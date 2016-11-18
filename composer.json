@@ -1,0 +1,34 @@
+{
+    "name": "SplashSync/Dolibarr",
+    "description": "Splash Module for Dolibarr ERP",
+
+    "license": "GPL",
+
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    
+    "config": {
+        "vendor-dir": "splash/Resources"
+    },
+    
+    "repositories": [
+        {
+            "type":"package",
+            "package": 
+            {
+                "name": "Splash",
+                "version": "master",
+                "source": 
+                {
+                    "url": "https://github.com/SplashSync/Php-Core.git",
+                    "type": "git",
+                    "reference":"master"
+                }
+            }
+        }
+    ],
+    "require": {
+        "Splash": "master"
+    } 
+    
+}

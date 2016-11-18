@@ -1,0 +1,177 @@
+# Dolibarr language file - en_US - osconnect
+# * Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com>
+# * This program is Copyright (C) Protected.
+# *  \Id 	 $Id: splash.lang 421 2015-11-13 11:40:34Z Nanard33 $
+# *  \version    $Revision: 421 $
+# *  \brief      Main Translations file for Osconnect
+CHARSET=UTF-8
+#
+# General
+#
+SPL_Shop=Dashboard
+SPL_ShopWeb=Dashboard
+#
+# Page Index
+#
+SPL_Index=OSCommerce RC2.2 Manager
+SPL_Name=OSCommerce RC2.2
+SPL_ConnectedTo = Connected to <b>%s</b>
+SPL_NotConnected = No Shop Connected
+SPL_History = Historic
+ChiffreAffaireAnnee = %s Sales   
+#
+# Page Index - Statistiques
+#
+SPL_CA_DELTA=Sales Evolution
+SPL_SHIP=Delivery 
+SPL_NEWCLIENTS=New customer accounts
+
+SPL_SCALE    =   Period
+SPL_12MOIS   =   This Year
+SPL_24MOIS   =   Last 2 Years
+SPL_36MOIS   =   Last 3 Years
+SPL_48MOIS   =   Last 4 Years
+SPL_LASTMONTH   =   This Month
+SPL_TWOLASTMONTH   =   Last Two Months
+SPL_PROD_GVAL      =   Products Sales Repartition
+SPL_PROD_GQTE      =   Products Quantity Repartition
+SPL_AVG_CART      	=   Average Basket
+SPL_ORDERS_COMP		= Orders Composition
+
+#
+# Page Admin - Main
+#
+SPL_MAIN = Main Parameters
+SPL_Index = Splash Sync
+SPL_SiteName = Website name
+SPL_SiteId = Unique identifier for this website on Dolibarr (8 Char Max). This parameter must be identical on both side.
+SPL_www = Public address of this Shop (www.myshop.com). This address is only used for embedded redirection on your dashboard. 
+SPL_Host = Host Address or Server Ip - Adress of your Webshop administration page.</br> This address must be without "http://". (www.myshop.com/admin) 
+SPL_SQL = Direct connexion to OsCommerce website with SQL
+SPL_WS = Connexion to webshop using NUSOAP WebService
+SPL_WsFolder = Module's folder. Use this parameter only if our module file isn't</br> in the root directory of your administration folder. 
+SPL_WsCrypt = Messages Encryption
+SPL_WsCrypt_d = Encrypt all transmited & received messages between Master & Slave servers.</br> Encryption Method : %s
+SPL_WsKey = Secret Key
+SPL_WsKey_d = Secret Unique Security Key for messages encryption. This parameter must be identical on both side of connexion.
+SPL_WsCallKo = WebService Communication Fail
+SPL_TestPerformed = Tests Performed on Remote Server
+#
+# Page Admin - Test Connexion
+#
+SPL_WsTest      = Connexion test with remote server
+SPL_WsActivateNode      = Server Activation
+SPL_WsTestPing          = Ping test on remote server (No data encapsulation, no encryption)
+SPL_WsTestConnect       = Connexion test on remote server (With data encapsulation and encryption if defined)
+SPL_WsPingOk= Ping test of server '%s' passed.
+SPL_WsPingKo= Ping test of server '%s' failled.
+SPL_WsTestOk= Connexion test with server '%s' passed.
+SPL_WsTestKo= Connexion test with server '%s' failled.
+#
+# Page Admin - Local Setup
+#
+SPL_CustomParameters    = Local Parameters
+SPL_LocalUser           = Local User for remotly  performed operations 
+SPL_Language            = Remote Fields Descriptions & Messages Language 
+#
+# Page Admin - Objects Setup
+#
+SPL_NodeInfosList       = List of available Information blocks on Remote Server
+SPL_NodeIdCard          = Remote Server Identity Card
+SPL_ObjectSetup         = Objets Synchronisation Setup
+SPL_AvailableObjects    = List of available Objects on remote server
+#
+# Page Admin - Messages
+#
+SPL_NoWebsite = No Os Commerce Website Configured
+SPL_NoActiveWebSite = No Os Commerce Website selected
+SPL_DeleteSite = Do you really want to delete this website connexion?
+SPL_NoCommid = No User / Commercial selected for OsConnect module.
+SPL_SyncAll = Do you really want to launch a synchronization of all the objects? </br> </br> All existing Dobilarr objects will be overwritten. </br> </br> This may take several minutes depending on the number of objects to import. 
+SPL_SetupOrdersStatusFirst=Please set up orders status before accessing this page.
+
+SPL_Help1    = All support for this module is provided online only. </br> </br> For all features description and more, refer <a href="%s" target="_blank"> %s </a>  </br> </br>
+SPL_Help2    = If you face any problem using this module, you will find module's documentation on <a href="%s" target="_blank"> %s </a> </br> </br> You can also read module's FAQ on <a href="%s" target="_blank"> %s </a>
+SPL_Help3    = If you find any bug on this module, please post on <a href="%s" target="_blank"> %s </a> </br> </br> Module's updates are provided here <a  href="%s" target="_blank"> %s </a> 
+
+SPL_License = Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com> </br> </br> This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.</br> </br> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</br> </br>  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+#
+# Page Admin - Avancé - Setup
+#
+SPL_ShopSetup	=	Module setup on target website
+SPL_WsDBOk		=	Module is correctly installed in database
+SPL_WsDBKo		=	Module isn't correctly installed in database
+SPL_WsParamOk	= 	Module's configuration looks correct. No critical parameter is empty.
+SPL_WsParamKo	= 	Module's configuration is wrong or missing. Critical parameters are empty.
+SPL_WsConnectOk =	Test of reverse connection was succesful
+SPL_WsConnectKo =	Test of reverse connection fail! Check you configuration.
+SPL_SetupOrdersStatusFirst=Orders status must be set up before accessing this menu.
+
+#
+# Page Admin - Avancé - Dolibarr
+#
+SPL_ConfDol = OsCommerce website Setup on Dolibarr
+SPL_Lang = Default language for site data
+SPL_Com = User / Commercial who will be affected the actions of OsConnect Module. This user must have all rights to access commands, products and categories.
+SPL_Stock = Default warehouse where products are stored
+SPL_Bank = Bank account to which payments are allocated
+SPL_ShipTVA = VAT to be applied to deliveries.
+#
+# Page Admin - Avancé - Services / Produits
+#
+SPL_ConfProd            =   Products Configuration / Synchronization 
+SPL_ConfProdExport      =   Automatically export changes made on Dolibarr to OsCommerce
+SPL_ConfProdImportUp    =   Automatically update Dolibarr products when modifications are done in OS Commerce
+SPL_ConfProdImportNew   =   Automatically import new products to Dolibarr
+SPL_ConfProdCatAutoImport   = When importing a product, automatically import products categories that do not exist on Dolibarr
+
+SPL_ConfProdCat         =   Products categories Configuration / Synchronization
+SPL_ConfProdCatExport   =   Automatically export changes made on Dolibarr to OsCommerce
+SPL_ConfProdCatImportUp =   Automatically update Dolibarr products categories when modifications are done in OS Commerce
+SPL_ConfProdCatImportNew=   Automatically import new products categories to Dolibarr
+SPL_ConfProdCatProdAutoImport   = When importing a product categories, automatically import products that do not exist on Dolibarr
+
+SPL_ConfProdModules     =   Support for OS Commerce modules 
+SPL_ConfProdMultimages  =   Module MultiImage, management of multiple images for products. <a href="%s" > Download Module </a>    
+SPL_ConfProdHeaderTags  =   Module HeaderTags, management Html Tags for Products and Categories. <a href="%s" > Download Module </a> 
+#
+# Page Admin - Avancé - Services / Clients
+#
+SPL_ConfClients         =   Customers Configuration / Synchronization
+SPL_ConfClientExport    =   Automatically export changes made on Dolibarr to OsCommerce
+SPL_ConfClientImportUp =   Automatically update Dolibarr customers when modifications are done in OS Commerce
+SPL_ConfClientImportNew  =   Automatically import new customers to Dolibarr
+#
+# Page Admin - Avancé - Services / Commandes
+#
+SPL_ConfOrders         =   Orders Configuration / Synchronization
+#
+# Page Admin - Avancé - Pays & Langues
+#
+SPL_COUNTRIESNOTINDOL = Country existing in OsCommerce but not in Dolibarr
+SPL_CONFLANG = Languages equivalences between Oscommerce & Dolibarr 
+#
+#
+#
+# Commons - History
+#
+SPL_Fil-O = Filter on this OsCommerce Id
+SPL_CleanFil-O = Clear filter on this OsCommerce Id 
+SPL_Fil-D = Filter on this Dolibarr Id 
+SPL_CleanFil-D = Clear filter on this Dolibarr Id
+SPL_AllSiteHistory = All shops historics
+#
+# Commons - Messages
+#
+SPL_Deletelink = Do you really want to delete the link between this object and the website?
+SPL_DeleteImage = Do you really want to delete this image?
+SPL_DeleteFile = Also delete the file from server?
+SPL_DeleteCountry = Do you want to delete this country from Oscommerce country list?
+SPL_ImportAll = Import All
+SPL_ProductNoExist = Product not synchronized
+SPL_CategorieNoExist = Category not synchronized
+SPL_OrphelinElement = This item has a link that is not part of any Os Commerce site. Click delete to correct the problem.
+SPL_ShopNotFound = Could not find OSCommerce shop %s on Dolibarr
+SPL_NoData = No records found on OSCommerce
+
