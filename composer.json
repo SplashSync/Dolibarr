@@ -25,10 +25,25 @@
                     "reference":"master"
                 }
             }
-        }
+        },
+        {
+            "type":"package",
+            "package": 
+            {
+                "name": "Test",
+                "version": "master",
+                "source": 
+                {
+                    "url": "https://github.com/SplashSync/Php-Tester.git",
+                    "type": "git",
+                    "reference":"master"
+                }
+            }
+        }        
     ],
     "require": {
-        "Splash": "master"
+        "Splash": "master",
+        "Test": "master"
     } 
     
 }
