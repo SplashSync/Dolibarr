@@ -511,7 +511,8 @@ class SplashOrder extends SplashObject
     private function buildOrderLineFields() {
         global $langs;
         
-        $ListName = $langs->trans("OrderLine") . " => " ;
+        $ListName   = $langs->trans("OrderLine") . " => " ;
+        $GroupName  = $langs->trans("OrderLine");
         
         //====================================================================//
         // Order Line Label
@@ -528,6 +529,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("desc")
                 ->InList("lines")
                 ->Name( $ListName . $langs->trans("Description"))
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/partOfInvoice","description")        
                 ->Association("desc@lines","qty@lines","price@lines");        
 
@@ -537,6 +539,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("fk_product")
                 ->InList("lines")
                 ->Name( $ListName . $langs->trans("Product"))
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/Product","productID")
                 ->Association("desc@lines","qty@lines","price@lines");        
 //                ->NotTested();        
@@ -547,6 +550,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("qty")
                 ->InList("lines")
                 ->Name( $ListName . $langs->trans("Quantity"))
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/QuantitativeValue","value")        
                 ->Association("desc@lines","qty@lines","price@lines");        
 
@@ -556,6 +560,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("remise_percent")
                 ->InList("lines")
                 ->Name( $ListName . $langs->trans("Discount"))
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/Order","discount")
                 ->Association("desc@lines","qty@lines","price@lines");        
 
@@ -565,6 +570,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("price")
                 ->InList("lines")
                 ->Name( $ListName . $langs->trans("Price"))
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/PriceSpecification","price")        
                 ->Association("desc@lines","qty@lines","price@lines");        
 
@@ -607,6 +613,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("date_modification")
                 ->Name($langs->trans("DateLastModification"))
                 ->MicroData("http://schema.org/DataFeedItem","dateModified")
+                ->Group("Meta")
                 ->ReadOnly();
         
         //====================================================================//
@@ -615,6 +622,7 @@ class SplashOrder extends SplashObject
                 ->Identifier("date_creation")
                 ->Name($langs->trans("DateCreation"))
                 ->MicroData("http://schema.org/DataFeedItem","dateCreated")
+                ->Group("Meta")
                 ->ReadOnly();        
         
     }   

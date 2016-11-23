@@ -439,6 +439,8 @@ class SplashProduct extends SplashObject
     private function buildDescFields()   {
         global $conf,$langs;
         
+        $GroupName  =   $langs->trans("Description");
+        
         //====================================================================//
         // PRODUCT DESCRIPTIONS
         //====================================================================//
@@ -452,6 +454,7 @@ class SplashProduct extends SplashObject
                     ->Identifier("label")
                     ->Name($langs->trans("ProductLabel"))
                     ->IsListed()
+                    ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","name")
                     ->isRequired();
             //====================================================================//
@@ -460,12 +463,14 @@ class SplashProduct extends SplashObject
                     ->Identifier("description")
                     ->Name($langs->trans("Description"))
                     ->IsListed()
+                    ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","description");
             //====================================================================//
             // Note
             $this->FieldsFactory()->Create(SPL_T_MTEXT)
                     ->Identifier("note")
                     ->Name($langs->trans("Note"))
+                    ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","privatenote");
         //====================================================================//
         // No Multilangs Descriptions
@@ -476,6 +481,7 @@ class SplashProduct extends SplashObject
                     ->Identifier("label")
                     ->Name($langs->trans("ProductLabel"))
                     ->IsListed()
+                    ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","name")
                     ->isRequired();
             //====================================================================//
@@ -484,12 +490,14 @@ class SplashProduct extends SplashObject
                     ->Identifier("description")
                     ->Name($langs->trans("Description"))
                     ->IsListed()
+                    ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","description");
             //====================================================================//
             // Note
             $this->FieldsFactory()->Create(SPL_T_TEXT)
                     ->Identifier("note")
                     ->Name($langs->trans("Note"))
+                    ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","privatenote");
         }        
         
@@ -629,7 +637,8 @@ class SplashProduct extends SplashObject
                 ->Identifier("status_buy")
                 ->Name($langs->trans("Status").' ('.$langs->trans("Buy").')')
                 ->MicroData("http://schema.org/Product","ordered")
-                ->isListed();        
+                ->Group("Meta")
+               ->isListed();        
         
         //====================================================================//
         // On Buy
@@ -637,6 +646,7 @@ class SplashProduct extends SplashObject
                 ->Identifier("status")
                 ->Name($langs->trans("Status").' ('.$langs->trans("Sell").')')
                 ->MicroData("http://schema.org/Product","offered")
+                ->Group("Meta")
                 ->isListed();        
         
         
@@ -650,6 +660,7 @@ class SplashProduct extends SplashObject
                 ->Identifier("date_modification")
                 ->Name($langs->trans("DateLastModification"))
                 ->MicroData("http://schema.org/DataFeedItem","dateModified")
+                ->Group("Meta")
                 ->ReadOnly();
         
         //====================================================================//
@@ -658,6 +669,7 @@ class SplashProduct extends SplashObject
                 ->Identifier("date_creation")
                 ->Name($langs->trans("DateCreation"))
                 ->MicroData("http://schema.org/DataFeedItem","dateCreated")
+                ->Group("Meta")
                 ->ReadOnly();             
         
     }   

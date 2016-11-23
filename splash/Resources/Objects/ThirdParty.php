@@ -551,12 +551,13 @@ class SplashThirdParty extends SplashObject
     private function buildAddressFields() {
         global $langs;
         
+        $GroupName = $langs->trans("CompanyAddress");
         //====================================================================//
         // Addess
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("address")
                 ->Name($langs->trans("CompanyAddress"))
-                ->Group("Address")
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","streetAddress");
 
         //====================================================================//
@@ -564,7 +565,7 @@ class SplashThirdParty extends SplashObject
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("zip")
                 ->Name( $langs->trans("CompanyZip"))
-                ->Group("Address")
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","postalCode")
                 ->isListed();
         
@@ -573,14 +574,14 @@ class SplashThirdParty extends SplashObject
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("town")
                 ->Name($langs->trans("CompanyTown"))
-                ->Group("Address")
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","addressLocality");
         
         //====================================================================//
         // State Name
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("state")
-                ->Group("Address")
+                ->Group($GroupName)
                 ->Name($langs->trans("State"))
                 ->ReadOnly();
         
@@ -589,7 +590,7 @@ class SplashThirdParty extends SplashObject
         $this->FieldsFactory()->Create(SPL_T_STATE)
                 ->Identifier("state_code")
                 ->Name($langs->trans("State Code"))
-                ->Group("Address")
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","addressRegion")
                 ->ReadOnly();
         
@@ -598,7 +599,7 @@ class SplashThirdParty extends SplashObject
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("country")
                 ->Name($langs->trans("CompanyCountry"))
-                ->Group("Address")
+                ->Group($GroupName)
                 ->ReadOnly()
                 ->isListed();
         
@@ -607,7 +608,7 @@ class SplashThirdParty extends SplashObject
         $this->FieldsFactory()->Create(SPL_T_COUNTRY)
                 ->Identifier("country_code")
                 ->Name($langs->trans("CountryCode"))
-                ->Group("Address")
+                ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","addressCountry");
         
     }

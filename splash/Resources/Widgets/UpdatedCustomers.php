@@ -30,15 +30,11 @@
 // *******************************************************************//
 //                     SPLASH FOR DOLIBARR                            //
 // *******************************************************************//
-//                  TEST & DEMONSTRATION WIDGET                       //
+//                     LAST CUSTOMER BOX WIDGET                       //
 // *******************************************************************//
 //====================================================================//
 
-/**
- *	\class      Address
- *	\brief      Address - Thirdparty Contacts Management Class
- */
-class SplashCustomers extends SplashWidget
+class SplashUpdatedCustomers extends SplashWidget
 {
     
     //====================================================================//
@@ -69,6 +65,8 @@ class SplashCustomers extends SplashWidget
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
     static $OPTIONS       = array(
+        "Width"         =>  self::SIZE_M,
+        "Header"        =>  True,
         "Footer"        =>  False
     );
     
@@ -79,6 +77,27 @@ class SplashCustomers extends SplashWidget
     //====================================================================//
     // Class Main Functions
     //====================================================================//
+    
+    /**
+     *      @abstract   Return Widget Customs Parameters
+     */
+    public function getParameters()
+    {
+        global $langs;
+        $langs->load("admin");
+        
+        //====================================================================//
+        // Max Number of Entities
+        $this->FieldsFactory()->Create(SPL_T_INT)
+                ->Identifier("max")
+                ->Name($langs->trans("MaxNbOfLinesForBoxes"));
+//                ->Description($langs->trans("BoxTitleNbOfCustomers"));        
+        
+      
+        //====================================================================//
+        // Publish Fields
+        return $this->FieldsFactory()->Publish();
+    }       
     
     /**
      *  @abstract     Return requested Customer Data
@@ -103,7 +122,7 @@ class SplashCustomers extends SplashWidget
         // Load Dolibarr Box Class & Prepare Datas
         include_once DOL_DOCUMENT_ROOT.'/core/boxes/box_clients.php';        
         $this->Box = new box_clients($db);
-        $this->Box->loadBox();
+        $this->Box->loadBox($params["max"] ? $params["max"]: Null );
         
         //====================================================================//
         // Setup Widget Core Informations
@@ -173,8 +192,7 @@ class SplashCustomers extends SplashWidget
         // Build Table Contents
         //====================================================================//
         $Contents   = array();
-        foreach ($this->Box->info_box_contents as $Line) {
-
+        foreach ($this->Box->info_box_contents as $Line) {         
             $Contents[] = array(
                 '<i class="fa fa-user" aria-hidden="true">&nbsp;-&nbsp;</i>' . $Line[1]["text"],   
                 $Line[2]["text"],   
