@@ -34,11 +34,17 @@
 // *******************************************************************//
 //====================================================================//
 
+namespace   Splash\Local\Objects;
+
+use Splash\Models\ObjectBase;
+use Splash\Core\SplashCore      as Splash;
+use Contact;
+
 /**
  *	\class      Address
  *	\brief      Address - Thirdparty Contacts Management Class
  */
-class SplashAddress extends SplashObject
+class Address extends ObjectBase
 {
     
     //====================================================================//

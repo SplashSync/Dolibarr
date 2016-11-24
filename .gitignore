@@ -1,5 +1,6 @@
 /splash/Resources/Splash/
 /splash/Resources/composer/
 /splash/Resources/autoload.php
+/splash/vendor/
 /dispatch.php
 /composer.lock

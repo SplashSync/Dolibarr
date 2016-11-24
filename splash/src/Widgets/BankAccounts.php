@@ -34,7 +34,12 @@
 // *******************************************************************//
 //====================================================================//
 
-class SplashBankAccounts extends SplashWidget
+namespace   Splash\Local\Widgets;
+
+use Splash\Models\WidgetBase;
+use Splash\Core\SplashCore      as Splash;
+
+class BankAccounts extends WidgetBase
 {
     
     //====================================================================//
@@ -125,7 +130,7 @@ class SplashBankAccounts extends SplashWidget
         //====================================================================//
         // Load Dolibarr Box Class & Prepare Datas
         include_once DOL_DOCUMENT_ROOT.'/core/boxes/box_comptes.php';        
-        $this->Box = new box_comptes($db);
+        $this->Box = new \box_comptes($db);
         $this->Box->loadBox($params["max"] ? $params["max"]: Null );
         
         //====================================================================//

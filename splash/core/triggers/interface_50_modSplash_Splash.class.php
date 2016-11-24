@@ -21,6 +21,8 @@ include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
 
 global $langs; 
 
+use Splash\Client\Splash;
+
 //====================================================================//
 // Load traductions files requiredby by page
 $langs->load("errors");

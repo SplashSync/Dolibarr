@@ -23,6 +23,7 @@
  *  \brief      Display Module Tests Results
 */
 
+use Splash\Client\Splash;
 
 //====================================================================//
 // Open Connection Test Tab
@@ -39,6 +40,23 @@ echo '  <tr class="pair">';
 echo '      <td width="60%">' . $langs->trans("SPL_ObjectsList") . '</td>';
 echo '      <td><ul>';
 foreach ($list as $value) {
+    echo "<li>" . $value . "</li>";
+}
+echo '      </ul></td>';
+echo '  </tr>';
+echo '</tbody></table>';
+echo Splash::Log()->GetHtmlLog(True);
+echo "</br>";
+
+//====================================================================//
+// List Objects
+//====================================================================//
+$Widgets   =   Splash::Widgets();
+echo '<table class="noborder" width="100%"><tbody>';
+echo '  <tr class="pair">';
+echo '      <td width="60%">' . $langs->trans("SPL_WidgetsList") . '</td>';
+echo '      <td><ul>';
+foreach ($Widgets as $value) {
     echo "<li>" . $value . "</li>";
 }
 echo '      </ul></td>';

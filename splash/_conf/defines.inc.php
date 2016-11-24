@@ -26,13 +26,12 @@
 */
 
 //====================================================================//
-// Splash Module Include
-require_once( dirname(dirname(__FILE__)) . "/Resources/Splash/splash.php");
+// Splash Module & Dependecies Autoloader
+require_once( dirname(dirname(__FILE__)) . "/vendor/autoload.php");
 
-// ***************************************
+//====================================================================//
 //  CONSTANTS DEFINITION
-// ***************************************
-
+//====================================================================//
 
 //====================================================================//
 // Show Debug Messages
@@ -83,7 +82,7 @@ define('SPL_NOK'     ,	0);
 
 //====================================================================//
 // Folders Definition for this Module 
-define('SPL_FOLDER'	,	"/splash");
+define('SPL_FOLDER'	,	"/splash/vendor/splash/phpcore");
 define('SPL_ROOT'	,	DOL_DOCUMENT_ROOT.SPL_FOLDER);
 define('SPL_CORE'	,	"/core");
 define('SPL_CFG'	,	"/_conf");

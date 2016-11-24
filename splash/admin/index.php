@@ -23,14 +23,21 @@
  *  \brief      Page d'administration/configuration du module OsCommerce
 */
 
+use Splash\Client\Splash;
+
 //====================================================================//
 //   INCLUDES 
 //====================================================================//
-require("../../main.inc.php");
+require("../../main.inc.php"); 
 
 //====================================================================//
-// Splash Module Include
-require_once("../Resources/Splash/splash.php");
+// Splash Module Definitions
+include_once(dirname(dirname(__FILE__)) ."/_conf/defines.inc.php");
+
+$reflector = new ReflectionClass("Splash\Local\Local");
+echo dirname($reflector->getFileName());
+         
+//exit;
 
 //====================================================================//
 // Functions Dolibarr

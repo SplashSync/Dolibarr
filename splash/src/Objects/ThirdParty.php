@@ -34,11 +34,17 @@
 // *******************************************************************//
 //====================================================================//
 
+namespace   Splash\Local\Objects;
+
+use Splash\Models\ObjectBase;
+use Splash\Core\SplashCore      as Splash;
+use Societe;
+
 /**
  *	\class      ThirdParty
  *	\brief      ThirdParty - Customers / Supplier Management Class
  */
-class SplashThirdParty extends SplashObject
+class ThirdParty extends ObjectBase
 {
     //====================================================================//
     // Object Definition Parameters	

@@ -34,11 +34,17 @@
 // *******************************************************************//
 //====================================================================//
 
+namespace   Splash\Local\Objects;
+
+use Splash\Models\ObjectBase;
+use Splash\Core\SplashCore      as Splash;
+
+
 /**
  *	\class      Product
  *	\brief      Product - Dolibarr Products Management Class
  */
-class SplashProduct extends SplashObject
+class Product extends ObjectBase
 {
     //====================================================================//
     // Object Definition Parameters	
@@ -284,7 +290,7 @@ class SplashProduct extends SplashObject
         
         //====================================================================//
         // Init Object 
-        $this->Object = new Product($db);
+        $this->Object = new \Product($db);
         if ( $this->Object->fetch($id) != 1 )   {
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Product (" . $id . ").");
         }
@@ -904,11 +910,11 @@ class SplashProduct extends SplashObject
      */
     private function setInitObject($id) 
     {
-        global $db,$user;
+        global $db;
         
         //====================================================================//
         // Init Object 
-        $this->Object = new Product($db);
+        $this->Object = new \Product($db);
         
         //====================================================================//
         // If $id Given => Load Object From DataBase

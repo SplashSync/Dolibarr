@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+<phpunit
+    backupGlobals               = "false"
+    backupStaticAttributes      = "false"
+    colors                      = "true"
+    convertErrorsToExceptions   = "true"
+    convertNoticesToExceptions  = "false"
+    convertWarningsToExceptions = "false"
+    processIsolation            = "false"
+    stopOnFailure               = "true"
+    syntaxCheck                 = "false"
+    bootstrap                   = "splash/vendor/autoload.php" 
+    verbose                     = "false"
+    debug                       = "false"    
+    timeoutForLargeTests        = "120"  
+>
+
+    <testsuites>
+        <testsuite name="All">
+            <directory>splash/vendor/splash/phpcore/Tests/*</directory>
+        </testsuite>
+        <testsuite name="Core">
+            <directory>splash/vendor/splash/phpcore/Tests/Core</directory>
+        </testsuite>
+        <testsuite name="Admin">
+            <directory>splash/vendor/splash/phpcore/Tests/Admin</directory>
+        </testsuite>
+        <testsuite name="Objects">
+            <directory>splash/vendor/splash/phpcore/Tests/Objects</directory>
+        </testsuite>
+        <testsuite name="Widgets">
+            <directory>splash/vendor/splash/phpcore/Tests/Widgets</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>splash/vendor/splash/phpcore</directory>
+            <exclude>
+                <directory>splash/vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+</phpunit>

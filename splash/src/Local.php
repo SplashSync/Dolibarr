@@ -26,6 +26,12 @@
  *  \remarks	Designed for Splash Module - Dolibar ERP Version  
 */
 
+namespace Splash\Local;
+
+use Splash\Core\SplashCore      as Splash;
+
+use User;
+
 //====================================================================//
 //  INCLUDES
 //====================================================================//
@@ -57,7 +63,7 @@
  *	\class      SplashLocal
  *	\brief      Local Core Management Class
  */
-class SplashLocal 
+class Local 
 {
     //====================================================================//
     // General Class Variables	
@@ -103,25 +109,25 @@ class SplashLocal
      */
     public static function Parameters()
     {
-        global $langs,$conf;
+        global $langs;
         
         $Parameters       =     array();
 
         //====================================================================//
         // Server Identification Parameters
-        $Parameters["WsIdentifier"]         =   $conf->global->SPLASH_WS_ID;
-        $Parameters["WsEncryptionKey"]      =   $conf->global->SPLASH_WS_KEY;
+        $Parameters["WsIdentifier"]         =   self::getParameter("SPLASH_WS_ID");
+        $Parameters["WsEncryptionKey"]      =   self::getParameter("SPLASH_WS_KEY");
         
         //====================================================================//
         // If Debug Mode => Allow Overide of Server Host Address
-        if ( (SPLASH_DEBUG) && !empty($conf->global->SPLASH_WS_HOST) ) {
-            $Parameters["WsHost"]           =   $conf->global->SPLASH_WS_HOST;
+        if ( (SPLASH_DEBUG) && !empty(self::getParameter("SPLASH_WS_HOST")) ) {
+            $Parameters["WsHost"]           =   self::getParameter("SPLASH_WS_HOST");
         }
         
         //====================================================================//
         // Overide Module Parameters with Local User Selected Lang
-        if ( $conf->global->SPLASH_LANG ) {
-            $Parameters["DefaultLanguage"]      =   $conf->global->SPLASH_LANG;
+        if ( self::getParameter("SPLASH_LANG") ) {
+            $Parameters["DefaultLanguage"]      =   self::getParameter("SPLASH_LANG");
         //====================================================================//
         // Overide Module Parameters with Local Default System Lang
         } elseif ( ($langs) && $langs->getDefaultLang() ) {
@@ -130,7 +136,7 @@ class SplashLocal
         
         //====================================================================//
         // Overide Module Local Name in Logs
-        $Parameters["localname"]        =   $conf->global->MAIN_INFO_SOCIETE_NOM;
+        $Parameters["localname"]        =   self::getParameter("MAIN_INFO_SOCIETE_NOM");
         
         return $Parameters;
     }    
@@ -156,26 +162,26 @@ class SplashLocal
         //====================================================================//
         if ( SPLASH_SERVER_MODE )
         {
-            global $db,$langs,$conf,$user,$hookmanager;
-
-            if (!defined("DOL_DOCUMENT_ROOT")) {
-                //====================================================================//
-                // Initiate Dolibarr Global Envirement Variables
-                require_once( $this->getDolibarrRoot() . "/master.inc.php");           
-            }
-           
-            //====================================================================//
-            // Splash Modules Constant Definition
-            require_once(DOL_DOCUMENT_ROOT.'/splash/_conf/defines.inc.php'); 
-
-            
-            //====================================================================//
-            // Load Default Language
-            $this->LoadDefaultLanguage();      
-            
-            //====================================================================//
-            // Load Default User
-            $this->LoadLocalUser();    
+//            global $db,$langs,$conf,$user,$hookmanager;
+//
+//            if (!defined("DOL_DOCUMENT_ROOT")) {
+//                //====================================================================//
+//                // Initiate Dolibarr Global Envirement Variables
+//                require_once( $this->getDolibarrRoot() . "/master.inc.php");           
+//            }
+//           
+//            //====================================================================//
+//            // Splash Modules Constant Definition
+//            require_once(DOL_DOCUMENT_ROOT.'/splash/_conf/defines.inc.php'); 
+//
+//            
+//            //====================================================================//
+//            // Load Default Language
+//            $this->LoadDefaultLanguage();      
+//            
+//            //====================================================================//
+//            // Load Default User
+//            $this->LoadLocalUser();    
             
         }
 
@@ -194,9 +200,31 @@ class SplashLocal
 
         // NOTHING TO DO         
         
+        if (!defined("DOL_DOCUMENT_ROOT")) {
+        
+            global $db,$langs,$conf,$user,$hookmanager;
+
+            //====================================================================//
+            // Initiate Dolibarr Global Envirement Variables
+            require_once( $this->getDolibarrRoot() . "/master.inc.php");           
+           
+            //====================================================================//
+            // Splash Modules Constant Definition
+            require_once(DOL_DOCUMENT_ROOT.'/splash/_conf/defines.inc.php'); 
+            
+            //====================================================================//
+            // Load Default Language
+            $this->LoadDefaultLanguage();      
+            
+            //====================================================================//
+            // Load Default User
+            $this->LoadLocalUser();           
+        
+        }
+        
         return True;
     }      
-
+           
     /**
      *      @abstract       Return Local Server Self Test Result
      *                      
@@ -264,35 +292,25 @@ class SplashLocal
      */
     public function Informations($Informations)
     {
-        global $conf;
-        $g = $conf->global;
-        
         //====================================================================//
         // Init Response Object
         $Response = $Informations;
 
         //====================================================================//
-        // Server General Description
-//        $r->shortdesc     = "Splash for Dolibarr ERP Version " . DOL_VERSION;
-//        $r->longdesc      = "Splash Connector Module for Dolibarr.";
-        
-        //====================================================================//
         // Company Informations
-//        $Response->company          = $g->MAIN_INFO_SOCIETE_NOM     ?   $g->MAIN_INFO_SOCIETE_NOM       :   "...";
-        $Response->address          = $g->MAIN_INFO_SOCIETE_ADDRESS ?   $g->MAIN_INFO_SOCIETE_ADDRESS   :   "...";
-        $Response->zip              = $g->MAIN_INFO_SOCIETE_ZIP     ?   $g->MAIN_INFO_SOCIETE_ZIP       :   "...";
-        $Response->town             = $g->MAIN_INFO_SOCIETE_TOWN    ?   $g->MAIN_INFO_SOCIETE_TOWN      :   "...";
-        $Response->country          = $g->MAIN_INFO_SOCIETE_COUNTRY ?   $g->MAIN_INFO_SOCIETE_COUNTRY   :   "...";
-        $Response->www              = $g->MAIN_INFO_SOCIETE_WEB     ?   $g->MAIN_INFO_SOCIETE_WEB       :   "...";
-        $Response->email            = $g->MAIN_INFO_SOCIETE_MAIL    ?   $g->MAIN_INFO_SOCIETE_MAIL      :   "...";
-        $Response->phone            = $g->MAIN_INFO_SOCIETE_TEL     ?   $g->MAIN_INFO_SOCIETE_TEL       :   "...";
+        $Response->company          =   self::getParameter("MAIN_INFO_SOCIETE_NOM", "...");
+        $Response->address          =   self::getParameter("MAIN_INFO_SOCIETE_ADDRESS", "...");
+        $Response->zip              =   self::getParameter("MAIN_INFO_SOCIETE_ZIP", "...");
+        $Response->town             =   self::getParameter("MAIN_INFO_SOCIETE_TOWN", "...");
+        $Response->country          =   self::getParameter("MAIN_INFO_SOCIETE_COUNTRY", "...");
+        $Response->www              =   self::getParameter("MAIN_INFO_SOCIETE_WEB", "...");
+        $Response->email            =   self::getParameter("MAIN_INFO_SOCIETE_MAIL", "...");
+        $Response->phone            =   self::getParameter("MAIN_INFO_SOCIETE_TEL", "...");
         
         //====================================================================//
         // Server Logo & Images
-        $Response->icoraw           = Splash::File()->ReadFileContents(DOL_DOCUMENT_ROOT . "/favicon.ico");
-//        $Response->icoraw           =   "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
+        $Response->icoraw           =   Splash::File()->ReadFileContents(DOL_DOCUMENT_ROOT . "/favicon.ico");
         $Response->logourl          =   "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
-//        $Response->logoraw          =   NUll;
         
         //====================================================================//
         // Server Informations
@@ -1025,7 +1043,9 @@ class SplashLocal
      *      @return     string  $CountryId          Country Dolibarr Id
      * 
      *      @return     int                   State Dolibarr Id, else 0
-     */
+     */  
+
+
     function getStateByCode($StateCode,$CountryId)
     {   
         global $db;
@@ -1360,6 +1380,24 @@ class SplashLocal
         }        
 
         return True;
+    }
+    
+//====================================================================//
+//  VARIOUS LOW LEVEL FUNCTIONS
+//====================================================================//
+
+    /**
+     *      @abstract       Safe Get of A Global Parameter
+     * 
+     *      @param      string  $Key      Global Parameter Key
+     *      @param      string  $Default  Default Parameter Value
+     * 
+     *      @return     string
+     */
+    private static function getParameter($Key, $Default = Null) 
+    {
+        global $conf;
+        return isset($conf->global->$Key)  ? $conf->global->$Key : $Default;
     }
     
 }
