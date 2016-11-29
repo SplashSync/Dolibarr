@@ -851,7 +851,7 @@ class Product extends ObjectBase
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
-                $this->getSingleField($FieldName);
+                $this->getSingleField($FieldName, 0);
                 break;                
             
             default:
@@ -888,7 +888,7 @@ class Product extends ObjectBase
             //====================================================================//
             case 'date_creation':
             case 'date_modification':
-                $this->Out[$FieldName] = dol_print_date($this->Object->$FieldName,'standard');
+                $this->Out[$FieldName] = dol_print_date($this->Object->$FieldName,'dayrfc');
                 break;                
 
             default:

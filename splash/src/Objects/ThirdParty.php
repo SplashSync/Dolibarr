@@ -852,7 +852,7 @@ class ThirdParty extends ObjectBase
                     $this->Object->info($this->Object->id);
                     $this->infoloaded = True;
                 }
-                $this->Out[$FieldName] = dol_print_date($this->Object->$FieldName,'standard');
+                $this->Out[$FieldName] = dol_print_date($this->Object->$FieldName,'dayrfc');
                 break;
                     
             default:

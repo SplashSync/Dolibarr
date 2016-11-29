@@ -500,7 +500,7 @@ class Invoice extends ObjectBase
                 ->Identifier("isDraft")
                 ->Name($langs->trans("Invoice") . " : " . $langs->trans("Draft"))
                 ->MicroData("http://schema.org/PaymentStatusType","InvoiceDraft")
-                ->Association( "isdraft","iscanceled","isvalidated","isclosed")
+                ->Association( "isDraft","isCanceled","isValidated")
                 ->ReadOnly();     
 
         //====================================================================//
@@ -509,7 +509,7 @@ class Invoice extends ObjectBase
                 ->Identifier("isCanceled")
                 ->Name($langs->trans("Invoice") . " : " . $langs->trans("Canceled"))
                 ->MicroData("http://schema.org/PaymentStatusType","PaymentDeclined")
-                ->Association( "isdraft","iscanceled","isvalidated","isclosed")
+                ->Association( "isDraft","isCanceled","isValidated")
                 ->ReadOnly();     
         
         //====================================================================//
@@ -518,7 +518,7 @@ class Invoice extends ObjectBase
                 ->Identifier("isValidated")
                 ->Name($langs->trans("Invoice") . " : " . $langs->trans("Validated"))
                 ->MicroData("http://schema.org/PaymentStatusType","PaymentDue")
-                ->Association( "isdraft","iscanceled","isvalidated","isclosed")
+                ->Association( "isDraft","isCanceled","isValidated")
                 ->ReadOnly();
 
         //====================================================================//
