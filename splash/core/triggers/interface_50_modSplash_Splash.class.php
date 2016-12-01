@@ -22,6 +22,7 @@ include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
 global $langs; 
 
 use Splash\Client\Splash;
+use Splash\Components\Logger;
 
 //====================================================================//
 // Load traductions files requiredby by page
@@ -95,7 +96,7 @@ class InterfaceSplash
     *  @param       SpashLog    			Input Log Class
     *  @return      None
     */
-    function PostMessages(SplashLog $log)
+    function PostMessages(Logger $log)
     {
         //====================================================================//
         // When Library is called in server mode, no Message Storage
