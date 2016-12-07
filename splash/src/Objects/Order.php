@@ -468,6 +468,7 @@ class Order extends ObjectBase
         // Is Draft
         $this->FieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("isdraft")
+                ->Group($langs->trans("Status"))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Draft"))
                 ->MicroData("http://schema.org/OrderStatus","OrderDraft")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
@@ -477,6 +478,7 @@ class Order extends ObjectBase
         // Is Canceled
         $this->FieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("iscanceled")
+                ->Group($langs->trans("Status"))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Canceled"))
                 ->MicroData("http://schema.org/OrderStatus","OrderCancelled")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
@@ -486,6 +488,7 @@ class Order extends ObjectBase
         // Is Validated
         $this->FieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("isvalidated")
+                ->Group($langs->trans("Status"))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Validated"))
                 ->MicroData("http://schema.org/OrderStatus","OrderProcessing")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
@@ -496,6 +499,7 @@ class Order extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("isclosed")
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Closed"))
+                ->Group($langs->trans("Status"))
                 ->MicroData("http://schema.org/OrderStatus","OrderDelivered")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
                 ->ReadOnly();
@@ -504,6 +508,7 @@ class Order extends ObjectBase
         // Is Paid
         $this->FieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("facturee")
+                ->Group($langs->trans("Status"))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))
                 ->MicroData("http://schema.org/OrderStatus","OrderPaid")
                 ->NotTested();
@@ -667,6 +672,7 @@ class Order extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("status")
                 ->Name($langs->trans("Status"))
+                ->Group($langs->trans("Status"))
                 ->MicroData("http://schema.org/Order","orderStatus")
                 ->AddChoice("OrderCanceled",    $langs->trans("StatusOrderCanceled"))
                 ->AddChoice("OrderDraft",       $langs->trans("StatusOrderDraftShort"))
@@ -1057,7 +1063,21 @@ class Order extends ObjectBase
             // Order Company Id 
             case 'socid':
                 $SocId = self::ObjectId_DecodeId( $Data );
-                $this->setSingleField($FieldName,$SocId);
+                
+                //====================================================================//
+                //  If Ne Order (Not Saved)
+                if ( empty($this->Object->id) ) {
+                    $this->setSingleField($FieldName,$SocId);
+                }
+                //====================================================================//
+                //  Compare Field Data
+                elseif ( $this->Object->$FieldName != $SocId ) {
+                    //====================================================================//
+                    //  Update Field Data
+                    $this->Object->setValueFrom("fk_soc",$SocId);
+                    $this->update = True;
+                }  
+
                 break;                 
             default:
                 return;
@@ -1143,7 +1163,7 @@ class Order extends ObjectBase
             //====================================================================//
             // Create New Line
             if ( !$this->OrderLine ) {
-                $this->OrderLine = new OrderLine($db);
+                $this->OrderLine = new  \OrderLine($db);
                 $this->OrderLine->fk_commande = $this->Object->id;
 //                $this->OrderLine->fk_commande = 5;
             }
@@ -1393,7 +1413,7 @@ class Order extends ObjectBase
             //====================================================================//
             // Appel des triggers
             include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-            $interface=new Interfaces($db);
+            $interface=new \Interfaces($db);
             if ( $interface->run_triggers('ORDER_UPDATE',$this->Object,$user,$langs,$conf) <= 0) {  
                 foreach ($interface->errors as $Error) {
                     Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,$langs->trans($Error));

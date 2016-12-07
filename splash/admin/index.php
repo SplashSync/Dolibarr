@@ -34,11 +34,6 @@ require("../../main.inc.php");
 // Splash Module Definitions
 include_once(dirname(dirname(__FILE__)) ."/_conf/defines.inc.php");
 
-$reflector = new ReflectionClass("Splash\Local\Local");
-echo dirname($reflector->getFileName());
-         
-//exit;
-
 //====================================================================//
 // Functions Dolibarr
 require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");

@@ -31,6 +31,7 @@ namespace Splash\Local;
 use Splash\Core\SplashCore      as Splash;
 
 use User;
+use ArrayObject;
 
 //====================================================================//
 //  INCLUDES
@@ -361,187 +362,7 @@ class Local
             $OsWs_Langs[] =   array( "name" => $lang , "code" => $key);
         }
         return $OsWs_Langs;
-    }     
-    
-//====================================================================//
-// *******************************************************************//
-//  INFORMATION RETIEVAL FUNCTIONS
-// *******************************************************************//
-//====================================================================//
-
-    /**
-        * Return Server Id Card
-        *
-        * @return array
-        */
-    public function IdCard()
-    {
-        global $conf;
-        //====================================================================//
-        // Retreive Helper Core Class
-        $helper = Splash::HelperCore();
-        
-        //====================================================================//
-        // Init Response Object
-        $r = new ArrayObject(array(),  ArrayObject::ARRAY_AS_PROPS);
-        
-        //====================================================================//
-        // Widget Title
-        //====================================================================//
-        $r->title           =   "Server Id Card";
-        
-        //====================================================================//
-        // Server Infos as Array
-        //====================================================================//
-        
-        //====================================================================//
-        // Server General Description
-        $r->shortdesc     = "Splash for Dolibarr ERP Version " . DOL_VERSION;
-        $r->longdesc      = "Splash Connector Module for Dolibarr.";
-        //====================================================================//
-        // Company Informations
-        $r->company       = $conf->global->MAIN_INFO_SOCIETE_NOM?$conf->global->MAIN_INFO_SOCIETE_NOM:"...";
-        $r->address       = $conf->global->MAIN_INFO_SOCIETE_ADDRESS?$conf->global->MAIN_INFO_SOCIETE_ADDRESS:"...";
-        $r->zip           = $conf->global->MAIN_INFO_SOCIETE_ZIP?$conf->global->MAIN_INFO_SOCIETE_ZIP:"...";
-        $r->town          = $conf->global->MAIN_INFO_SOCIETE_TOWN?$conf->global->MAIN_INFO_SOCIETE_TOWN:"...";
-        $r->country       = $conf->global->MAIN_INFO_SOCIETE_COUNTRY?$conf->global->MAIN_INFO_SOCIETE_COUNTRY:"...";
-        $r->www           = $conf->global->MAIN_INFO_SOCIETE_WEB?$conf->global->MAIN_INFO_SOCIETE_WEB:"...";
-        $r->email         = $conf->global->MAIN_INFO_SOCIETE_MAIL?$conf->global->MAIN_INFO_SOCIETE_MAIL:"...";
-        $r->phone         = $conf->global->MAIN_INFO_SOCIETE_TEL?$conf->global->MAIN_INFO_SOCIETE_TEL:"...";
-        //====================================================================//
-        // Server Logo & Images
-        $r->icoraw          = "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
-        $r->logourl         = "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
-        $r->logoraw         = "...";
-        //====================================================================//
-        // Server Informations
-        $r->servertype    = "Dolibarr ERP";
-        $r->serverurl     = DOL_MAIN_URL_ROOT;
-        //====================================================================//
-        // Module Informations
-        $r->moduleauthor  = "Splash Inc. (www.splashconnector.com)";
-        $r->moduleversion = OSWS_VERSION;
- 
-        //====================================================================//
-        // Server Infos as Html
-        //====================================================================//
-        
-        //====================================================================//
-        // Table Head
-        $tablehead  = $helper->TableHead(Osws::Trans("Description"),Osws::Trans("Value"));
-        //====================================================================//
-        // Server Name
-        $tablebody  = $helper->TableLine(Osws::Trans("Node"), $r->serversw);
-        //====================================================================//
-        // Company Name
-        $tablebody .= $helper->TableLine(Osws::Trans("Company"), $r->societe);
-        //====================================================================//
-        // Company Address
-        $address    =  $r->address . $helper->Br();
-        $address   .=  $r->zip . " " . $r->town;
-        $tablebody .= $helper->TableLine(Osws::Trans("Address"), $address);
-        //====================================================================//
-        // Company Website
-        $link       = $helper->Link($r->www,Null,$r->www,NULL,TRUE);
-        $tablebody .= $helper->TableLine(Osws::Trans("Website"), $link);
-        //====================================================================//
-        // Company email
-        $tablebody .= $helper->TableLine(Osws::Trans("Email"), $r->email);
-        //====================================================================//
-        // Company Phone
-        $tablebody .= $helper->TableLine(Osws::Trans("Phone"), $r->phone);
-        $r->body   .= $helper->Table($tablehead,$tablebody,"table-striped table-hover table-condensed no-footer");           
-        
-        return $r;
-    }
-    
-    /**
-    *       @abstract       Ask for remote slave Informations 
-    *                       Information list is specific to each node...
-    *                       Only "list" Information is mandatory to read available informations as array
-    *                       $r->list["InfoName"]    =   "Info Description";
-    *                       If Informations may be displayed, it is recommanded to create variable
-    *                       $r->html with Html raw code for infomation display. 
-    * 
-    *       @param      string      $InfoName       Information Type Name 
-    *       @return     array                       Array including all requested informations
-    *
-    *******			Requiered Parameters
-    *					$r->html            =   RAW Html content to display Id Card. No external dependency allowed.
-    */
-    function Info($InfoName)
-    {
-        //====================================================================//
-        // No Information Type
-        if (empty($InfoName)) {
-            return Splash::Log()->Err('OsWs Local - Read Info Error: No information Type Given');
-        }
-        //====================================================================//
-        // Initiate Infos return ArrayObject
-        $r = new ArrayObject(array(),  ArrayObject::ARRAY_AS_PROPS);
-        $r->html = "";
-        
-        switch ($InfoName)
-        {
-            case "list":
-                //====================================================================//
-                // Widget Title
-                $r->title       =  "List of all available Informations";
-                
-                //====================================================================//
-                // List Available Infos as an array
-                $r->data = array();
-                $r->data["list"]        =   "List of all available Informations";
-                $r->data["idcard"]      =   "Server Generic Id Card";
-                $r->data["php-infos"]   =   "Server Php Informations";
-                
-                //====================================================================//
-                // Available Infos an Html Table
-                $r->body   =  _Tables::Table("NoStyle","width=100% align=\"center\" border=\"1\"");
-                $r->body  .=  _Tables::FullHeadLine("NoStyle",_Html::Bold("Name"),_Html::Bold("Description"));
-                foreach ($r->data as $key => $value) {
-                    $r->body  .=  _Tables::FullLine("NoStyle",$key,$value);
-                }
-                $r->body  .=  _Tables::TableEnd();
-                break;
-            
-            case "idcard":
-                $r = $this->IdCard();
-                break;
-            
-            case "php-infos":
-                //====================================================================//
-                // Widget Title
-                $r->title       =  "Server Php Informations";                
-                
-                //====================================================================//
-                // Return Server PHP Informations
-                $r->data = array();
-                $r->data["phpversion"]        =   phpversion();
-
-                //====================================================================//
-                // Fetch Php Infos
-                ob_start();                                 // Stop Html execution
-                phpinfo();                                  // Read PhpInfos
-                $infos .= ob_get_contents();                    // Store contents
-                ob_end_clean();                             // Clear Html output buffer
-                
-                //====================================================================//
-                // Widget Body
-                $r->body  = '<p align="center"><iframe seamless scrolling="auto" width="1000" height="600" srcdoc="' ; 
-                $r->body .= htmlspecialchars($infos);        
-                $r->body .= '"></iframe></p>';        
-                
-                break;
-            
-            default:
-                //====================================================================//
-                // Unknow Information Type                 
-                return Splash::Log()->Err('OsWs Local - Read Info Error: Unknown information Type ('. $InfoName .')');
-                break;
-        }
-        return $r;
-    }
+    }         
     
 //====================================================================//
 // *******************************************************************//
@@ -1023,13 +844,13 @@ class Local
         global $db;
         if (self::DolVersionCmp("3.7.0") >= 0) {
             require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
-            $pays = new Ccountry($db);
+            $pays = new \Ccountry($db);
             if ( $pays->fetch(Null,$code) > 0 ) {
                 return $pays->id; 
             }
         } else {
             require_once DOL_DOCUMENT_ROOT.'/core/class/cpays.class.php';
-            $pays = new Cpays($db);
+            $pays = new \Cpays($db);
             if ( $pays->fetch(Null,$code) > 0 ) {
                 return $pays->id; 
             }

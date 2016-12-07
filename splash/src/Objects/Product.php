@@ -324,7 +324,7 @@ class Product extends ObjectBase
         //====================================================================//
         // Return Data
         //====================================================================//
-        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__," DATA : " . print_r($this->Out,1));
+//        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__," DATA : " . print_r($this->Out,1));
         return $this->Out; 
     }
         
@@ -364,6 +364,8 @@ class Product extends ObjectBase
             $this->setMetaFields($FieldName,$Data);
         }
         
+//Splash::Log()->Deb("ErrLocalWrongField " . __CLASS__ . __FUNCTION__);
+//Splash::Log()->Err("ErrLocalWrongField " . __CLASS__ . __FUNCTION__);
         //====================================================================//
         // Create/Update Object if Requiered
         if ( $this->setSaveObject() == False ) {
@@ -396,7 +398,7 @@ class Product extends ObjectBase
         
         //====================================================================//
         // Create Object 
-        $Object = new Product($db);
+        $Object = new \Product($db);
         
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -827,7 +829,14 @@ class Product extends ObjectBase
      */
     private function getStockFields($Key,$FieldName) {
 
-        
+////====================================================================//
+//// Load Current Product Stock Details
+//$this->Object->load_stock();                
+//$this->Object->stock_reel = 22;
+//
+//
+//var_dump($this->Object->stock_reel);
+
         //====================================================================//
         // READ Fields
         switch ($FieldName)
@@ -848,10 +857,12 @@ class Product extends ObjectBase
             //====================================================================//
             // Stock Direct Reading
             case 'stock_reel':
+//                $this->Out[$FieldName] = (int) $this->Object->$FieldName;
+//                break;                
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
-                $this->getSingleField($FieldName, 0);
+                $this->getSingleField($FieldName, "Object", 0);
                 break;                
             
             default:
@@ -1251,7 +1262,6 @@ class Product extends ObjectBase
         if ( $delta == 0 ) {
             return True;
         }
-        
         //====================================================================//
         // Verify Default Product Stock is defined
         if ( !empty ($conf->global->SPLASH_STOCK) ) {
@@ -1266,25 +1276,6 @@ class Product extends ObjectBase
                     $this->Object->price                        // Product Price for PMP
                 );                            
         }
-        
-//        //====================================================================//
-//        // If we are in Debug Mode => Use first available stock
-//        elseif ( OsWs::Tools()->isDebugMode() ) {
-//            //====================================================================//
-//            // Include Object Dolibarr Class
-//            require_once DOL_DOCUMENT_ROOT.'/product/stock/class/entrepot.class.php';
-//            //====================================================================//
-//            // Detect First Open Stock
-//            $stocks = new Entrepot($db);
-//            $stockslist = $stocks->list_array();
-//            $stockid = array_shift(array_keys($stockslist));
-//            if (is_numeric($stockid) && ($stockid > 0)) {
-//                $delta  =   $Object->stock_reel - $NewStock;
-//                $sens   =   ($delta > 0)?1:0;                
-//                $Object->correct_stock($user,$stockid,abs($delta), $sens, $langs->trans("Updated by Splash Module Debugger"), 0);
-//                OsWs::Log()->Msg("Product - Stock Updated with Debug Stock." );
-//            }
-//        }
         
         //====================================================================//
         // Return No Default Stock Error

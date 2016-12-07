@@ -318,7 +318,7 @@ class ThirdParty extends ObjectBase
         //====================================================================//
         // Return Data
         //====================================================================//
-        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__," DATA : " . print_r($this->Out,1));
+//        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__," DATA : " . print_r($this->Out,1));
         return $this->Out; 
     }
         
@@ -431,6 +431,7 @@ class ThirdParty extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("name")
                 ->Name($langs->trans("CompanyName"))
+                ->isLogged()
                 ->Description($langs->trans("CompanyName"))
                 ->MicroData("http://schema.org/Organization","legalName")       // 8f0ca290d33f34b64658814bd2642d60
                 ->isRequired()
@@ -441,6 +442,7 @@ class ThirdParty extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("firstname")
                 ->Name($langs->trans("Firstname"))
+                ->isLogged()
                 ->MicroData("http://schema.org/Person","familyName")
                 ->Association("firstname","lastname");        
         
@@ -449,6 +451,7 @@ class ThirdParty extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("lastname")
                 ->Name($langs->trans("Lastname"))
+                ->isLogged()
                 ->MicroData("http://schema.org/Person","givenName")
                 ->Association("firstname","lastname");        
                 
@@ -479,6 +482,7 @@ class ThirdParty extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_PHONE)
                 ->Identifier("phone")
                 ->Name($langs->trans("Phone"))
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","telephone")
                 ->isListed();
 
@@ -502,6 +506,7 @@ class ThirdParty extends ObjectBase
         // Id Professionnal 1 SIREN
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("idprof1")
+                ->Group("ID")
                 ->Name($langs->trans("ProfId1Short"))
                 ->MicroData("http://schema.org/Organization","duns");
         
@@ -509,6 +514,7 @@ class ThirdParty extends ObjectBase
         // Id Professionnal 2 SIRET
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("idprof2")
+                ->Group("ID")
                 ->Name($langs->trans("ProfId2Short"))
                 ->MicroData("http://schema.org/Organization","taxID");
 
@@ -516,6 +522,7 @@ class ThirdParty extends ObjectBase
         // Id Professionnal 3 APE
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("idprof3")
+                ->Group("ID")
                 ->Name($langs->trans("ProfId3Short"))
                 ->MicroData("http://schema.org/Organization","naics");
         
@@ -523,6 +530,7 @@ class ThirdParty extends ObjectBase
         // Id Professionnal 4 RCS
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("idprof4")
+                ->Group("ID")
                 ->Name($langs->trans("ProfId4Short"))
                 ->MicroData("http://schema.org/Organization","isicV4");
         
@@ -530,6 +538,7 @@ class ThirdParty extends ObjectBase
         // Id Professionnal 5
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("idprof5")
+                ->Group("ID")
                 ->Name($langs->trans("ProfId5Short"));
         
         
@@ -538,7 +547,7 @@ class ThirdParty extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("idprof6")
                 ->Name($langs->trans("ProfId6Short"))
-//                ->MicroData("http://splashync.com/schemas","DateCreated");
+                ->Group("ID")
                 ->MicroData("http://splashync.com/schemas","ObjectId");
 
         //====================================================================//
@@ -546,6 +555,7 @@ class ThirdParty extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("tva_intra")
                 ->Name($langs->trans("VATIntra"))
+                ->Group("ID")
                 ->MicroData("http://schema.org/Organization","vatID");
         
         return;
@@ -564,6 +574,7 @@ class ThirdParty extends ObjectBase
                 ->Identifier("address")
                 ->Name($langs->trans("CompanyAddress"))
                 ->Group($GroupName)
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","streetAddress");
 
         //====================================================================//
@@ -573,6 +584,7 @@ class ThirdParty extends ObjectBase
                 ->Name( $langs->trans("CompanyZip"))
                 ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","postalCode")
+                ->isLogged()
                 ->isListed();
         
         //====================================================================//
@@ -581,6 +593,7 @@ class ThirdParty extends ObjectBase
                 ->Identifier("town")
                 ->Name($langs->trans("CompanyTown"))
                 ->Group($GroupName)
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","addressLocality");
         
         //====================================================================//
@@ -615,6 +628,7 @@ class ThirdParty extends ObjectBase
                 ->Identifier("country_code")
                 ->Name($langs->trans("CountryCode"))
                 ->Group($GroupName)
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","addressCountry");
         
     }
@@ -1234,7 +1248,7 @@ class ThirdParty extends ObjectBase
         //====================================================================//
         // Check if Updated
         if ( $this->Object->name === $encodedFullName ) {
-            return True;
+            return False;
         }
         
         //====================================================================//

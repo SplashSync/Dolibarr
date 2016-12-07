@@ -214,13 +214,19 @@ class InterfaceSplash
     {    
         global $db;
         
+        //====================================================================//
+        // Check if object if in Remote Create Mode 
+        $isLockedForCreation    =    Splash::Object("Product")->isLocked();
+        
+        //====================================================================//
+        // Filter Triggered Actions 
         if (    ($Action !== 'PRODUCT_CREATE') 
             &&  ($Action !== 'PRODUCT_MODIFY')
             &&  ($Action !== 'PRODUCT_DELETE')
             //====================================================================//
-            // Since Dol 3.9 Was introduced Triggert On setMultiLang
+            // Since Dol 3.9 Was introduced Trigger On setMultiLang
             // We need to filter this trigger when Product Remotly Created                
-            &&  ($Action !== 'PRODUCT_SET_MULTILANGS' || Splash::Object("Product")->isLocked())
+            &&  ($Action !== 'PRODUCT_SET_MULTILANGS')
             &&  ($Action !== 'PRODUCT_PRICE_MODIFY')
             &&  ($Action !== 'STOCK_MOVEMENT') ) 
         {
@@ -241,23 +247,23 @@ class InterfaceSplash
         }
         
         if ( $Action        == 'PRODUCT_CREATE')  {  
-            $this->Action   = SPL_A_CREATE;
-            $this->Comment  = "Product Created on Dolibarr";
+            $this->Action       = SPL_A_CREATE;
+            $this->Comment      = "Product Created on Dolibarr";
         } else if ($Action  == 'PRODUCT_MODIFY') {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment  = "Product Updated on Dolibarr";
+            $this->Action       = SPL_A_UPDATE;
+            $this->Comment      = "Product Updated on Dolibarr";
         } else if ($Action  == 'PRODUCT_SET_MULTILANGS') {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment  = "Product Description Updated on Dolibarr";
+            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->Comment      = "Product Description Updated on Dolibarr";
         } else if ($Action  == 'STOCK_MOVEMENT') {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment  = "Product Stock Updated on Dolibarr";            
+            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->Comment      = "Product Stock Updated on Dolibarr";            
         } else if ($Action  == 'PRODUCT_PRICE_MODIFY') {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment       = "Product Price Updated on Dolibarr";               
+            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->Comment  = "Product Price Updated on Dolibarr";               
         } else if ($Action  == 'PRODUCT_DELETE') {
-            $this->Action   = SPL_A_DELETE;
-            $this->Comment  = "Product Deleted on Dolibarr";
+            $this->Action       = SPL_A_DELETE;
+            $this->Comment      = "Product Deleted on Dolibarr";
         }        
         
         return True;
@@ -362,6 +368,12 @@ class InterfaceSplash
     {    
         global $db;
 
+        //====================================================================//
+        // Check if object if in Remote Create Mode 
+        $isLockedForCreation    =    Splash::Object("Order")->isLocked();
+        
+        //====================================================================//
+        // Filter Triggered Actions 
         if (    ($Action !== 'ORDER_CREATE') 
             &&  ($Action !== 'ORDER_VALIDATE')
             &&  ($Action !== 'ORDER_UPDATE')
@@ -380,6 +392,7 @@ class InterfaceSplash
         //====================================================================//
         // Commit Last Changes done On DataBase
         $db->Commit();
+        
         //====================================================================//
         // Store Global Action Parameters 
         $this->Type      = "Order";
@@ -392,9 +405,10 @@ class InterfaceSplash
         } else {
             $this->Id        = $Object->id;
         } 
+        
         if ( $Action        == 'ORDER_CREATE')  {  
-            $this->Action   = SPL_A_CREATE;
-            $this->Comment  = "Order Created on Dolibarr";
+            $this->Action       = SPL_A_CREATE;
+            $this->Comment      = "Order Created on Dolibarr";
         } elseif (    ($Action == 'ORDER_VALIDATE') 
             ||  ($Action == 'ORDER_UPDATE')
             ||  ($Action == 'LINEORDER_INSERT')
@@ -405,11 +419,11 @@ class InterfaceSplash
             ||  ($Action == 'ORDER_CLASSIFY_BILLED')
             ||  ($Action == 'ORDER_CANCEL') ) 
         {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment  = "Order Updated on Dolibarr";
+            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->Comment      = "Order Updated on Dolibarr";
         } else if ($Action  == 'ORDER_DELETE') {
-            $this->Action   = SPL_A_DELETE;
-            $this->Comment  = "Order Deleted on Dolibarr";
+            $this->Action       = SPL_A_DELETE;
+            $this->Comment      = "Order Deleted on Dolibarr";
         }       
         return True;
     }  
@@ -424,9 +438,13 @@ class InterfaceSplash
      */
     function InvoiceCommit($Action, $Object)
     {    
-        global $db;
 
+        //====================================================================//
+        // Check if object if in Remote Create Mode 
+        $isLockedForCreation    =    Splash::Object("Invoice")->isLocked();
         
+        //====================================================================//
+        // Filter Triggered Actions 
         if (    ($Action !== 'BILL_CREATE') 
             &&  ($Action !== 'BILL_CLONE')
             &&  ($Action !== 'BILL_MODIFY')
@@ -477,8 +495,8 @@ class InterfaceSplash
         } 
         
         if ( $Action        == 'BILL_CREATE')  {  
-            $this->Action   = SPL_A_CREATE;
-            $this->Comment  = "Invoice Created on Dolibarr";
+            $this->Action       = SPL_A_CREATE;
+            $this->Comment      = "Invoice Created on Dolibarr";
         } elseif ( ($Action == 'BILL_MODIFY') 
             ||  ($Action == 'BILL_VALIDATE')
             ||  ($Action == 'BILL_UNVALIDATE')
@@ -492,11 +510,11 @@ class InterfaceSplash
             ||  ($Action == 'LINEBILL_UPDATE')
             ||  ($Action == 'LINEBILL_DELETE') ) 
         {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment  = "Invoice Updated on Dolibarr";
+            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->Comment      = "Invoice Updated on Dolibarr";
         } else if ($Action  == 'BILL_DELETE') {
-            $this->Action   = SPL_A_DELETE;
-            $this->Comment  = "Invoice Deleted on Dolibarr";
+            $this->Action       = SPL_A_DELETE;
+            $this->Comment      = "Invoice Deleted on Dolibarr";
         }       
         //====================================================================//
         // Commit Last Changes done On DataBase
@@ -547,6 +565,8 @@ class InterfaceSplash
      */
     function run_trigger($action,$object,$user,$langs,$conf)
     {
+        Splash::Log()->Deb("Start of Splash Module Trigger Actions (Action=" . $action . ")");
+            
         //====================================================================//
         // Init Action Parameters 
         $this->Type         = Null;
