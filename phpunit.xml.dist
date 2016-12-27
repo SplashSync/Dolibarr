@@ -19,24 +19,30 @@
 
     <testsuites>
         <testsuite name="All">
+            <directory>splash/Tests/*</directory>
             <directory>splash/vendor/splash/phpcore/Tests/*</directory>
         </testsuite>
         <testsuite name="Core">
+            <directory>splash/Tests/Core</directory>
             <directory>splash/vendor/splash/phpcore/Tests/Core</directory>
         </testsuite>
         <testsuite name="Admin">
+            <directory>splash/Tests/Admin</directory>
             <directory>splash/vendor/splash/phpcore/Tests/Admin</directory>
         </testsuite>
         <testsuite name="Objects">
+            <directory>splash/Tests/Objects</directory>
             <directory>splash/vendor/splash/phpcore/Tests/Objects</directory>
         </testsuite>
         <testsuite name="Widgets">
+            <directory>splash/Tests/Widgets</directory>
             <directory>splash/vendor/splash/phpcore/Tests/Widgets</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
+            <directory>splash/Tests</directory>
             <directory>splash/vendor/splash/phpcore</directory>
             <exclude>
                 <directory>splash/vendor</directory>
