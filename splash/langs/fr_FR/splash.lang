@@ -29,8 +29,10 @@ SPL_SiteId_Tooltip  =   Ce parametre est fourni lors de la création d'un serveu
 SPL_WsKey           =   Clef Unique de Cryptage
 SPL_WsKey_Tooltip   =   Ce parametre est fourni lors de la création d'un serveur sur le site.
 
+SPL_WsExpert        =   Activer la configuration avancée du serveur
+SPL_WsExpert_Tooltip=   N'activer qu'à notre demande, au risque de voir votre sreveur ne plus fonctionner!! 
 SPL_WsHost          =   Adresse du Server Splash Sync à Utiliser
-SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. VAleur par défaut : soap.splashsync.com 
+SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. Valeur par défaut : soap.splashsync.com 
 
 SPL_Local_Config    =   Paramètres Locaux
 SPL_DfLang          =   Langue par défaut utilisée par le module

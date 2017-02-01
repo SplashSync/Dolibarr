@@ -121,7 +121,7 @@ class Local
         
         //====================================================================//
         // If Debug Mode => Allow Overide of Server Host Address
-        if ( (SPLASH_DEBUG) && !empty(self::getParameter("SPLASH_WS_HOST")) ) {
+        if ( (self::getParameter("SPLASH_WS_EXPERT")) && !empty(self::getParameter("SPLASH_WS_HOST")) ) {
             $Parameters["WsHost"]           =   self::getParameter("SPLASH_WS_HOST");
         }
         

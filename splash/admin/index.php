@@ -73,6 +73,20 @@ if (!$user->admin)	accessforbidden();
 
 //====================================================================//
 // Update of Main Module Parameters
+if ($action == 'UpdateMode')
+{
+    //====================================================================//
+    // Update Server Expert Mode
+    $WsExpert = GETPOST('WsExpert')?1:0;
+    dolibarr_set_const($db,"SPLASH_WS_EXPERT",$WsExpert,'int',0,'',$conf->entity);
+    if ( !$WsExpert ) {
+        dolibarr_set_const($db,"SPLASH_WS_HOST","",'chaine',0,'',$conf->entity);
+    }
+    header("location:" . filter_input(INPUT_SERVER, "PHP_SELF"));
+}
+
+//====================================================================//
+// Update of Main Module Parameters
 if ($action == 'UpdateMain')
 {
     //====================================================================//
@@ -98,8 +112,10 @@ if ($action == 'UpdateMain')
         }
     }
     
+
+    
     //====================================================================//
-    // Update Server Encryption Key
+    // Update Server Host Url
     $WsHost = GETPOST('WsHost','alpha');
     if ( $WsKey ) {
         if ( dolibarr_set_const($db,"SPLASH_WS_HOST",$WsHost,'chaine',0,'',$conf->entity) <= 0){

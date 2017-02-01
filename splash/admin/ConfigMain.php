@@ -26,7 +26,7 @@
 
 //====================================================================//
 // Create Setup Form
-echo    '<form name="MainSetup" action="'.  filter_input(INPUT_SERVER, "php_self").'" method="POST">';
+echo    '<form name="MainSetup" action="'.  filter_input(INPUT_SERVER, "PHP_SELF").'" method="POST">';
 echo    '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 echo    '<input type="hidden" name="action" value="UpdateMain">';
 
@@ -49,8 +49,22 @@ echo '      <td>' . $form->textwithpicto($langs->trans("SPL_WsKey"), $langs->tra
 echo '      <td><input type="text"  name="WsKey" value="' . $conf->global->SPLASH_WS_KEY . '" size="50"></td>';
 echo '  </tr>';
 //====================================================================//
+// Ws Expert Mode
+echo '  <tr class="pair">';
+echo '      <td>' . $form->textwithpicto($langs->trans("SPL_WsExpert"), $langs->trans("SPL_WsExpert_Tooltip")) . '</td>';
+if ($conf->global->SPLASH_WS_EXPERT) {
+    echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateMode&WsExpert=0">';
+        echo img_picto($langs->trans("Enabled"),'switch_on');
+    echo '</a></td>';
+} else {
+    echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateMode&WsExpert=1">';
+        echo img_picto($langs->trans("Disabled"),'switch_off');
+    echo '</a></td>';
+}
+echo '  </tr>';
+//====================================================================//
 // Ws Host Url Parameter
-if (SPLASH_DEBUG) {
+if ($conf->global->SPLASH_WS_EXPERT) {
     echo '  <tr class="pair">';
     echo '      <td>' . $form->textwithpicto($langs->trans("SPL_WsHost"), $langs->trans("SPL_WsHost_Tooltip")) . '</td>';
     echo '      <td><input type="text"  name="WsHost" value="' . $conf->global->SPLASH_WS_HOST . '" size="50"></td>';
