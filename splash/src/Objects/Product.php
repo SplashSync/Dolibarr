@@ -814,9 +814,7 @@ class Product extends ObjectBase
                 return;
         }
         
-        if (!is_null($Key)) {
-            unset($this->In[$Key]);
-        }
+        unset($this->In[$Key]);
     }
 
     /**
