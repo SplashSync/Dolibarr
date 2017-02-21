@@ -8,7 +8,8 @@
     "prefer-stable": true,
     
     "config": {
-        "vendor-dir": "splash/vendor"
+        "vendor-dir":                       "splash/vendor",
+        "preferred-install":                "dist"
     },
     
     "autoload": {
