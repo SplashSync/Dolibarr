@@ -40,11 +40,10 @@ define("SPL_SHOW_DEV"			,0);
 
 //====================================================================//
 // Module Version
-define("SPL_MOD_VERSION"	,'0.0.1-Dev');
+define("SPL_MOD_VERSION"	,'0.9.0');
 define("SPL_MOD_ID"		,9200);
 define("SPL_MOD_NAME"           ,'splash');
 define("SPL_MOD_CATEGORIE"	,'technic');
-//define("SPL_MOD_PICTO"	,'energie');
 define("SPL_MOD_PICTO"          ,'splash@splash');
 define("SPL_FULL_NAME"          ,'Splash Server Module for Dolibarr');
 

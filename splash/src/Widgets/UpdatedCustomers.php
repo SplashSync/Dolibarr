@@ -127,7 +127,7 @@ class UpdatedCustomers extends WidgetBase
         // Load Dolibarr Box Class & Prepare Datas
         include_once DOL_DOCUMENT_ROOT.'/core/boxes/box_clients.php';        
         $this->Box = new \box_clients($db);
-        $this->Box->loadBox($params["max"] ? $params["max"]: Null );
+        $this->Box->loadBox($params["max"] ? $params["max"]: 10 );
         
         //====================================================================//
         // Setup Widget Core Informations
