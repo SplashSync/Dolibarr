@@ -312,7 +312,8 @@ class Address extends ObjectBase
         //====================================================================//
         // Run Through All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $Key => $FieldName) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $Key => $FieldName) {
             //====================================================================//
             // Read Requested Fields            
             $this->getCoreFields($Key,$FieldName);
@@ -323,7 +324,7 @@ class Address extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName) {
+            foreach ($this->In as $FieldName) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
@@ -363,7 +364,8 @@ class Address extends ObjectBase
         //====================================================================//
         // Run Throw All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $FieldName => $Data) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $FieldName => $Data) {
             //====================================================================//
             // Write Requested Fields
             $this->setCoreFields($FieldName,$Data);
@@ -380,7 +382,7 @@ class Address extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName => $Data) {
+            foreach ($this->In as $FieldName => $Data) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;

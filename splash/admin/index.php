@@ -112,8 +112,6 @@ if ($action == 'UpdateMain')
         }
     }
     
-
-    
     //====================================================================//
     // Update Server Host Url
     $WsHost = GETPOST('WsHost','alpha');

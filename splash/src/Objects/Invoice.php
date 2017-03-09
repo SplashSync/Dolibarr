@@ -288,7 +288,8 @@ class Invoice extends ObjectBase
         //====================================================================//
         // Run Through All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $Key => $FieldName) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $Key => $FieldName) {
             //====================================================================//
             // Read Requested Fields            
             $this->getCoreFields($Key,$FieldName);
@@ -301,7 +302,7 @@ class Invoice extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName) {
+            foreach ($this->In as $FieldName) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
@@ -336,7 +337,8 @@ class Invoice extends ObjectBase
         //====================================================================//
         // Run Throw All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $FieldName => $Data) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $FieldName => $Data) {
             //====================================================================//
             // Write Requested Fields
             $this->setCoreFields($FieldName,$Data);
@@ -353,7 +355,7 @@ class Invoice extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName => $Data) {
+            foreach ($this->In as $FieldName => $Data) {
                 Splash::Log()->War("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
@@ -604,6 +606,12 @@ class Invoice extends ObjectBase
                 ->InList("payments")
                 ->Name( $ListName . $langs->trans("PaymentMode"))
                 ->MicroData("http://schema.org/Invoice","PaymentMethod")
+                ->AddChoice("ByBankTransferInAdvance"   , "By bank transfer in advance")
+                ->AddChoice("CheckInAdvance"            , "Check in advance")
+                ->AddChoice("COD"                       , "Cash On Delivery")
+                ->AddChoice("Cash"                      , "Cash")
+                ->AddChoice("PayPal"                    , "Online Payments (PayPal, more..)")
+                ->AddChoice("DirectDebit"               , "Credit Card")
                 ->NotTested();        
 
         //====================================================================//
@@ -955,7 +963,7 @@ class Invoice extends ObjectBase
         while ($i < $Count) {
             $this->Payments[$i] = $db->fetch_object($Result);
             //====================================================================//
-            // Detect Payment Metyhod Type from Default Payment "known" methods
+            // Detect Payment Method Type from Default Payment "known" methods
             switch ($this->Payments[$i]->code){
                 case "PRE":
                 case "PRO":
@@ -973,8 +981,10 @@ class Invoice extends ObjectBase
                     $this->Payments[$i]->method = "Cash";
                     break;
                 case "CB":
-                case "VAD":
                     $this->Payments[$i]->method = "DirectDebit";
+                    break;
+                case "VAD":
+                    $this->Payments[$i]->method = "PayPal";
                     break;
                 default:
                     $this->Payments[$i]->method = "Unknown";
@@ -1299,7 +1309,7 @@ class Invoice extends ObjectBase
      */
     private function setInvoiceLineFields($FieldName,$Data) 
     {
-        global $db,$langs;         
+        global $db,$langs, $mysoc;         
         //====================================================================//
         // Safety Check
         if ( $FieldName !== "lines" ) {
@@ -1350,7 +1360,7 @@ class Invoice extends ObjectBase
                 //====================================================================//
                 // Calcul du total TTC et de la TVA pour la ligne a partir de
                 include_once DOL_DOCUMENT_ROOT.'/core/lib/price.lib.php';
-                $localtaxes_type=getLocalTaxesFromRate($this->InvoiceLine->tva_tx,0,$this->InvoiceLine->socid);
+                $localtaxes_type=getLocalTaxesFromRate($this->InvoiceLine->tva_tx,0,$this->InvoiceLine->socid, $mysoc);
                 $tabprice=calcul_price_total(
                         $this->InvoiceLine->qty, $this->InvoiceLine->subprice, 
                         $this->InvoiceLine->remise_percent, $this->InvoiceLine->tva_tx, 
@@ -1514,12 +1524,26 @@ class Invoice extends ObjectBase
             {
                     $this->PaymentLine->update_date($LineData["date"]);
             }
+            
             //====================================================================//
             // Update Payment Number
             if ( array_key_exists("number", $LineData) 
                 && ($this->PaymentLine->num_paiement !== $LineData["number"]) ) 
             {
                     $this->PaymentLine->update_num($LineData["number"]);
+            }
+            
+            //====================================================================//
+            // Update Payment Method
+            if ( array_key_exists("mode", $LineData) ) {
+                //====================================================================//
+                // Detect Payment Method Id
+                $NewMethodId        = $this->IdentifyPaymentMethod($LineData["mode"]);
+                $CurrentMethodId    = $this->IdentifyPaymentType($this->PaymentLine->type_code);
+                if ($NewMethodId && ($CurrentMethodId !== $NewMethodId) ) {
+                    $this->PaymentLine->setValueFrom("fk_paiement",$NewMethodId);
+                }
+                
             }
               
             //====================================================================//
@@ -1551,7 +1575,8 @@ class Invoice extends ObjectBase
         // Verify Minimal Fields Ar available
         if ( !array_key_exists("mode", $LineData) 
                 || !array_key_exists("date" , $LineData)
-                || !array_key_exists("amount" , $LineData) ) {
+                || !array_key_exists("amount" , $LineData)
+                || empty($LineData["amount"]) ) {
             return;
         }
         $this->PaymentLine = new \Paiement($db);
@@ -1707,7 +1732,8 @@ class Invoice extends ObjectBase
         
         //====================================================================//
         // Apply Post Create Parameter Changes 
-        foreach (clone $this->In as $FieldName => $Data) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $FieldName => $Data) {
             //====================================================================//
             // Write Requested Fields
             $this->setPostCreateFields($FieldName,$Data);
@@ -1846,31 +1872,44 @@ class Invoice extends ObjectBase
      */
     private function IdentifyPaymentMethod($MethodType) 
     {
-        global $db,$conf;         
+        global $conf;         
+        
         //====================================================================//
         // Detect Payment Method Type from Default Payment "known/standard" methods
         switch ($MethodType){
             case "ByBankTransferInAdvance":
-                $DolMethod = "VIR";
-                break;
+                return $this->IdentifyPaymentType("VIR");
             case "CheckInAdvance":
-                $DolMethod = "CHQ";
-                break;
+                return $this->IdentifyPaymentType("CHQ");
             case "COD":
-                $DolMethod = "FAC";
-                break;
+                return $this->IdentifyPaymentType("FAC");
             case "Cash":
-                $DolMethod = "LIQ";
-                break;
+                return $this->IdentifyPaymentType("LIQ");
             case "PayPal":
-                $DolMethod = "VAD";
-                break;
+                return $this->IdentifyPaymentType("VAD");
             case "CreditCard":
-                $DolMethod = "CB";
-                break;
-            default:
-                goto DefaultPayment;
+            case "DirectDebit":
+                return $this->IdentifyPaymentType("CB");
         }        
+        
+        //====================================================================//
+        // Return Default Payment Method or 0 (Default) 
+        if ( isset($conf->global->SPLASH_DEFAULT_PAYMENT) && !empty($conf->global->SPLASH_DEFAULT_PAYMENT) ) {
+            return $this->IdentifyPaymentType($conf->global->SPLASH_DEFAULT_PAYMENT);
+        }
+        return $this->IdentifyPaymentType("VAD");
+    }
+    
+    /**
+     *  @abstract     Identify Payment Method Id using Payment Method Code
+     * 
+     *  @param        string    $PaymentTypeCode        Payment Method Code
+     * 
+     *  @return       int
+     */
+    private function IdentifyPaymentType($PaymentTypeCode) 
+    {
+        global $db;         
         
         //====================================================================//
         // Include Object Dolibarr Class
@@ -1880,23 +1919,20 @@ class Invoice extends ObjectBase
         //====================================================================//
         // Safety Check
         if ( empty($Form->cache_types_paiements) ) {
-            goto DefaultPayment;
+            return 0;
         }    
         //====================================================================//
-        // Detect Payment Method Id From Method 
+        // Detect Payment Method Id From Method Code
         foreach ($Form->cache_types_paiements as $Key => $PaymentMethod) {
-            if ( $PaymentMethod["code"] === $DolMethod ) {
+            if ( $PaymentMethod["code"] === $PaymentTypeCode ) {
                 return $Key;
             }   
         }
         //====================================================================//
-        // Return Default Payment Method or Null 
-        DefaultPayment:
-        if ( isset($conf->global->SPLASH_DEFAULT_PAYMENT) && !empty($conf->global->SPLASH_DEFAULT_PAYMENT) ) {
-            return $conf->global->SPLASH_DEFAULT_PAYMENT;
-        }
-        return "VAD";
+        // Default Payment Method Id 
+        return 0;
     }
+    
 }
 
 

@@ -281,20 +281,14 @@ class Product extends ObjectBase
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
         //====================================================================//
-        // Load Required Translation Files
-//        $langs->load("dict");        
-        
-        //====================================================================//
         // Init Reading
         $this->In = $list;
-        
         //====================================================================//
         // Init Object 
         $this->Object = new \Product($db);
         if ( $this->Object->fetch($id) != 1 )   {
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Product (" . $id . ").");
         }
-        
         //====================================================================//
         // Init Response Array 
         $this->Out  =   array( "id" => $id );
@@ -302,7 +296,8 @@ class Product extends ObjectBase
         //====================================================================//
         // Run Through All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $Key => $FieldName) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $Key => $FieldName) {
             //====================================================================//
             // Read Requested Fields            
             $this->getCoreFields($Key,$FieldName);
@@ -315,7 +310,7 @@ class Product extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName) {
+            foreach ($this->In as $FieldName) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
@@ -354,7 +349,8 @@ class Product extends ObjectBase
         //====================================================================//
         // Run Throw All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $FieldName => $Data) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $FieldName => $Data) {
             //====================================================================//
             // Write Requested Fields
             $this->setCoreFields($FieldName,$Data);
@@ -363,24 +359,21 @@ class Product extends ObjectBase
             $this->setStockFields($FieldName,$Data);
             $this->setMetaFields($FieldName,$Data);
         }
-        
-//Splash::Log()->Deb("ErrLocalWrongField " . __CLASS__ . __FUNCTION__);
-//Splash::Log()->Err("ErrLocalWrongField " . __CLASS__ . __FUNCTION__);
         //====================================================================//
         // Create/Update Object if Requiered
         if ( $this->setSaveObject() == False ) {
             return False;
         }            
-        
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName => $Data) {
+            foreach ($this->In as $FieldName => $Data) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
         }        
-        
+        //====================================================================//
+        // Return Object Id        
         return (int) $this->Object->id;        
     }       
 
@@ -801,6 +794,7 @@ class Product extends ObjectBase
                             $PriceTTC,
                             $conf->global->MAIN_MONNAIE);
                     break;
+                    
                 case 'cost_price':
                         $PriceHT    = (double) $this->Object->getValueFrom($this->Object->table_element, $this->Object->id, "cost_price");
                         $this->Out[$FieldName] = self::Price_Encode(

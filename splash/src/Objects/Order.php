@@ -282,7 +282,8 @@ class Order extends ObjectBase
         //====================================================================//
         // Run Through All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $Key => $FieldName) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $Key => $FieldName) {
             //====================================================================//
             // Read Requested Fields            
             $this->getCoreFields($Key,$FieldName);
@@ -294,7 +295,7 @@ class Order extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName) {
+            foreach ($this->In as $FieldName) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
@@ -329,7 +330,8 @@ class Order extends ObjectBase
         //====================================================================//
         // Run Throw All Requested Fields
         //====================================================================//
-        foreach (clone $this->In as $FieldName => $Data) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $FieldName => $Data) {
             //====================================================================//
             // Write Requested Fields
             $this->setCoreFields($FieldName,$Data);
@@ -346,7 +348,7 @@ class Order extends ObjectBase
         //====================================================================//
         // Verify Requested Fields List is now Empty => All Fields Read Successfully
         if ( count($this->In) ) {
-            foreach (clone $this->In as $FieldName => $Data) {
+            foreach ($this->In as $FieldName => $Data) {
                 Splash::Log()->Err("ErrLocalWrongField",__CLASS__,__FUNCTION__, $FieldName);
             }
             return False;
@@ -1145,7 +1147,7 @@ class Order extends ObjectBase
      */
     private function setOrderLineFields($FieldName,$Data) 
     {
-        global $db,$langs;
+        global $db, $langs, $mysoc;
 //Splash::Log()->www("setOrderLine", $Data);            
         //====================================================================//
         // Safety Check
@@ -1221,7 +1223,7 @@ class Order extends ObjectBase
                 // qty, pu, remise_percent et txtva
                 // TRES IMPORTANT: C'est au moment de l'insertion ligne qu'on doit stocker
                 // la part ht, tva et ttc, et ce au niveau de la ligne qui a son propre taux tva.
-                $localtaxes_type=getLocalTaxesFromRate($this->OrderLine->tva_tx,0,$this->OrderLine->socid);
+                $localtaxes_type=getLocalTaxesFromRate($this->OrderLine->tva_tx,0,$this->OrderLine->socid, $mysoc);
 
                 $tabprice=calcul_price_total(
                         $this->OrderLine->qty, $this->OrderLine->subprice, 
@@ -1391,7 +1393,8 @@ class Order extends ObjectBase
         
         //====================================================================//
         // Apply Post Create Parameter Changes 
-        foreach (clone $this->In as $FieldName => $Data) {
+        $Fields = is_a($this->In, "ArrayObject") ? $this->In->getArrayCopy() : $this->In;        
+        foreach ($Fields as $FieldName => $Data) {
             //====================================================================//
             // Write Requested Fields
             $this->setPostCreateFields($FieldName,$Data);
