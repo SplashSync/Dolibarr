@@ -47,11 +47,6 @@ class BankAccounts extends WidgetBase
     //====================================================================//
     
     /**
-     *  Widget Disable Flag. Uncomment thius line to Override this flag and disable Object.
-     */
-//    protected static    $DISABLED        =  True;
-    
-    /**
      *  Widget Name (Translated by Module)
      */
     protected static    $NAME            =  "BoxCurrentAccounts";
@@ -72,7 +67,9 @@ class BankAccounts extends WidgetBase
     static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
         "Header"        =>  True,
-        "Footer"        =>  False
+        "Footer"        =>  False,
+        'UseCache'      =>  True,
+        'CacheLifeTime' =>  60,
     );
     
     //====================================================================//
@@ -92,13 +89,7 @@ class BankAccounts extends WidgetBase
         $langs->load("admin");
         
         //====================================================================//
-        // Max Number of Entities
-        $this->FieldsFactory()->Create(SPL_T_INT)
-                ->Identifier("max")
-                ->Name($langs->trans("MaxNbOfLinesForBoxes"));
-        
-        //====================================================================//
-        // Max Number of Entities
+        // Use Compact Mode
         $this->FieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("compact")
                 ->Name($langs->trans("Compact Mode"));
@@ -119,7 +110,6 @@ class BankAccounts extends WidgetBase
      */
     public function Get($params=NULL)
     {
-        global $db;
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
@@ -127,12 +117,6 @@ class BankAccounts extends WidgetBase
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
 
-        //====================================================================//
-        // Load Dolibarr Box Class & Prepare Datas
-        include_once DOL_DOCUMENT_ROOT.'/core/boxes/box_comptes.php';        
-        $this->Box = new \box_comptes($db);
-        $this->Box->loadBox($params["max"] ? $params["max"]: Null );
-        
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
@@ -148,6 +132,7 @@ class BankAccounts extends WidgetBase
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
+        $this->MaxItems = !empty($params["max"]) ? $params["max"] : 10;
         if( $params["compact"]) {
             $this->buildSparkBlock();
         } else {
@@ -173,11 +158,11 @@ class BankAccounts extends WidgetBase
     */
     private function buildDisabledBlock()   {
 
-        global $langs;
+        global $langs, $user;
         
-        if ( !$this->Box->enabled ) {
+        if ( !$user->rights->banque->lire ) {
             $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
+            $Contents   = array("warning"   => $langs->trans("ReadPermissionNotAllowed"));
             //====================================================================//
             // Warning Block
             $this->BlocksFactory()->addNotificationsBlock($Contents);
@@ -185,42 +170,82 @@ class BankAccounts extends WidgetBase
     }    
   
     /**
+     * @abstract    Read Widget Datas
+     */
+    private function getData()   {
+
+        global $langs, $user, $db, $conf;
+        
+        if ( !$user->rights->banque->lire ) {
+            return array();
+        }
+        
+        //====================================================================//
+        // Execute SQL Request
+        //====================================================================//
+        $sql = "SELECT rowid, ref, label, bank, clos, account_number, currency_code, min_desired, comment";
+        $sql.= " FROM ".MAIN_DB_PREFIX."bank_account";
+        $sql.= " WHERE entity = ".$conf->entity;
+        $sql.= " AND clos = 0";
+        $sql.= " ORDER BY label";
+        $sql.= $db->plimit($this->MaxItems, 0);
+        dol_syslog(get_class($this)."::loadBox", LOG_DEBUG);
+        $Result = $db->query($sql);
+        
+        //====================================================================//
+        // Empty Contents
+        //====================================================================//
+        if ( count($Result) < 1 ) {
+            $langs->load("admin");
+            $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
+            //====================================================================//
+            // Warning Block
+            $this->BlocksFactory()->addNotificationsBlock($Contents);
+            return array();
+        } 
+        
+        return $Result;
+    }
+        
+    /**
     *   @abstract     Block Building - Text Intro
     */
     private function buildTableBlock()   {
 
-        global $langs;
+        global $langs, $db;
         
-        if ( count($this->Box->info_box_contents) < 1 ) {
-            $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("ReadPermissionNotAllowed"));
-            //====================================================================//
-            // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
-            
-            return;
-        } 
+        $Data   = $this->getData();
         
         //====================================================================//
         // Build Table Contents
         //====================================================================//
-        $Contents   = array();
-        $Prefix     = '<i class="fa fa-money" aria-hidden="true">&nbsp;-&nbsp;</i>';;
+        $Contents       = array();
+        include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+        $account_static = new \Account($db);
+        $Prefix     = '<i class="fa fa-university" aria-hidden="true">&nbsp;</i>';
      
-        foreach ($this->Box->info_box_contents as $Line) {
-            
-            if ( $Line[1]["text"] != "&nbsp;" ) {
-                $Text = $Prefix . $Line[1]["text"] ;
+        foreach ($Data as $Line) {
+            $account_static->id         = $Line["rowid"];
+            $account_static->label      = $Line["label"];
+            $account_static->number     = $Line["number"];
+            $solde=$account_static->solde(0);
+                    
+            if ($solde < 0) {
+                $Value = '<span class="text-danger">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
+                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';     
+            } elseif ($solde < $Line["min_desired"]) {
+                $Value = '<span class="text-warning">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
+                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';    
             } else {
-                $Text = $Line[0]["text"] ;
+                $Value = '<span class="text-success">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
             }
             
             $Contents[] = array(
-                $Text,   
-                $Line[3]["text"],   
+                $Prefix . $Line["ref"], $Line["label"], $Line["bank"],
+                $Value,   
             );
-            
         }
+        
         //====================================================================//
         // Build Table Options
         //====================================================================//
@@ -239,46 +264,67 @@ class BankAccounts extends WidgetBase
     */
     private function buildSparkBlock()   {
 
-        global $langs;
+        global $langs, $db;
         
-        if ( count($this->Box->info_box_contents) < 1 ) {
-            $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("ReadPermissionNotAllowed"));
-            //====================================================================//
-            // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
-            
-            return;
-        } 
-        
+        $Data   = $this->getData();
+
         //====================================================================//
         // Build SparkInfo Options
         //====================================================================//
+        switch($Data->num_rows) {
+            case 1:
+                $Width = self::SIZE_XL;
+                break;
+            case 2:
+                $Width = self::SIZE_M;
+                break;
+            case 3:
+                $Width = self::SIZE_SM;
+                break;
+            default:
+                $Width = self::SIZE_XS;
+                break;
+        }
         $Options = array(
             "AllowHtml"         =>  True,
-            "Width"             =>  self::SIZE_SM
+            "Width"             =>  $Width
         );
         
         //====================================================================//
         // Build SparkInfo Contents
         //====================================================================//
-        foreach ($this->Box->info_box_contents as $Line) {
+        
+        include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+        $account_static = new \Account($db);
+        
+        foreach ($Data as $Line) {
+            $account_static->id         = $Line["rowid"];
+            $account_static->label      = $Line["label"];
+            $account_static->number     = $Line["number"];
+            $solde  =   $account_static->solde(0);
             
-            if ( $Line[1]["text"] != "&nbsp;" ) {
-                $Text = $Line[1]["text"] ;
+            
+             if ($solde < 0) {
+                $Class = "text-danger";
+                $Value = '<span class="text-danger">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
+                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';     
+            } elseif ($solde < $Line["min_desired"]) {
+                $Class = "text-warning";
+                $Value = '<span class="text-warning">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
+                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';    
             } else {
-                $Text = '<b class="text-danger">' . $Line[0]["text"] . "</b>";
-            }
+                $Class = "text-success";
+                $Value = '<span class="text-success">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
+            }           
             
             $Contents = array(
-                "title"     =>      $Text,   
-                "fa_icon"   =>      "money",
-                "value"     =>      $Line[3]["text"],   
+                "title"     =>      $Line["ref"],   
+                "fa_icon"   =>      "university " . $Class,
+                "value"     =>      $Value,   
             );
             //====================================================================//
             // Add SparkInfo Block
             $this->BlocksFactory()->addSparkInfoBlock($Contents, $Options );
-            
         }
 
         

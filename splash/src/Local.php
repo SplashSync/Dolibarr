@@ -234,9 +234,9 @@ class Local
      *      This function called during Server Validation Process
      * 
      *      We recommand using this function to validate all functions or parameters
-     *      that may be required by Objects, Widgets or any other modul specific action.
+     *      that may be required by Objects, Widgets or any other module specific action.
      * 
-     *      Use Module Logging system & translation tools to retrun test results Logs
+     *      Use Module Logging system & translation tools to return test results Logs
      * 
      *      @return         bool    global test result
      */

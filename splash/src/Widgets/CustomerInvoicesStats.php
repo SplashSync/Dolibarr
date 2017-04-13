@@ -30,7 +30,7 @@
 // *******************************************************************//
 //                     SPLASH FOR DOLIBARR                            //
 // *******************************************************************//
-//                  TEST & DEMONSTRATION WIDGET                       //
+//                  BANK ACCOUNTS LEVELS WIDGET                       //
 // *******************************************************************//
 //====================================================================//
 
@@ -39,42 +39,36 @@ namespace   Splash\Local\Widgets;
 use Splash\Models\WidgetBase;
 use Splash\Core\SplashCore      as Splash;
 
-/**
- *	\class      Address
- *	\brief      Address - Thirdparty Contacts Management Class
- */
-class Demo extends WidgetBase
+class CustomerInvoicesStats extends WidgetBase
 {
-    
     //====================================================================//
     // Object Definition Parameters	
     //====================================================================//
     
     /**
-     *  Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
-     */
-    protected static    $DISABLED        =  True;
-    
-    /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "Demo Widget";
+    protected static    $NAME            =  "CustomersInvoices";
     
     /**
      *  Widget Description (Translated by Module) 
      */
-    protected static    $DESCRIPTION     =  "TEST & DEMONSTRATION WIDGET";    
+    protected static    $DESCRIPTION     =  "CustomersInvoices";    
     
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag) 
      */
-    protected static    $ICO            =  "fa fa-magic";
+    protected static    $ICO            =  "fa fa-line-chart";
     
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
     static $OPTIONS       = array(
-        "Width"     =>      self::SIZE_XL
+        "Width"         =>  self::SIZE_M,
+        "Header"        =>  True,
+        "Footer"        =>  True,
+        'UseCache'      =>  True,
+        'CacheLifeTime' =>  60,        
     );
     
     //====================================================================//
@@ -82,50 +76,16 @@ class Demo extends WidgetBase
     //====================================================================//
 
     //====================================================================//
-    // Class Constructor
-    //====================================================================//
-        
-//    /**
-//     *      @abstract       Class Constructor (Used only if localy necessary)
-//     *      @return         int                     0 if KO, >0 if OK
-//     */
-//    function __construct()
-//    {
-//        //====================================================================//
-//        // Place Here Any SPECIFIC Initialisation Code
-//        //====================================================================//
-//        
-//        return True;
-//    }    
-    
-    //====================================================================//
     // Class Main Functions
     //====================================================================//
     
-    /**
-     *      @abstract   Return Widget Customs Parameters
-     */
-    public function getParameters()
-    {
-        //====================================================================//
-        // Reference
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
-                ->Identifier("text_input")
-                ->Name("Text Input")
-                ->Description("Widget Specific Custom text Input");        
-        
-        //====================================================================//
-        // Reference
-        $this->FieldsFactory()->Create(SPL_T_INT)
-                ->Identifier("integer_input")
-                ->Name("Numeric Input")
-                ->Description("Widget Specific Custom Numeric Input"); 
-        
-        //====================================================================//
-        // Publish Fields
-        return $this->FieldsFactory()->Publish();
+//    /**
+//     *      @abstract   Return Widget Customs Parameters
+//     */
+//    public function getParameters()
+//    {
 //        return array();
-    }        
+//    }       
     
     /**
      *  @abstract     Return requested Customer Data
@@ -153,20 +113,14 @@ class Demo extends WidgetBase
         $this->setIcon($this->getIcon()); 
         
         //====================================================================//
-        // Build Intro Text Block
+        // Build Data Blocks
         //====================================================================//
-        $this->buildIntroBlock();
-          
-        //====================================================================//
-        // Build Inputs Block
-        //====================================================================//
-        $this->buildParametersBlock($params);        
         
-        //====================================================================//
-        // Build Inputs Block
-        //====================================================================//
-        $this->buildNotificationsBlock();        
-
+        $this->importDates($params);
+        
+        
+        $this->buildMorrisBarBlock();
+        
         //====================================================================//
         // Set Blocks to Widget
         $this->setBlocks($this->BlocksFactory()->Render());
@@ -181,59 +135,103 @@ class Demo extends WidgetBase
     // Blocks Generation Functions
     //====================================================================//
 
-    /**
-    *   @abstract     Block Building - Text Intro
-    */
-    private function buildIntroBlock()   {
-        //====================================================================//
-        // Into Text Block
-        $this->BlocksFactory()->addTextBlock("This is a Demo Text Block!!" . "You can repeat me as much as you want!");
-    }    
-  
-    /**
-    *   @abstract     Block Building - Inputs Parameters
-    */
-    private function buildParametersBlock($Inputs = array())   {
 
-        //====================================================================//
-        // verify Inputs
-        if( !is_array($Inputs) && !is_a($Inputs, "ArrayObject") ) {
-            $this->BlocksFactory()->addNotificationsBlock(array("warning" => "Inputs is not an Array! Is " . get_class($Inputs)));
-        } 
-        
-        //====================================================================//
-        // Parameters Table Block
-        $TableContents = array();
-        $TableContents[]    =   array("Received " . count($Inputs) .  " inputs parameters","Value");
-        foreach ($Inputs as $key => $value) {
-            $TableContents[]    =   array($key, $value);
-        }
-        
-        $this->BlocksFactory()->addTableBlock($TableContents,array("Width" => self::SIZE_M));
-    } 
     
     /**
-    *   @abstract     Block Building - Notifications Parameters
+     * @abstract    Read Widget Datas
+     */
+    private function getData()   {
+
+        global $db;
+        
+        include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
+        
+        $stats = new \FactureStats($db, 0, 'customer', 0);
+        
+        //====================================================================//
+        // Execute SQL Query
+        //====================================================================//
+        
+        $sql = "SELECT date_format(f.datef,'%".$this->GroupBy."') as step,";
+        $sql.= " COUNT(*) as nb, SUM(f.total) as total";
+        $sql.= " FROM ".$stats->from;
+        $sql.= " WHERE f.datef BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql.= " AND ".$stats->where;
+        $sql.= " GROUP BY step";
+        $sql.= $db->order('step','ASC');
+
+        $Result = $db->query($sql);
+
+        $RawData = array();
+        foreach (mysqli_fetch_all($Result,MYSQLI_ASSOC) as $Value)
+        {
+            $RawData[$Value["step"]] = $Value["total"];
+        } 
+        
+        return $this->parseDatedData($RawData);
+    }
+   
+    
+    /**
+    *   @abstract     Block Building - Morris Bar Graph
     */
-    private function buildNotificationsBlock()   {
+    private function buildMorrisBarBlock()   {
+
+        global $langs;
+        
+        $langs->load("compta");
+        
+        //====================================================================//
+        // Build Chart Contents
+        //====================================================================//
+        $Data   = $this->getData();
 
         //====================================================================//
-        // Notifications Block
-        
-        $Notifications = array(
-            "error" =>  "This is a Sample Error Notification",
-            "warning" =>  "This is a Sample Warning Notification",
-            "success" =>  "This is a Sample Success Notification",
-            "info" =>  "This is a Sample Infomation Notification",
+        // Chart Options
+        $ChartOptions = array(
+            "title"     => $langs->trans("SalesTurnover"),
+            "labels"            => array($langs->trans("AmountTTCShort")),
         );
+        //====================================================================//
+        // Block Options
+        $Options = array(
+            "AllowHtml"         => True,
+        );
+        //====================================================================//
+        // Add Table Block
+        $this->BlocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
         
-        
-        $this->BlocksFactory()->addNotificationsBlock($Notifications,array("Width" => self::SIZE_M));
-    } 
+    }       
     
     //====================================================================//
     // Class Tooling Functions
     //====================================================================//
+
+    //====================================================================//
+    // Overide Splash Functions
+    //====================================================================//
+
+    /**
+     *      @abstract   Return name of this Widget Class
+     */
+    public function getName()
+    {
+        global $langs;     
+        $langs->load("main");
+        $langs->load("boxes");        
+        return html_entity_decode($langs->trans(static::$NAME));
+    }
+
+    /**
+     *      @abstract   Return Description of this Widget Class
+     */
+    public function getDesc()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");        
+        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+    }
 
 }
 

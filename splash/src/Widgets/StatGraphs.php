@@ -30,7 +30,7 @@
 // *******************************************************************//
 //                     SPLASH FOR DOLIBARR                            //
 // *******************************************************************//
-//                     LAST CUSTOMER BOX WIDGET                       //
+//                  BANK ACCOUNTS LEVELS WIDGET                       //
 // *******************************************************************//
 //====================================================================//
 
@@ -39,32 +39,26 @@ namespace   Splash\Local\Widgets;
 use Splash\Models\WidgetBase;
 use Splash\Core\SplashCore      as Splash;
 
-class UpdatedCustomers extends WidgetBase
+class StatGraphs extends WidgetBase
 {
-    
     //====================================================================//
     // Object Definition Parameters	
     //====================================================================//
     
     /**
-     *  Widget Disable Flag. Uncomment thius line to Override this flag and disable Object.
-     */
-//    protected static    $DISABLED        =  True;
-    
-    /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "BoxLastCustomers";
+    protected static    $NAME            =  "Statistics";
     
     /**
      *  Widget Description (Translated by Module) 
      */
-    protected static    $DESCRIPTION     =  "BoxTitleLastModifiedCustomers";    
+    protected static    $DESCRIPTION     =  "Statistics";    
     
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag) 
      */
-    protected static    $ICO            =  "fa fa-users";
+    protected static    $ICO            =  "fa fa-line-chart";
     
     //====================================================================//
     // Define Standard Options for this Widget
@@ -72,8 +66,14 @@ class UpdatedCustomers extends WidgetBase
     static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
         "Header"        =>  True,
-        "Footer"        =>  False
+        "Footer"        =>  True,
+        'UseCache'      =>  True,
+        'CacheLifeTime' =>  60,        
     );
+    
+    private $Mode = CustomerInvoices;
+    
+    private $ChartType =   "Line";
     
     //====================================================================//
     // General Class Variables	
@@ -89,19 +89,35 @@ class UpdatedCustomers extends WidgetBase
     public function getParameters()
     {
         global $langs;
-        $langs->load("admin");
+        Splash::Local()->LoadDefaultLanguage();
+        $langs->load("compta");
         
         //====================================================================//
-        // Max Number of Entities
-        $this->FieldsFactory()->Create(SPL_T_INT)
-                ->Identifier("max")
-                ->Name($langs->trans("MaxNbOfLinesForBoxes"))
-                ->Description($langs->trans("BoxTitleLastModifiedCustomers"));        
+        // Select Data Type Mode
+        $this->FieldsFactory()->Create(SPL_T_TEXT)
+                ->Identifier("mode")
+                ->Name($langs->trans("Model"))
+                ->isRequired()
+                ->AddChoice("CustomerInvoices",     html_entity_decode($langs->trans("ReportTurnover")))
+                ->AddChoice("CustomerOrders",       html_entity_decode($langs->trans("OrderStats")))
+                ->AddChoice("SupplierInvoices",     html_entity_decode($langs->trans("BillsForSuppliers")))
+                ;
       
+        //====================================================================//
+        // Select Chart Rendering Mode
+        $this->FieldsFactory()->Create(SPL_T_TEXT)
+                ->Identifier("chart_type")
+                ->Name($langs->trans("Type"))
+                ->isRequired()
+                ->AddChoice("Line",    "Line Chart")
+                ->AddChoice("Bar",     "Bar Chart")
+                ->AddChoice("Area",    "Area Chart")
+                ;
+        
         //====================================================================//
         // Publish Fields
         return $this->FieldsFactory()->Publish();
-    }       
+    }      
     
     /**
      *  @abstract     Return requested Customer Data
@@ -114,13 +130,13 @@ class UpdatedCustomers extends WidgetBase
      */
     public function Get($params=NULL)
     {
-        global $db;
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
+
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
@@ -129,15 +145,21 @@ class UpdatedCustomers extends WidgetBase
         $this->setIcon($this->getIcon()); 
         
         //====================================================================//
-        // Build Disabled Block
+        // Build Data Blocks
         //====================================================================//
-        $this->buildDisabledBlock();
-          
-        //====================================================================//
-        // Build Disabled Block
-        //====================================================================//
-        $this->MaxItems = !empty($params["max"]) ? $params["max"] : 10;
-        $this->buildTableBlock();
+        
+        if (isset($params["mode"]) && in_array($params["mode"], ["CustomerInvoices", "CustomerOrders", "SupplierInvoices"])) {
+            $this->Mode = $params["mode"];
+        }
+        
+        if (isset($params["chart_type"]) && in_array($params["chart_type"], ["Bar", "Line", "Area"])) {
+            $this->ChartType = $params["chart_type"];
+        }
+        
+        $this->importDates($params);
+        $this->setupMode();
+        
+        $this->buildMorrisBarBlock();
         
         //====================================================================//
         // Set Blocks to Widget
@@ -153,86 +175,116 @@ class UpdatedCustomers extends WidgetBase
     // Blocks Generation Functions
     //====================================================================//
 
-    /**
-    *   @abstract     Block Building - Box is Disabled
-    */
-    private function buildDisabledBlock()   {
-
-        global $langs, $user;
+    private function setupMode()   {
         
-        if ( !$user->rights->societe->lire ) {
-            $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
-            //====================================================================//
-            // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
-        }        
+        global $db, $langs;
         
-    }    
-  
-    /**
-    *   @abstract     Block Building - Text Intro
-    */
-    private function buildTableBlock()   {
-
-        global $langs, $db, $user;
-        
-        if ( !$user->rights->societe->lire ) {
-            return;
-        }
-        
-        //====================================================================//
-        // Execute SQL Request
-        //====================================================================//
-        $sql = "SELECT s.nom as name, s.rowid as socid, s.tms as modified, s.status as status";
-        $sql.= " FROM ".MAIN_DB_PREFIX."societe as s";
-        $sql.= " ORDER BY s.tms DESC";
-        $sql.= $db->plimit($this->MaxItems, 0);
-        dol_syslog(get_class($this)."::loadLastModifiedUsers", LOG_DEBUG);
-        $Result = $db->query($sql);
-        
-        //====================================================================//
-        // Empty Contents
-        //====================================================================//
-        if ( count($Result) < 1 ) {
-            $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("NoRecordedCustomers"));
-            //====================================================================//
-            // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
+        switch ($this->Mode) {
             
-            return;
+            case "CustomerInvoices":
+                $langs->load("compta");
+                //====================================================================//
+                // Load Stat Class
+                include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
+                $this->stats    = new \FactureStats($db, 0, 'customer', 0);
+                //====================================================================//
+                // Setup Mode
+                $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total) as total";
+                $this->where    = "f.datef ";
+                $this->title    = $langs->trans("SalesTurnover");
+                $this->labels   = array($langs->trans("AmountTTCShort"));
+                break;
+            
+            case "SupplierInvoices":
+                $langs->load("compta");
+                //====================================================================//
+                // Load Stat Class
+                include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
+                $this->stats    = new \FactureStats($db, 0, 'supplier', 0);
+                //====================================================================//
+                // Setup Mode
+                $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total_ht) as total";
+                $this->where    = "f.datef ";
+                $this->title    = $langs->trans("BillsForSuppliers");
+                $this->labels   = array($langs->trans("AmountHTShort"));
+                break;
+            
+            case "CustomerOrders":
+                $langs->load("compta");
+                //====================================================================//
+                // Load Stat Class
+                include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
+                $this->stats    = new \CommandeStats($db, 0, 'customer', 0);
+                //====================================================================//
+                // Setup Mode
+                $this->select   = "date_format(c.date_commande,'%".$this->GroupBy."') as step, SUM(c.total_ht) as total";
+                $this->where    = "c.date_commande ";
+                $this->title    = $langs->trans("OrderStats");
+                $this->labels   = array($langs->trans("AmountHTShort"));
+                break;            
+        }
+    }
+    
+    /**
+     * @abstract    Read Widget Datas
+     */
+    private function getData()   {
+
+        global $db;
+                
+        //====================================================================//
+        // Execute SQL Query
+        //====================================================================//
+        
+        $sql = "SELECT " . $this->select;
+        $sql.= " FROM ".$this->stats->from;
+        $sql.= " WHERE " . $this->where . " BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql.= " AND ".$this->stats->where;
+        $sql.= " GROUP BY step";
+        $sql.= $db->order('step','ASC');
+
+        $Result = $db->query($sql);
+
+        $RawData = array();
+        foreach (mysqli_fetch_all($Result,MYSQLI_ASSOC) as $Value)
+        {
+            $RawData[$Value["step"]] = $Value["total"];
         } 
         
+        return $this->parseDatedData($RawData);
+    }
+   
+    
+    /**
+    *   @abstract     Block Building - Morris Bar Graph
+    */
+    private function buildMorrisBarBlock()   {
+
+        global $langs;
+        
+        $langs->load("compta");
+        
         //====================================================================//
-        // Build Table Contents
+        // Build Chart Contents
         //====================================================================//
-        $langs->load('companies');
-        $Contents   = array();
-        foreach ($Result as $Line) {   
-            $Name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>' . $Line["name"];
-            if ($Line["status"]) {
-                $Status = '<i class="fa fa-check-circle-o text-success" aria-hidden="true">&nbsp;';
-                $Status.= $langs->trans("InActivity").'</i>';
-            } else {
-                $Status = '<i class="fa fa-times-circle-o text-danger" aria-hidden="true">&nbsp;';
-                $Status.= $langs->trans("ActivityCeased").'</i>';
-            }
-            $Contents[] = array($Name, $Line["modified"], $Status);
-        }
+        $Data   = $this->getData();
+
         //====================================================================//
-        // Build Table Options
+        // Chart Options
+        $ChartOptions = array(
+            "title"     => $this->title, 
+            "labels"    => $this->labels,
+        );
         //====================================================================//
+        // Block Options
         $Options = array(
             "AllowHtml"         => True,
-            "HeadingRows"       => 0,
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addTableBlock($Contents,$Options);
+        $this->BlocksFactory()->addMorrisGraphBlock($Data, $this->ChartType, $ChartOptions, $Options);
         
-    }      
-
+    }       
     
     //====================================================================//
     // Class Tooling Functions
@@ -248,7 +300,7 @@ class UpdatedCustomers extends WidgetBase
     public function getName()
     {
         global $langs;     
-        $langs->load("boxes");        
+        $langs->load("main");
         return html_entity_decode($langs->trans(static::$NAME));
     }
 
@@ -258,10 +310,10 @@ class UpdatedCustomers extends WidgetBase
     public function getDesc()
     {
         global $langs;
-        $langs->load("boxes");        
+        $langs->load("main");
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-    
+
 }
 
 
