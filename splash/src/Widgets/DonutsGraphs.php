@@ -39,7 +39,7 @@ namespace   Splash\Local\Widgets;
 use Splash\Models\WidgetBase;
 use Splash\Core\SplashCore      as Splash;
 
-class StatGraphs extends WidgetBase
+class DonutsGraphs extends WidgetBase
 {
     //====================================================================//
     // Object Definition Parameters	
@@ -48,17 +48,17 @@ class StatGraphs extends WidgetBase
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "Statistics";
+    protected static    $NAME            =  "BoxProductDistribution";
     
     /**
      *  Widget Description (Translated by Module) 
      */
-    protected static    $DESCRIPTION     =  "Statistics";    
+    protected static    $DESCRIPTION     =  "BoxProductDistribution";    
     
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag) 
      */
-    protected static    $ICO            =  "fa fa-line-chart";
+    protected static    $ICO            =  "fa fa-pie-chart";
     
     //====================================================================//
     // Define Standard Options for this Widget
@@ -71,10 +71,10 @@ class StatGraphs extends WidgetBase
         'CacheLifeTime' =>  60,        
     );
     
-    private $Mode = "CustomerInvoices";
+    private $Mode = "Invoices";
     
     private $ChartType =   "Line";
-    
+   
     //====================================================================//
     // General Class Variables	
     //====================================================================//
@@ -98,9 +98,10 @@ class StatGraphs extends WidgetBase
                 ->Identifier("mode")
                 ->Name($langs->trans("Model"))
                 ->isRequired()
-                ->AddChoice("CustomerInvoices",     html_entity_decode($langs->trans("ReportTurnover")))
-                ->AddChoice("CustomerOrders",       html_entity_decode($langs->trans("OrderStats")))
-                ->AddChoice("SupplierInvoices",     html_entity_decode($langs->trans("BillsForSuppliers")))
+                ->AddChoice("Invoices",         html_entity_decode($langs->trans("ForCustomersInvoices")))
+                ->AddChoice("InvoicesCount",    html_entity_decode($langs->trans("ForCustomersInvoices")))
+                ->AddChoice("Orders",           html_entity_decode($langs->trans("ForCustomersOrders")))
+                ->AddChoice("OrdersCount",      html_entity_decode($langs->trans("ForCustomersOrders")))
                 ;
       
         //====================================================================//
@@ -109,9 +110,8 @@ class StatGraphs extends WidgetBase
                 ->Identifier("chart_type")
                 ->Name($langs->trans("Type"))
                 ->isRequired()
-                ->AddChoice("Line",    "Line Chart")
+                ->AddChoice("Pie",      "Pie Chart")
                 ->AddChoice("Bar",     "Bar Chart")
-                ->AddChoice("Area",    "Area Chart")
                 ;
         
         //====================================================================//
@@ -130,6 +130,8 @@ class StatGraphs extends WidgetBase
      */
     public function Get($params=NULL)
     {
+        global $db;
+        
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
@@ -147,19 +149,22 @@ class StatGraphs extends WidgetBase
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
+		
+            
         
-        if (isset($params["mode"]) && in_array($params["mode"], ["CustomerInvoices", "CustomerOrders", "SupplierInvoices"])) {
+        if (isset($params["mode"]) && in_array($params["mode"], ["Invoices", "InvoicesCount", "Orders", "OrdersCount"])) {
             $this->Mode = $params["mode"];
         }
         
-        if (isset($params["chart_type"]) && in_array($params["chart_type"], ["Bar", "Line", "Area"])) {
+        if (isset($params["chart_type"]) && in_array($params["chart_type"], ["Bar", "Pie"])) {
             $this->ChartType = $params["chart_type"];
         }
         
         $this->importDates($params);
         $this->setupMode();
         
-        $this->buildMorrisBarBlock();
+        $this->buildMorrisDonutBlock();
+//        $this->buildMorrisBarBlock();
         
         //====================================================================//
         // Set Blocks to Widget
@@ -181,7 +186,7 @@ class StatGraphs extends WidgetBase
         
         switch ($this->Mode) {
             
-            case "CustomerInvoices":
+            case "Invoices":
                 $langs->load("compta");
                 //====================================================================//
                 // Load Stat Class
@@ -189,11 +194,28 @@ class StatGraphs extends WidgetBase
                 $this->stats    = new \FactureStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total) as total";
-                $this->where    = "f.datef ";
+                $this->select   = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
+                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
                 $this->title    = $langs->trans("SalesTurnover");
                 $this->labels   = array($langs->trans("AmountTTCShort"));
                 break;
+            
+            case "InvoicesCount":
+                $langs->load("compta");
+                //====================================================================//
+                // Load Stat Class
+                include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
+                $this->stats    = new \FactureStats($db, 0, 'customer', 0);
+                //====================================================================//
+                // Setup Mode
+                $this->select   = "product.ref as label, COUNT(product.ref) as value";
+                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
+                $this->title    = $langs->trans("SalesTurnover");
+                $this->labels   = array($langs->trans("AmountTTCShort"));
+                break;
+            
             
             case "SupplierInvoices":
                 $langs->load("compta");
@@ -237,37 +259,59 @@ class StatGraphs extends WidgetBase
         //====================================================================//
         
         $sql = "SELECT " . $this->select;
-        $sql.= " FROM ".$this->stats->from;
+        $sql.= " FROM ".$this->from;
         $sql.= " WHERE " . $this->where . " BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
         $sql.= " AND ".$this->stats->where;
-        $sql.= " GROUP BY step";
-        $sql.= $db->order('step','ASC');
+        $sql.= " GROUP BY label";
+        $sql.= $db->order('value','ASC');
 
         $Result = $db->query($sql);
 
+        $Data = mysqli_fetch_all($Result,MYSQLI_ASSOC);
+        
+// Splash::Log()->war("SQL : " .  $sql);
+//        
+// Splash::Log()->www("RawData", $Data);
+// 
+// 
+// $this->BlocksFactory()->addNotificationsBlock(["warning" => $sql]);
+// $this->BlocksFactory()->addTableBlock($Data);
+ 
+        return $Data;
+        
+        
         $RawData = array();
         foreach (mysqli_fetch_all($Result,MYSQLI_ASSOC) as $Value)
         {
-            $RawData[$Value["step"]] = $Value["total"];
+            $RawData[$Value["label"]] = $Value["total"];
         } 
         
         return $this->parseDatedData($RawData);
     }
    
-    
     /**
-    *   @abstract     Block Building - Morris Bar Graph
+    *   @abstract     Block Building - Morris Donut Graph
     */
-    private function buildMorrisBarBlock()   {
+    private function buildMorrisDonutBlock()   {
 
         global $langs;
-        
-        $langs->load("compta");
         
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
         $Data   = $this->getData();
+
+        
+        if ( empty($Data) ) {
+            $langs->load("admin");
+            $this->BlocksFactory()->addNotificationsBlock(array(
+                "warning"   => $langs->trans("PreviewNotAvailable")
+                    ));
+            return;
+        }  
+        
+        $langs->load("compta");
+        
 
         //====================================================================//
         // Chart Options
@@ -282,7 +326,48 @@ class StatGraphs extends WidgetBase
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addMorrisGraphBlock($Data, $this->ChartType, $ChartOptions, $Options);
+        $this->BlocksFactory()->addMorrisDonutBlock($Data, $ChartOptions, $Options);
+        
+    }          
+    
+    /**
+    *   @abstract     Block Building - Morris Bar Graph
+    */
+    private function buildMorrisBarBlock()   {
+
+        global $langs;
+        
+        //====================================================================//
+        // Build Chart Contents
+        //====================================================================//
+        $Data   = $this->getData();
+
+        
+        if ( empty($Data) ) {
+            $langs->load("admin");
+            $this->BlocksFactory()->addNotificationsBlock(array(
+                "warning"   => $langs->trans("PreviewNotAvailable")
+                    ));
+            return;
+        }  
+        
+        $langs->load("compta");
+        
+
+        //====================================================================//
+        // Chart Options
+        $ChartOptions = array(
+            "title"     => $this->title, 
+            "labels"    => $this->labels,
+        );
+        //====================================================================//
+        // Block Options
+        $Options = array(
+            "AllowHtml"         => True,
+        );
+        //====================================================================//
+        // Add Table Block
+        $this->BlocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
         
     }       
     
