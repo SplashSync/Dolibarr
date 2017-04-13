@@ -84,6 +84,13 @@ class CustomerInvoicesStats extends WidgetBase
     // Class Main Functions
     //====================================================================//
     
+    public function __construct() {
+        //====================================================================//
+        // Load Default Language
+        Splash::Local()->LoadDefaultLanguage();
+    }
+    
+
 //    /**
 //     *      @abstract   Return Widget Customs Parameters
 //     */

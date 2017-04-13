@@ -82,6 +82,12 @@ class DonutsGraphs extends WidgetBase
     //====================================================================//
     // Class Main Functions
     //====================================================================//
+
+    public function __construct() {
+        //====================================================================//
+        // Load Default Language
+        Splash::Local()->LoadDefaultLanguage();
+    }
     
     /**
      *      @abstract   Return Widget Customs Parameters
@@ -90,16 +96,22 @@ class DonutsGraphs extends WidgetBase
     {
         global $langs;
         Splash::Local()->LoadDefaultLanguage();
+        
+        $langs->load("main");
+        $langs->load("bills");
         $langs->load("compta");
         
+        $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+        $TitleInvoices  = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
+                
         //====================================================================//
         // Select Data Type Mode
         $this->FieldsFactory()->Create(SPL_T_TEXT)
                 ->Identifier("mode")
                 ->Name($langs->trans("Model"))
                 ->isRequired()
-                ->AddChoice("Invoices",         html_entity_decode($langs->trans("ForCustomersInvoices")))
-                ->AddChoice("InvoicesCount",    html_entity_decode($langs->trans("ForCustomersInvoices")))
+                ->AddChoice("Invoices",         html_entity_decode($TitleInvoices))
+                ->AddChoice("InvoicesCount",    html_entity_decode($TitleInvoices . " (" . $langs->trans("NbOfLines") . ")" ))
                 ->AddChoice("Orders",           html_entity_decode($langs->trans("ForCustomersOrders")))
                 ->AddChoice("OrdersCount",      html_entity_decode($langs->trans("ForCustomersOrders")))
                 ;
@@ -111,7 +123,7 @@ class DonutsGraphs extends WidgetBase
                 ->Name($langs->trans("Type"))
                 ->isRequired()
                 ->AddChoice("Pie",      "Pie Chart")
-                ->AddChoice("Bar",     "Bar Chart")
+                ->AddChoice("Bar",      "Bar Chart")
                 ;
         
         //====================================================================//
@@ -150,8 +162,6 @@ class DonutsGraphs extends WidgetBase
         // Build Data Blocks
         //====================================================================//
 		
-            
-        
         if (isset($params["mode"]) && in_array($params["mode"], ["Invoices", "InvoicesCount", "Orders", "OrdersCount"])) {
             $this->Mode = $params["mode"];
         }
@@ -163,8 +173,11 @@ class DonutsGraphs extends WidgetBase
         $this->importDates($params);
         $this->setupMode();
         
-        $this->buildMorrisDonutBlock();
-//        $this->buildMorrisBarBlock();
+        if ( $this->ChartType == "Bar") {
+            $this->buildMorrisBarBlock();
+        } else {
+            $this->buildMorrisDonutBlock();
+        }
         
         //====================================================================//
         // Set Blocks to Widget
@@ -183,6 +196,8 @@ class DonutsGraphs extends WidgetBase
     private function setupMode()   {
         
         global $db, $langs;
+        $langs->load("main");
+        $langs->load("bills");
         
         switch ($this->Mode) {
             
@@ -197,7 +212,9 @@ class DonutsGraphs extends WidgetBase
                 $this->select   = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
                 $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
                 $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
-                $this->title    = $langs->trans("SalesTurnover");
+                
+                $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
                 $this->labels   = array($langs->trans("AmountTTCShort"));
                 break;
             
@@ -212,8 +229,10 @@ class DonutsGraphs extends WidgetBase
                 $this->select   = "product.ref as label, COUNT(product.ref) as value";
                 $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
                 $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
-                $this->title    = $langs->trans("SalesTurnover");
-                $this->labels   = array($langs->trans("AmountTTCShort"));
+                
+                $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
+                $this->labels   = array($langs->trans("NbOfLines"));
                 break;
             
             
@@ -250,43 +269,25 @@ class DonutsGraphs extends WidgetBase
     /**
      * @abstract    Read Widget Datas
      */
-    private function getData()   {
+    private function getData($Limit = Null)   {
 
         global $db;
                 
         //====================================================================//
         // Execute SQL Query
         //====================================================================//
-        
-        $sql = "SELECT " . $this->select;
-        $sql.= " FROM ".$this->from;
+        $sql = "SELECT " . $this->select . " FROM ".$this->from;
         $sql.= " WHERE " . $this->where . " BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
         $sql.= " AND ".$this->stats->where;
         $sql.= " GROUP BY label";
-        $sql.= $db->order('value','ASC');
-
-        $Result = $db->query($sql);
-
-        $Data = mysqli_fetch_all($Result,MYSQLI_ASSOC);
-        
-// Splash::Log()->war("SQL : " .  $sql);
-//        
-// Splash::Log()->www("RawData", $Data);
-// 
-// 
-// $this->BlocksFactory()->addNotificationsBlock(["warning" => $sql]);
-// $this->BlocksFactory()->addTableBlock($Data);
- 
-        return $Data;
-        
-        
-        $RawData = array();
-        foreach (mysqli_fetch_all($Result,MYSQLI_ASSOC) as $Value)
-        {
-            $RawData[$Value["label"]] = $Value["total"];
+        $sql.= $db->order('value','DESC');
+        if ( $Limit ) {
+            $sql.= $db->plimit($Limit);
         } 
         
-        return $this->parseDatedData($RawData);
+        $Data = mysqli_fetch_all($db->query($sql),MYSQLI_ASSOC);
+        
+        return $Data;
     }
    
     /**
@@ -301,7 +302,6 @@ class DonutsGraphs extends WidgetBase
         //====================================================================//
         $Data   = $this->getData();
 
-        
         if ( empty($Data) ) {
             $langs->load("admin");
             $this->BlocksFactory()->addNotificationsBlock(array(
@@ -340,7 +340,7 @@ class DonutsGraphs extends WidgetBase
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $Data   = $this->getData();
+        $Data   = $this->getData(5);
 
         
         if ( empty($Data) ) {
@@ -353,7 +353,6 @@ class DonutsGraphs extends WidgetBase
         
         $langs->load("compta");
         
-
         //====================================================================//
         // Chart Options
         $ChartOptions = array(
@@ -386,6 +385,7 @@ class DonutsGraphs extends WidgetBase
     {
         global $langs;     
         $langs->load("main");
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$NAME));
     }
 
@@ -396,6 +396,7 @@ class DonutsGraphs extends WidgetBase
     {
         global $langs;
         $langs->load("main");
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
 
