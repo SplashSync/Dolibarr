@@ -250,13 +250,17 @@ class StatGraphs extends WidgetBase
         $sql.= " GROUP BY step";
         $sql.= $db->order('step','ASC');
 
-        $Result = $db->query($sql);
-
-        $RawData = array();
-        foreach (mysqli_fetch_all($Result,MYSQLI_ASSOC) as $Value)
+        $Result     = $db->query($sql);
+        $num        = $db->num_rows($Result);           // Read number of results
+        $i          = 0;
+        $RawData    = array();
+        
+        while ($i < $num)
         {
+            $Value = $db->fetch_array($Result);
             $RawData[$Value["step"]] = $Value["total"];
-        } 
+            $i++;
+        }        
         
         return $this->parseDatedData($RawData);
     }

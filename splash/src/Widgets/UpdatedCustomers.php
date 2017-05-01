@@ -201,7 +201,7 @@ class UpdatedCustomers extends WidgetBase
         //====================================================================//
         // Empty Contents
         //====================================================================//
-        if ( count($Result) < 1 ) {
+        if ( $db->num_rows($Result) < 1 ) {
             $langs->load("admin");
             $Contents   = array("warning"   => $langs->trans("NoRecordedCustomers"));
             //====================================================================//
@@ -216,16 +216,22 @@ class UpdatedCustomers extends WidgetBase
         //====================================================================//
         $langs->load('companies');
         $Contents   = array();
-        foreach ($Result as $Line) {   
-            $Name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>' . $Line["name"];
-            if ($Line["status"]) {
+        $num        = $db->num_rows($Result);           // Read number of results
+        $i          = 0;
+        
+        while ($i < $num)
+        {
+            $Value = $db->fetch_array($Result);
+            $Name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>' . $Value["name"];
+            if ($Value["status"]) {
                 $Status = '<i class="fa fa-check-circle-o text-success" aria-hidden="true">&nbsp;';
                 $Status.= $langs->trans("InActivity").'</i>';
             } else {
                 $Status = '<i class="fa fa-times-circle-o text-danger" aria-hidden="true">&nbsp;';
                 $Status.= $langs->trans("ActivityCeased").'</i>';
             }
-            $Contents[] = array($Name, $Line["modified"], $Status);
+            $Contents[] = array($Name, $Value["modified"], $Status);
+            $i++;
         }
         //====================================================================//
         // Build Table Options

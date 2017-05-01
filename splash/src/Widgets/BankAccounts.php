@@ -201,7 +201,7 @@ class BankAccounts extends WidgetBase
         //====================================================================//
         // Empty Contents
         //====================================================================//
-        if ( count($Result) < 1 ) {
+        if ( $db->num_rows($Result) < 1 ) {
             $langs->load("admin");
             $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
             //====================================================================//
@@ -210,7 +210,16 @@ class BankAccounts extends WidgetBase
             return array();
         } 
         
-        return $Result;
+        $i          = 0;
+        $RawData    = array();
+        while ($i < $db->num_rows($Result))
+        {
+            $RawData[$i] = $db->fetch_array($Result);
+            $i++;
+        }    
+        
+        
+        return $RawData;
     }
         
     /**
@@ -277,7 +286,7 @@ class BankAccounts extends WidgetBase
         //====================================================================//
         // Build SparkInfo Options
         //====================================================================//
-        switch($Data->num_rows) {
+        switch(count($Data)) {
             case 1:
                 $Width = self::SIZE_XL;
                 break;

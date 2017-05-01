@@ -39,7 +39,7 @@ namespace   Splash\Local\Widgets;
 use Splash\Models\WidgetBase;
 use Splash\Core\SplashCore      as Splash;
 
-class DonutsGraphs extends WidgetBase
+class ProductDistribution extends WidgetBase
 {
     //====================================================================//
     // Object Definition Parameters	
@@ -99,10 +99,12 @@ class DonutsGraphs extends WidgetBase
         
         $langs->load("main");
         $langs->load("bills");
+        $langs->load("orders");
         $langs->load("compta");
         
         $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
         $TitleInvoices  = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
+        $TitleOrders    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Orders"));
                 
         //====================================================================//
         // Select Data Type Mode
@@ -112,10 +114,11 @@ class DonutsGraphs extends WidgetBase
                 ->isRequired()
                 ->AddChoice("Invoices",         html_entity_decode($TitleInvoices))
                 ->AddChoice("InvoicesCount",    html_entity_decode($TitleInvoices . " (" . $langs->trans("NbOfLines") . ")" ))
-                ->AddChoice("Orders",           html_entity_decode($langs->trans("ForCustomersOrders")))
-                ->AddChoice("OrdersCount",      html_entity_decode($langs->trans("ForCustomersOrders")))
+                ->AddChoice("Orders",           html_entity_decode($TitleOrders))
+                ->AddChoice("OrdersCount",      html_entity_decode($TitleOrders . " (" . $langs->trans("NbOfLines") . ")" ))
                 ;
       
+        
         //====================================================================//
         // Select Chart Rendering Mode
         $this->FieldsFactory()->Create(SPL_T_TEXT)
@@ -141,9 +144,7 @@ class DonutsGraphs extends WidgetBase
 
      */
     public function Get($params=NULL)
-    {
-        global $db;
-        
+    {        
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
@@ -198,11 +199,14 @@ class DonutsGraphs extends WidgetBase
         global $db, $langs;
         $langs->load("main");
         $langs->load("bills");
+        $langs->load("compta");
+        $langs->load("orders");
         
+        $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+                
         switch ($this->Mode) {
             
             case "Invoices":
-                $langs->load("compta");
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
@@ -212,14 +216,13 @@ class DonutsGraphs extends WidgetBase
                 $this->select   = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
                 $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
                 $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
-                
-                $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+                //====================================================================//
+                // Setup Titles
                 $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
-                $this->labels   = array($langs->trans("AmountTTCShort"));
+                $this->labels   = array($langs->trans("AmountHTShort"));
                 break;
             
             case "InvoicesCount":
-                $langs->load("compta");
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
@@ -229,39 +232,43 @@ class DonutsGraphs extends WidgetBase
                 $this->select   = "product.ref as label, COUNT(product.ref) as value";
                 $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
                 $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
-                
-                $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
-                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
+                //====================================================================//
+                // Setup Titles
+                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices")) . " (" . $langs->trans("NbOfLines") . ")";
                 $this->labels   = array($langs->trans("NbOfLines"));
                 break;
             
             
-            case "SupplierInvoices":
-                $langs->load("compta");
-                //====================================================================//
-                // Load Stat Class
-                include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
-                $this->stats    = new \FactureStats($db, 0, 'supplier', 0);
-                //====================================================================//
-                // Setup Mode
-                $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total_ht) as total";
-                $this->where    = "f.datef ";
-                $this->title    = $langs->trans("BillsForSuppliers");
-                $this->labels   = array($langs->trans("AmountHTShort"));
-                break;
-            
-            case "CustomerOrders":
-                $langs->load("compta");
+            case "Orders":
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
                 $this->stats    = new \CommandeStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select   = "date_format(c.date_commande,'%".$this->GroupBy."') as step, SUM(c.total_ht) as total";
-                $this->where    = "c.date_commande ";
-                $this->title    = $langs->trans("OrderStats");
+                $this->select   = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
+                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->where    = "c.rowid = tl.fk_commande AND tl.fk_product = product.rowid AND c.date_commande";
+                //====================================================================//
+                // Setup Titles
+                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Orders"));
                 $this->labels   = array($langs->trans("AmountHTShort"));
+                break;            
+            
+            case "OrdersCount":
+                //====================================================================//
+                // Load Stat Class
+                include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
+                $this->stats    = new \CommandeStats($db, 0, 'customer', 0);
+                //====================================================================//
+                // Setup Mode
+                $this->select   = "product.ref as label, COUNT(product.ref) as value";
+                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->where    = "c.rowid = tl.fk_commande AND tl.fk_product = product.rowid AND c.date_commande";
+                //====================================================================//
+                // Setup Titles
+                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Orders")) . " (" . $langs->trans("NbOfLines") . ")";
+                $this->labels   = array($langs->trans("NbOfLines"));
                 break;            
         }
     }
@@ -285,9 +292,17 @@ class DonutsGraphs extends WidgetBase
             $sql.= $db->plimit($Limit);
         } 
         
-        $Data = mysqli_fetch_all($db->query($sql),MYSQLI_ASSOC);
+        $Result     = $db->query($sql);
+        $num        = $db->num_rows($Result);           // Read number of results
+        $i          = 0;
+        $RawData    = array();
+        while ($i < $num)
+        {
+            $RawData[$i] = $db->fetch_array($Result);
+            $i++;
+        }          
         
-        return $Data;
+        return $RawData;
     }
    
     /**
