@@ -163,27 +163,7 @@ class Local
         //====================================================================//
         if ( SPLASH_SERVER_MODE )
         {
-//            global $db,$langs,$conf,$user,$hookmanager;
-//
-//            if (!defined("DOL_DOCUMENT_ROOT")) {
-//                //====================================================================//
-//                // Initiate Dolibarr Global Envirement Variables
-//                require_once( $this->getDolibarrRoot() . "/master.inc.php");           
-//            }
-//           
-//            //====================================================================//
-//            // Splash Modules Constant Definition
-//            require_once(DOL_DOCUMENT_ROOT.'/splash/_conf/defines.inc.php'); 
-//
-//            
-//            //====================================================================//
-//            // Load Default Language
-//            $this->LoadDefaultLanguage();      
-//            
-//            //====================================================================//
-//            // Load Default User
-//            $this->LoadLocalUser();    
-            
+            define('NOCSRFCHECK',1);	// This is Webservice Access. We must be able to go on it from outside. 
         }
 
         //====================================================================//
@@ -324,20 +304,7 @@ class Local
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 
     
@@ -432,63 +399,6 @@ class Local
             $langs->setDefaultLang(Splash::Configuration()->DefaultLanguage);
         }
     }
-    
-    /**
-     *      @abstract       Verify Given Price Definition is valid 
-     *      @param          int         $type       Price Base Type (-1=Unknown,0=Without VAT,1=With VAT)
-     *      @param          double      $vat        VAT in Percent
-     *      @param          double      $ht         Price Without VAT
-     *      @param          double      $ttc        Price With VAT
-     *      @return         int                     0 if KO, 1 if OK
-     */
-//    public function isValidPrice($type=Null,$vat=Null,$ht=Null,$ttc=Null)
-//    {
-//        if ( ($type !== Null)  && !empty($vat) )        { 
-//            if      ( ($type == 1)  && ($ttc !== Null) )           { return 1; }
-//            elseif  ( ($type == 0)  && ($ht !== Null) )            { return 1; }
-//        }
-//        
-//        // If not valid but Any Parameter Defined, Return Help Message
-//        if ( ($ht !== Null)  && ($ttc !== Null) )   {
-//            Splash::Log()->War("OsWs Local - Set New Price : To Setup a new price, you must send at least :");
-//            $msg = ($type===Null)?"Empty":(($type)?"With VAT":"Without VAT");
-//            Splash::Log()->War("&nbsp;&nbsp;&nbsp;'PriceType' => 0 (without VAT) or 1 (with VAT). Given " . $msg );
-//            Splash::Log()->War("&nbsp;&nbsp;&nbsp;'VAT' precentage. Given " . (($vat===Null)?"Empty":$vat));
-//            $msg = (($ht===Null)?"Empty":$ht) . " and " . (($ttc===Null)?"Empty":$ttc);
-//            Splash::Log()->War("&nbsp;&nbsp;&nbsp;Suitable 'priceht' or 'pricettc'. Given " . $msg);
-//        }
-//        return 0;
-//    }
-    
-    /**
-     *      @abstract       Decide if the Given Price Definition require a Price Update 
-     *      @param          object      $Object     Dolibarr Object
-     *      @param          int         $type       Price Base Type (-1=Unknown,0=Without VAT,1=With VAT)
-     *      @param          double      $vat        VAT in Percent
-     *      @param          double      $ht         Price Without VAT
-     *      @param          double      $ttc        Price With VAT
-     *      @param          bool        $npr        VAT NPR Flag
-     *      @return         int                     0 if KO, 1 if OK
-     */
-//    public function isPriceUpdateNeeded($Object,$type=Null,$vat=Null,$ht=Null,$ttc=Null,$npr=Null)
-//    {
-//        // If Pricetype was changed 
-//        if ( ( $type == 1 )  && ( $Object->price_base_type !==  "TTC") )        { return 1; }
-//        else if ( ( $type == 0 )  && ( $Object->price_base_type !==  "HT") )    { return 1; }
-//        // If Pricetype is unknown but not HT on local side 
-//        else if ( ( $type == -1 )  && ( $Object->price_base_type !==  "HT") )   { return 1; }
-//        // If Pricetype is TTC but price changed 
-//        else if ( ( $type == 1 )  && ( !self::CompareFloat($Object->price_ttc,$ttc)) )           { return 1; }
-//        // If Pricetype is HT but price changed 
-//        else if ( ( $type == 0 )  && ( !self::CompareFloat($Object->price,$ht) ) )                { return 1; }
-//        // If VAT Rate was changed 
-//        else if ( !self::CompareFloat($Object->tva_tx,$vat) )                                     { return 1; }
-//        // If VAT NPR Flag was changed 
-//        else if ( ($npr != NUll) && ( $npr != $Object->tva_npr ) )               { return 1; }
-//
-//        // Update Not Needed
-//        return 0;
-//    }
     
     /**
      *      @abstract       Update Multilangual Fields of an Object

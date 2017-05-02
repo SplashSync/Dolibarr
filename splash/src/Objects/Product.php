@@ -430,6 +430,7 @@ class Product extends ObjectBase
                 ->Name($langs->trans("ProductRef"))
                 ->IsListed()
                 ->MicroData("http://schema.org/Product","model")
+                ->isLogged()
                 ->isRequired();
         
     }    
@@ -455,6 +456,7 @@ class Product extends ObjectBase
                     ->Identifier("label")
                     ->Name($langs->trans("ProductLabel"))
                     ->IsListed()
+                    ->isLogged()
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","name")
                     ->isRequired();
@@ -464,6 +466,7 @@ class Product extends ObjectBase
                     ->Identifier("description")
                     ->Name($langs->trans("Description"))
                     ->IsListed()
+                    ->isLogged()
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","description");
             //====================================================================//
@@ -482,6 +485,7 @@ class Product extends ObjectBase
                     ->Identifier("label")
                     ->Name($langs->trans("ProductLabel"))
                     ->IsListed()
+                    ->isLogged()
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","name")
                     ->isRequired();
@@ -491,6 +495,7 @@ class Product extends ObjectBase
                     ->Identifier("description")
                     ->Name($langs->trans("Description"))
                     ->IsListed()
+                    ->isLogged()
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","description");
             //====================================================================//
@@ -556,6 +561,7 @@ class Product extends ObjectBase
                 ->Identifier("price")
                 ->Name($langs->trans("SellingPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Product","price")
+                ->isLogged()
                 ->isListed();
         
         if ( Splash::Local()->DolVersionCmp("3.9.0") >= 0) {
@@ -565,6 +571,7 @@ class Product extends ObjectBase
                     ->Identifier("cost_price")
                     ->Name($langs->trans("CostPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
                     ->Description($langs->trans("CostPriceDescription"))
+                    ->isLogged()
                     ->MicroData("http://schema.org/Product","wholesalePrice");
             
         } 

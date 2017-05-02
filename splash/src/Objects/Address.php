@@ -444,6 +444,7 @@ class Address extends ObjectBase
                 ->Name($langs->trans("CustomerCode"))
                 ->Description($langs->trans("CustomerCodeDesc"))
                 ->IsListed()
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","name");
         
 //        //====================================================================//
@@ -462,6 +463,7 @@ class Address extends ObjectBase
                 ->Name($langs->trans("Firstname"))
                 ->MicroData("http://schema.org/Person","familyName")
                 ->IsListed()
+                ->isLogged()
                 ->isRequired();
         
         //====================================================================//
@@ -470,6 +472,7 @@ class Address extends ObjectBase
                 ->Identifier("lastname")
                 ->Name($langs->trans("Lastname"))
                 ->MicroData("http://schema.org/Person","givenName")        
+                ->isLogged()
                 ->IsListed();
                 
         //====================================================================//
@@ -487,11 +490,14 @@ class Address extends ObjectBase
     private function buildMainFields() {
         global $conf,$langs;
         
+        $GroupName = $langs->trans("CompanyAddress");
         //====================================================================//
         // Addess
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("address")
                 ->Name($langs->trans("CompanyAddress"))
+                ->Group($GroupName)
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","streetAddress");
 
         //====================================================================//
@@ -500,6 +506,8 @@ class Address extends ObjectBase
                 ->Identifier("zip")
                 ->Name( $langs->trans("CompanyZip"))
                 ->MicroData("http://schema.org/PostalAddress","postalCode")
+                ->Group($GroupName)
+                ->isLogged()
                 ->isListed();
         
         //====================================================================//
@@ -508,6 +516,8 @@ class Address extends ObjectBase
                 ->Identifier("town")
                 ->Name($langs->trans("CompanyTown"))
                 ->MicroData("http://schema.org/PostalAddress","addressLocality")
+                ->Group($GroupName)
+                ->isLogged()
                 ->isListed();
         
         //====================================================================//
@@ -516,6 +526,7 @@ class Address extends ObjectBase
                 ->Identifier("country")
                 ->Name($langs->trans("CompanyCountry"))
                 ->ReadOnly()
+                ->Group($GroupName)
                 ->isListed();
         
         //====================================================================//
@@ -523,6 +534,8 @@ class Address extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_COUNTRY)
                 ->Identifier("country_code")
                 ->Name($langs->trans("CountryCode"))
+                ->Group($GroupName)
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","addressCountry");
 
         if (empty($conf->global->SOCIETE_DISABLE_STATE))
@@ -532,6 +545,7 @@ class Address extends ObjectBase
             $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                     ->Identifier("state")
                     ->Name($langs->trans("State"))
+                    ->Group($GroupName)
                     ->ReadOnly();
 
             //====================================================================//
@@ -540,6 +554,8 @@ class Address extends ObjectBase
                     ->Identifier("state_code")
                     ->Name($langs->trans("State Code"))
                     ->MicroData("http://schema.org/PostalAddress","addressRegion")
+                    ->Group($GroupName)
+                    ->isLogged()
                     ->NotTested();
         }
 
@@ -549,6 +565,7 @@ class Address extends ObjectBase
                 ->Identifier("phone_pro")
                 ->Name($langs->trans("PhonePro"))
                 ->MicroData("http://schema.org/Organization","telephone")
+                ->isLogged()
                 ->isListed();
 
         //====================================================================//
@@ -556,6 +573,7 @@ class Address extends ObjectBase
         $this->FieldsFactory()->Create(SPL_T_PHONE)
                 ->Identifier("phone_perso")
                 ->Name($langs->trans("PhonePerso"))
+                ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","telephone");
         
         //====================================================================//
@@ -564,6 +582,7 @@ class Address extends ObjectBase
                 ->Identifier("phone_mobile")
                 ->Name($langs->trans("PhoneMobile"))
                 ->MicroData("http://schema.org/Person","telephone")
+                ->isLogged()
                 ->isListed();
 
         //====================================================================//
@@ -572,6 +591,7 @@ class Address extends ObjectBase
                 ->Identifier("email")
                 ->Name($langs->trans("Email"))
                 ->MicroData("http://schema.org/ContactPoint","email")
+                ->isLogged()
                 ->isListed();  
         
         return;
