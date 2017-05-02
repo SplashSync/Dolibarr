@@ -1167,6 +1167,13 @@ class Order extends ObjectBase
             if ( !$this->OrderLine ) {
                 $this->OrderLine = new  \OrderLine($db);
                 $this->OrderLine->fk_commande = $this->Object->id;
+                // For Compatibility wit Dolibarr > 4.0
+                $this->OrderLine->fk_multicurrency          = "NULL";
+                $this->OrderLine->multicurrency_code        = "NULL";
+                $this->OrderLine->multicurrency_subprice    = "0.0";
+		$this->OrderLine->multicurrency_total_ht    = "0.0";
+		$this->OrderLine->multicurrency_total_tva   = "0.0";
+		$this->OrderLine->multicurrency_total_ttc   = "0.0";
 //                $this->OrderLine->fk_commande = 5;
             }
 //            //====================================================================//
