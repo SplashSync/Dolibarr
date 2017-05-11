@@ -1,8 +1,8 @@
 ################################################################################
-# Dolibarr language file - fr_FR - osconnect
+# Dolibarr language file - fr_FR
 ################################################################################
 #
-# * Copyright (C) 2014 Bernard Paquier       <contact@dolibarr-addict.com>
+# * Copyright (C) 2017 Splash Sync       <contact@splashsync.com>
 # * This program is Copyright (C) Protected.
 # *  \Id 	 $Id: splash.lang 527 2016-05-25 10:18:55Z Nanard33 $
 # *  \version    $Revision: 527 $
@@ -16,12 +16,14 @@ CHARSET=UTF-8
 # General
 ################################################################################
 
+SPL_Welcome         =   Module Splash Activé
+
 ################################################################################
 # Admin Page Index
 ################################################################################
 SPL_Name            =   Splash Sync Module
-SPL_Short_Desc      =   Splash Sync Connector for Dolibarr. Open Synchronisation system for dolibarr (Version > 3.5.x).
-SPL_Full_Desc       =   Splash Sync Connector for Dolibarr. Open Synchronisation system for dolibarr (Version > 3.5.x).
+SPL_Short_Desc      =   Splash Sync, Connecteur pour Dolibarr. (Version > 3.5.x).
+SPL_Full_Desc       =   Splash Sync, Connecteur pour Dolibarr. Le système de Synchronisation Open-Source pour Dolibarr (Version > 3.5.x). Plus d'informations sur <a href="http://www.splashsync.com" target="_blank">www.splashsync.com</a>
 
 SPL_Main_Config     =   Paramètres généraux
 SPL_SiteId          =   Identifiant unique pour ce site sur le server Splash (8 Char Max). 
@@ -30,9 +32,9 @@ SPL_WsKey           =   Clef Unique de Cryptage
 SPL_WsKey_Tooltip   =   Ce parametre est fourni lors de la création d'un serveur sur le site.
 
 SPL_WsExpert        =   Activer la configuration avancée du serveur
-SPL_WsExpert_Tooltip=   N'activer qu'à notre demande, au risque de voir votre sreveur ne plus fonctionner!! 
+SPL_WsExpert_Tooltip=   N'activer qu'à notre demande, au risque de voir votre serveur ne plus fonctionner!! 
 SPL_WsHost          =   Adresse du Server Splash Sync à Utiliser
-SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. Valeur par défaut : soap.splashsync.com 
+SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. Valeur par défaut : www.splashsync.com/ws/soap 
 
 SPL_Local_Config    =   Paramètres Locaux
 SPL_DfLang          =   Langue par défaut utilisée par le module
@@ -52,8 +54,8 @@ SPL_WidgetList      = Liste des widgets disponibles
 # Admin Page Connect Tests Results
 ################################################################################
 
-SPL_WsTest              = Test de la connexion au serveur distant.
-SPL_SelfTest            = Verification de la configuration du Module Dolibarr.
+SPL_WsTest              = Test de la connexion au serveur
+SPL_SelfTest            = Vérification de la configuration du Module Dolibarr.
 SPL_WsTestPing          = Tentative de ping du serveur distant (Sans encapsulation des données ni cryptage)
 SPL_WsTestConnect       = Tentative de connexion au serveur distant (Avec encapsulation et cryptage si actif)
 
@@ -65,125 +67,4 @@ SPL_WsConnectOk         = La connexion au serveur a réussi.
 SPL_WsConnectKo         = La connexion au serveur à échouée.
 
 
-
-
-
-
-
-SPL_Node=Serveur Distants
-SPL_Shop=Boutique
-SPL_ShopWeb=Boutique Web
-SPL_Name=OSCommerce RC2.2
-SPL_ConnectedTo = Connecté à <b>%s</b>
-SPL_NotConnected = Aucun Serveur Connecté  
-SPL_History =   Historique
-ChiffreAffaireAnnee = Chiffre d'affaire de l'année %s 
-#
-# Page Index - Statistiques
-#
-SPL_CA_DELTA=Evolution CA
-SPL_SHIP=Expeditions 
-SPL_NEWCLIENTS=Nouveaux compte clients
-
-SPL_SCALE    =   Période
-SPL_12MOIS   =   Cette Année
-SPL_24MOIS   =   2 ans
-SPL_36MOIS   =   3 ans
-SPL_48MOIS   =   4 ans
-SPL_LASTMONTH   	=   30 Derniers Jours
-SPL_TWOLASTMONTH   	=   60 Derniers Jours
-SPL_PROD_GVAL      	=   CA généré par Produits
-SPL_PROD_GQTE      	=   Qte de Produits Vendus
-SPL_AVG_CART      	=   Panier Moyen
-SPL_ORDERS_COMP		= Composition des Commandes
-
-#
-# Page Admin - Main
-#
-SPL_MAIN = Paramètres Généraux
-SPL_Index = Splash
-SPL_SiteName = Nom du serveur distant. (Pour Affichage)
-SPL_SiteId = Identifiant unique pour ce site sur Dolibarr (8 Char Max). Ce parametre doit être identique des deux côtés. 
-SPL_MasterNode      = Mode Maïtre
-SPL_SlaveNode       = Mode Esclave
-SPL_NodeMode        = Mode de ce serveur.</br> Mode Maïtre : La synchronistaion des objets est contrôlée depuis Dolibarr, le serveur distant ne fait que reporter les modifications. </br> Mode Esclave : La synchronistaion des objets est contrôlée par le serveur distant, Dolibarr ne fait que reporter les modifications faites sur ses objets.
-SPL_www = Adresse publique de la boutique. (www.maboutique.com) Cette addresse n'est utilisée que pour l'accès à la boutique depuis la tableau de bord. 
-SPL_Host = Addresse ou Ip du serveur - Adresse de la page d'administration de </br>votre boutique. Adresse sans "http://". (www.myshop.com/admin)  
-SPL_SQL = Connexion directe site OsCommerce via SQL
-SPL_WS = Paramètres de connexion au serveur distant via OsWs
-SPL_WsCrypt = Crypter les Messages
-SPL_WsCrypt_d = Encrypter tous les massages échengés entre les serveurs Maîtres et Esclaves.</br> Methode de cryptage : %s
-SPL_WsFolder = Dossier dans lequel est stocké le module. Utilisez ce parametre si</br> le module est installé ailleurs que dans le dossier racine de la zone d'administration. Laisser vide sinon.
-SPL_WsKey = Clef Unique
-SPL_WsKey_d = Clef Privée Unique pour sécuriser la connexion entre les serveurs Maîtres et Esclaves.</br> Ce parametre doit être identique des deux côtés.
-SPL_WsCallKo = Echec de communication en WebService
-SPL_TestPerformed = Tests Realisés sur le Serveur Distant
-
-#
-# Page Admin - Local Setup
-#
-SPL_CustomParameters    = Paramètres Locaux
-SPL_LocalUser           = Utlisateur utilisé pour les opérations initiées par le serveur distant. 
-SPL_Language            = Langue utilisé pour les Descriptions et Messages distant 
-#
-# Page Admin - Objects Setup
-#
-SPL_NodeInfosList       = Liste des blocks d'informations disponibles sur le server distant
-SPL_ObjectSetup         = Configuration de la synchronisation des objets
-SPL_NodeIdCard          = Carte d'identité du serveur distant
-SPL_AvailableObjects    = Liste des Objets disponibles sur ce serveur distant
-SPL_ExportNew           = Exporter automatiquement les nouveaux objets créés localement vers le site distant?
-SPL_ImportNew           = Importer automatiquement les nouveaux objets créés sur le site distant?
-SPL_ExportUpdated       = Lors de la mise à jour d'un objet local, le créer automatiquement sur le site distant si il n'y existe pas encore?
-SPL_ImportUpdated       = Lors de la mise à jour d'un objet sur le site distant, le créer automatiquement localement si il n'y existe pas encore?
-SPL_ExportDelete        = Lors de la suppression d'un objet local, le supprimer aussi du site distant?
-SPL_ImportDelete        = Lors de la suppression d'un objet sur le site distant, le supprimer aussi localement?
-SPL_DatasToSynchronize  = Champs de données à synchroniser
-SPL_NodeisSlaveMode     = N/A, Ce serveur est configuré en mode Slave.
-SPL_ObjectisDisabled    = Synchronisation inactive pour cet objet
-#
-# General - Add Fields Sync Menu
-#
-AddObjectFieldSync      = Ajouter un champs à synchroniser
-SPL_SelectValidate      = Configuration OK, validez pour ajouter le champs à la configuration 
-SPL_SelectRemoteField   = Sélectionnez le champs distant a synchroniser 
-SPL_SelectLocalField    = Sélectionnez le champs local a synchroniser 
-SPL_SelectSync          = Choisissez le mode de synchronisation 
-#
-# Page Admin - Messages
-#
-SPL_NoNodeFound         = Pas de Serveur Distant Configuré
-SPL_NoActiveWebSite     = Pas de Serveur Distant Actif
-SPL_DeleteSite          = Souhaitez vous vraiment supprimer la configuration de se serveur distant?
-SPL_NoCommid            = Pas d'Utilisateur / Commercial selectionné pour le module Splash.
-SPL_SyncAll             = Voulez vous vraiment lancer une synchronisation de tous le objets? </br></br>Tous les objets existant sur Dobilarr seront écrasés.</br></br>Cette tâche peut prendre plusieurs minutes selon le nombre d'objets à importer. 
-#
-# Page Mapping 
-#
-SPL_ObjectMapping       = Cartographie des Objects sur le Serveur Distant
-SPL_LocalObjectMapping  = Cartographie des Objects Locaux
-#
-# Fiches des Objets 
-#
-SPL_SyncOn              = Objet Synchronisé sur :
-#
-#
-# Historics
-#
-SPL_Fil-O = Filtrer sur cet Id OsCommerce
-SPL_CleanFil-O = Effacer le filtre sur cet Id OsCommerce
-SPL_Fil-D = Filtrer sur cet Id Dolibarr
-SPL_CleanFil-D = Effacer le filtre sur cet Id Dolibarr
-SPL_AllSiteHistory = Historique de toutes les boutiques
-#
-# Commons - Messages
-#
-SPL_Deletelink          = Souhaitez vous vraiment supprimer le lien entre cet objet et le site?
-SPL_DeleteImage         = Souhaitez vous vraiment supprimer cette image?
-SPL_DeleteFile          = Souhaitez vous aussi supprimer le fichier du serveur?
-SPL_DeleteDataField         = Souhaitez vous aussi supprimer la synchronisation de ce champ?
-SPL_ImportAll           = Importer Tout
-SPL_OrphelinElement     = Cet élement dispose d'un lien qui n'est plus rattaché à aucun site distant. Cliquez sur supprimer pour corriger le problème.
-SPL_ShopNotFound        = Impossible de trouver la boutique OsCommerce %s sur Dolibarr
-SPL_NoData              = Aucun enregistrement trouvé sur le serveur distant
 
