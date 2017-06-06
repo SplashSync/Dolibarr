@@ -49,7 +49,7 @@ echo Splash::Log()->GetHtmlLog(True);
 echo "</br>";
 
 //====================================================================//
-// List Objects
+// List Widgets
 //====================================================================//
 $Widgets   =   Splash::Widgets();
 echo '<table class="noborder" width="100%"><tbody>';

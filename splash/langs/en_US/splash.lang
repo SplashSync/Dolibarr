@@ -27,9 +27,9 @@ SPL_Full_Desc       =   Splash Sync Connector for Dolibarr. Open-Source Synchron
 
 SPL_Main_Config     =   Main Parameters
 SPL_SiteId          =   Unique Identifier for this website on Splash Servers (8 Char Max). 
-SPL_SiteId_Tooltip  =   This parameter is provided when you create a new Server on ouor website. 
+SPL_SiteId_Tooltip  =   This parameter is provided when you create a new Server on our website. 
 SPL_WsKey           =   Unique Encryption Key
-SPL_WsKey_Tooltip   =   This parameter is provided when you create a new Server on ouor website. 
+SPL_WsKey_Tooltip   =   This parameter is provided when you create a new Server on our website. 
 
 SPL_WsExpert        =   Enable Advanced Configuration for this Server
 SPL_WsExpert_Tooltip=   Only use uppon our request! Your serveur may not work normally. 
