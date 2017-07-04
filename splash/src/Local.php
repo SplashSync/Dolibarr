@@ -112,19 +112,16 @@ class Local
     {
         global $langs;
         
-        $Parameters       =     array();
-
+        $Parameters       =     array();        
         //====================================================================//
         // Server Identification Parameters
         $Parameters["WsIdentifier"]         =   self::getParameter("SPLASH_WS_ID");
         $Parameters["WsEncryptionKey"]      =   self::getParameter("SPLASH_WS_KEY");
-        
         //====================================================================//
         // If Debug Mode => Allow Overide of Server Host Address
         if ( (self::getParameter("SPLASH_WS_EXPERT")) && !empty(self::getParameter("SPLASH_WS_HOST")) ) {
             $Parameters["WsHost"]           =   self::getParameter("SPLASH_WS_HOST");
         }
-        
         //====================================================================//
         // Overide Module Parameters with Local User Selected Lang
         if ( self::getParameter("SPLASH_LANG") ) {
@@ -134,7 +131,6 @@ class Local
         } elseif ( ($langs) && $langs->getDefaultLang() ) {
             $Parameters["DefaultLanguage"]      =   $langs->getDefaultLang();
         } 
-        
         //====================================================================//
         // Overide Module Local Name in Logs
         $Parameters["localname"]        =   self::getParameter("MAIN_INFO_SOCIETE_NOM");
