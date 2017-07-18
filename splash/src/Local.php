@@ -95,11 +95,11 @@ class Local
 //====================================================================//
     
     /**
-     *      @abstract       Return Local Server Parameters as Aarray
+     *      @abstract       Return Local Server Parameters as Array
      *                      
      *      THIS FUNCTION IS MANDATORY 
      * 
-     *      This function called on each initialisation of the module
+     *      This function called on each initialization of the module
      * 
      *      Result must be an array including mandatory parameters as strings
      *         ["WsIdentifier"]         =>>  Name of Module Default Language
