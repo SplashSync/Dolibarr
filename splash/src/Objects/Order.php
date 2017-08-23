@@ -1269,12 +1269,12 @@ class Order extends ObjectBase
             if (array_key_exists("fk_product", $LineData) && !empty($LineData["fk_product"]) ) {
                 $ProductId = $this->ObjectId_DecodeId($LineData["fk_product"]);
                 if ( $this->OrderLine->fk_product != $ProductId )  {
-                    $this->OrderLine->setValueFrom("fk_product",$ProductId);
+                    $this->OrderLine->setValueFrom("fk_product",$ProductId, NUll, NUll, NUll, NUll, "none");
                     $this->orderlineupdate = TRUE;
                 }   
             } elseif (array_key_exists("fk_product", $LineData) && empty($LineData["fk_product"]) ) {
                 if ( $this->OrderLine->fk_product != 0 )  {
-                    $this->OrderLine->setValueFrom("fk_product",0);
+                    $this->OrderLine->setValueFrom("fk_product",0, NUll, NUll, NUll, NUll, "none");
                     $this->orderlineupdate = TRUE;
                 }   
             }       

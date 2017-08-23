@@ -469,13 +469,16 @@ class Product extends ObjectBase
                     ->isLogged()
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","description");
+            
             //====================================================================//
             // Note
-            $this->FieldsFactory()->Create(SPL_T_MTEXT)
+            if ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) {
+                $this->FieldsFactory()->Create(SPL_T_MTEXT)
                     ->Identifier("note")
                     ->Name($langs->trans("Note"))
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","privatenote");
+            }
         //====================================================================//
         // No Multilangs Descriptions
         } else {
