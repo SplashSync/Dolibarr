@@ -70,6 +70,24 @@ if ($conf->global->SPLASH_WS_EXPERT) {
     echo '      <td><input type="text"  name="WsHost" value="' . $conf->global->SPLASH_WS_HOST . '" size="50"></td>';
     echo '  </tr>';
 }
+//====================================================================//
+// Ws Protocol Parameter
+if ($conf->global->SPLASH_WS_EXPERT) {
+    //====================================================================//
+    // Default Synchronized Product Price
+    echo '  <tr class="pair">';
+    echo '      <td>' . $langs->trans("SPL_WsMethod") . '</td>';
+    echo '      <td>';
+    
+	print '<select name="WsMethod" class="flat">';
+            print '<option value="NuSOAP" ' . ( ("NuSOAP" == $conf->global->SPLASH_WS_METHOD) ? 'selected' : '' ) . '>NuSOAP Librarie</option>' ;
+            print '<option value="SOAP" '   . ( ("SOAP" == $conf->global->SPLASH_WS_METHOD) ? 'selected' : '' ) . '>Generic PHP SOAP</option>' ;
+	print '</select>';    
+    
+    echo '      </td>';
+    echo '  </tr>';    
+    
+}
 echo '</tbody></table>';
 
 //====================================================================//

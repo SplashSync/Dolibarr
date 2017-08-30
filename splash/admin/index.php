@@ -122,6 +122,15 @@ if ($action == 'UpdateMain')
     }
     
     //====================================================================//
+    // Update Protocl
+    $WsMethod = GETPOST('WsMethod','alpha');
+    if ( $WsMethod ) {
+        if ( dolibarr_set_const($db,"SPLASH_WS_METHOD",$WsMethod,'chaine',0,'',$conf->entity) <= 0){
+            $errors++;
+        }
+    }
+    
+    //====================================================================//
     // DB Commit & Display User Message
     if (! $error) {
         $db->commit();
@@ -166,6 +175,15 @@ if ($action == 'UpdateMain')
             $errors++;
         }
     }
+    
+    //====================================================================//
+    // Update Default MultiPrice
+    $DfPrice = GETPOST('price_level','alpha');
+    if ( $DfUser ) {
+        if ( dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL",$DfPrice,'chaine',0,'',$conf->entity) <= 0){
+            $errors++;
+        }
+    }    
 
     //====================================================================//
     // Update Default Bank Account Id

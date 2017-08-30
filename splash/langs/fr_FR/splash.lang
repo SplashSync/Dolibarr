@@ -35,6 +35,7 @@ SPL_WsExpert        =   Activer la configuration avancée du serveur
 SPL_WsExpert_Tooltip=   N'activer qu'à notre demande, au risque de voir votre serveur ne plus fonctionner!! 
 SPL_WsHost          =   Adresse du Server Splash Sync à Utiliser
 SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. Valeur par défaut : www.splashsync.com/ws/soap 
+SPL_WsMethod        =   Protocole de WebService à Utiliser
 
 SPL_Local_Config    =   Paramètres Locaux
 SPL_DfLang          =   Langue par défaut utilisée par le module
@@ -42,6 +43,7 @@ SPL_DfUser          =   Utilisateur utilisée par le module lors des opération 
 SPL_DfStock         =   Entrepot par défaut utilisée par le module (si non spécifié)
 SPL_DfBankAccount   =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
 SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifié)
+SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-prix est actif)
 
 ################################################################################
 # Admin Page Self Tests Results

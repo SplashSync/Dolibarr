@@ -39,6 +39,7 @@ namespace   Splash\Local\Objects;
 use Splash\Models\ObjectBase;
 use Splash\Core\SplashCore      as Splash;
 
+use Splash\Models\Objects\PricesTrait;
 
 /**
  *	\class      Product
@@ -46,6 +47,9 @@ use Splash\Core\SplashCore      as Splash;
  */
 class Product extends ObjectBase
 {
+    
+    use PricesTrait;
+    
     //====================================================================//
     // Object Definition Parameters	
     //====================================================================//
@@ -788,18 +792,29 @@ class Product extends ObjectBase
                 // PRICE INFORMATIONS
                 //====================================================================//
                 case 'price':
-                    if ( $this->Object->price_base_type === 'TTC' ) {
-                        $PriceHT    = Null;
-                        $PriceTTC   = (double) $this->Object->price_ttc;
+                    
+                    
+                    //====================================================================//
+                    // If multiprices are enabled
+                    if (!empty($conf->global->PRODUIT_MULTIPRICES) )
+                    {
+                        $PriceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
+                        $PriceType  = $this->Object->multiprices_base_type[$PriceLevel];
+                        $PriceHT    = (double) $this->Object->multiprices[$PriceLevel];
+                        $PriceTTC   = (double) $this->Object->multiprices_ttc[$PriceLevel];
+                        $PriceVAT   = (double) $this->Object->multiprices_tva_tx[$PriceLevel];
                     } else {
+                        $PriceType  = $this->Object->price_base_type;
                         $PriceHT    = (double) $this->Object->price;
-                        $PriceTTC   = Null;
+                        $PriceTTC   = (double) $this->Object->price_ttc;
+                        $PriceVAT   = (double) $this->Object->tva_tx;
                     }
-                    $this->Out[$FieldName] = self::Price_Encode(
-                            $PriceHT,
-                            (double)$this->Object->tva_tx,
-                            $PriceTTC,
-                            $conf->global->MAIN_MONNAIE);
+                    
+                    if ( $PriceType === 'TTC' ) {
+                        $this->Out[$FieldName] = self::Prices()->Encode(Null, $PriceVAT, $PriceTTC, $conf->global->MAIN_MONNAIE);
+                    } else {
+                        $this->Out[$FieldName] = self::Prices()->Encode($PriceHT, $PriceVAT, Null, $conf->global->MAIN_MONNAIE);
+                    }
                     break;
                     
                 case 'cost_price':
