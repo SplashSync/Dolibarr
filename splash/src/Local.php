@@ -32,35 +32,8 @@ use Splash\Core\SplashCore      as Splash;
 
 use User;
 use ArrayObject;
-
-//====================================================================//
-//  INCLUDES
-//====================================================================//
-
-
-//====================================================================//
-//  CONSTANTS DEFINITION
-//====================================================================//
-
-//====================================================================//
-//  CLASS DEFINITION
-//====================================================================//
-
-//====================================================================//
-// *******************************************************************//
-// *******************************************************************//
-//====================================================================//
-// 
-//  MAIN CORE FUNCTION
-//  
-//  This Class includes all commons Local functions
-//    
-//====================================================================//
-// *******************************************************************//
-// *******************************************************************//
-//====================================================================//
     
- /**
+/**
  *	\class      SplashLocal
  *	\brief      Local Core Management Class
  */
@@ -297,13 +270,62 @@ class Local
         return $Response;
     }    
     
-    
-    
+//====================================================================//
+// *******************************************************************//
+//  OPTIONNAl CORE MODULE LOCAL FUNCTIONS
+// *******************************************************************//
+//====================================================================//
     
 
+    /**
+     *      @abstract       Return Local Server Test Sequences as Aarray
+     *                      
+     *      THIS FUNCTION IS OPTIONNAL - USE IT ONLY IF REQUIRED
+     * 
+     *      This function called on each initialization of module's tests sequences.
+     *      It's aim is to list different configurations for testing on local system.
+     * 
+     *      If Name = List, Result must be an array including list of Sequences Names.
+     * 
+     *      If Name = ASequenceName, Function will Setup Sequence on Local System.
+     * 
+     *      @return         array       $Sequences
+     */    
+    public static function TestSequences($Name = Null)
+    {
+        global $db, $conf;
+        require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
+                
+        switch($Name) {
+            
+            case "Monolangual":
+                dolibarr_set_const($db,"MAIN_MULTILANGS"            ,0,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);              
+                return;
+                
+            case "Multilangual":
+                dolibarr_set_const($db,"MAIN_MULTILANGS"            ,1,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);              
+                return;
+            
+            case "MultiPrices":
+                dolibarr_set_const($db,"MAIN_MULTILANGS"            ,1,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,1,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"PRODUIT_MULTIPRICES_LIMIT"  ,3,'chaine',0,'',$conf->entity);              
+                
+                return;
+                
+            case "List":
+                return array("Monolangual", "Multilangual" );
+                
+        }
+    }
     
-
-    
+//====================================================================//
+// *******************************************************************//
+// Place Here Any SPECIFIC or COMMON Local Functions
+// *******************************************************************//
+//====================================================================//
     
     /**
      *      @abstract       Return lost of all active langues code
@@ -326,12 +348,6 @@ class Local
         }
         return $OsWs_Langs;
     }         
-    
-//====================================================================//
-// *******************************************************************//
-// Place Here Any SPECIFIC or COMMON Local Functions
-// *******************************************************************//
-//====================================================================//
     
     /**
      *      @abstract       Initiate Local Request User if not already defined

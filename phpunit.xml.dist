@@ -18,38 +18,26 @@
 >
 
     <testsuites>
-        <testsuite name="All">
-            <directory>splash/Tests/*</directory>
+        <testsuite name="Core">
             <directory>splash/vendor/splash/phpcore/Tests/*</directory>
         </testsuite>
-        <testsuite name="Core">
-            <directory>splash/Tests/Core</directory>
-            <directory>splash/vendor/splash/phpcore/Tests/Core</directory>
-        </testsuite>
-        <testsuite name="Admin">
-            <directory>splash/Tests/Admin</directory>
-            <directory>splash/vendor/splash/phpcore/Tests/Admin</directory>
-        </testsuite>
-        <testsuite name="Objects">
-            <directory>splash/Tests/Objects</directory>
-            <directory>splash/vendor/splash/phpcore/Tests/Objects</directory>
-        </testsuite>
-        <testsuite name="Widgets">
-            <directory>splash/Tests/Widgets</directory>
-            <directory>splash/vendor/splash/phpcore/Tests/Widgets</directory>
+        <testsuite name="Local">
+            <directory>splash/src/Tests/*</directory>
         </testsuite>
     </testsuites>
 
     <filter>
-        <whitelist>
-            <directory>splash/Tests</directory>
-            <directory>splash/vendor/splash/phpcore</directory>
-            <exclude>
-                <directory>splash/vendor</directory>
-            </exclude>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory>splash/src/Objects</directory>
+            <directory>splash/src/Widgets</directory>
+            <file>splash/src/Local.php</file>
         </whitelist>
     </filter>
     
+    <logging>
+        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>
+    </logging> 
+        
     <php>
         <const  name="SPLASH_DEBUG" value="true" />
         <server name="SERVER_NAME" value="http://localhost/Dolibarr/Dol-3.9"/>
