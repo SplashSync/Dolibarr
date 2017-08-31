@@ -70,6 +70,35 @@ echo '  <tr class="pair">';
 echo '      <td>' . $langs->trans("SPL_DfStock") . '</td>';
 echo '      <td>' . $formproduct->selectWarehouses($conf->global->SPLASH_STOCK,'stock','',1) . '</td>';
 echo '  </tr>';
+
+
+//====================================================================//
+// If multiprices are enabled
+if (!empty($conf->global->PRODUIT_MULTIPRICES) )
+{
+    //====================================================================//
+    // Default Synchronized Product Price
+    echo '  <tr class="pair">';
+    echo '      <td>' . $langs->trans("SPL_DfMultiPrice") . '</td>';
+    echo '      <td>';
+    
+	print '<select name="price_level" class="flat">';
+	for($i=1;$i<=$conf->global->PRODUIT_MULTIPRICES_LIMIT;$i++)
+	{
+		print '<option value="'.$i.'"' ;
+		if($i == $conf->global->SPLASH_MULTIPRICE_LEVEL) { print 'selected'; }
+		print '>'. $langs->trans('SellingPrice') . " " .$i;
+		$keyforlabel='PRODUIT_MULTIPRICES_LABEL'.$i;
+		if (! empty($conf->global->$keyforlabel)) {
+                    print ' - '.$langs->trans($conf->global->$keyforlabel);
+                }
+		print '</option>';
+	}
+	print '</select>';    
+    
+    echo '      </td>';
+    echo '  </tr>';
+}
 //====================================================================//
 // Default Bank Account Parameter
 require_once(DOL_DOCUMENT_ROOT."/core/class/html.form.class.php");

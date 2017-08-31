@@ -91,9 +91,14 @@ class Local
         $Parameters["WsIdentifier"]         =   self::getParameter("SPLASH_WS_ID");
         $Parameters["WsEncryptionKey"]      =   self::getParameter("SPLASH_WS_KEY");
         //====================================================================//
-        // If Debug Mode => Allow Overide of Server Host Address
+        // If Expert Mode => Allow Overide of Server Host Address
         if ( (self::getParameter("SPLASH_WS_EXPERT")) && !empty(self::getParameter("SPLASH_WS_HOST")) ) {
             $Parameters["WsHost"]           =   self::getParameter("SPLASH_WS_HOST");
+        }
+        //====================================================================//
+        // If Expert Mode => Allow Update of Communication Protocol
+        if ( (self::getParameter("SPLASH_WS_EXPERT")) && !empty(self::getParameter("SPLASH_WS_METHOD")) ) {
+            $Parameters["WsMethod"]           =   self::getParameter("SPLASH_WS_METHOD");
         }
         //====================================================================//
         // Overide Module Parameters with Local User Selected Lang
