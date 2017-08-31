@@ -317,11 +317,11 @@ class Local
                 dolibarr_set_const($db,"MAIN_MULTILANGS"            ,1,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,1,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES_LIMIT"  ,3,'chaine',0,'',$conf->entity);              
-                
+                dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL"    ,rand(1,3),'chaine',0,'',$conf->entity);              
                 return;
                 
             case "List":
-                return array("Monolangual", "Multilangual" );
+                return array("Monolangual", "Multilangual", "MultiPrices" );
                 
         }
     }

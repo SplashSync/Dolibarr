@@ -776,58 +776,54 @@ class Product extends ObjectBase
         switch ($FieldName)
         {
             
+            //====================================================================//
+            // PRODUCT SPECIFICATIONS
+            //====================================================================//
+            case 'weight':
+                $this->Out[$FieldName] = (float) Splash::Local()->C_Weight($this->Object->weight,$this->Object->weight_units);             
+                break;
+            case 'length':
+                $this->Out[$FieldName] = (float) Splash::Local()->C_Length($this->Object->length,$this->Object->length_units);             
+                break;
+            case 'surface':
+                $this->Out[$FieldName] = (float) Splash::Local()->C_Surface($this->Object->surface,$this->Object->surface_units);             
+                break;
+            case 'volume':
+                $this->Out[$FieldName] = (float) Splash::Local()->C_Volume($this->Object->volume,$this->Object->volume_units);             
+                break;
+            
+            //====================================================================//
+            // PRICE INFORMATIONS
+            //====================================================================//
+            case 'price':
                 //====================================================================//
-                // PRODUCT SPECIFICATIONS
-                //====================================================================//
-                case 'weight':
-                    $this->Out[$FieldName] = (float) Splash::Local()->C_Weight($this->Object->weight,$this->Object->weight_units);             
-                    break;
-                case 'length':
-                    $this->Out[$FieldName] = (float) Splash::Local()->C_Length($this->Object->length,$this->Object->length_units);             
-                    break;
-                case 'surface':
-                    $this->Out[$FieldName] = (float) Splash::Local()->C_Surface($this->Object->surface,$this->Object->surface_units);             
-                    break;
-                case 'volume':
-                    $this->Out[$FieldName] = (float) Splash::Local()->C_Volume($this->Object->volume,$this->Object->volume_units);             
-                    break;
-                //====================================================================//
-                // PRICE INFORMATIONS
-                //====================================================================//
-                case 'price':
-                    
-                    
-                    //====================================================================//
-                    // If multiprices are enabled
-                    if (!empty($conf->global->PRODUIT_MULTIPRICES) )
-                    {
-                        $PriceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
-                        $PriceType  = $this->Object->multiprices_base_type[$PriceLevel];
-                        $PriceHT    = (double) $this->Object->multiprices[$PriceLevel];
-                        $PriceTTC   = (double) $this->Object->multiprices_ttc[$PriceLevel];
-                        $PriceVAT   = (double) $this->Object->multiprices_tva_tx[$PriceLevel];
-                    } else {
-                        $PriceType  = $this->Object->price_base_type;
-                        $PriceHT    = (double) $this->Object->price;
-                        $PriceTTC   = (double) $this->Object->price_ttc;
-                        $PriceVAT   = (double) $this->Object->tva_tx;
-                    }
-                    
-                    if ( $PriceType === 'TTC' ) {
-                        $this->Out[$FieldName] = self::Prices()->Encode(Null, $PriceVAT, $PriceTTC, $conf->global->MAIN_MONNAIE);
-                    } else {
-                        $this->Out[$FieldName] = self::Prices()->Encode($PriceHT, $PriceVAT, Null, $conf->global->MAIN_MONNAIE);
-                    }
-                    break;
-                    
-                case 'cost_price':
-                        $PriceHT    = (double) $this->Object->getValueFrom($this->Object->table_element, $this->Object->id, "cost_price");
-                        $this->Out[$FieldName] = self::Price_Encode(
-                                $PriceHT,
-                                (double)$this->Object->tva_tx,
-                                Null,
-                                $conf->global->MAIN_MONNAIE);
-                    break;
+                // If multiprices are enabled
+                if (!empty($conf->global->PRODUIT_MULTIPRICES) )
+                {
+                    $PriceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
+                    $PriceType  = $this->Object->multiprices_base_type[$PriceLevel];
+                    $PriceHT    = (double) $this->Object->multiprices[$PriceLevel];
+                    $PriceTTC   = (double) $this->Object->multiprices_ttc[$PriceLevel];
+                    $PriceVAT   = (double) $this->Object->multiprices_tva_tx[$PriceLevel];
+                } else {
+                    $PriceType  = $this->Object->price_base_type;
+                    $PriceHT    = (double) $this->Object->price;
+                    $PriceTTC   = (double) $this->Object->price_ttc;
+                    $PriceVAT   = (double) $this->Object->tva_tx;
+                }
+
+                if ( $PriceType === 'TTC' ) {
+                    $this->Out[$FieldName] = self::Prices()->Encode(Null, $PriceVAT, $PriceTTC, $conf->global->MAIN_MONNAIE);
+                } else {
+                    $this->Out[$FieldName] = self::Prices()->Encode($PriceHT, $PriceVAT, Null, $conf->global->MAIN_MONNAIE);
+                }
+                break;
+
+            case 'cost_price':
+                    $PriceHT    = (double) $this->Object->getValueFrom($this->Object->table_element, $this->Object->id, "cost_price");
+                    $this->Out[$FieldName] = self::Prices()
+                            ->Encode( $PriceHT, (double)$this->Object->tva_tx, Null, $conf->global->MAIN_MONNAIE );
+                break;
 
             default:
                 return;
@@ -845,14 +841,6 @@ class Product extends ObjectBase
      *  @return         none
      */
     private function getStockFields($Key,$FieldName) {
-
-////====================================================================//
-//// Load Current Product Stock Details
-//$this->Object->load_stock();                
-//$this->Object->stock_reel = 22;
-//
-//
-//var_dump($this->Object->stock_reel);
 
         //====================================================================//
         // READ Fields
@@ -1106,7 +1094,7 @@ class Product extends ObjectBase
             case 'price':
                 //====================================================================//
                 // Read Current Product Price (Via Out Buffer)
-                $this->getMainFields(Null,"price");
+                $this->getMainFields(0,"price");
                 //====================================================================//
                 // Compare Prices
                 if ( !$this->Price_Compare($this->Out["price"],$Data) ) {
@@ -1138,7 +1126,7 @@ class Product extends ObjectBase
      */
     private function setSavePrice()
     {
-        global $user;
+        global $user, $conf;
         
         //====================================================================//
         // Verify Price Need to be Updated
@@ -1163,17 +1151,26 @@ class Product extends ObjectBase
         }
 
         //====================================================================//
+        // If multiprices are enabled
+        if (!empty($conf->global->PRODUIT_MULTIPRICES) )
+        {
+            $PriceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
+        } else {
+            $PriceLevel = 0;
+        }
+                    
+        //====================================================================//
         // Commit Price Update on Product Object
         //====================================================================//
         // For compatibility with previous versions => V3.5.0 or Above
         if (Splash::Local()->DolVersionCmp("3.5.0") >= 0) {
             return (bool) $this->Object
-                    ->updatePrice($Price,$PriceBase, $user, $this->NewPrice["vat"]);
+                    ->updatePrice($Price,$PriceBase, $user, $this->NewPrice["vat"], '', $PriceLevel);
         //====================================================================//
         // For compatibility with previous versions => Below V3.5.0
         } else {    
             return (bool) $this->Object
-                    ->updatePrice($this->Object->id, $Price,$PriceBase, $user, $this->NewPrice["vat"]);
+                    ->updatePrice($this->Object->id, $Price,$PriceBase, $user, $this->NewPrice["vat"], '', $PriceLevel);
         }
         return False;
     }
