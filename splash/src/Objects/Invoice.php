@@ -1604,7 +1604,7 @@ class Invoice extends ObjectBase
 
         //====================================================================//
         // Setup Payment Account Id
-        $Result = $this->PaymentLine->addPaymentToBank($user,'payment','(CustomerInvoicePaymentBack)',$conf->global->SPLASH_BANK,"","");
+        $Result = $this->PaymentLine->addPaymentToBank($user,'payment','(Payment)',$conf->global->SPLASH_BANK,"","");
         if ( $Result < 0) {  
             Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to add Invoice Payment to Bank Account. ");
             Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,$langs->trans($this->PaymentLine->error));
