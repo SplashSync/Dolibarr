@@ -524,7 +524,7 @@ class Order extends ObjectBase
     private function buildOrderLineFields() {
         global $langs;
         
-        $ListName   = $langs->trans("OrderLine") . " => " ;
+        $ListName   = "";
         $GroupName  = $langs->trans("OrderLine");
         
         //====================================================================//
@@ -1126,7 +1126,7 @@ class Order extends ObjectBase
         //====================================================================//        
         case 'facturee':
             if ($Data) {
-                $this->Object->classifyBilled();
+                $this->Object->classifyBilled($user);
             }
             break;            
                 
