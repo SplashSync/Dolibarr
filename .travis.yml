@@ -51,11 +51,14 @@ before_script:
         mysql -e "SELECT VERSION();"
         echo
       fi
+
+    # Run Composer
+    - composer update 
   
     # Clone Dolibarr & Move to Web folder
     - git clone --depth=1 --branch="$DOL_VERSION" https://github.com/Dolibarr/dolibarr.git /tmp/Dolibarr
 
-    # Copy Splash Module to Dolibarr folder
+    # Build & Copy Splash Module to Dolibarr folder
     - export PLUGIN_SLUG=$(basename $(pwd))
     - cd ..
     - mv "$PLUGIN_SLUG"/splash "/tmp/Dolibarr/htdocs/splash"
@@ -68,9 +71,6 @@ before_script:
     - bash $TRAVIS_BUILD_DIR/build/configure_dolibarr.sh  
     - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
     
-    
-    
-
 #    # Configure Wordpress
 #    - cd /tmp/Wordpress
 #    - mysql -e "CREATE DATABASE wordpress_tests;" -uroot
@@ -84,9 +84,8 @@ before_script:
     
     # Move to Splash Module Dir
     - cd "/tmp/Dolibarr/htdocs/splash"
+    - ll
     
-    # Run Composer
-    - composer update 
 
 script: 
     - phpunit --version
