@@ -410,10 +410,16 @@ class Product extends ObjectBase
         
         //====================================================================//
         // Delete Object
-        if ( $Object->delete($user) <= 0) {  
+        if ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) {
+            $Result = $Object->delete($user);
+        } else {
+            $Result = $Object->delete();
+        }
+        if ( $Result <= 0) {  
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,$langs->trans($Object->error));
         }
         
+                
         return True;
     }       
 
