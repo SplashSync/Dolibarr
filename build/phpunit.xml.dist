@@ -11,7 +11,7 @@
     processIsolation            = "false"
     stopOnFailure               = "true"
     syntaxCheck                 = "false"
-    bootstrap                   = "bootstrap.php" 
+    bootstrap                   = "../splash/vendor/autoload.php" 
     verbose                     = "false"
     debug                       = "false"    
     timeoutForLargeTests        = "120"  

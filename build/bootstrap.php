@@ -19,10 +19,6 @@ require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
 dolibarr_set_const($db,"MAIN_MODULE_SYSLOG",0,'chaine',0,'',0);
 
 //====================================================================//
-// Activate Splash Module
-activateModule("modSplash");
-
-//====================================================================//
 // Setup Splash Module
 dolibarr_set_const($db,"SPLASH_WS_ID","12345678",'chaine',0,'',$conf->entity);
 dolibarr_set_const($db,"SPLASH_WS_KEY","001234567800",'chaine',0,'',$conf->entity);
@@ -32,4 +28,14 @@ dolibarr_set_const($db,"SPLASH_STOCK",1,'chaine',0,'',$conf->entity);
 dolibarr_set_const($db,"SPLASH_BANK",1,'chaine',0,'',$conf->entity);
 dolibarr_set_const($db,"SPLASH_DEFAULT_PAYMENT","CB",'chaine',0,'',$conf->entity);
 dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL",1,'chaine',0,'',$conf->entity);
-       
+
+//====================================================================//
+// Activate Splash Module
+activateModule("modSplash", 0);
+
+//    
+//try {
+////    activateModule("modSplash", 1);
+//} catch ( \PHPUnit\Framework\Exception $ex) {
+//    echo $ex->getMessage();
+//}

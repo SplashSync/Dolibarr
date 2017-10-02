@@ -86,6 +86,7 @@ before_script:
     
 
 script: 
+    - php build/bootstrap.php
     - phpunit --version
     - phpunit -c build/phpunit.xml.dist 
         
