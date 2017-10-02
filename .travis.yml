@@ -1,0 +1,101 @@
+# Travis CI Configuration File
+
+# Tell Travis CI we're using PHP
+language: php
+
+# Versions of PHP to test against
+php:
+#    - "5.6"
+#    - "7.0"
+    - "7.1"
+#    - "7.2"
+
+# Specify versions of WordPress to test against
+# WP_VERSION = WordPress version number (use "master" for SVN trunk)
+# WP_MULTISITE = whether to test multisite (use either "0" or "1")
+env:
+    global:
+        # Set to true for very verbose output
+        - DEBUG=false  
+    matrix:
+#    - WP_VERSION=master WP_MULTISITE=0
+#    - WP_VERSION=4.8.1 WP_MULTISITE=0
+#    - WP_VERSION=4.7 WP_MULTISITE=0
+#    - WP_VERSION=4.6 WP_MULTISITE=0
+#    - WP_VERSION=master WP_MULTISITE=1
+#    - WP_VERSION=4.8.1 WP_MULTISITE=1
+       - DOL_VERSION=develop
+    
+install:
+    # Disable Xdebug ...
+    - sudo phpdismod xdebug
+    - phpenv config-rm xdebug.ini
+    
+before_script:
+  
+    - |
+      echo Start travis
+      echo Current dir is `pwd`
+      echo Home dir is `echo ~`
+      echo TRAVIS_BUILD_DIR is $TRAVIS_BUILD_DIR
+  
+    - |
+      if [ "$DEBUG" = true ]; then
+        echo "Debugging informations"
+        # Check PHP
+        php -i
+        # Check PHPUnit installation
+        which phpunit
+        phpunit --version
+        # Check MySQL
+        mysql --version
+        mysql -e "SELECT VERSION();"
+        echo
+      fi
+  
+    # Clone Dolibarr & Move to Web folder
+    - git clone --depth=1 --branch="$DOL_VERSION" https://github.com/Dolibarr/dolibarr.git /tmp/Dolibarr
+
+    # Copy Splash Module to Dolibarr folder
+    - export PLUGIN_SLUG=$(basename $(pwd))
+    - cd ..
+    - mv "$PLUGIN_SLUG"/splash/ "/tmp/Dolibarr/htdocs/splash"
+
+    # Init Database
+    - bash build/install_database.sh
+    
+    # Setup Conf file
+    - cd /tmp/Dolibarr
+    - bash build/configure_dolibarr.sh  
+    - bash build/upgrtade_dolibarr.sh  
+    
+    
+    
+
+#    # Configure Wordpress
+#    - cd /tmp/Wordpress
+#    - mysql -e "CREATE DATABASE wordpress_tests;" -uroot
+#    - cp wp-tests-config-sample.php wp-tests-config.php
+#    - sed -i "s/youremptytestdbnamehere/wordpress_tests/" wp-tests-config.php
+#    - sed -i "s/yourusernamehere/travis/" wp-tests-config.php
+#    - sed -i "s/yourpasswordhere//" wp-tests-config.php
+#    
+#    # Disable Wp Debug (Not to Show notice etc...) 
+#    - sed -i "s/WP_DEBUG/WP_NO_DEBUG/" wp-tests-config.php
+    
+    # Move to Splash Module Dir
+    - cd "/tmp/Dolibarr/htdocs/splash"
+    
+    # Run Composer
+    - composer update 
+
+script: 
+    - phpunit --version
+    - phpunit -c build/phpunit.xml.dist 
+        
+notifications:
+  email:         
+    on_success: never # default: change
+    on_failure: never # default: always
+
+after_failure:

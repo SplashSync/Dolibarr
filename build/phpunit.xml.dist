@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+<phpunit
+    backupGlobals               = "false"
+    backupStaticAttributes      = "false"
+    colors                      = "true"
+    convertErrorsToExceptions   = "true"
+    convertNoticesToExceptions  = "false"
+    convertWarningsToExceptions = "false"
+    processIsolation            = "false"
+    stopOnFailure               = "true"
+    syntaxCheck                 = "false"
+    bootstrap                   = "../splash/vendor/autoload.php" 
+    verbose                     = "false"
+    debug                       = "false"    
+    timeoutForLargeTests        = "120"  
+>
+
+    <testsuites>
+        <testsuite name="Core">
+            <directory>../splash/vendor/splash/phpcore/Tests/*</directory>
+        </testsuite>
+        <testsuite name="Local">
+            <directory>../splash/src/Tests/*</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory>../splash/src/Objects</directory>
+            <directory>../splash/src/Widgets</directory>
+            <file>../splash/src/Local.php</file>
+        </whitelist>
+    </filter>
+    
+    <logging>
+        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>
+    </logging> 
+        
+    <php>
+        <const  name="SPLASH_DEBUG" value="true" />
+        <const  name="SPLASH_TRAVIS" value="true" />
+    </php>
+</phpunit>
