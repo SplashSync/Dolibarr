@@ -58,7 +58,7 @@ before_script:
     # Copy Splash Module to Dolibarr folder
     - export PLUGIN_SLUG=$(basename $(pwd))
     - cd ..
-    - mv "$PLUGIN_SLUG"/splash/ "/tmp/Dolibarr/htdocs/splash"
+    - mv "$PLUGIN_SLUG"/splash "/tmp/Dolibarr/htdocs/splash"
 
     # Init Database
     - bash $TRAVIS_BUILD_DIR/build/install_database.sh
