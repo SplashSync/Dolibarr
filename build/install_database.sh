@@ -7,7 +7,8 @@ mysql -e 'FLUSH PRIVILEGES;'
 echo "Loading demo Data"
 mysql -D travis < $DOL_BUILD_DIR/dev/initdemo/mysqldump_dolibarr_$DATA_VERSION.sql
 
-if [[ ${DOL_VERSION:0:1} >= "5" ]];  
+VERSION=`expr substr $DOL_VERSION 1 1`
+if [ "$VERSION" = "5" ];  
 then 
     echo "BugFix Update for Dolibarr 5.0.0"
     mysql -D travis -e "ALTER TABLE llx_socpeople CHANGE zip zip varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;"
