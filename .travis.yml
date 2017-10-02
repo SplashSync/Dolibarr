@@ -64,7 +64,7 @@ before_script:
     # Build & Copy Splash Module to Dolibarr folder
     - export PLUGIN_SLUG=$(basename $(pwd))
     - cd ..
-    - mv "$PLUGIN_SLUG"/splash "/tmp/Dolibarr/htdocs/splash"
+    - mv "$PLUGIN_SLUG" "/tmp/Dolibarr/htdocs"
 
     # Init Database
     - bash $TRAVIS_BUILD_DIR/build/install_database.sh
@@ -85,8 +85,8 @@ before_script:
 #    # Disable Wp Debug (Not to Show notice etc...) 
 #    - sed -i "s/WP_DEBUG/WP_NO_DEBUG/" wp-tests-config.php
     
-    # Move to Splash Module Dir
-    - cd "$DOL_BUILD_DIR/htdocs/splash"
+    # Move to Dolibarr Root Dir
+    - cd "$DOL_BUILD_DIR/htdocs"
     - ls -l
     
 
