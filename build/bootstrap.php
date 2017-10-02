@@ -10,7 +10,10 @@ global $db,$langs,$conf,$user,$hookmanager;
 //====================================================================//
 // Initiate Dolibarr Global Envirement Variables
 require_once( dirname(__DIR__) . "/master.inc.php");  
-     
+//====================================================================//
+// Functions Dolibarr
+require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
+
 //====================================================================//
 // Activate Splash Module
 activateModule("modSplash");
