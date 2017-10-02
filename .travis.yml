@@ -18,17 +18,11 @@ env:
         # Set to true for very verbose output
         - DEBUG=false  
     matrix:
-#    - WP_VERSION=master WP_MULTISITE=0
-#    - WP_VERSION=4.8.1 WP_MULTISITE=0
-#    - WP_VERSION=4.7 WP_MULTISITE=0
-#    - WP_VERSION=4.6 WP_MULTISITE=0
-#    - WP_VERSION=master WP_MULTISITE=1
-#    - WP_VERSION=4.8.1 WP_MULTISITE=1
+       - DOL_VERSION=develop DATA_VERSION=6.0.0
        - DOL_VERSION=6.0 DATA_VERSION=6.0.0
        - DOL_VERSION=5.0 DATA_VERSION=5.0.0
        - DOL_VERSION=4.0 DATA_VERSION=4.0.0
        - DOL_VERSION=3.9 DATA_VERSION=3.9.0
-#       - DOL_VERSION=develop DATA_VERSION=6.0.0
     
 install:
     # Disable Xdebug ...
@@ -76,9 +70,7 @@ before_script:
     - cp -rf "$TRAVIS_BUILD_DIR/splash" "$DOL_BUILD_DIR/htdocs/splash"
     - cp "$TRAVIS_BUILD_DIR/composer.json" "$DOL_BUILD_DIR/htdocs/composer.json"
     - cp -rf "$TRAVIS_BUILD_DIR/build" "$DOL_BUILD_DIR/htdocs/build"
-    - ls -l "$DOL_BUILD_DIR/htdocs"
-    - ls -l "$DOL_BUILD_DIR/htdocs/splash"
-    - ls -l "$DOL_BUILD_DIR/htdocs/build"
+
     # Run Composer
     - cd "$DOL_BUILD_DIR/htdocs/"
     - composer update 
