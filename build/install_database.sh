@@ -14,4 +14,10 @@ then
     mysql -D travis -e "ALTER TABLE llx_socpeople CHANGE zip zip varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;"
 fi 
 
+if [ "$VERSION" = "4" ];  
+then 
+    echo "BugFix Update for Dolibarr 4.0.0"
+    mysql -D travis -e "ALTER TABLE llx_socpeople CHANGE zip zip varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;"
+fi 
+
 echo
