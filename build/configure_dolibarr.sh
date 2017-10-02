@@ -2,8 +2,8 @@ export CONF_FILE=htdocs/conf/conf.php
 echo "Setting up Dolibarr $CONF_FILE"
 echo '<?php ' > $CONF_FILE
 echo '$'dolibarr_main_url_root=\'http://127.0.0.1\'';' >> $CONF_FILE
-echo '$'dolibarr_main_document_root=\'$TRAVIS_BUILD_DIR/htdocs\'';' >> $CONF_FILE
-echo '$'dolibarr_main_data_root=\'$TRAVIS_BUILD_DIR/documents\'';' >> $CONF_FILE
+echo '$'dolibarr_main_document_root=\'$DOL_BUILD_DIR/htdocs\'';' >> $CONF_FILE
+echo '$'dolibarr_main_data_root=\'$DOL_BUILD_DIR/documents\'';' >> $CONF_FILE
 echo '$'dolibarr_main_db_host=\'127.0.0.1\'';' >> $CONF_FILE
 echo '$'dolibarr_main_db_name=\'travis\'';' >> $CONF_FILE
 echo '$'dolibarr_main_db_user=\'travis\'';' >> $CONF_FILE

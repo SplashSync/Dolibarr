@@ -32,11 +32,14 @@ install:
     
 before_script:
   
+    - export DOL_BUILD_DIR=/tmp/Dolibarr
+    
     - |
       echo Start travis
       echo Current dir is `pwd`
       echo Home dir is `echo ~`
       echo TRAVIS_BUILD_DIR is $TRAVIS_BUILD_DIR
+      echo DOL_BUILD_DIR is $DOL_BUILD_DIR
   
     - |
       if [ "$DEBUG" = true ]; then
@@ -56,7 +59,7 @@ before_script:
     - composer update 
   
     # Clone Dolibarr & Move to Web folder
-    - git clone --depth=1 --branch="$DOL_VERSION" https://github.com/Dolibarr/dolibarr.git /tmp/Dolibarr
+    - git clone --depth=1 --branch="$DOL_VERSION" https://github.com/Dolibarr/dolibarr.git $DOL_BUILD_DIR
 
     # Build & Copy Splash Module to Dolibarr folder
     - export PLUGIN_SLUG=$(basename $(pwd))
@@ -84,7 +87,7 @@ before_script:
     
     # Move to Splash Module Dir
     - cd "/tmp/Dolibarr/htdocs/splash"
-    - ll
+    - ls -l
     
 
 script: 
