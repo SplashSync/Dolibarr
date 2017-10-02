@@ -371,7 +371,7 @@ class Invoice extends ObjectBase
     */    
     public function Delete($id=NULL)
     {
-        global $db,$user,$langs;
+        global $db,$user,$conf;
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
@@ -386,14 +386,21 @@ class Invoice extends ObjectBase
         }
         //====================================================================//
         // Set Object Id, fetch not needed
-        $this->Object->id = $id;
+        $Object->id = $id; 
+        
+        //====================================================================//
+        // Debug Mode => Force Allow Delete
+        if ( defined("SPLASH_DEBUG") && SPLASH_DEBUG ) {
+            $conf->global->INVOICE_CAN_ALWAYS_BE_REMOVED = 1;
+        }
         //====================================================================//
         // Delete Object
         $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
-        if ( $Object->delete($Arg1)) {         
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,$langs->trans($this->Object->error));
+        if ( $Object->delete($Arg1) <= 0 ) {         
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, $Object->errorsToString());
         }
         return True;
+        
     }       
 
     //====================================================================//
