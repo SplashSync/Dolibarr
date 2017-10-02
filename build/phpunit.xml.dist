@@ -41,5 +41,6 @@
     <php>
         <const  name="SPLASH_DEBUG" value="true" />
         <const  name="SPLASH_TRAVIS" value="true" />
+        <server name="SERVER_NAME" value="http://localhost/Dolibarr/Tests"/>
     </php>
 </phpunit>

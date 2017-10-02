@@ -6,8 +6,8 @@ language: php
 # Versions of PHP to test against
 php:
 #    - "5.6"
-#    - "7.0"
-    - "7.1"
+    - "7.0"
+#    - "7.1"
 #    - "7.2"
 
 # Specify versions of WordPress to test against
@@ -24,7 +24,8 @@ env:
 #    - WP_VERSION=4.6 WP_MULTISITE=0
 #    - WP_VERSION=master WP_MULTISITE=1
 #    - WP_VERSION=4.8.1 WP_MULTISITE=1
-       - DOL_VERSION=develop DATA_VERSION=6.0.0
+       - DOL_VERSION=6.0.0 DATA_VERSION=6.0.0
+#       - DOL_VERSION=develop DATA_VERSION=6.0.0
     
 install:
     # Disable Xdebug ...
