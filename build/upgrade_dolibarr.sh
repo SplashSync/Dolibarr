@@ -79,6 +79,5 @@ fi
 cd -
 set +e
 echo
-#cat $TRAVIS_BUILD_DIR/upgrade400500-2.log
-#cat /tmp/dolibarr_install.log
+
 

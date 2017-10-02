@@ -24,7 +24,7 @@ env:
 #    - WP_VERSION=4.6 WP_MULTISITE=0
 #    - WP_VERSION=master WP_MULTISITE=1
 #    - WP_VERSION=4.8.1 WP_MULTISITE=1
-       - DOL_VERSION=develop
+       - DOL_VERSION=develop DATA_VERSION=6.0.0
     
 install:
     # Disable Xdebug ...
@@ -72,7 +72,7 @@ before_script:
     # Setup Conf file
     - cd /tmp/Dolibarr
     - bash $TRAVIS_BUILD_DIR/build/configure_dolibarr.sh  
-    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
+#    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
     
 #    # Configure Wordpress
 #    - cd /tmp/Wordpress
@@ -86,7 +86,7 @@ before_script:
 #    - sed -i "s/WP_DEBUG/WP_NO_DEBUG/" wp-tests-config.php
     
     # Move to Splash Module Dir
-    - cd "/tmp/Dolibarr/htdocs/splash"
+    - cd "$DOL_BUILD_DIR/htdocs/splash"
     - ls -l
     
 
