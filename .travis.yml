@@ -61,12 +61,12 @@ before_script:
     - mv "$PLUGIN_SLUG"/splash/ "/tmp/Dolibarr/htdocs/splash"
 
     # Init Database
-    - bash build/install_database.sh
+    - bash $TRAVIS_BUILD_DIR/build/install_database.sh
     
     # Setup Conf file
     - cd /tmp/Dolibarr
-    - bash build/configure_dolibarr.sh  
-    - bash build/upgrtade_dolibarr.sh  
+    - bash $TRAVIS_BUILD_DIR/build/configure_dolibarr.sh  
+    - bash $TRAVIS_BUILD_DIR/build/upgrtade_dolibarr.sh  
     
     
     
