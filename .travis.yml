@@ -33,6 +33,7 @@ install:
 before_script:
   
     - export DOL_BUILD_DIR=/tmp/Dolibarr
+    - export PLUGIN_SLUG=$(basename $(pwd))
     
     - |
       echo Start travis
@@ -40,6 +41,7 @@ before_script:
       echo Home dir is `echo ~`
       echo TRAVIS_BUILD_DIR is $TRAVIS_BUILD_DIR
       echo DOL_BUILD_DIR is $DOL_BUILD_DIR
+      echo PLUGIN_SLUG is $PLUGIN_SLUG
   
     - |
       if [ "$DEBUG" = true ]; then
@@ -54,9 +56,6 @@ before_script:
         mysql -e "SELECT VERSION();"
         echo
       fi
-
-    # Run Composer
-    - composer update 
   
     # Clone Dolibarr & Move to Web folder
     - git clone --depth=1 --branch="$DOL_VERSION" https://github.com/Dolibarr/dolibarr.git $DOL_BUILD_DIR
@@ -70,7 +69,10 @@ before_script:
 #    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
-    - sudo cp -Rf "$TRAVIS_BUILD_DIR" "$DOL_BUILD_DIR/htdocs/"
+    - mv "$PLUGIN_SLUG" "$DOL_BUILD_DIR/htdocs/"
+    # Run Composer
+    - cd "$DOL_BUILD_DIR/htdocs/"
+    - composer update 
     
     # Move to Dolibarr Root Dir
     - cd "$DOL_BUILD_DIR/htdocs"
