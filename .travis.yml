@@ -71,7 +71,7 @@ before_script:
     # Copy Splash Module to Dolibarr folder
     - cp -rf "$TRAVIS_BUILD_DIR/splash" "$DOL_BUILD_DIR/htdocs/splash"
     - cp "$TRAVIS_BUILD_DIR/composer.json" "$DOL_BUILD_DIR/htdocs/composer.json"
-    - cp "$TRAVIS_BUILD_DIR/build/phpunit.xml.dist" "$DOL_BUILD_DIR/htdocs/phpunit.xml.dist"
+    - cp "$TRAVIS_BUILD_DIR/build/phpunit.xml.dist" "$DOL_BUILD_DIR/htdocs/build/phpunit.xml.dist"
     - ls -l "$DOL_BUILD_DIR/htdocs"
     - ls -l "$DOL_BUILD_DIR/htdocs/splash"
     # Run Composer
@@ -84,7 +84,7 @@ before_script:
 
 script: 
     - phpunit --version
-    - phpunit -c phpunit.xml.dist 
+    - phpunit -c build/phpunit.xml.dist 
         
 notifications:
   email:         
