@@ -15,6 +15,10 @@ require_once( dirname(__DIR__) . "/master.inc.php");
 require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
 
 //====================================================================//
+// Disable Log Module
+dolibarr_set_const($db,"MAIN_MODULE_SYSLOG",0,'chaine',0,'',0);
+
+//====================================================================//
 // Activate Splash Module
 activateModule("modSplash");
 
