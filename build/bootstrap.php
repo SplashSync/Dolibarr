@@ -3,13 +3,13 @@
  * Bootstrap Dolibarr testing environment.
  */
 
-require "../splash/vendor/autoload.php";
+require dirname(__DIR__) . "/splash/vendor/autoload.php";
 
 global $db,$langs,$conf,$user,$hookmanager;
 
 //====================================================================//
 // Initiate Dolibarr Global Envirement Variables
-require_once( "../master.inc.php");  
+require_once( dirname(__DIR__) . "/master.inc.php");  
      
 //====================================================================//
 // Activate Splash Module
