@@ -410,7 +410,7 @@ class Product extends ObjectBase
         
         //====================================================================//
         // Delete Object
-        if ( $Object->delete() <= 0) {  
+        if ( $Object->delete($user) <= 0) {  
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,$langs->trans($Object->error));
         }
         
@@ -476,13 +476,13 @@ class Product extends ObjectBase
             
             //====================================================================//
             // Note
-            if ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) {
-                $this->FieldsFactory()->Create(SPL_T_MTEXT)
+//            if ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) {
+                $this->FieldsFactory()->Create(SPL_T_TEXT)
                     ->Identifier("note")
                     ->Name($langs->trans("Note"))
                     ->Group($GroupName)
                     ->MicroData("http://schema.org/Product","privatenote");
-            }
+//            }
         //====================================================================//
         // No Multilangs Descriptions
         } else {
@@ -741,7 +741,6 @@ class Product extends ObjectBase
         {
             case 'label':
             case 'description':
-            case 'note':
                 
                 //====================================================================//        
                 // Update Product Description
@@ -752,6 +751,12 @@ class Product extends ObjectBase
                 }                
                 break;            
             
+            case 'note':
+                
+                $this->getSingleField($FieldName);
+                
+                break;            
+
             default:
                 return;
         }
@@ -1016,7 +1021,6 @@ class Product extends ObjectBase
         {
             case 'label':
             case 'description':
-            case 'note':
                 //====================================================================//        
                 // Update Product Description
                 if ($conf->global->MAIN_MULTILANGS) {        
@@ -1031,6 +1035,11 @@ class Product extends ObjectBase
                     $this->Object->libelle = $this->Object->label;
                 }
                 break;                    
+                
+            case 'note':
+                $this->setSingleField($FieldName, $Data);
+                break;                    
+            
             default:
                 return;
         }
