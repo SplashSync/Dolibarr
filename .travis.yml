@@ -70,14 +70,14 @@ before_script:
         
     # Copy Splash Module to Dolibarr folder
     - cp -rf "$TRAVIS_BUILD_DIR" "$DOL_BUILD_DIR/htdocs/"
+    - ls -l "$DOL_BUILD_DIR/htdocs"
+    - ls -l "$DOL_BUILD_DIR/htdocs/splash"
     # Run Composer
     - cd "$DOL_BUILD_DIR/htdocs/"
     - composer update 
     
     # Move to Dolibarr Root Dir
     - cd "$DOL_BUILD_DIR/htdocs"
-    - ls -l "$DOL_BUILD_DIR/htdocs"
-    - ls -l "$DOL_BUILD_DIR/htdocs/splash"
     
 
 script: 
