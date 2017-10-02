@@ -377,7 +377,7 @@ class Invoice extends ObjectBase
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Create Object
-        $this->Object = new \Facture($db);
+        $Object = new \Facture($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
@@ -389,7 +389,8 @@ class Invoice extends ObjectBase
         $this->Object->id = $id;
         //====================================================================//
         // Delete Object
-        if ( $this->Object->delete($id) <= 0) {  
+        $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
+        if ( $Object->delete($Arg1)) {         
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,$langs->trans($this->Object->error));
         }
         return True;
