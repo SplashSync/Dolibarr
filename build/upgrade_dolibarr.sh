@@ -1,7 +1,7 @@
 echo "Upgrading Dolibarr"
 # Ensure we catch errors
 set +e
-cd /tmp/Dolibarrhtdocs/install
+cd /tmp/Dolibarr/htdocs/install
   
 if [[ $DOL_VERSION == "develop" ]]; 
 then 
