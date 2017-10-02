@@ -65,16 +65,17 @@ before_script:
     - bash $TRAVIS_BUILD_DIR/build/install_database.sh
     
     # Setup Conf file
-    - cd /tmp/Dolibarr
+    - cd $DOL_BUILD_DIR
     - bash $TRAVIS_BUILD_DIR/build/configure_dolibarr.sh  
 #    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
-    - cp -rf "$TRAVIS_BUILD_DIR" "/tmp/Dolibarr/htdocs"
+    - sudo cp -Rf "$TRAVIS_BUILD_DIR" "$DOL_BUILD_DIR/htdocs/"
     
     # Move to Dolibarr Root Dir
     - cd "$DOL_BUILD_DIR/htdocs"
-    - ls -l
+    - ls -l "$DOL_BUILD_DIR/htdocs"
+    - ls -l "$DOL_BUILD_DIR/htdocs/splash"
     
 
 script: 
