@@ -28,7 +28,6 @@ env:
     
 install:
     # Disable Xdebug ...
-    - sudo phpdismod xdebug
     - phpenv config-rm xdebug.ini
     
 before_script:
