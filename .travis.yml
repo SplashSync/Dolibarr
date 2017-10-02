@@ -66,7 +66,7 @@ before_script:
     # Setup Conf file
     - cd /tmp/Dolibarr
     - bash $TRAVIS_BUILD_DIR/build/configure_dolibarr.sh  
-    - bash $TRAVIS_BUILD_DIR/build/upgrtade_dolibarr.sh  
+    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
     
     
     
