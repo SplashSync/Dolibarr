@@ -69,7 +69,7 @@ before_script:
 #    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
-    - mv "$PLUGIN_SLUG" "$DOL_BUILD_DIR/htdocs/"
+    - cp "$TRAVIS_BUILD_DIR" "$DOL_BUILD_DIR/htdocs/"
     # Run Composer
     - cd "$DOL_BUILD_DIR/htdocs/"
     - composer update 
