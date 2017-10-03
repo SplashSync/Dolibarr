@@ -22,7 +22,7 @@ env:
        - DOL_VERSION=6.0 DATA_VERSION=6.0.0
        - DOL_VERSION=5.0 DATA_VERSION=5.0.0
        - DOL_VERSION=4.0 DATA_VERSION=4.0.0
-       - DOL_VERSION=3.9 DATA_VERSION=3.9.0
+#       - DOL_VERSION=3.9 DATA_VERSION=3.9.0
     
 install:
     # Disable Xdebug ...
@@ -64,7 +64,7 @@ before_script:
     # Setup Conf file
     - cd $DOL_BUILD_DIR
     - bash $TRAVIS_BUILD_DIR/build/configure_dolibarr.sh  
-#    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
+    - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
     - cp -rf "$TRAVIS_BUILD_DIR/splash" "$DOL_BUILD_DIR/htdocs/splash"
