@@ -432,7 +432,7 @@ class ThirdParty extends ObjectBase
                 ->Name($langs->trans("CompanyName"))
                 ->isLogged()
                 ->Description($langs->trans("CompanyName"))
-                ->MicroData("http://schema.org/Organization","legalName")       // 8f0ca290d33f34b64658814bd2642d60
+                ->MicroData("http://schema.org/Organization","legalName")      
                 ->isRequired()
                 ->IsListed();
 

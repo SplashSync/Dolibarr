@@ -970,7 +970,10 @@ class Product extends ObjectBase
             //====================================================================//
             // Required For Dolibarr Below 3.6
             //! Type 0 for regular product, 1 for service (Advanced feature: 2 for assembly kit, 3 for stock kit)
-            $this->Object->type        = 0;				   
+            $this->Object->type        = 0;	
+            //====================================================================//
+            // Required For Dolibarr BarCode Module
+            $this->Object->barcode     = -1;	            
             
         }        
         
