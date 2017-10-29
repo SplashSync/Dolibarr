@@ -530,6 +530,12 @@ class InterfaceSplash
     function Commit()
     {    
         //====================================================================//
+        // Prevent Repeated Commit if Needed
+        if ( ($this->Action == SPL_A_UPDATE) && Splash::Object($this->Type)->isLocked() ) {
+            return;
+        }
+
+        //====================================================================//
         // Verify Id Before commit
         if ($this->Id > 0 ) {
             //====================================================================//
