@@ -45,30 +45,7 @@ trait MetaTrait {
                 ->Name($langs->trans("Status").' ('.$langs->trans("Sell").')')
                 ->MicroData("http://schema.org/Product","offered")
                 ->Group("Meta")
-                ->isListed();        
-        
-        
-        //====================================================================//
-        // TRACEABILITY INFORMATIONS
-        //====================================================================//        
-        
-        //====================================================================//
-        // TMS - Last Change Date 
-        $this->FieldsFactory()->Create(SPL_T_DATE)
-                ->Identifier("date_modification")
-                ->Name($langs->trans("DateLastModification"))
-                ->MicroData("http://schema.org/DataFeedItem","dateModified")
-                ->Group("Meta")
-                ->ReadOnly();
-        
-        //====================================================================//
-        // datec - Creation Date 
-        $this->FieldsFactory()->Create(SPL_T_DATE)
-                ->Identifier("date_creation")
-                ->Name($langs->trans("DateCreation"))
-                ->MicroData("http://schema.org/DataFeedItem","dateCreated")
-                ->Group("Meta")
-                ->ReadOnly();             
+                ->isListed();                  
         
     }   
 
@@ -94,16 +71,6 @@ trait MetaTrait {
                 $this->getSimpleBool($FieldName);
                 break;                
             
-            //====================================================================//
-            // TRACEABILITY INFORMATIONS
-            //====================================================================//
-            case 'date_creation':
-            case 'date_modification':
-                $this->Out[$FieldName] = dol_print_date($this->Object->$FieldName,'dayrfc');
-                break;                
-
-            default:
-                return;
         }
         
         unset($this->In[$Key]);

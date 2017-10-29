@@ -425,6 +425,7 @@ class Local
      *      @param          array       $Data       New Multilangual Contents
      * 
      *      @return         bool                    Is Object Update needed or Not
+     * @deprecated since version 1.3.0
      */
     public function setMultilang($Object=Null,$key=Null,$Data=Null)
     {
@@ -481,6 +482,8 @@ class Local
      *      @param          array       $key        Id of a Multilangual Contents
      *      @param          array       $Text       New Contents
      *      @return         int                     0 if no update needed, 1 if update needed
+     * @deprecated since version 1.3.0
+     * 
      */
     public function setDefaultlang($Object=Null,$key=Null,$Text=Null)
     {
@@ -509,6 +512,9 @@ class Local
      *      @param          object      $Object     Pointer to Dolibarr Object
      *      @param          array       $key        Id of a Multilangual Contents
      *      @return         int                     0 if KO, 1 if OK
+     * 
+     * @deprecated since version 1.3.0
+     * 
      */
     public function getMultilang(&$Object=Null,$key=Null)
     {
@@ -765,6 +771,7 @@ class Local
      *      @abstract   Compare Two Float Value and 
      *      @return     string  $code         Country Iso Code
      *      @return     int                   Country Dolibarr Id, else 0
+     * @deprecated since version 1.3.0
      */
     function getCountryByCode($code)
     {   
@@ -791,6 +798,8 @@ class Local
      *      @return     string  $CountryId          Country Dolibarr Id
      * 
      *      @return     int                   State Dolibarr Id, else 0
+     * @deprecated since version 1.3.0
+     * 
      */  
 
 
@@ -1098,13 +1107,13 @@ class Local
     
     /**
      *      @abstract       Update Single Dolibarr Entity Field Data 
-     * 
      *      @param      string  $Table      Entity Table Name Without Prefix
      *      @param      int     $RowId      Entity RowId
      *      @param      string  $Name       Field Name
      *      @param      mixed  $Value      Field Data
      * 
      *      @return         string
+     * @deprecated since version 1.3.0
      */
     public function setSingleField($Table, $RowId, $Name, $Value) 
     {

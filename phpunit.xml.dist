@@ -40,6 +40,7 @@
         
     <php>
         <const  name="SPLASH_DEBUG" value="true" />
-        <server name="SERVER_NAME" value="http://localhost/Dolibarr/Dol-3.9"/>
+        <server name="SPLASH_TRAVIS" value="false" />
+        <server name="SERVER_NAME" value="http://localhost/Dolibarr/Dol-6.0"/>
     </php>
 </phpunit>

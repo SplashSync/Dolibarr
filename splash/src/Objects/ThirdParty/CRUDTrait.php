@@ -15,12 +15,12 @@
  * 
  **/
 
-namespace Splash\Local\Objects\Product;
+namespace Splash\Local\Objects\ThirdParty;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Product CRUD Functions
+ * @abstract    Dolibarr Contacts Address CRUD Functions
  */
 trait CRUDTrait
 {
@@ -38,12 +38,12 @@ trait CRUDTrait
         Splash::Log()->Trace(__CLASS__,__FUNCTION__); 
         //====================================================================//
         // Init Object 
-        $Object = new \Product ($db);
+        $Object = new \Societe ($db);
         //====================================================================//
         // Fatch Object 
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Product (" . $Id . ").");
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load ThirdPaty (" . $Id . ").");
         }        
         return $Object;
     }    
@@ -57,51 +57,39 @@ trait CRUDTrait
      */
     public function Create()
     {
-        global $db, $user, $langs;          
+        global $db, $user;          
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);         
         //====================================================================//
-        // Check Product Ref is given
-        if ( empty($this->In["ref"]) ) {
-            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,$langs->trans("ProductRef"));
-        }
-        //====================================================================//
-        // Check Product Label is given
-        if ( empty($this->In["label"]) ) {
-            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,$langs->trans("ProductLabel"));
+        // Check Customer Name is given
+        if ( empty($this->In["name"]) ) {
+            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"name");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
             return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
-        }        
-        
+        }         
         //====================================================================//
         // Init Object 
-        $this->Object = new \Product($db);        
+        $this->Object = new \Societe($db);        
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("ref", $this->In["ref"] );
-        $this->setMultilang("label", $this->In["label"] );
+        $this->setSimple("name", $this->In["name"] );
         //====================================================================//
-        // Required For Dolibarr Below 3.6
-        $this->Object->type        = 0;	
-        //====================================================================//
-        // Required For Dolibarr BarCode Module
-        $this->Object->barcode     = -1;	 
-        //====================================================================//
-        // LOAD USER FROM DATABASE
-        Splash::Local()->LoadLocalUser();
-        if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
-        } 
+        // Dolibarr infos
+        $this->Object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
+        $this->Object->prospect           = 0;        // 0=no prospect, 1=prospect
+        $this->Object->fournisseur        = 0;        // 0=no supplier, 1=supplier
+        $this->Object->code_client        = -1;       // If not erased, will be created by system
+        $this->Object->code_fournisseur   = -1;       // If not erased, will be created by system        
         //====================================================================//
         // Create Object In Database
         if ( $this->Object->create($user) <= 0) {    
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Product. ");;
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new ThirdPaty. ");
         }        
         
         return $this->Object;
@@ -118,6 +106,9 @@ trait CRUDTrait
     {
         global $user;
         //====================================================================//
+        // Compute Changes on Customer Name
+        $this->updateFullName();        
+        //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
         if ( !$Needed) {
@@ -131,7 +122,7 @@ trait CRUDTrait
         }        
         //====================================================================//
         // Update Product Object 
-        if ( $this->Object->update($this->Object->id,$user) <= 0) {  
+        if ( $this->Object->update($this->Object->id,$user,1,$this->allowmodcodeclient) <= 0) {  
             $this->CatchDolibarrErrors();
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Product (" . $this->Object->id) . ")" ;
         }        
@@ -153,7 +144,7 @@ trait CRUDTrait
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Object 
-        $Object = new \Product($db);
+        $Object = new \Societe($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
@@ -165,8 +156,8 @@ trait CRUDTrait
         $Object->id = $Id;
         //====================================================================//
         // Delete Object 
-        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;
-        if ( $Object->delete($Arg1) <= 0 ) {  
+//        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;
+        if ( $Object->delete($Id) <= 0 ) {  
             return $this->CatchDolibarrErrors( $Object );
         }
         return True;
