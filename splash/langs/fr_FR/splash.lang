@@ -50,7 +50,7 @@ SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-
 ################################################################################
 
 SPL_ObjectsList     = Liste des objets disponibles
-SPL_WidgetList      = Liste des widgets disponibles
+SPL_WidgetsList      = Liste des widgets disponibles
 
 ################################################################################
 # Admin Page Connect Tests Results

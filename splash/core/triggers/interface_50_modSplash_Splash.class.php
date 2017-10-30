@@ -376,11 +376,14 @@ class InterfaceSplash
         // Filter Triggered Actions 
         if (    ($Action !== 'ORDER_CREATE') 
             &&  ($Action !== 'ORDER_VALIDATE')
+            &&  ($Action !== 'ORDER_MODIFY')
             &&  ($Action !== 'ORDER_UPDATE')
             &&  ($Action !== 'ORDER_DELETE')
             &&  ($Action !== 'LINEORDER_INSERT')
             &&  ($Action !== 'LINEORDER_UPDATE')
             &&  ($Action !== 'LINEORDER_DELETE')
+            &&  ($Action !== 'COMMANDE_ADD_CONTACT')
+            &&  ($Action !== 'COMMANDE_DELETE_CONTACT')
             &&  ($Action !== 'ORDER_CLOSE')
             &&  ($Action !== 'ORDER_REOPEN')
             &&  ($Action !== 'ORDER_CLASSIFY_BILLED')
@@ -410,10 +413,13 @@ class InterfaceSplash
             $this->Action       = SPL_A_CREATE;
             $this->Comment      = "Order Created on Dolibarr";
         } elseif (    ($Action == 'ORDER_VALIDATE') 
+            ||  ($Action == 'ORDER_MODIFY')
             ||  ($Action == 'ORDER_UPDATE')
             ||  ($Action == 'LINEORDER_INSERT')
             ||  ($Action == 'LINEORDER_UPDATE')
             ||  ($Action == 'LINEORDER_DELETE')
+            ||  ($Action == 'COMMANDE_ADD_CONTACT')
+            ||  ($Action == 'COMMANDE_DELETE_CONTACT')                
             ||  ($Action == 'ORDER_CLOSE')
             ||  ($Action == 'ORDER_REOPEN')
             ||  ($Action == 'ORDER_CLASSIFY_BILLED')
@@ -424,7 +430,7 @@ class InterfaceSplash
         } else if ($Action  == 'ORDER_DELETE') {
             $this->Action       = SPL_A_DELETE;
             $this->Comment      = "Order Deleted on Dolibarr";
-        }       
+        }         
         return True;
     }  
     
@@ -546,7 +552,7 @@ class InterfaceSplash
                     $this->Action,                  // Splash Action Type
                     $this->Login,                   // Current User Login
                     $this->Comment);                // Action Comment
-            Splash::Log()->Deb("Change Commited (Action=" . $this->Comment . ") Object => ", $this->Type);
+            Splash::Log()->Deb("Change Commited (Action=" . $this->Comment . ") Object => ". $this->Type);
         } else {
             Splash::Log()->War("Commit Id Missing (Action=" . $this->Comment . ") Object => ". $this->Type);
         }

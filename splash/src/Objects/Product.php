@@ -38,6 +38,7 @@ class Product extends AbstractObject
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\MultilangualTrait;
     use \Splash\Local\Core\MetaDatesTrait;
+    use \Splash\Local\Core\UnitConverterTrait;
     
     // Dolibarr Products Traits
     use \Splash\Local\Objects\Product\ObjectsListTrait;

@@ -115,16 +115,16 @@ trait MainTrait {
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                $this->Out[$FieldName] = (float) Splash::Local()->C_Weight($this->Object->weight,$this->Object->weight_units);             
+                $this->Out[$FieldName] = (float) $this->C_Weight($this->Object->weight,$this->Object->weight_units);             
                 break;
             case 'length':
-                $this->Out[$FieldName] = (float) Splash::Local()->C_Length($this->Object->length,$this->Object->length_units);             
+                $this->Out[$FieldName] = (float) $this->C_Length($this->Object->length,$this->Object->length_units);             
                 break;
             case 'surface':
-                $this->Out[$FieldName] = (float) Splash::Local()->C_Surface($this->Object->surface,$this->Object->surface_units);             
+                $this->Out[$FieldName] = (float) $this->C_Surface($this->Object->surface,$this->Object->surface_units);             
                 break;
             case 'volume':
-                $this->Out[$FieldName] = (float) Splash::Local()->C_Volume($this->Object->volume,$this->Object->volume_units);             
+                $this->Out[$FieldName] = (float) $this->C_Volume($this->Object->volume,$this->Object->volume_units);             
                 break;
             
             //====================================================================//
@@ -186,32 +186,32 @@ trait MainTrait {
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                if ( (string)$Data !== (string) Splash::Local()->C_Weight($this->Object->weight,$this->Object->weight_units)) {   
-                    $nomalized                      =   Splash::Local()->N_Weight($Data);
+                if ( (string)$Data !== (string) $this->C_Weight($this->Object->weight,$this->Object->weight_units)) {   
+                    $nomalized                      =   $this->N_Weight($Data);
                     $this->Object->weight           =   $nomalized->weight;
                     $this->Object->weight_units     =   $nomalized->weight_units;
                     $this->needUpdate();
                 }
                 break;
             case 'length':
-                if ( (string)$Data !== (string) Splash::Local()->C_Length($this->Object->length,$this->Object->length_units)) {             
-                    $nomalized                      =   Splash::Local()->N_Length($Data);
+                if ( (string)$Data !== (string) $this->C_Length($this->Object->length,$this->Object->length_units)) {             
+                    $nomalized                      =   $this->N_Length($Data);
                     $this->Object->length           =   $nomalized->length;
                     $this->Object->length_units     =   $nomalized->length_units;
                     $this->needUpdate();
                 }
                 break;
             case 'surface':
-                if ( (string)$Data !== (string) Splash::Local()->C_Surface($this->Object->surface,$this->Object->surface_units)) {             
-                    $nomalized                      =   Splash::Local()->N_Surface($Data);
+                if ( (string)$Data !== (string) $this->C_Surface($this->Object->surface,$this->Object->surface_units)) {             
+                    $nomalized                      =   $this->N_Surface($Data);
                     $this->Object->surface          =   $nomalized->surface;
                     $this->Object->surface_units    =   $nomalized->surface_units;
                     $this->needUpdate();
                 }
                 break;
             case 'volume':
-               if ( (string)$Data !== (string) Splash::Local()->C_Volume($this->Object->volume,$this->Object->volume_units)) {             
-                    $nomalized                      =   Splash::Local()->N_Volume($Data);
+               if ( (string)$Data !== (string) $this->C_Volume($this->Object->volume,$this->Object->volume_units)) {             
+                    $nomalized                      =   $this->N_Volume($Data);
                     $this->Object->volume           =   $nomalized->volume;
                     $this->Object->volume_units     =   $nomalized->volume_units;
                     $this->needUpdate();

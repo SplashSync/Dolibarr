@@ -114,7 +114,7 @@ trait CRUDTrait
         // Update Product Object 
         if ( $this->Object->update($this->Object->id,$user) <= 0) {  
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Product (" . $this->Object->id) . ")" ;
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Product (" . $this->Object->id . ")") ;
         }        
         return (int) $this->Object->id;
     }  
