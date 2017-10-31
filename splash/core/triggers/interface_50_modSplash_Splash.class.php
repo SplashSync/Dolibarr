@@ -444,6 +444,7 @@ class InterfaceSplash
      */
     function InvoiceCommit($Action, $Object)
     {    
+        global $db;
 
         //====================================================================//
         // Check if object if in Remote Create Mode 
@@ -472,6 +473,10 @@ class InterfaceSplash
             return False;
         }
         
+        //====================================================================//
+        // Commit Last Changes done On DataBase
+        $db->Commit();
+
         //====================================================================//
         // Store Global Action Parameters 
         $this->Type      = "Invoice";
