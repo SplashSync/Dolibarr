@@ -39,6 +39,7 @@ class ThirdParty extends AbstractObject
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
+    use \Splash\Local\Core\ExtraFieldsTrait;
     
     // Dolibarr ThirdParty Traits
     use \Splash\Local\Objects\ThirdParty\ObjectsListTrait;
@@ -72,6 +73,12 @@ class ThirdParty extends AbstractObject
      */
     protected static    $ICO     =  "fa fa-user";
     
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public  $ExtraFieldsType    =  "societe"; 
+        
     //====================================================================//
     // Class Constructor
     //====================================================================//

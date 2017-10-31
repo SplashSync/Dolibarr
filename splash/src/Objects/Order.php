@@ -64,6 +64,7 @@ class Order extends AbstractObject
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\BaseItemsTrait;
+    use \Splash\Local\Core\ExtraFieldsTrait;    
     
     // Dolibarr Orders Traits
     use \Splash\Local\Objects\Order\ObjectsListTrait;
@@ -98,7 +99,11 @@ class Order extends AbstractObject
      */
     protected static    $ICO     =  "fa fa-shopping-cart ";
     
-
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public  $ExtraFieldsType    =  "commande"; 
     
     //====================================================================//
     // Class Constructor

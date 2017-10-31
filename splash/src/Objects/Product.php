@@ -39,6 +39,7 @@ class Product extends AbstractObject
     use \Splash\Local\Core\MultilangualTrait;
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\UnitConverterTrait;
+    use \Splash\Local\Core\ExtraFieldsTrait;
     
     // Dolibarr Products Traits
     use \Splash\Local\Objects\Product\ObjectsListTrait;
@@ -72,6 +73,12 @@ class Product extends AbstractObject
      *  Object Icon (FontAwesome or Glyph ico tag) 
      */
     protected static    $ICO     =  "fa fa-product-hunt";
+    
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public  $ExtraFieldsType    =  "product"; 
     
     //====================================================================//
     // Class Constructor

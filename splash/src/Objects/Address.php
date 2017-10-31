@@ -39,7 +39,8 @@ class Address extends AbstractObject
     use \Splash\Local\Core\DirectAccessTrait;
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
-    
+    use \Splash\Local\Core\ExtraFieldsTrait;
+        
     // Dolibarr Address Traits
     use \Splash\Local\Objects\Address\ObjectsListTrait;
     use \Splash\Local\Objects\Address\CRUDTrait;
@@ -69,6 +70,12 @@ class Address extends AbstractObject
      *  Object Icon (FontAwesome or Glyph ico tag) 
      */
     protected static    $ICO     =  "fa fa-envelope-o";
+    
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public  $ExtraFieldsType    =  "socpeople"; 
     
     //====================================================================//
     // Class Constructor
