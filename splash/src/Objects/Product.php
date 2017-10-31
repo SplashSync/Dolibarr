@@ -78,7 +78,7 @@ class Product extends AbstractObject
     // ExtraFields Type
     //====================================================================//
     
-    public  $ExtraFieldsType    =  "product"; 
+    public  static $ExtraFieldsType    =  "product"; 
     
     //====================================================================//
     // Class Constructor

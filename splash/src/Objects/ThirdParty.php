@@ -77,7 +77,7 @@ class ThirdParty extends AbstractObject
     // ExtraFields Type
     //====================================================================//
     
-    public  $ExtraFieldsType    =  "societe"; 
+    public static  $ExtraFieldsType    =  "societe"; 
         
     //====================================================================//
     // Class Constructor
@@ -100,7 +100,7 @@ class ThirdParty extends AbstractObject
         $langs->load("admin");
         $langs->load("companies");
         $langs->load("other");
-        
+
         return True;
     } 
     

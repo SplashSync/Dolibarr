@@ -75,7 +75,7 @@ class Address extends AbstractObject
     // ExtraFields Type
     //====================================================================//
     
-    public  $ExtraFieldsType    =  "socpeople"; 
+    public static $ExtraFieldsType    =  "socpeople"; 
     
     //====================================================================//
     // Class Constructor

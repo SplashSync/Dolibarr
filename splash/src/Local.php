@@ -33,12 +33,16 @@ use Splash\Core\SplashCore      as Splash;
 use User;
 use ArrayObject;
     
+use Splash\Local\Core\ExtraFieldsTrait;
+
 /**
  *	\class      SplashLocal
  *	\brief      Local Core Management Class
  */
 class Local 
 {
+    use ExtraFieldsTrait;
+    
     //====================================================================//
     // General Class Variables	
     // Place Here Any SPECIFIC Variable for your Core Module Class
@@ -312,7 +316,12 @@ class Local
             
             case "Monolangual":
                 dolibarr_set_const($db,"MAIN_MULTILANGS"            ,0,'chaine',0,'',$conf->entity);              
-                dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);          
+                
+                self::configurePhpUnitExtraFields("societe",    False);
+                self::configurePhpUnitExtraFields("socpeople",  False);
+                self::configurePhpUnitExtraFields("product",    False);
+                self::configurePhpUnitExtraFields("commande",   False);                
                 return;
                 
             case "Multilangual":
@@ -326,9 +335,21 @@ class Local
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES_LIMIT"  ,3,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL"    ,rand(1,3),'chaine',0,'',$conf->entity);              
                 return;
+
+            case "ExtraFields":
+                dolibarr_set_const($db,"MAIN_MULTILANGS"            ,0,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);              
+                
+                self::configurePhpUnitExtraFields("societe",    True);
+                self::configurePhpUnitExtraFields("socpeople",  True);
+                self::configurePhpUnitExtraFields("product",    True);
+                self::configurePhpUnitExtraFields("commande",   True);
+                return;
+
                 
             case "List":
-                return array("Monolangual", "Multilangual", "MultiPrices" );
+                return array("Monolangual", "Multilangual", "MultiPrices", "ExtraFields" );
+//                return array( "ExtraFields" );
                 
         }
     }

@@ -103,7 +103,7 @@ class Order extends AbstractObject
     // ExtraFields Type
     //====================================================================//
     
-    public  $ExtraFieldsType    =  "commande"; 
+    public static $ExtraFieldsType    =  "commande"; 
     
     //====================================================================//
     // Class Constructor
