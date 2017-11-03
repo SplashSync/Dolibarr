@@ -126,7 +126,8 @@ trait StatusTrait {
             // Set Canceled
             if ( $this->Object->cancel($conf->global->SPLASH_STOCK) != 1 ) {
                 return Splash::Log()->Err("ErrLocalTpl", __CLASS__,"Set Canceled", $langs->trans($this->Object->error) );
-            }                
+            }     
+            $this->Object->statut = \Commande::STATUS_CANCELED;
             return True;
         }
         //====================================================================//
@@ -141,7 +142,8 @@ trait StatusTrait {
             // If Not Draft (Validated or Closed)            
             if ( ($this->Object->statut != 0) && $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) {
                 return Splash::Log()->Err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans($this->Object->error) );
-            }                
+            }        
+            $this->Object->statut = \Commande::STATUS_DRAFT;
             return True;
         }        
         //====================================================================//
@@ -156,7 +158,8 @@ trait StatusTrait {
             // If Previously Closed => Re-Open
             if ( ( $this->Object->statut == 3 ) && ( $this->Object->set_reopen($user) != 1 ) ) {
                 return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Re-Open", $langs->trans($this->Object->error) );
-            }      
+            }     
+            $this->Object->statut = \Commande::STATUS_VALIDATED;
         }            
         //====================================================================//
         // Statut Closed => Go Closed
@@ -166,6 +169,7 @@ trait StatusTrait {
             if ( ( $this->Object->statut == 1 ) && ( $this->Object->cloture($user) != 1 ) ) {
                 return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Closed", $langs->trans($this->Object->error) );
             }         
+            $this->Object->statut = \Commande::STATUS_CLOSED;
         }
         
     }    

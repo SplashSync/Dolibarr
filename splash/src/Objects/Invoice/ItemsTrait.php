@@ -15,29 +15,30 @@
  * 
  **/
 
-namespace Splash\Local\Objects\Order;
+namespace Splash\Local\Objects\Invoice;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Customer Orders Items Fields
+ * @abstract    Dolibarr Customer Invoice Items Fields
  */
 trait ItemsTrait {
-
+    
+   
     /**
      *  @abstract     Create a New Line Item
      * 
-     *  @return         OrderLine
+     *  @return         FactureLigne
      */
     protected function createItem() 
     {
         global $db;
         
-        $Item   = new  \OrderLine($db);
+        $Item   = new  \FactureLigne($db);
         
         //====================================================================//
         // Pre-Setup of Item
-        $Item->fk_commande = $this->Object->id;
+        $Item->fk_facture = $this->Object->id;
         $Item->subprice                     = 0;
         $Item->price                        = 0;
         $Item->qty                          = 0;
@@ -66,27 +67,30 @@ trait ItemsTrait {
     /**
      *  @abstract     Delete a Line Item
      * 
-     *  @param        OrderLine     $OrderLine  Order OrderLine Item
+     *  @param        OrderLine     $FactureLigne  Order FactureLigne Item
      * 
      *  @return         bool
      */
-    protected function deleteItem( $OrderLine ) 
+    protected function deleteItem( $FactureLigne ) 
     {
-        global $user;
+//        global $user;
+//        //====================================================================//
+//        // Prepare Args
+//        $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : $FactureLigne->id;
+//        $Arg2 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $FactureLigne->id : Null;
         //====================================================================//
-        // Force Order Status To Draft
-        $this->Object->statut         = 0;
-        $this->Object->brouillon      = 1;
-        //====================================================================//
-        // Prepare Args
-        $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
-        $Arg2 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : Null;
+        // Debug Mode => Force Allow Delete
+        if ( defined("SPLASH_DEBUG") && SPLASH_DEBUG ) {
+            //====================================================================//
+            // Force Invoice Status To Draft
+            $this->Object->brouillon      = 1;
+        }
         //====================================================================//
         // Perform Line Delete
-        if ( $this->Object->deleteline($Arg1, $Arg2) <= 0) { 
+        if ( $this->Object->deleteline($FactureLigne->id) <= 0) { 
             return $this->CatchDolibarrErrors();
         }
         return True;
-    }
+    }  
     
 }

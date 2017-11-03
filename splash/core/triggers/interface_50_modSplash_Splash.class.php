@@ -489,7 +489,7 @@ class InterfaceSplash
         } elseif (is_a($Object, "Paiement")) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts 
-            $Amounts = Splash::Object("Product")->getPaiementAmounts($Object->id);
+            $Amounts = Splash::Object("Invoice")->getPaiementAmounts($Object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array  
             $this->Id        = array();

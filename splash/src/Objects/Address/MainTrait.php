@@ -203,7 +203,6 @@ trait MainTrait {
             case 'address':
             case 'zip':
             case 'town':
-            case 'state_code':
             case 'phone_pro':
             case 'phone_perso':
             case 'phone_mobile':

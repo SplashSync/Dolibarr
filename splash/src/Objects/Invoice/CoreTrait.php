@@ -15,10 +15,10 @@
  * 
  **/
 
-namespace Splash\Local\Objects\Order;
+namespace Splash\Local\Objects\Invoice;
 
 /**
- * @abstract    Dolibarr Customer Orders Fields (Required) 
+ * @abstract    Dolibarr Customer Invoice Fields (Required) 
  */
 trait CoreTrait {
 
@@ -33,7 +33,7 @@ trait CoreTrait {
         $this->FieldsFactory()->Create(self::Objects()->Encode( "ThirdParty" , SPL_T_ID))
                 ->Identifier("socid")
                 ->Name($langs->trans("Company"))
-                ->MicroData("http://schema.org/Organization","ID")
+                ->MicroData("http://schema.org/Invoice","customer")
                 ->isRequired();  
         
         //====================================================================//
@@ -49,33 +49,32 @@ trait CoreTrait {
         // Reference
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref")
-                ->Name($langs->trans("RefOrder"))
-                ->MicroData("http://schema.org/Order","name")       
+                ->Name($langs->trans("InvoiceRef"))
+                ->MicroData("http://schema.org/Invoice","name")       
                 ->ReadOnly()
                 ->IsListed();
-
+        
         //====================================================================//
         // Customer Reference
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_client")
-                ->Name($langs->trans("RefCustomerOrder"))
-                ->IsListed()
-                ->MicroData("http://schema.org/Order","orderNumber");
+                ->Name($langs->trans("RefCustomer"))
+                ->MicroData("http://schema.org/Invoice","confirmationNumber");
         
         //====================================================================//
         // Internal Reference
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_int")
-                ->Name($langs->trans("InternalRef"))
-                ->MicroData("http://schema.org/Order","description");
+                ->Name($langs->trans("RefCustomer") . " " . $langs->trans("Internal"))
+                ->MicroData("http://schema.org/Invoice","description");
                 
         //====================================================================//
         // External Reference
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_ext")
-                ->Name($langs->trans("RefExt"))
+                ->Name($langs->trans("ExternalRef"))
                 ->IsListed()
-                ->MicroData("http://schema.org/Order","alternateName");
+                ->MicroData("http://schema.org/Invoice","alternateName");
         
     }    
 
@@ -139,10 +138,10 @@ trait CoreTrait {
             // Direct Readings
             case 'ref':
             case 'ref_client':
-            case 'ref_ext':                
                 $this->setSimple($FieldName,$Data);
                 break;
             
+            case 'ref_ext':                
             case 'ref_int':
                 //====================================================================//
                 //  Compare Field Data

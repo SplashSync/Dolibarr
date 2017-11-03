@@ -322,6 +322,7 @@ class Local
                 self::configurePhpUnitExtraFields("socpeople",  False);
                 self::configurePhpUnitExtraFields("product",    False);
                 self::configurePhpUnitExtraFields("commande",   False);                
+                self::configurePhpUnitExtraFields("facture",    False);
                 return;
                 
             case "Multilangual":
@@ -334,6 +335,12 @@ class Local
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,1,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES_LIMIT"  ,3,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL"    ,rand(1,3),'chaine',0,'',$conf->entity);              
+                
+                self::configurePhpUnitExtraFields("societe",    False);
+                self::configurePhpUnitExtraFields("socpeople",  False);
+                self::configurePhpUnitExtraFields("product",    False);
+                self::configurePhpUnitExtraFields("commande",   False);                
+                self::configurePhpUnitExtraFields("facture",    False);
                 return;
 
             case "ExtraFields":
@@ -344,11 +351,13 @@ class Local
                 self::configurePhpUnitExtraFields("socpeople",  True);
                 self::configurePhpUnitExtraFields("product",    True);
                 self::configurePhpUnitExtraFields("commande",   True);
+                self::configurePhpUnitExtraFields("facture",    True);
                 return;
 
                 
             case "List":
                 return array("Monolangual", "Multilangual", "MultiPrices", "ExtraFields" );
+//                return array("Monolangual");
 //                return array( "ExtraFields" );
                 
         }
@@ -443,138 +452,6 @@ class Local
         if ( !empty(Splash::Configuration()->DefaultLanguage) ) {
             $langs->setDefaultLang(Splash::Configuration()->DefaultLanguage);
         }
-    }
-    
-    /**
-     *      @abstract       Update Multilangual Fields of an Object
-     * 
-     *      @param          object      $Object     Pointer to Dolibarr Object
-     *      @param          array       $key        Id of a Multilangual Contents
-     *      @param          array       $Data       New Multilangual Contents
-     * 
-     *      @return         bool                    Is Object Update needed or Not
-     * @deprecated since version 1.3.0
-     */
-    public function setMultilang($Object=Null,$key=Null,$Data=Null)
-    {
-        global $langs,$conf;
-        //====================================================================//        
-        // Safety Check 
-        //====================================================================//        
-        if ( is_null($Data) ) {
-            return False;
-        }
-        if ( !is_array($Data) && !is_a($Data,"ArrayObject") ) {
-            return False;
-        }
-        //====================================================================//        
-        // Single Language Descriptions
-        if (!$conf->global->MAIN_MULTILANGS) {
-            if ( $Object->$key !== $Data) {             
-                $Object->$key = $Data; 
-                return True;
-            }
-            return False;
-        }
-        //====================================================================//        
-        // Update Native Multilangs Descriptions
-        //====================================================================//        
-        $UpdateRequired = False;
-        //====================================================================//        
-        // Create or Update Multilangs Fields
-        foreach ($Data as $IsoCode => $Content) {
-            //====================================================================//        
-            // Create This Translation if empty
-            if ( !isset ($Object->multilangs[$IsoCode]) ) {
-                $Object->multilangs[$IsoCode] = array();
-            }
-            //====================================================================//        
-            // Update Contents
-            //====================================================================//        
-            if ( $Object->multilangs[$IsoCode][$key] !== $Content) {             
-                $Object->multilangs[$IsoCode][$key] = $Content;
-                $UpdateRequired = True;
-            }
-            //====================================================================//        
-            // Duplicate Contents to Default language if needed
-            if ( ($IsoCode == $langs->getDefaultLang()) && property_exists(get_class($Object),$key)) {
-                $Object->$key = $Content;
-            }
-        }
-        return $UpdateRequired;
-    }
-    
-    /**
-     *      @abstract       Update Default Values of a Multilangual Fields of an Object
-     *      @param          object      $Object     Pointer to Dolibarr Object
-     *      @param          array       $key        Id of a Multilangual Contents
-     *      @param          array       $Text       New Contents
-     *      @return         int                     0 if no update needed, 1 if update needed
-     * @deprecated since version 1.3.0
-     * 
-     */
-    public function setDefaultlang($Object=Null,$key=Null,$Text=Null)
-    {
-        global $langs,$conf,$update;
-        //====================================================================//        
-        // Native Multilangs Descriptions
-        if ($conf->global->MAIN_MULTILANGS) {
-            // Get Default Language
-            $DfLang = $langs->getDefaultLang();
-            // If Needed, Update Fields
-            if ( $Object->multilangs[$DfLang][$key] !== $Text) {             
-                $Object->multilangs[$DfLang][$key] = $Text;
-                $update++;
-            }
-        }
-        
-        if ( $Object->$key !== $Text) {             
-            $Object->$key = $Text; 
-            $update++;
-        }
-        return $Object;
-    }    
-    
-    /**
-     *      @abstract       Read Multilangual Fields of an Object
-     *      @param          object      $Object     Pointer to Dolibarr Object
-     *      @param          array       $key        Id of a Multilangual Contents
-     *      @return         int                     0 if KO, 1 if OK
-     * 
-     * @deprecated since version 1.3.0
-     * 
-     */
-    public function getMultilang(&$Object=Null,$key=Null)
-    {
-        global $langs,$conf;
-        
-        //====================================================================//        
-        // Native Multilangs Descriptions
-        if ($conf->global->MAIN_MULTILANGS) {
-            
-            //====================================================================//        
-            // If Multilang Contents doesn't exists
-            if (count($Object->multilangs) == 0)    {
-                // Get Default Language
-                $DfLang = $langs->getDefaultLang();
-                return array( $DfLang => $Object->$key );    
-            }
-            
-            //====================================================================//        
-            /// Else read Multilang contents 
-            $Data = array(); 
-            foreach ($Object->multilangs as $IsoCode => $Content) {
-                if (isset ($Content[$key] )) {
-                    $Data[$IsoCode] = $Content[$key];
-                }
-            }
-            
-        //====================================================================//        
-        // Single Language Descriptions
-        } else {
-            $Data = $Object->$key;     
-        }
-         return $Data;
     }
         
     /**
@@ -793,77 +670,7 @@ class Local
             }
         }
         return $Images;
-    }
-     
-    /**
-     *      @abstract   Compare Two Float Value and 
-     *      @return     string  $code         Country Iso Code
-     *      @return     int                   Country Dolibarr Id, else 0
-     * @deprecated since version 1.3.0
-     */
-    function getCountryByCode($code)
-    {   
-        global $db;
-        if (self::DolVersionCmp("3.7.0") >= 0) {
-            require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
-            $pays = new \Ccountry($db);
-            if ( $pays->fetch(Null,$code) > 0 ) {
-                return $pays->id; 
-            }
-        } else {
-            require_once DOL_DOCUMENT_ROOT.'/core/class/cpays.class.php';
-            $pays = new \Cpays($db);
-            if ( $pays->fetch(Null,$code) > 0 ) {
-                return $pays->id; 
-            }
-        }
-        return False;
-    }
-    
-    /**
-     *      @abstract   Search For State Dolibarr Id using State Code & Country Id
-     *      @param      string  $StateCode          State Iso Code
-     *      @return     string  $CountryId          Country Dolibarr Id
-     * 
-     *      @return     int                   State Dolibarr Id, else 0
-     * @deprecated since version 1.3.0
-     * 
-     */  
-
-
-    function getStateByCode($StateCode,$CountryId)
-    {   
-        global $db;
-        
-        if ( empty($CountryId) ) {
-            return False;
-        } 
-        
-        //====================================================================//
-        // Select State Id &œ Code
-        $sql = "SELECT d.rowid as id, d.code_departement as code";
-        $sql .= " FROM ".MAIN_DB_PREFIX ."c_departements as d, ".MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_pays as p";
-        //====================================================================//
-        // Search by Country & State Code
-        $sql .= " WHERE d.fk_region=r.code_region and r.fk_pays=p.rowid";
-        $sql .= " AND p.rowid = '".$CountryId."'";
-        $sql .= " AND d.code_departement = '".$StateCode."'";
-        
-        //====================================================================//
-        // Execute final request
-        $resql = $db->query($sql);        
-        if (empty($resql))  {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
-        }
-        
-        if ( $db->num_rows($resql) == 1 ) {
-            return $db->fetch_object($resql)->id;
-        }
-                
-//        Splash::Log()->War("MsgLocalTpl",__CLASS__,__FUNCTION__," SQL : " . $sql);
-//        Splash::Log()->www(" RESP : " , $db->fetch_object($resql)->id );
-        return False;
-    }    
+    } 
     
 //====================================================================//
 //  Dolibarr Specific Tools
@@ -920,40 +727,6 @@ class Local
         }
 
         return dirname(dirname(dirname(__FILE__)));
-    }
-    
-    /**
-     *      @abstract       Update Single Dolibarr Entity Field Data 
-     *      @param      string  $Table      Entity Table Name Without Prefix
-     *      @param      int     $RowId      Entity RowId
-     *      @param      string  $Name       Field Name
-     *      @param      mixed  $Value      Field Data
-     * 
-     *      @return         string
-     * @deprecated since version 1.3.0
-     */
-    public function setSingleField($Table, $RowId, $Name, $Value) 
-    {
-        global $db;
-        
-        //====================================================================//
-        // Prepare SQL Request
-        //====================================================================//
-        $sql  = "UPDATE ".MAIN_DB_PREFIX.$Table;
-        $sql .= " SET " . $Name . "='".$db->escape($Value)."'";
-        $sql .= " WHERE rowid=".$db->escape($RowId);
-                
-        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__," SQL : " . $sql);
-                
-        //====================================================================//
-        // Execute SQL Query
-        //====================================================================//
-        $result = $db->query($sql);
-        if (empty($result))  {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
-        }        
-
-        return True;
     }
     
 //====================================================================//

@@ -28,7 +28,7 @@ use ExtraFields;
 trait ExtraFieldsTrait {
 
     
-    private $ExtraFields            = Null; 
+    private $ExtraFields            =   Null; 
     private $ExtraPrefix            =   "options_"; 
         
     private static $TestedExtraTypes   =   array(
@@ -221,15 +221,11 @@ trait ExtraFieldsTrait {
         global $db;
         //====================================================================//
         // Load ExtraFields List        
-        if( !$this->ExtraFields ) {
+        if( $this->ExtraFields == Null ) {
             require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
             $this->ExtraFields = new ExtraFields($db);
-        }
-        $Key    =    is_null($ElementType) ? static::$ExtraFieldsType : $ElementType;
-        //====================================================================//
-        // Load array of extrafields for elementype = $this->table_element
-        if (empty($this->ExtraFields->attributes[$Key]['loaded']))  {
-            $this->ExtraFields->fetch_name_optionals_label($Key);
+            $Key    =    is_null($ElementType) ? static::$ExtraFieldsType : $ElementType;
+            $this->ExtraFields->fetch_name_optionals_label($Key, 1);           
         }
     }
     
@@ -254,11 +250,10 @@ trait ExtraFieldsTrait {
      *  @abstract     Get Dolibarr ExtraFields Types
      */
     private function getExtraTypes()   {
-        $Types  =    $this->ExtraFields->attributes[static::$ExtraFieldsType]['type'];
-        if ( empty($Types) ) {
+        if ( empty($this->ExtraFields->attribute_type) ) {
             return array();
         }
-        return $Types;
+        return $this->ExtraFields->attribute_type;
     }
     
     /**
@@ -335,7 +330,7 @@ trait ExtraFieldsTrait {
     private function getSplashTypeFromId( $FieldName )   {
         
         $Id   =   $this->decodeType($FieldName);
-        $Type =   $this->ExtraFields->attributes[static::$ExtraFieldsType]['type'][$Id];        
+        $Type =   $this->ExtraFields->attribute_type[$Id];        
         return $this->getSplashType($Type);
     }
     
@@ -345,8 +340,7 @@ trait ExtraFieldsTrait {
     private function getLabel( $Type )   {
 
         $this->loadExtraFields();
-        
-        return $this->ExtraFields->attributes[static::$ExtraFieldsType]['label'][$Type];
+        return $this->ExtraFields->attribute_label[$Type];
     }
     
     /**
@@ -355,8 +349,7 @@ trait ExtraFieldsTrait {
     private function getIsRequired( $Type )   {
 
         $this->loadExtraFields();
-        
-        return $this->ExtraFields->attributes[static::$ExtraFieldsType]['required'][$Type];
+        return $this->ExtraFields->attribute_required[$Type];
     }    
     
     /**
@@ -365,8 +358,10 @@ trait ExtraFieldsTrait {
     private function getIsReadOnly( $Type )   {
 
         $this->loadExtraFields();
-        
-        return !empty($this->ExtraFields->attributes[static::$ExtraFieldsType]['computed'][$Type]);
+        if ( isset($this->ExtraFields->attribute_computed) ) {
+            return !empty($this->ExtraFields->attribute_computed[$Type]);
+        }
+        return False;
     }  
     
     /**
@@ -375,8 +370,7 @@ trait ExtraFieldsTrait {
     private function getIsHidden( $Type )   {
 
         $this->loadExtraFields();
-        
-        return $this->ExtraFields->attributes[static::$ExtraFieldsType]['ishidden'][$Type];
+        return (bool) $this->ExtraFields->attribute_hidden[$Type];
     }  
     
 
@@ -405,7 +399,7 @@ trait ExtraFieldsTrait {
         
         //====================================================================//
         // Load Existing Types for this Element
-        $ExistingTypes  =    $ExtraFields->attributes[$ElementType]['type'];
+        $ExistingTypes  =    $ExtraFields->attribute_type['type'];
         if ( empty($ExistingTypes) ) {
             $ExistingTypes  =     array();
         }

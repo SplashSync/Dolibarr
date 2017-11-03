@@ -15,12 +15,12 @@
  * 
  **/
 
-namespace Splash\Local\Objects\Order;
+namespace Splash\Local\Objects\Invoice;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Customer Orders CRUD Functions
+ * @abstract    Dolibarr Customer Invoice CRUD Functions
  */
 trait CRUDTrait
 {
@@ -44,14 +44,15 @@ trait CRUDTrait
         }             
         //====================================================================//
         // Init Object 
-        $Object = new \Commande ($db);
+        $Object = new \Facture ($db);
         //====================================================================//
         // Fatch Object 
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
         }   
-        $Object->fetch_lines();
+        $Object->fetch_lines(); 
+        $this->loadPayments($Id);
         return $Object;
     }    
 
@@ -86,18 +87,20 @@ trait CRUDTrait
         }         
         //====================================================================//
         // Init Object 
-        $this->Object = new \Commande($db);    
+        $this->Object = new \Facture($db);    
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("date", $this->In["date"] );
         $this->setSimple("socid", self::Objects()->Id($this->In["socid"]) );  
-        $this->setSimple("statut", \Commande::STATUS_DRAFT );  
+        $this->setSimple("statut", \Facture::STATUS_DRAFT );  
+        $this->Object->statut = \Facture::STATUS_DRAFT;
+        $this->Object->paye = 0;
         
         //====================================================================//
         // Create Object In Database
         if ( $this->Object->create($user) <= 0) {    
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Order. ");
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Invoice. ");
         }        
         
         return $this->Object;
@@ -124,12 +127,12 @@ trait CRUDTrait
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
             return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
-        }        
+        } 
         //====================================================================//
         // Update Product Object 
         if ( $this->Object->update($user)  <= 0 ) {  
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Order (" . $this->Object->id . ")") ;
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Invoice (" . $this->Object->id . ")") ;
         }        
         return (int) $this->Object->id;
     }  
@@ -143,13 +146,13 @@ trait CRUDTrait
      */    
     public function Delete($Id = NULL)
     {
-        global $db,$user;
+        global $db,$user,$conf;
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Object 
-        $Object = new \Commande($db);
+        $Object = new \Facture($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
@@ -157,13 +160,24 @@ trait CRUDTrait
             return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }
         //====================================================================//
+        // Debug Mode => Force Allow Delete
+        if ( defined("SPLASH_DEBUG") && SPLASH_DEBUG ) {
+            $conf->global->INVOICE_CAN_ALWAYS_BE_REMOVED = 1;
+        }        
+        //====================================================================//
+        // Debug Mode => Force Delete All Invooices Payments
+        if ( defined("SPLASH_DEBUG") && SPLASH_DEBUG ) {
+            $this->clearPayments($Id);
+        }        
+        //====================================================================//
         // Set Object Id, fetch not needed
         $Object->id = $Id;
         //====================================================================//
         // Delete Object 
-//        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;
-        if ( $Object->delete($user) <= 0 ) {  
-            return $this->CatchDolibarrErrors( $Object );
+        $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
+        if ( $Object->delete($Arg1) <= 0 ) {  
+            $this->CatchDolibarrErrors( $Object );
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Invoice (" . $Id . ")") ;
         }
         return True;
     }      
