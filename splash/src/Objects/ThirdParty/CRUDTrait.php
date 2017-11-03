@@ -121,10 +121,15 @@ trait CRUDTrait
             return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }        
         //====================================================================//
-        // Update Product Object 
+        // Update Object 
         if ( $this->Object->update($this->Object->id,$user,1,$this->allowmodcodeclient) <= 0) {  
             $this->CatchDolibarrErrors();
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Product (" . $this->Object->id . ")");
+        }      
+        //====================================================================//
+        // Update Object Extra Fields 
+        if ( $this->Object->insertExtraFields()  <= 0 ) {  
+            $this->CatchDolibarrErrors();
         }        
         return (int) $this->Object->id;
     }  

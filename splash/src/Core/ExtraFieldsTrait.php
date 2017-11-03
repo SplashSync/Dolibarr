@@ -103,7 +103,7 @@ trait ExtraFieldsTrait {
         }           
         //====================================================================//
         // Extract Field Data
-        if (array_key_exists($FieldName, $this->Object->array_options) ) {
+        if ( isset($this->Object->array_options) && array_key_exists($FieldName, $this->Object->array_options) ) {
             $FieldData  = $this->Object->array_options[$FieldName];
         } else {
             $FieldData  = Null;
@@ -187,7 +187,7 @@ trait ExtraFieldsTrait {
             case SPL_T_BOOL:
                 if ( $CurrentData != $Data ) {
                     $this->Object->array_options[$FieldName] = $Data;
-                    $this->Object->updateExtraField($this->decodeType($FieldName));
+                    $this->needUpdate();
                 } 
                 break;            
                                 
@@ -195,7 +195,7 @@ trait ExtraFieldsTrait {
                 if ( $CurrentData != $Data ) {
                     date_default_timezone_set('UTC');
                     $this->Object->array_options[$FieldName] = $Data;
-                    $this->Object->updateExtraField($this->decodeType($FieldName));
+                    $this->needUpdate();
                 } 
                 break;         
             
@@ -203,7 +203,7 @@ trait ExtraFieldsTrait {
                 $PriceHT  = PricesTrait::Prices()->TaxExcluded( $Data );
                 if ( $CurrentData != $PriceHT ) {
                     $this->Object->array_options[$FieldName] = $PriceHT;
-                    $this->Object->updateExtraField($this->decodeType($FieldName));
+                    $this->needUpdate();
                 } 
                 break;              
             
@@ -225,7 +225,7 @@ trait ExtraFieldsTrait {
             require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
             $this->ExtraFields = new ExtraFields($db);
             $Key    =    is_null($ElementType) ? static::$ExtraFieldsType : $ElementType;
-            $this->ExtraFields->fetch_name_optionals_label($Key, 1);           
+            $this->ExtraFields->fetch_name_optionals_label($Key, 1);      
         }
     }
     

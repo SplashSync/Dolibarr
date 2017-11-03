@@ -99,7 +99,6 @@ trait CRUDTrait
             $this->CatchDolibarrErrors();
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Order. ");
         }        
-        
         return $this->Object;
     }
     
@@ -130,6 +129,11 @@ trait CRUDTrait
         if ( $this->Object->update($user)  <= 0 ) {  
             $this->CatchDolibarrErrors();
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Order (" . $this->Object->id . ")") ;
+        }        
+        //====================================================================//
+        // Update Object Extra Fields 
+        if ( $this->Object->insertExtraFields()  <= 0 ) {  
+            $this->CatchDolibarrErrors();
         }        
         return (int) $this->Object->id;
     }  

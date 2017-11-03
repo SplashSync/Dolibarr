@@ -135,6 +135,11 @@ trait CRUDTrait
             $this->CatchDolibarrErrors();
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Product (" . $this->Object->id . ")") ;
         }        
+        //====================================================================//
+        // Update Object Extra Fields 
+        if ( $this->Object->insertExtraFields()  <= 0 ) {  
+            $this->CatchDolibarrErrors();
+        }        
         return (int) $this->Object->id;
     }  
     
