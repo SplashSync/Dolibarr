@@ -509,6 +509,7 @@ class InterfaceSplash
             $this->Action       = SPL_A_CREATE;
             $this->Comment      = "Invoice Created on Dolibarr";
         } elseif ( ($Action == 'BILL_MODIFY') 
+            ||  ($Action == 'BILL_CLONE')
             ||  ($Action == 'BILL_VALIDATE')
             ||  ($Action == 'BILL_UNVALIDATE')
             ||  ($Action == 'BILL_CANCEL')

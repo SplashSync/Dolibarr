@@ -33,6 +33,7 @@ trait CRUDTrait
     public function Load( $Id )
     {
         global $db, $user;        
+        global $conf;        
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__); 
@@ -49,6 +50,7 @@ trait CRUDTrait
         // Fatch Object 
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
+            Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Current Entity is : " . $conf->entity);
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
         }   
         $Object->fetch_lines(); 
