@@ -129,18 +129,19 @@ trait StatusTrait {
                 //====================================================================//
                 // If Already Paid => Set Draft
                 if ( ( $this->Object->statut == 2 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Draft", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
                 }     
                 //====================================================================//
                 // If Already Canceled => Set Draft
                 if ( ( $this->Object->statut == 3 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Draft", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
                 }  
                 //====================================================================//
                 // If Not Valdidated => Set Validated
                 if ( ( $this->Object->statut != 1 ) && ( $this->Object->validate($user,"",$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Validated", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
                 }        
+                $this->Object->paye = 0;
                 $this->Object->statut = \Facture::STATUS_VALIDATED;                     
                 break;
             //====================================================================//
@@ -150,13 +151,14 @@ trait StatusTrait {
                 //====================================================================//
                 // If Draft => Set Validated
                 if ( ( $this->Object->statut == 0 ) && ( $this->Object->validate($user,"",$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Validated", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
                 }                
                 //====================================================================//
                 // If Validated => Set Paid
                 if ( ( $this->Object->statut == 1 ) && ( $this->Object->set_paid($user) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Paid", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
                 }
+                $this->Object->paye = 1;
                 $this->Object->statut = \Facture::STATUS_CLOSED;
                 break; 
             //====================================================================//
@@ -166,8 +168,9 @@ trait StatusTrait {
                 //====================================================================//
                 // Whatever => Set Canceled
                 if ( ( $this->Object->statut != 3 ) && ( $this->Object->set_canceled($user) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Canceled", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
                 }   
+                $this->Object->paye = 0;
                 $this->Object->statut = \Facture::STATUS_ABANDONED;
                 break;                  
         }  
