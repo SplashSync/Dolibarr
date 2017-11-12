@@ -51,7 +51,7 @@ trait CRUDTrait
             $this->CatchDolibarrErrors($Object);
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
         }   
-        $Object->fetch_lines();
+        $Object->fetch_lines();        
         return $Object;
     }    
 
