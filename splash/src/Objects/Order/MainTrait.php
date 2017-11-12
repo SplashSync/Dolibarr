@@ -199,26 +199,56 @@ trait MainTrait {
                 $this->needUpdate();
                 break;   
                
-        //====================================================================//
-        // ORDER INVOCE
-        //====================================================================//        
-        case 'facturee':
-            if ($this->Object->facturee == $Data) {
+            //====================================================================//
+            // ORDER INVOCED FLAG
+            //====================================================================//        
+            case 'facturee':
+                if ($this->Object->facturee == $Data) {
+                    break;
+                }
+                $this->updateBilled = $Data;
+                $this->updateBilledFlag();
                 break;
-            }
-            if ($Data) {
-                $this->Object->classifyBilled($user);
-            } else {
-                $this->Object->classifyUnBilled();
-            }
-            $this->CatchDolibarrErrors();
-            break;            
-                
                 
             default:
                 return;
         }
+        
+        
         unset($this->In[$FieldName]);
     }
+    
+    /**
+     *  @abstract     Update Order Billed Flag if Required & Possibe
+     * 
+     *  @param        string    $FieldName              Field Identifier / Name
+     *  @param        mixed     $Data                   Field Data
+     * 
+     *  @return         none
+     */
+    protected function updateBilledFlag() 
+    {
+        global $user; 
+        
+        // Not Required
+        if ( !isset($this->updateBilled) ) {
+            return;
+        }        
+        // Not Possible
+        if ( $this->Object->statut <= \Commande::STATUS_DRAFT ) {
+            return;
+        }
+        
+        // Update
+        if ($this->updateBilled) {
+            $this->Object->classifyBilled($user);
+        } else {
+            $this->Object->classifyUnBilled();
+        }
+        unset($this->updateBilled);
+        $this->CatchDolibarrErrors();
+        
+    }
+    
     
 }

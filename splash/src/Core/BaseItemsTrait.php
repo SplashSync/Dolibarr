@@ -210,8 +210,11 @@ trait BaseItemsTrait {
             $this->deleteItem( $LineItem ); 
         }        
         //====================================================================//
-        // Update Order Total Prices
+        // Update Order/Invoice Total Prices
         $this->Object->update_price();
+        //====================================================================//
+        // Reload Order/Invoice Lines
+        $this->Object->fetch_lines();
         
         unset($this->In[$FieldName]);
     }

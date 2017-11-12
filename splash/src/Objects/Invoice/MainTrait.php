@@ -199,6 +199,11 @@ trait MainTrait {
                     break;                   
                 }
                 //====================================================================//
+                // If Status Is Not Validated => Cannot Update This Flag
+                if ( $this->Object->statut < 1 ) {
+                    break;
+                }     
+                //====================================================================//
                 // Set Paid using Dolibarr Function
                 if ( $Data && ($this->Object->statut == 1) && ( $this->Object->set_paid($user) != 1 ) ) {
                     return $this->CatchDolibarrErrors();
