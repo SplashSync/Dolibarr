@@ -511,6 +511,7 @@ class InterfaceSplash
         } elseif ( ($Action == 'BILL_MODIFY') 
             ||  ($Action == 'BILL_CLONE')
             ||  ($Action == 'BILL_VALIDATE')
+            ||  ($Action == 'BILL_CLONE')
             ||  ($Action == 'BILL_UNVALIDATE')
             ||  ($Action == 'BILL_CANCEL')
             ||  ($Action == 'BILL_PAYED')

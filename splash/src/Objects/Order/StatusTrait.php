@@ -115,17 +115,17 @@ trait StatusTrait {
             //====================================================================//
             // If Previously Closed => Set Draft
             if ( ( $this->Object->statut == 3 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Draft", $langs->trans($this->Object->error) );
+                return $this->CatchDolibarrErrors();
             }         
             //====================================================================//
             // If Previously Draft => Valid
             if ( ( $this->Object->statut == 0 ) && ( $this->Object->valid($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Validated", $langs->trans($this->Object->error) );
+                return $this->CatchDolibarrErrors();
             }               
             //====================================================================//
             // Set Canceled
             if ( $this->Object->cancel($conf->global->SPLASH_STOCK) != 1 ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__,"Set Canceled", $langs->trans($this->Object->error) );
+                    return $this->CatchDolibarrErrors();
             }     
             $this->Object->statut = \Commande::STATUS_CANCELED;
             return True;
@@ -133,7 +133,7 @@ trait StatusTrait {
         //====================================================================//
         // If Previously Canceled => Re-Validate
         if ( ( $this->Object->statut == -1 ) && ( $this->Object->valid($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-            return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Validated Again", $langs->trans($this->Object->error) );
+            return $this->CatchDolibarrErrors();
         }         
         //====================================================================//
         // Statut Draft
@@ -141,7 +141,7 @@ trait StatusTrait {
             //====================================================================//
             // If Not Draft (Validated or Closed)            
             if ( ($this->Object->statut != 0) && $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans($this->Object->error) );
+                return $this->CatchDolibarrErrors();
             }        
             $this->Object->statut = \Commande::STATUS_DRAFT;
             return True;
@@ -171,6 +171,9 @@ trait StatusTrait {
             }         
             $this->Object->statut = \Commande::STATUS_CLOSED;
         }
+        //====================================================================//
+        // Redo Billed flag Update if Impacted by Status Change
+        $this->updateBilledFlag();
         
     }    
     
