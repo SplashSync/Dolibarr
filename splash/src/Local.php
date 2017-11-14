@@ -283,6 +283,10 @@ class Local
         $Response->servertype       =   "Dolibarr ERP";
         $Response->serverurl        =   DOL_MAIN_URL_ROOT;
         
+        //====================================================================//
+        // Current Module Version
+        $Response->moduleversion    =   SPL_MOD_VERSION; 
+        
         return $Response;
     }    
     

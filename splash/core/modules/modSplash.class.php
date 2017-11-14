@@ -36,8 +36,7 @@ include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
 
 
 /**
- *      \class      modOsconnect
- *      \brief      Description and activation class for module MyModule
+ * @abstract Splash Module For Dolibarr
  */
 class modSplash extends DolibarrModules
 {
@@ -48,13 +47,19 @@ class modSplash extends DolibarrModules
 	function modSplash($DB)
 	{
             global $langs;
+            //====================================================================//
+            // Load traductions files required by by page
             $langs->load("admin");
             $langs->load("splash@splash");
             
-            //====================================================================//
-            // Load traductions files required by by page
-
             $this->db = $DB;
+            
+            //====================================================================//
+            // Module Editor Infos
+            $this->editor_name = "Splash Sync";
+            $this->editor_web = "www.splashsync.com";            
+            
+            //====================================================================//
             // Id for module (must be unique).
             // Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
             $this->numero = SPL_MOD_ID;
@@ -77,6 +82,7 @@ class modSplash extends DolibarrModules
             // If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
             $this->picto = SPL_MOD_PICTO;
 
+            //====================================================================//
             // Defined all module parts (triggers, login, substitutions, menus, css, etc...)
             // for default path (eg: /mymodule/core/xxxxx) (0=disable, 1=enable)
             // for specific path of parts (eg: /mymodule/core/modules/barcode)
@@ -97,6 +103,7 @@ class modSplash extends DolibarrModules
             // Config pages. Put here list of php page names stored in admmin directory used to setup module.
             $this->config_page_url = array("index.php@".SPL_MOD_NAME);
 
+            //====================================================================//
             // Dependencies
             // List of modules id that must be enabled if this module is enabled
             $this->depends = array("modCommande","modProduct","modCategorie","modStock","modBanque","modSociete","modFacture");		
