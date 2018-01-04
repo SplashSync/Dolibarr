@@ -227,6 +227,7 @@ trait BaseItemsTrait {
      *  @return         none
      */
     private function setItem($ItemData) {
+        global $user; 
         
         //====================================================================//
         // New Line ? => Create One
@@ -263,8 +264,14 @@ trait BaseItemsTrait {
         // Commit Line Update
         if ( !$this->ItemUpdate ) {
             return;
-        }                
-        if ( $this->CurrentItem->update() <= 0) {
+        }      
+        
+        //====================================================================//
+        // Prepare Args
+        $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
+        //====================================================================//
+        // Perform Line Update        
+        if ( $this->CurrentItem->update($Arg1) <= 0) {
             $this->CatchDolibarrErrors($this->CurrentItem);
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to update Line Item. ");
         }
