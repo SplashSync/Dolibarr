@@ -2,7 +2,7 @@
     "name": "splash/dolibarr",
     "description": "Splash Module for Dolibarr ERP",
 
-    "license": "GPL",
+    "license": "MIT",
 
     "minimum-stability": "dev",
     "prefer-stable": true,
