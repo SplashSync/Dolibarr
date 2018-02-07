@@ -40,9 +40,14 @@ trait CRUDTrait
         // Init Object 
         $Object = new \Societe ($db);
         //====================================================================//
-        // Fatch Object 
+        // Fetch Object 
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load ThirdPaty (" . $Id . ").");
+        }        
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load ThirdPaty (" . $Id . ").");
         }        
         return $Object;
@@ -124,7 +129,7 @@ trait CRUDTrait
         // Update Object 
         if ( $this->Object->update($this->Object->id,$user,1,$this->allowmodcodeclient) <= 0) {  
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Product (" . $this->Object->id . ")");
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update ThirdParty (" . $this->Object->id . ")");
         }      
         //====================================================================//
         // Update Object Extra Fields 
@@ -159,6 +164,12 @@ trait CRUDTrait
         //====================================================================//
         // Set Object Id, fetch not needed
         $Object->id = $Id;
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        unset($Object->entity);
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete ThirdParty (" . $Id . ").");
+        }       
         //====================================================================//
         // Delete Object 
 //        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;

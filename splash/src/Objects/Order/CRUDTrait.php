@@ -51,6 +51,11 @@ trait CRUDTrait
             $this->CatchDolibarrErrors($Object);
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
         }   
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
+        }           
         $Object->fetch_lines();        
         return $Object;
     }    
@@ -163,6 +168,12 @@ trait CRUDTrait
         //====================================================================//
         // Set Object Id, fetch not needed
         $Object->id = $Id;
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        unset($Object->entity);
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Order (" . $Id . ").");
+        }               
         //====================================================================//
         // Delete Object 
 //        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;

@@ -44,7 +44,7 @@ trait CoreTrait {
         $this->FieldsFactory()
                 ->Create($conf->global->MAIN_MULTILANGS ? SPL_T_MVARCHAR : SPL_T_VARCHAR)
                 ->Identifier("label")
-                ->Name($langs->trans("ProductLabel"))
+                ->Name($langs->trans("ProductLabel") . ($conf->global->MAIN_MULTILANGS ? ' (M)' : Null))
                 ->IsListed()
                 ->isLogged()
                 ->Group($langs->trans("Description"))

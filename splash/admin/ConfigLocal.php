@@ -23,7 +23,7 @@
  *  \brief      Display Module Tests Results
 */
 
-
+use Splash\Core\SplashCore as Splash;
 
 //====================================================================//
 // Create Setup Form
@@ -60,7 +60,7 @@ echo '  </tr>';
 // Default User Parameter
 echo '  <tr class="impair">';
 echo '      <td>' . $langs->trans("SPL_DfUser") . '</td>';
-echo '      <td>' . $form->select_dolusers($conf->global->SPLASH_USER,'user',1) . '</td>';
+echo '      <td>' . $form->select_dolusers($conf->global->SPLASH_USER,'user',1, Null, 0, '', '', $conf->entity ) . '</td>';
 echo '  </tr>';
 //====================================================================//
 // Default Warehouse Parameter

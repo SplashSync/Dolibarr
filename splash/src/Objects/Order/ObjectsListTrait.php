@@ -66,14 +66,19 @@ trait ObjectsListTrait {
         //====================================================================//
         // Select Database tables
         $sql   .= " FROM " . MAIN_DB_PREFIX . "commande as o ";
+        
+        //====================================================================//
+        // Entity Filter
+        $sql   .= " WHERE o.entity IN (".getEntity('commande', 1).")";        
         //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if ( !empty($filter) && is_string($filter)) {
+            $sql   .= " AND ( ";
             //====================================================================//
             // Search in Order Ref.
-            $sql   .= " WHERE LOWER( o.ref ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " LOWER( o.ref ) LIKE LOWER( '%" . $filter ."%') ";
             //====================================================================//
             // Search in Order Internal Ref 
             $sql   .= " OR LOWER( o.ref_int ) LIKE LOWER( '%" . $filter ."%') ";
@@ -83,6 +88,7 @@ trait ObjectsListTrait {
             //====================================================================//
             // Search in Order Customer Ref
             $sql   .= " OR LOWER( o.ref_client ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " ) ";  
         }   
         //====================================================================//
         // Setup sortorder

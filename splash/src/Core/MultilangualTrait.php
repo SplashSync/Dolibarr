@@ -75,6 +75,17 @@ trait MultilangualTrait {
                 $this->needUpdate();
             }
         }
+        
+        //====================================================================//        
+        // For Safety => Push First Value to Default Lang if Empty + Warning
+        if( property_exists(get_class($this->Object),$FieldName) && empty($this->Object->$FieldName) ) {
+            $this->Object->$FieldName    =   array_shift($Data);
+            Splash::Log()->War(
+                    "Value for default Dolibarr language is missing in received Multilangual Contents. "
+                    . "Please check configuration of all your sites to use the same default Language. "
+                    . "Current Default Language is : " . $langs->getDefaultLang());
+        }
+        
         return $this;        
     }  
     
@@ -95,22 +106,32 @@ trait MultilangualTrait {
         //====================================================================//        
         // Native Multilangs Descriptions
         //====================================================================//                
-        $Data = array(); 
+        
         //====================================================================//        
         // If Multilang Contents doesn't exists
         if ( empty($this->Object->multilangs) )    {
-            // Get Default Language
-            $DfLang = $langs->getDefaultLang();
-            $Data = array( $DfLang => trim($this->Object->$FieldName) );
-        } else {
+            $this->Out[$FieldName] = array( 
+                        $langs->getDefaultLang() => trim($this->Object->$FieldName) 
+                    );
+            return $this;    
+        } 
+            
+        $Data = array(); 
+        
+        //====================================================================//        
+        // Read Multilang contents 
+        foreach ($this->Object->multilangs as $IsoCode => $Content) {
             //====================================================================//        
-            // Read Multilang contents 
-            foreach ($this->Object->multilangs as $IsoCode => $Content) {
-                if (isset ($Content[$FieldName] )) {
-                    $Data[$IsoCode] = $Content[$FieldName];
-                }
-            }
+            // Give Priority to Default language 
+            if ( ($IsoCode == $langs->getDefaultLang()) && property_exists(get_class($this->Object),$FieldName)) {
+                $Data[$IsoCode] = $this->Object->$FieldName;
+            //====================================================================//        
+            // Extract from Multilang Array 
+            } elseif (isset ($Content[$FieldName] )) {
+                $Data[$IsoCode] = $Content[$FieldName];
+            }               
         }
+            
         $this->Out[$FieldName] = $Data;
         return $this;    
     }    

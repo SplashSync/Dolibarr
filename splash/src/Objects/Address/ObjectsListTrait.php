@@ -82,10 +82,15 @@ trait ObjectsListTrait {
         }        
         
         //====================================================================//
+        // Entity Filter
+        $sql   .= " WHERE c.entity IN (".getEntity('contact', 1).")";
+        
+        //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if ( !empty($filter) && is_string($filter)) {
+            $sql   .= " AND ( ";
             //====================================================================//
             // Search in External Ref
             $sql   .= " WHERE LOWER( c.ref_ext ) LIKE LOWER( '%" . $filter ."%') ";
@@ -108,6 +113,7 @@ trait ObjectsListTrait {
             //====================================================================//
             // Search in Town
             $sql   .= " OR LOWER( c.town ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " ) ";              
         }  
         
         //====================================================================//

@@ -30,7 +30,7 @@ trait ErrorParserTrait {
      * 
      * @param   object  $Subject    Focus on a specific object
      * 
-     * @return  bool                False is Error was Found
+     * @return  bool                False if Error was Found
      */
     protected function CatchDolibarrErrors( $Subject = Null ) {
         

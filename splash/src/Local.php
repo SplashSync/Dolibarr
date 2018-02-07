@@ -34,6 +34,7 @@ use User;
 use ArrayObject;
     
 use Splash\Local\Core\ExtraFieldsTrait;
+use Splash\Local\Core\MultiCompanyTrait;
 
 /**
  *	\class      SplashLocal
@@ -42,6 +43,7 @@ use Splash\Local\Core\ExtraFieldsTrait;
 class Local 
 {
     use ExtraFieldsTrait;
+    use MultiCompanyTrait;
     
     //====================================================================//
     // General Class Variables	
@@ -116,7 +118,11 @@ class Local
         //====================================================================//
         // Overide Module Local Name in Logs
         $Parameters["localname"]        =   self::getParameter("MAIN_INFO_SOCIETE_NOM");
-        
+        //====================================================================//
+        // Overide Webserver Path if MultiCompany Module Is Active
+        if ( Splash::Local()->isMultiCompanyChildEntity() ) {
+            $Parameters["ServerPath"]        =   Splash::Local()->getMultiCompanyServerPath();
+        }        
         return $Parameters;
     }    
     
@@ -157,8 +163,6 @@ class Local
         // When Library is called in both clinet & server mode
         //====================================================================//
 
-        // NOTHING TO DO         
-        
         if (!defined("DOL_DOCUMENT_ROOT")) {
         
             global $db,$langs,$conf,$user,$hookmanager;
@@ -169,8 +173,8 @@ class Local
            
             //====================================================================//
             // Splash Modules Constant Definition
-            require_once(DOL_DOCUMENT_ROOT.'/splash/_conf/defines.inc.php'); 
-            
+            require_once( dirname(__DIR__) .'/_conf/defines.inc.php'); 
+    
             //====================================================================//
             // Load Default Language
             $this->LoadDefaultLanguage();      
@@ -178,8 +182,15 @@ class Local
             //====================================================================//
             // Load Default User
             $this->LoadLocalUser();           
-        
+            
+            //====================================================================//
+            // Manage MultiCompany
+            //====================================================================//
+            $this->setupMultiCompany();
+         
         }
+        
+        
         
         return True;
     }      
@@ -244,7 +255,6 @@ class Local
             return Splash::Log()->Err("Splash Module for Dolibarr require Dolibarr Version Above 4.0. Please update your system before using Splash.");
         }
         
-
         Splash::Log()->Msg("MsgSelfTestOk");
         return True;
     }       
@@ -321,6 +331,7 @@ class Local
             case "Monolangual":
                 dolibarr_set_const($db,"MAIN_MULTILANGS"            ,0,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);          
+                dolibarr_set_const($db,"MAIN_MODULE_MULTICOMPANY"   ,0,'chaine',0,'',$conf->entity);              
                 
                 self::configurePhpUnitExtraFields("societe",    False);
                 self::configurePhpUnitExtraFields("socpeople",  False);
@@ -332,6 +343,7 @@ class Local
             case "Multilangual":
                 dolibarr_set_const($db,"MAIN_MULTILANGS"            ,1,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"MAIN_MODULE_MULTICOMPANY"   ,0,'chaine',0,'',$conf->entity);              
                 return;
             
             case "MultiPrices":
@@ -339,6 +351,7 @@ class Local
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,1,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES_LIMIT"  ,3,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL"    ,rand(1,3),'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"MAIN_MODULE_MULTICOMPANY"   ,0,'chaine',0,'',$conf->entity);              
                 
                 self::configurePhpUnitExtraFields("societe",    False);
                 self::configurePhpUnitExtraFields("socpeople",  False);
@@ -350,6 +363,7 @@ class Local
             case "ExtraFields":
                 dolibarr_set_const($db,"MAIN_MULTILANGS"            ,0,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"MAIN_MODULE_MULTICOMPANY"   ,0,'chaine',0,'',$conf->entity);              
                 
                 self::configurePhpUnitExtraFields("societe",    True);
                 self::configurePhpUnitExtraFields("socpeople",  True);
@@ -362,6 +376,7 @@ class Local
             case "List":
                 return array("Monolangual", "Multilangual", "MultiPrices", "ExtraFields" );
 //                return array("Monolangual");
+//                return array("Multilangual");
 //                return array( "ExtraFields" );
                 
         }

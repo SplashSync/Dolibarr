@@ -1,0 +1,26 @@
+###########################################################
+# Main Configuration
+###########################################################
+site_name: Dolibarr Splash Bundle 
+site_dir: "../../docs"
+theme: readthedocs
+
+repo_url: https://github.com/SplashSync/Dolibarr
+
+copyright:  <i class="fa fa-copyright" aria-hidden="true"></i> Copyright Splash Sync 2017 
+
+###########################################################
+# Site Contents
+###########################################################
+pages:
+    - Home:                     index.md
+    - Features:                 features.md
+    - Installation:             install.md
+    - Configuration:            configuration.md
+#    - Test & Connect: connect.md
+    - Français :
+        - Accueil :             fr/index.md
+        - Fonctionnalités:      fr/features.md
+        - Installation:         fr/install.md
+        - Configuration:        fr/configuration.md        
+#    - About: about.md

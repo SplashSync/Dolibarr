@@ -44,7 +44,12 @@ trait CRUDTrait
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Contact Address (" . $Id . ").");
-        }        
+        }  
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Contact Address (" . $Id . ").");
+        }           
         return $Object;
     }    
 
@@ -149,6 +154,12 @@ trait CRUDTrait
         //====================================================================//
         // Set Object Id, fetch not needed
         $Object->id = $Id;
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        unset($Object->entity);
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to delete Product (" . $Id . ").");
+        }        
         //====================================================================//
         // Delete Object 
 //        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;

@@ -22,6 +22,7 @@
             <directory>../splash/vendor/splash/phpcore/Tests/*</directory>
         </testsuite>
         <testsuite name="Local">
+            <directory>../splash/src/Tests/L05MultiCompanyTest.php</directory>
             <directory>../splash/src/Tests/*</directory>
         </testsuite>
     </testsuites>

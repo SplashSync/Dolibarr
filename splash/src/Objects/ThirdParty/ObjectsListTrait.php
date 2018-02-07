@@ -80,12 +80,16 @@ trait ObjectsListTrait {
         }        
         
         //====================================================================//
+        // Entity Filter
+        $sql   .= " WHERE s.entity IN (".getEntity('societe', 1).")";
+        //====================================================================//
         // Setup filters
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if ( !empty($filter) && is_string($filter)) {
+            $sql   .= " AND ( ";
             //====================================================================//
             // Search in Customer Code
-            $sql   .= " WHERE LOWER( s.code_client ) LIKE LOWER( '%" . $filter ."%') ";        
+            $sql   .= " LOWER( s.code_client ) LIKE LOWER( '%" . $filter ."%') ";        
             //====================================================================//
             // Search in Customer Name
             $sql   .= " OR LOWER( s.nom ) LIKE LOWER( '%" . $filter ."%') ";        
@@ -101,6 +105,7 @@ trait ObjectsListTrait {
             //====================================================================//
             // Search in Customer Town
             $sql   .= " OR LOWER( s.town ) LIKE LOWER( '%" . $filter ."%') ";        
+            $sql   .= " ) ";        
         }  
         //====================================================================//
         // Setup sortorder

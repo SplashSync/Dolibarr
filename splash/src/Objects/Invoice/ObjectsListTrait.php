@@ -66,14 +66,20 @@ trait ObjectsListTrait {
         //====================================================================//
         // Select Database tables
         $sql   .= " FROM " . MAIN_DB_PREFIX . "facture as f ";
+        
+        //====================================================================//
+        // Entity Filter
+        $sql   .= " WHERE f.entity IN (".getEntity('facture', 1).")";
+        
         //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if ( !empty($filter) && is_string($filter)) {
+            $sql   .= " AND ( ";
             //====================================================================//
             // Search in Invoice Ref.
-            $sql   .= " WHERE LOWER( f.facnumber ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " LOWER( f.facnumber ) LIKE LOWER( '%" . $filter ."%') ";
             //====================================================================//
             // Search in Invoice Internal Ref 
             $sql   .= " OR LOWER( f.ref_int ) LIKE LOWER( '%" . $filter ."%') ";
@@ -83,6 +89,7 @@ trait ObjectsListTrait {
             //====================================================================//
             // Search in Invoice Customer Ref
             $sql   .= " OR LOWER( f.ref_client ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " ) ";              
         }   
         //====================================================================//
         // Setup sortorder

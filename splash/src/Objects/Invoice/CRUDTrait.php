@@ -53,6 +53,11 @@ trait CRUDTrait
             Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Current Entity is : " . $conf->entity);
             return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
         }   
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
+        }           
         $Object->fetch_lines(); 
         $this->loadPayments($Id);
         return $Object;
@@ -179,6 +184,12 @@ trait CRUDTrait
         //====================================================================//
         // Set Object Id, fetch not needed
         $Object->id = $Id;
+        //====================================================================//
+        // Check Object Entity Access (MultiCompany) 
+        unset($Object->entity);
+        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
+            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Invoice (" . $Id . ").");
+        }        
         //====================================================================//
         // Delete Object 
         $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;

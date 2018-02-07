@@ -63,14 +63,19 @@ trait ObjectsListTrait {
         // Select Database tables
         $sql   .= " FROM " . MAIN_DB_PREFIX . "product as p ";
         
+        
+        //====================================================================//
+        // Entity Filter
+        $sql   .= " WHERE p.entity IN (".getEntity('product', 1).")";        
         //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if ( !empty($filter) && is_string($filter)) {
+            $sql   .= " AND ( ";
             //====================================================================//
             // Search in Product Ref.
-            $sql   .= " WHERE LOWER( p.ref ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " LOWER( p.ref ) LIKE LOWER( '%" . $filter ."%') ";
             //====================================================================//
             // Search in Product Label
             $sql   .= " OR LOWER( p.label ) LIKE LOWER( '%" . $filter ."%') ";
@@ -83,6 +88,8 @@ trait ObjectsListTrait {
             //====================================================================//
             // Search in Product Price
             $sql   .= " OR LOWER( p.price ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql   .= " ) ";        
+            
         }  
         
         //====================================================================//
