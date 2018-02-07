@@ -1,0 +1,224 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Splash Sync Module for Dolibarr\n\n\nWelcome to the Dolibarr Module's Documentation!\n\n\nThis module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.\n\n\nSummary\n\n\nThis documentation will focus on:\n\n\n\n\nFeatures \n Benefits\n\n\nModule Installation\n\n\nModule Configuration\n\n\n\n\nMore about Splash\n\n\nThis module is part of \nSplashSync\n project. \n\n\nFor more informations about Splash Sync, the way it works and how you can use it to connect your applications, please refer our \nonline documentation\n.", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#splash-sync-module-for-dolibarr", 
+            "text": "Welcome to the Dolibarr Module's Documentation!  This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.", 
+            "title": "Splash Sync Module for Dolibarr"
+        }, 
+        {
+            "location": "/#summary", 
+            "text": "This documentation will focus on:   Features   Benefits  Module Installation  Module Configuration", 
+            "title": "Summary"
+        }, 
+        {
+            "location": "/#more-about-splash", 
+            "text": "This module is part of  SplashSync  project.   For more informations about Splash Sync, the way it works and how you can use it to connect your applications, please refer our  online documentation .", 
+            "title": "More about Splash"
+        }, 
+        {
+            "location": "/features/", 
+            "text": "Key features \n benefits\n\n\nDolibarr is one of the major Open-Source ERP project you could find on the web. It's now working for more than 10 years and its very simple approach make it suitable for small and medium business.  \n\n\nThis module will give Splash access to Third Party, Products, Customer Orders \n Invoice.\n\n\nCentralize your sales workflow\n\n\nThis module was designed to transform Dolibarr into the heart of your business organization.\nBy importing and synchronizing all your sales informations, you can access all you sales in a single place, whatever the sales channels.\n\n\nSynchronize Products Stocks\n\n\nCentralize your products stocks from Dolibarr to any kind of applications.\n\n\nMerge all your customers data\n\n\nOnce all your modules connected, use the Object Linked to identify and merge all your customers profiles into a single Splash entity. \nThis way, all similar informations will be shared and synchronized anywhere, from CRM to E-Commerce.\n\n\nConsolidate \n Simplify your Financial Analytics\n\n\nOrders and invoices will be automatically imported from your E-Commerce, point-of-sale, or any other applications you may connect! \n\n\nYour financial analytics is easier... and with no efforts.", 
+            "title": "Features"
+        }, 
+        {
+            "location": "/features/#key-features-benefits", 
+            "text": "Dolibarr is one of the major Open-Source ERP project you could find on the web. It's now working for more than 10 years and its very simple approach make it suitable for small and medium business.    This module will give Splash access to Third Party, Products, Customer Orders   Invoice.", 
+            "title": "Key features &amp; benefits"
+        }, 
+        {
+            "location": "/features/#centralize-your-sales-workflow", 
+            "text": "This module was designed to transform Dolibarr into the heart of your business organization.\nBy importing and synchronizing all your sales informations, you can access all you sales in a single place, whatever the sales channels.", 
+            "title": "Centralize your sales workflow"
+        }, 
+        {
+            "location": "/features/#synchronize-products-stocks", 
+            "text": "Centralize your products stocks from Dolibarr to any kind of applications.", 
+            "title": "Synchronize Products Stocks"
+        }, 
+        {
+            "location": "/features/#merge-all-your-customers-data", 
+            "text": "Once all your modules connected, use the Object Linked to identify and merge all your customers profiles into a single Splash entity. \nThis way, all similar informations will be shared and synchronized anywhere, from CRM to E-Commerce.", 
+            "title": "Merge all your customers data"
+        }, 
+        {
+            "location": "/features/#consolidate-simplify-your-financial-analytics", 
+            "text": "Orders and invoices will be automatically imported from your E-Commerce, point-of-sale, or any other applications you may connect!   Your financial analytics is easier... and with no efforts.", 
+            "title": "Consolidate &amp; Simplify your Financial Analytics"
+        }, 
+        {
+            "location": "/install/", 
+            "text": "Installation\n\n\n\n\nDownload latest stable version here : \nSplash Modules\n\n\nCopy module contents on Dolibarr htdocs folder (htdocs/splash) \n\n\nEnable \n Configure the module\n\n\n\n\nRequirements\n\n\n\n\nPHP 5.6+ | PHP 7.0+\n\n\nDolibarr 4.0 or later\n\n\nAn active Splash Sync User Account", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/install/#installation", 
+            "text": "Download latest stable version here :  Splash Modules  Copy module contents on Dolibarr htdocs folder (htdocs/splash)   Enable   Configure the module", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/install/#requirements", 
+            "text": "PHP 5.6+ | PHP 7.0+  Dolibarr 4.0 or later  An active Splash Sync User Account", 
+            "title": "Requirements"
+        }, 
+        {
+            "location": "/configuration/", 
+            "text": "Configuration\n\n\nEnable the Module\n\n\nConfiguration of you module is available in \nSettings \n Modules \n Interfaces \n Splash\n \n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n \n \nAdd a Server\n and note your id \n encryption keys. \n\n\n\n\nThen, enter the keys on Module's configuration (take care not to forget any character). \n\n\n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/configuration/#configuration", 
+            "text": "", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/configuration/#enable-the-module", 
+            "text": "Configuration of you module is available in  Settings   Modules   Interfaces   Splash", 
+            "title": "Enable the Module"
+        }, 
+        {
+            "location": "/configuration/#connect-to-your-splash-account", 
+            "text": "First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to  Servers     Add a Server  and note your id   encryption keys.    Then, enter the keys on Module's configuration (take care not to forget any character).", 
+            "title": "Connect to your Splash Account"
+        }, 
+        {
+            "location": "/configuration/#setup-default-parameters", 
+            "text": "To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.", 
+            "title": "Setup default Parameters"
+        }, 
+        {
+            "location": "/configuration/#default-language", 
+            "text": "Select which language package module should use for communication with Splash Server.", 
+            "title": "Default Language"
+        }, 
+        {
+            "location": "/configuration/#default-user", 
+            "text": "Select which user will be used for all actions executed by Splash Module.   We highly recommend creation of a dedicated user for Splash.   Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.", 
+            "title": "Default User"
+        }, 
+        {
+            "location": "/configuration/#default-warehouse-bank-account-payment-method", 
+            "text": "Define these values to be used if no value is specified.", 
+            "title": "Default Warehouse / Bank Account / Payment Method"
+        }, 
+        {
+            "location": "/configuration/#check-results-of-self-tests", 
+            "text": "Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "title": "Check results of Self-Tests"
+        }, 
+        {
+            "location": "/fr/", 
+            "text": "Module Splash Sync pour Dolibarr\n\n\nBienvenue sur la documentation fran\u00e7aise du Module Dolibarr!\n\n\nCe module impl\u00e9mente le connecteur Splash Sync pour l'ERP Dolibarr. Il donne acc\u00e8s \u00e0 de multiples objets pour permettre leur synchronisation automatique via le protocole Splash Sync. \n\n\nSommaire\n\n\nCette documentation traite de:\n\n\n\n\nFonctionnalit\u00e9s \n Avantages\n\n\nInstallation du Module\n\n\nConfiguration du Module\n\n\n\n\nEn savoir plus sur Splash\n\n\nCe module fait parti du projet \nSplashSync\n. \n\n\nPour plus d'informations sur Splash Sync, la fa\u00e7on dont fonctionne la synchronisation et comment y connecter toutes vos applications, rendez-vous sur la \ndocumentation en ligne\n.", 
+            "title": "Accueil"
+        }, 
+        {
+            "location": "/fr/#module-splash-sync-pour-dolibarr", 
+            "text": "Bienvenue sur la documentation fran\u00e7aise du Module Dolibarr!  Ce module impl\u00e9mente le connecteur Splash Sync pour l'ERP Dolibarr. Il donne acc\u00e8s \u00e0 de multiples objets pour permettre leur synchronisation automatique via le protocole Splash Sync.", 
+            "title": "Module Splash Sync pour Dolibarr"
+        }, 
+        {
+            "location": "/fr/#sommaire", 
+            "text": "Cette documentation traite de:   Fonctionnalit\u00e9s   Avantages  Installation du Module  Configuration du Module", 
+            "title": "Sommaire"
+        }, 
+        {
+            "location": "/fr/#en-savoir-plus-sur-splash", 
+            "text": "Ce module fait parti du projet  SplashSync .   Pour plus d'informations sur Splash Sync, la fa\u00e7on dont fonctionne la synchronisation et comment y connecter toutes vos applications, rendez-vous sur la  documentation en ligne .", 
+            "title": "En savoir plus sur Splash"
+        }, 
+        {
+            "location": "/fr/features/", 
+            "text": "Principales fonctionnalit\u00e9s \n avantages\n\n\nDolibarr est l'un des principaux projets ERP Open Source que vous pouvez trouver sur le Web. Il travaille maintenant depuis plus de 10 ans et son approche tr\u00e8s simple le rend adapt\u00e9 aux petites et moyennes entreprises.  \n\n\nCe module donnera l'acc\u00e8s Splash aux tiers, aux produits, aux commandes clients et aux facture clients. Toutes les donn\u00e9es n\u00e9c\u00e9ssaires pour synchroniser votre ERP avec vos autres applications.\n\n\nCentralisez votre workflow de vente\n\n\nCe module a \u00e9t\u00e9 con\u00e7u pour mettre Dolibarr au c\u0153ur de votre gestion commerciale. \nEn important et en synchronisant toutes vos informations de vente, vous pouvez acc\u00e9der \u00e0 toutes vos ventes dans un seul endroit, quels que soient les canaux de vente. \nPoint de vente, site de E-Commerce, toutes les applications que vous connecterez pourront rapatrier leurs ventes sur Dolibarr.\n\n\nSynchronisation des Stocks de Produits\n\n\nCentralisez la gestion des stocks de vos produits entre Dolibarr et toutes vos autres applications.\n\n\nFusionnez vos donn\u00e9es clients\n\n\nUne fois tous les modules connect\u00e9s, utilisez le Linker (outil de fusion) pour identifier et fusionner tous les profils de vos clients dans une seule entit\u00e9 Splash.\nDe cette fa\u00e7on, toutes les informations similaires seront partag\u00e9es et synchronis\u00e9es partout, de la CRM au E-Commerce, vos donn\u00e9es sont toujours \u00e0 jour!\n\n\nConsolidez et Simplifiez votre gestion financi\u00e8re!\n\n\nLes commandes et les factures seront automatiquement import\u00e9es \u00e0 partir de votre E-Commerce, du point de vente ou de toute autre application que vous pouvez connecter!\n\n\nVotre analyse financi\u00e8re est plus facile ... et sans effort.", 
+            "title": "Fonctionnalit\u00e9s"
+        }, 
+        {
+            "location": "/fr/features/#principales-fonctionnalites-avantages", 
+            "text": "Dolibarr est l'un des principaux projets ERP Open Source que vous pouvez trouver sur le Web. Il travaille maintenant depuis plus de 10 ans et son approche tr\u00e8s simple le rend adapt\u00e9 aux petites et moyennes entreprises.    Ce module donnera l'acc\u00e8s Splash aux tiers, aux produits, aux commandes clients et aux facture clients. Toutes les donn\u00e9es n\u00e9c\u00e9ssaires pour synchroniser votre ERP avec vos autres applications.", 
+            "title": "Principales fonctionnalit\u00e9s &amp; avantages"
+        }, 
+        {
+            "location": "/fr/features/#centralisez-votre-workflow-de-vente", 
+            "text": "Ce module a \u00e9t\u00e9 con\u00e7u pour mettre Dolibarr au c\u0153ur de votre gestion commerciale. \nEn important et en synchronisant toutes vos informations de vente, vous pouvez acc\u00e9der \u00e0 toutes vos ventes dans un seul endroit, quels que soient les canaux de vente. \nPoint de vente, site de E-Commerce, toutes les applications que vous connecterez pourront rapatrier leurs ventes sur Dolibarr.", 
+            "title": "Centralisez votre workflow de vente"
+        }, 
+        {
+            "location": "/fr/features/#synchronisation-des-stocks-de-produits", 
+            "text": "Centralisez la gestion des stocks de vos produits entre Dolibarr et toutes vos autres applications.", 
+            "title": "Synchronisation des Stocks de Produits"
+        }, 
+        {
+            "location": "/fr/features/#fusionnez-vos-donnees-clients", 
+            "text": "Une fois tous les modules connect\u00e9s, utilisez le Linker (outil de fusion) pour identifier et fusionner tous les profils de vos clients dans une seule entit\u00e9 Splash.\nDe cette fa\u00e7on, toutes les informations similaires seront partag\u00e9es et synchronis\u00e9es partout, de la CRM au E-Commerce, vos donn\u00e9es sont toujours \u00e0 jour!", 
+            "title": "Fusionnez vos donn\u00e9es clients"
+        }, 
+        {
+            "location": "/fr/features/#consolidez-et-simplifiez-votre-gestion-financiere", 
+            "text": "Les commandes et les factures seront automatiquement import\u00e9es \u00e0 partir de votre E-Commerce, du point de vente ou de toute autre application que vous pouvez connecter!  Votre analyse financi\u00e8re est plus facile ... et sans effort.", 
+            "title": "Consolidez et Simplifiez votre gestion financi\u00e8re!"
+        }, 
+        {
+            "location": "/fr/install/", 
+            "text": "Installation\n\n\n\n\nT\u00e9l\u00e9chargez la derni\u00e8re version stable ici : \nSplash Modules\n\n\nCopier le contenu du module sur le dossier Dolibarr htdocs (htdocs/splash) \n\n\nActiver et configurer le module\n\n\n\n\nConfiguration minimale\n\n\n\n\nPHP 5.6+ | PHP 7.0+\n\n\nDolibarr 4.0 ou sup\u00e9rieur\n\n\nUn compte Splash Sync actif", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/fr/install/#installation", 
+            "text": "T\u00e9l\u00e9chargez la derni\u00e8re version stable ici :  Splash Modules  Copier le contenu du module sur le dossier Dolibarr htdocs (htdocs/splash)   Activer et configurer le module", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/fr/install/#configuration-minimale", 
+            "text": "PHP 5.6+ | PHP 7.0+  Dolibarr 4.0 ou sup\u00e9rieur  Un compte Splash Sync actif", 
+            "title": "Configuration minimale"
+        }, 
+        {
+            "location": "/fr/configuration/", 
+            "text": "Configuration\n\n\nActivez le Module\n\n\nLa configuration du module est disponible dans la configuration de Dolibarr \nConfiguration \n Modules \n Interfaces \n Splash\n \n\n\n\n\nConnectez vous \u00e0 votre compte Splash\n\n\nD'abord, vous devez cr\u00e9er des cl\u00e9s d'acc\u00e8s pour votre module sur notre site. Pour ce faire, sur votre compte Splash, allez sur \n Serveurs \n \n \n Ajoutez un serveur \n et notez vos cl\u00e9s d'identification et de cryptage qui vous seront donn\u00e9es.\n\n\n\n\nEnsuite, entrez les cl\u00e9s de la configuration du module (attention \u00e0 ne pas oublier de caract\u00e8re).\n\n\n\n\nConfigurer les param\u00e8tres par d\u00e9faut\n\n\nPour fonctionner correctement, le module a besoin de quelques param\u00e8tres. \nCes valeurs par d\u00e9faut seront utilis\u00e9es lors de la cr\u00e9ation / modification des objets.\n\n\n\n\nLangue par d\u00e9faut\n\n\nS\u00e9lectionnez la langue par d\u00e9faut \u00e0 utiliser pour la communication avec les serveurs de Splash.\n\n\nUser par d\u00e9faut\n\n\nS\u00e9lectionnez l'utilisateur qui sera utilis\u00e9 pour toutes les actions ex\u00e9cut\u00e9es par le module Splash.\nNous recommandons fortement la cr\u00e9ation d'un utilisateur \nd\u00e9di\u00e9\n pour Splash.\nSoyez conscient que le module Splash prends en compte la configuration des droits des utilisateurs, cet utilisateur doit donc disposer des droit appropri\u00e9s pour interagir avec Dolibarr.\n\n\nEntrep\u00f4t / Compte bancaire / M\u00e9thode de Paiement\n\n\nD\u00e9finissez ces valeurs \u00e0 utiliser si aucune valeur n'est sp\u00e9cifi\u00e9e. \n\n\nV\u00e9rifiez les r\u00e9sultats des Self-Tests\n\n\nChaque fois que vous mettez \u00e0 jour votre configuration, le module v\u00e9rifiera vos param\u00e8tres et vous assurera que la communication avec Splash fonctionne bien.\nAssurez-vous que tous les tests sont pass\u00e9s ... c'est critique!", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/fr/configuration/#configuration", 
+            "text": "", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/fr/configuration/#activez-le-module", 
+            "text": "La configuration du module est disponible dans la configuration de Dolibarr  Configuration   Modules   Interfaces   Splash", 
+            "title": "Activez le Module"
+        }, 
+        {
+            "location": "/fr/configuration/#connectez-vous-a-votre-compte-splash", 
+            "text": "D'abord, vous devez cr\u00e9er des cl\u00e9s d'acc\u00e8s pour votre module sur notre site. Pour ce faire, sur votre compte Splash, allez sur   Serveurs       Ajoutez un serveur   et notez vos cl\u00e9s d'identification et de cryptage qui vous seront donn\u00e9es.   Ensuite, entrez les cl\u00e9s de la configuration du module (attention \u00e0 ne pas oublier de caract\u00e8re).", 
+            "title": "Connectez vous \u00e0 votre compte Splash"
+        }, 
+        {
+            "location": "/fr/configuration/#configurer-les-parametres-par-defaut", 
+            "text": "Pour fonctionner correctement, le module a besoin de quelques param\u00e8tres. \nCes valeurs par d\u00e9faut seront utilis\u00e9es lors de la cr\u00e9ation / modification des objets.", 
+            "title": "Configurer les param\u00e8tres par d\u00e9faut"
+        }, 
+        {
+            "location": "/fr/configuration/#langue-par-defaut", 
+            "text": "S\u00e9lectionnez la langue par d\u00e9faut \u00e0 utiliser pour la communication avec les serveurs de Splash.", 
+            "title": "Langue par d\u00e9faut"
+        }, 
+        {
+            "location": "/fr/configuration/#user-par-defaut", 
+            "text": "S\u00e9lectionnez l'utilisateur qui sera utilis\u00e9 pour toutes les actions ex\u00e9cut\u00e9es par le module Splash.\nNous recommandons fortement la cr\u00e9ation d'un utilisateur  d\u00e9di\u00e9  pour Splash.\nSoyez conscient que le module Splash prends en compte la configuration des droits des utilisateurs, cet utilisateur doit donc disposer des droit appropri\u00e9s pour interagir avec Dolibarr.", 
+            "title": "User par d\u00e9faut"
+        }, 
+        {
+            "location": "/fr/configuration/#entrepot-compte-bancaire-methode-de-paiement", 
+            "text": "D\u00e9finissez ces valeurs \u00e0 utiliser si aucune valeur n'est sp\u00e9cifi\u00e9e.", 
+            "title": "Entrep\u00f4t / Compte bancaire / M\u00e9thode de Paiement"
+        }, 
+        {
+            "location": "/fr/configuration/#verifiez-les-resultats-des-self-tests", 
+            "text": "Chaque fois que vous mettez \u00e0 jour votre configuration, le module v\u00e9rifiera vos param\u00e8tres et vous assurera que la communication avec Splash fonctionne bien.\nAssurez-vous que tous les tests sont pass\u00e9s ... c'est critique!", 
+            "title": "V\u00e9rifiez les r\u00e9sultats des Self-Tests"
+        }
+    ]
+}
