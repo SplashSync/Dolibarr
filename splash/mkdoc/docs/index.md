@@ -1,3 +1,4 @@
+
 [![N|Solid](https://splashsync.github.io/Dolibarr/img/logo.jpg)](http://www.splashsync.com)
 
 # Splash Sync Module for Dolibarr
