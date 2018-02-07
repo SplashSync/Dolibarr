@@ -1,3 +1,5 @@
+[![N|Solid](https://splashsync.github.io/Dolibarr/img/logo.jpg)](http://www.splashsync.com)
+
 # Splash Sync Module for Dolibarr
 
 Welcome to the Dolibarr Module's Documentation!
@@ -9,7 +11,7 @@ This module implement Splash Sync connector for Dolibarr ERP. It provide access 
 This documentation will focus on:
 
 * [Features & Benefits](https://splashsync.github.io/Dolibarr/features)
-* [Module Installation](https://splashsync.github.io/Dolibarr/installation)
+* [Module Installation](https://splashsync.github.io/Dolibarr/install)
 * [Module Configuration](https://splashsync.github.io/Dolibarr/configuration)
 
 ## More about Splash
