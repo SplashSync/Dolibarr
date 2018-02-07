@@ -9,6 +9,8 @@ This module implement Splash Sync connector for Dolibarr ERP. It provide access 
 [![Total Downloads](https://poser.pugx.org/splash/dolibarr/downloads)](https://packagist.org/packages/splash/dolibarr)
 [![License](https://poser.pugx.org/splash/dolibarr/license)](https://packagist.org/packages/splash/dolibarr)
 
+[![Latest Unstable Version](https://poser.pugx.org/splash/dolibarr/v/unstable)](https://packagist.org/packages/splash/dolibarr)
+
 ## Installation
 
 * Download latest stable version here : [Splash Modules](http://www.splashsync.com/en/modules/)
