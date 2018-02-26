@@ -18,7 +18,7 @@ env:
         # Set to true for very verbose output
         - DEBUG=false  
     matrix:
-       - DOL_VERSION=develop DATA_VERSION=6.0.0
+       - DOL_VERSION=develop DATA_VERSION=7.0.0
        - DOL_VERSION=6.0 DATA_VERSION=6.0.0
        - DOL_VERSION=5.0 DATA_VERSION=5.0.0
        - DOL_VERSION=4.0 DATA_VERSION=4.0.0
