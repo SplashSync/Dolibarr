@@ -173,8 +173,7 @@ class Local
            
             //====================================================================//
             // Splash Modules Constant Definition
-            require_once( dirname(__DIR__) .'/_conf/defines.inc.php'); 
-    
+            dol_include_once("/splash/_conf/defines.inc.php");
             //====================================================================//
             // Load Default Language
             $this->LoadDefaultLanguage();      
