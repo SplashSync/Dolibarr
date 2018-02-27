@@ -33,7 +33,7 @@ fi
 if [ "$DOL_VERSION" = "develop" ];  
 then 
     echo "Database Migrations for Dolibarr Develop"
-    mysql -D travis < $DOL_BUILD_DIR/install/mysql/migration/7.0.0-8.0.0.sql
+    mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
 fi 
 
 echo
