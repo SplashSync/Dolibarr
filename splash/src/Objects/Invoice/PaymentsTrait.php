@@ -529,7 +529,8 @@ trait PaymentsTrait {
             $this->PaymentLine->fetch($PaymentData->id);            
             //====================================================================//
             // Check If Payment impact another Bill
-            if ( count($this->PaymentLine->getBillsArray()) > 1) {
+            $BillArray  =   $this->PaymentLine->getBillsArray();
+            if ( is_array($BillArray) && count($BillArray) > 1) {
                 continue;
             }
             //====================================================================//
