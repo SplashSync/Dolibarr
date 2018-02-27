@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,18 +16,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: main.lib.php 243 2013-06-02 16:05:41Z u58905340 $
  *  \version    $Revision: 243 $
- *  \date       $LastChangedDate$ 
+ *  \date       $LastChangedDate$
  *  \ingroup    Splash Server Module For Dolibarr
  *  \brief      Main constant definitions
- *  \remarks	
+ *  \remarks
 */
 
 //====================================================================//
 // Splash Module & Dependecies Autoloader
-require_once( dirname(dirname(__FILE__)) . "/vendor/autoload.php");
+dol_include_once("/splash/vendor/autoload.php");
+//require_once( dirname(dirname(__FILE__)) . ");
 
 //====================================================================//
 //  CONSTANTS DEFINITION
@@ -73,14 +74,14 @@ define('SPL_BUG_URL'	,	"http://www.dolibarr-addct.com");
 define('SPL_UPDATE_URL' ,	"http://www.dolistore.com");
 
 //====================================================================//
-// Function standard returns 
+// Function standard returns
 define('SPL_OK'      ,	1);
 define('SPL_KO'      ,	0);
 define('SPL_NOK'     ,	0);
 
 
 //====================================================================//
-// Folders Definition for this Module 
+// Folders Definition for this Module
 define('SPL_FOLDER'	,	"/splash/vendor/splash/phpcore");
 define('SPL_ROOT'	,	DOL_DOCUMENT_ROOT.SPL_FOLDER);
 define('SPL_CORE'	,	"/core");

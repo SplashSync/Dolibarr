@@ -19,11 +19,11 @@
 /**
  *  \Id 	$Id: main.lib.php 243 2013-06-02 16:05:41Z u58905340 $
  *  \version    $Revision: 243 $
- *  \date       $LastChangedDate$ 
+ *  \date       $LastChangedDate$
  *  \ingroup    Splash Server - Online Shop Connector for Dolibarr
  *              Webservice Module for ERP to Online Shop synchronisation
  *  \brief      Module Definitions
- *  \remarks	
+ *  \remarks
  */
 
 
@@ -31,7 +31,7 @@ include_once(DOL_DOCUMENT_ROOT ."/core/modules/DolibarrModules.class.php");
 
 //====================================================================//
 // Splash Module Definitions
-include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
+dol_include_once("/splash/_conf/defines.inc.php");
 
 
 
@@ -44,21 +44,21 @@ class modSplash extends DolibarrModules
 	 *   \brief      Constructor. Define names, constants, directories, boxes, permissions
 	 *   \param      DB      Database handler
 	 */
-	function modSplash($DB)
+	function __construct($DB)
 	{
             global $langs;
             //====================================================================//
             // Load traductions files required by by page
             $langs->load("admin");
             $langs->load("splash@splash");
-            
+
             $this->db = $DB;
-            
+
             //====================================================================//
             // Module Editor Infos
             $this->editor_name = "Splash Sync";
-            $this->editor_web = "www.splashsync.com";            
-            
+            $this->editor_web = "www.splashsync.com";
+
             //====================================================================//
             // Id for module (must be unique).
             // Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
@@ -97,7 +97,7 @@ class modSplash extends DolibarrModules
                                         'hooks' => '',              // Set here all hooks context managed by module
                                         'workflow' => ''            // Set here all workflow context managed by module
                                         );
-                
+
             $r=0;
 
             // Config pages. Put here list of php page names stored in admmin directory used to setup module.
@@ -106,14 +106,14 @@ class modSplash extends DolibarrModules
             //====================================================================//
             // Dependencies
             // List of modules id that must be enabled if this module is enabled
-            $this->depends = array("modCommande","modProduct","modCategorie","modStock","modBanque","modSociete","modFacture");		
+            $this->depends = array("modCommande","modProduct","modCategorie","modStock","modBanque","modSociete","modFacture");
             // List of modules id to disable if this one is disabled
-            $this->requiredby = array();	
+            $this->requiredby = array();
             $this->phpmin = array(5,6);                                 // Minimum version of PHP required by module
             $this->need_dolibarr_version = array(4,0);                  // Minimum version of Dolibarr required by module
             $this->langfiles = array(SPL_MOD_NAME."@".SPL_MOD_NAME);
 
-                
+
             //====================================================================//
             // Constants
             // Example: $this->const=array(0=>array('MYMODULE_MYNEWCONST1','chaine','myvalue','This is a constant to add',0),
@@ -169,7 +169,7 @@ class modSplash extends DolibarrModules
             //====================================================================//
             // Main menu entries
             $this->menus = array();			// List of menus to add
-                
+
 	}
 
 	/**
@@ -178,19 +178,19 @@ class modSplash extends DolibarrModules
 	 *					It also creates data directories.
 	 *      \return     int             1 if OK, 0 if KO
 	 */
-	function init()
+	function init($options='')
 	{
                 global $langs;
 
                 // Module Init
 		$sql = array();
-		$result =  $this->_init($sql);
-                
+		$result =  $this->_init($sql,$options);
+
                 if ($result) {
                     // Display Welcome Message
-                    setEventMessage($langs->trans("SPL_Welcome",SPL_MOD_VERSION),'mesgs');       
+                    setEventMessage($langs->trans("SPL_Welcome",SPL_MOD_VERSION),'mesgs');
                 }
-                
+
                 return $result;
 	}
 
@@ -200,10 +200,10 @@ class modSplash extends DolibarrModules
 	 *					Data directories are not deleted.
 	 *      \return     int             1 if OK, 0 if KO
 	 */
-	function remove()
+	function remove($options='')
 	{
 		$sql = array();
-		return $this->_remove($sql);
+		return $this->_remove($sql,$options);
 	}
 
 
