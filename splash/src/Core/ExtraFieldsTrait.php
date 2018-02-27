@@ -114,13 +114,20 @@ trait ExtraFieldsTrait {
         {
             case SPL_T_VARCHAR:
             case SPL_T_TEXT:
-            case SPL_T_DATE:
-            case SPL_T_DATETIME:
             case SPL_T_PHONE:
             case SPL_T_URL:
             case SPL_T_EMAIL:
                 $this->Out[$FieldName]  = $FieldData;
                 break;            
+            
+            case SPL_T_DATE:
+            case SPL_T_DATETIME:
+                if ( !is_numeric($FieldData) ) {
+                    $this->Out[$FieldName]  = $FieldData;
+                } else {
+                    $this->Out[$FieldName]  = dol_print_date($FieldData,'dayrfc');
+                }
+                break;   
             
             case SPL_T_INT:
                 $this->Out[$FieldName]  = (int) $FieldData;
