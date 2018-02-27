@@ -30,4 +30,10 @@ then
     mysql -D travis -e "ALTER TABLE llx_socpeople CHANGE zip zip varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;"
 fi 
 
+if [ "$DOL_VERSION" = "develop" ];  
+then 
+    echo "Database Migrations for Dolibarr Develop"
+    mysql -D travis < $DOL_BUILD_DIR/install/mysql/migration/7.0.0-8.0.0.sql
+fi 
+
 echo
