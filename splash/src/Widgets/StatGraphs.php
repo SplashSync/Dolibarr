@@ -98,6 +98,7 @@ class StatGraphs extends WidgetBase
         global $langs;
         Splash::Local()->LoadDefaultLanguage();
         $langs->load("compta");
+        $langs->load("bills");
         
         //====================================================================//
         // Select Data Type Mode
@@ -105,9 +106,9 @@ class StatGraphs extends WidgetBase
                 ->Identifier("mode")
                 ->Name($langs->trans("Model"))
                 ->isRequired()
-                ->AddChoice("CustomerInvoices",     html_entity_decode($langs->trans("ReportTurnover")))
-                ->AddChoice("CustomerOrders",       html_entity_decode($langs->trans("OrderStats")))
-                ->AddChoice("SupplierInvoices",     html_entity_decode($langs->trans("BillsForSuppliers")))
+                ->AddChoice("CustomerInvoices",     $langs->trans("ReportTurnover"))
+                ->AddChoice("CustomerOrders",       $langs->trans("OrderStats"))
+                ->AddChoice("SupplierInvoices",     $langs->trans("BillsSuppliers"))
                 ;
       
         //====================================================================//
@@ -167,7 +168,7 @@ class StatGraphs extends WidgetBase
         $this->setupMode();
         
         $this->buildMorrisBarBlock();
-        
+
         //====================================================================//
         // Set Blocks to Widget
         $this->setBlocks($this->BlocksFactory()->Render());
@@ -204,6 +205,7 @@ class StatGraphs extends WidgetBase
             
             case "SupplierInvoices":
                 $langs->load("compta");
+                $langs->load("bills");
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
@@ -212,7 +214,7 @@ class StatGraphs extends WidgetBase
                 // Setup Mode
                 $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total_ht) as total";
                 $this->where    = "f.datef ";
-                $this->title    = $langs->trans("BillsForSuppliers");
+                $this->title    = $langs->trans("BillsSuppliers");
                 $this->labels   = array($langs->trans("AmountHTShort"));
                 break;
             
@@ -274,6 +276,7 @@ class StatGraphs extends WidgetBase
         global $langs;
         
         $langs->load("compta");
+        $langs->load("bills");
         
         //====================================================================//
         // Build Chart Contents
