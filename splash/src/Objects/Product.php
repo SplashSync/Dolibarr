@@ -23,6 +23,8 @@ use Splash\Models\AbstractObject;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\PricesTrait;
+use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\ImagesTrait;
 
 /**
  * @abstract Dolibarr Product for SplashSync
@@ -33,6 +35,8 @@ class Product extends AbstractObject
     use IntelParserTrait;
     use SimpleFieldsTrait;
     use PricesTrait;
+    use ListsTrait;
+    use ImagesTrait;
 
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
@@ -40,6 +44,7 @@ class Product extends AbstractObject
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\UnitConverterTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
+    use \Splash\Local\Core\ImagesTrait;
     
     // Dolibarr Products Traits
     use \Splash\Local\Objects\Product\ObjectsListTrait;
