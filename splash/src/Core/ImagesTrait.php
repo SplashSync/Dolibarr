@@ -394,6 +394,12 @@ trait ImagesTrait {
             return;
         }
         
+        //====================================================================//
+        // Ensure Dolibarr Version is Compatible
+        if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
+            return;
+        }    
+        
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
                 
         //====================================================================//
