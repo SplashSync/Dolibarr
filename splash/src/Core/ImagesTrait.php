@@ -125,8 +125,10 @@ trait ImagesTrait {
         
         //====================================================================//
         // Refresh Object Attached Images (Manually, OR Ref Changed)
-    	$DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");   
-        \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
+        if (function_exists("completeFileArrayWithDatabaseInfo")) {
+            $DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");   
+            \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
+        } 
         //====================================================================//
         // Fetch Object Attached Images from Database
     	$FileArray = \dol_dir_list_in_database($this->RelFilesDir, "", Null, "position");
