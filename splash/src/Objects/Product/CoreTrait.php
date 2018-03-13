@@ -103,6 +103,8 @@ trait CoreTrait {
             //====================================================================//
             // Direct Writtings
             case 'ref':
+                // Update Path of Object Documents In Database
+                $this->updateFilesPath("produit", $this->Object->ref, $Data);
                 $this->setSimple($FieldName, $Data);
                 break;       
             
