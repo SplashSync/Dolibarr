@@ -65,7 +65,7 @@ trait ImagesTrait {
                 ->Name("Cover Image")
                 ->MicroData("http://schema.org/Product","isCover")
                 ->Group("Images")
-                ->ReadOnly();     
+                ->NotTested();     
         
     }
     
@@ -102,7 +102,6 @@ trait ImagesTrait {
         if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
             return;
         }         
-        
         //====================================================================//
         // Load Object Files Path
         $Entity     =   $this->Object->entity ? $this->Object->entity : $conf->entity;
@@ -125,15 +124,19 @@ trait ImagesTrait {
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
         
         //====================================================================//
-        // Fetch Object Attached Images
-    	$FileArray = \dol_dir_list($this->DolFilesDir, "files");
-
+        // Refresh Object Attached Images (Manually, OR Ref Changed)
+    	$DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");   
+        \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
+        //====================================================================//
+        // Fetch Object Attached Images from Database
+    	$FileArray = \dol_dir_list_in_database($this->RelFilesDir, "", Null, "position");
+        
         //====================================================================//
         // Create Images List
         foreach ($FileArray as $key => $File) {
             //====================================================================//
             // Filter No Images Files
-            if ( !in_array(pathinfo($File["relativename"], PATHINFO_EXTENSION) , [ "gif", "jpg", "jpeg", "png", "bmp" ]) ) {
+            if ( !in_array(pathinfo($File["name"], PATHINFO_EXTENSION) , [ "gif", "jpg", "jpeg", "png", "bmp" ]) ) {
                 continue;
             } 
             
@@ -141,29 +144,20 @@ trait ImagesTrait {
             // Insert Image in Output List
             $Image = self::Images()->Encode(
                     $File["name"], 
-                    $File["relativename"], 
+                    $File["name"], 
                     $File["path"] . "/", 
                     null );
             
             //====================================================================//
-            // Load EcmFile Object to Identify Position
-            $EcmFile   =   new EcmFiles($db);
-            $EcmFile->fetch(Null, Null, $this->ElementPath[$this->Object->element] . "/" . $this->Object->ref . "/" . $File["relativename"] );  
-            if ( !empty($EcmFile->position) ) {
-                $key    =    $EcmFile->position;
-            }
-            
-            //====================================================================//
             // Insert Data in List
-            self::Lists()->Insert( $this->Out, "images", $FieldName, $key, $Image );
-            self::Lists()->Insert( $this->Out, "images", "cover", $key, ($key == 0) );
+            self::Lists()->Insert( $this->Out, "images", $FieldName,    $File["position"], $Image );
+            self::Lists()->Insert( $this->Out, "images", "cover",       $File["position"], $File["cover"] );
             
         }
-        
+           
         //====================================================================//
         // Sort Image Array to Update Images Positions
         ksort($this->Out["images"]);
-               
     }
     
     protected function getImagesArrayFromEcm($Key,$FieldName)
@@ -237,7 +231,7 @@ trait ImagesTrait {
         if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
             return;
         }          
-        
+
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 
         //====================================================================//
@@ -249,8 +243,11 @@ trait ImagesTrait {
         $Position = 1;
         foreach ($Data as $Key => $ImageData) {
             //====================================================================//
+            // Check if Cover Image
+            $Cover  =   isset($ImageData['cover']) ? $ImageData['cover'] : False;
+            //====================================================================//
             // Update Item Line
-            $this->setImage($Position, $ImageData['image']);
+            $this->setImage($Position, $ImageData['image'], $Cover);
             $Position++;
         } 
         
@@ -278,12 +275,13 @@ trait ImagesTrait {
     /**
      *  @abstract     Write Data to Current Image
      * 
-     *  @param        int       $Position        Input Image Position on List
-     *  @param        array     $ImageData       Input Image Data Array
+     *  @param        int       $Position       Input Image Position on List
+     *  @param        array     $ImageData      Input Image Data Array
+     *  @param        bool      $Cover          Input Image is Cover
      * 
-     *  @return         none
+     *  @return       none
      */
-    private function setImage($Position, $ImageData) {
+    private function setImage($Position, $ImageData, $Cover = False) {
         global $db, $user, $conf; 
         $ImageUpdated   =   False;
         
@@ -346,6 +344,13 @@ trait ImagesTrait {
         }        
         
         //====================================================================//
+        // Check Image Cover Flag
+        if ( $EcmImage->cover != $Cover ) {
+            $EcmImage->cover = $Cover;
+            $ImageUpdated   =   True;
+        }  
+        
+        //====================================================================//
         // Image Not Updated
         if ( !$ImageUpdated ) {
             return;
@@ -369,6 +374,50 @@ trait ImagesTrait {
         
         $this->Object->addThumbs($this->DolFilesDir . "/" . $EcmImage->filename);
 
+    }
+    
+    /**
+     *  @abstract     Update Object Files Path if Ref Changed
+     * 
+     *  @param        int       $Position       Input Image Position on List
+     *  @param        array     $ImageData      Input Image Data Array
+     *  @param        bool      $Cover          Input Image is Cover
+     * 
+     *  @return       none
+     */
+    private function updateFilesPath($Element, $Oldref, $Newref) {
+        global $db; 
+
+        //====================================================================//
+        // Check if Ref was Changed
+        if ( empty($Element) || empty($Oldref) || empty($Newref) || ($Oldref == $Newref) ) {
+            return;
+        }
+        
+        require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+                
+        //====================================================================//
+        // Create EcmFiles Main Object
+        $EcmImage       =   new EcmFiles($db);
+
+        //====================================================================//
+        // Prepare Update Request
+        $sql  =   $sql = 'UPDATE ' . MAIN_DB_PREFIX . $EcmImage->table_element . ' SET';
+        $sql .= ' filepath = "' . $Element . '/' . $Newref. '" ';
+        $sql .= ' WHERE filepath="' . $Element . '/' . $Oldref. '"';
+           
+        //====================================================================//
+        // Execute Update Request
+        $db->begin();
+        $resql = $db->query($sql);
+        if (!$resql) {
+            $EcmImage->errors[] = 'Error ' . $db->lasterror();
+            $this->CatchDolibarrErrors($EcmImage);
+            dol_syslog(__METHOD__ . ' ' . implode(',', $this->errors), LOG_ERR);
+            $db->rollback();
+            return;
+        }
+        $db->commit();
     }
     
 }
