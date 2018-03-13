@@ -86,6 +86,11 @@ trait ImagesTrait {
         global $db, $conf;
         
         //====================================================================//
+        // Safety Check
+        if ( !isset($this->Out) ) {
+            $this->Out = array();
+        }   
+        //====================================================================//
         // Check if List field & Init List Array
         $FieldId = self::Lists()->InitOutput( $this->Out, "images", $FieldName );
         if ( !$FieldId ) {
@@ -100,12 +105,13 @@ trait ImagesTrait {
         
         //====================================================================//
         // Load Object Files Path
-        $this->DolFilesDir = $conf->product->multidir_output[$this->Object->entity];
+        $Entity     =   $this->Object->entity ? $this->Object->entity : $conf->entity;
+        $this->DolFilesDir = $conf->product->multidir_output[$Entity];
         $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->Object, $this->Object->element);
         $this->DolFilesDir.= dol_sanitizeFileName($this->Object->ref);
         $this->RelFilesDir = $this->ElementPath[$this->Object->element];
         $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->Object->ref);    	
-        
+
         //====================================================================//
         // Fetch Object Attached Images
         $this->getImagesArrayFromDir($Key, $FieldName);
@@ -255,13 +261,15 @@ trait ImagesTrait {
             $EcmImage       =   new EcmFiles($db);
             $EcmImage->fetch(Null, Null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
             //====================================================================//
-            // Create Object In Database
+            // Delete Object In Database
             if ( $EcmImage->delete($user) <= 0) {    
                 $this->CatchDolibarrErrors($EcmImage);
                 Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to Delete Image File. ");
             }   
-
+            //====================================================================//
+            // Delete Object From Disk
             Splash::File()->DeleteFile( $this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"] );
+            unset($this->Out["images"][$Key]);
         }          
 
         unset($this->In[$FieldName]);
@@ -297,7 +305,6 @@ trait ImagesTrait {
                 $EcmImage->fetch(Null, Null, $this->RelFilesDir . "/" . $CurrentImage["image"]["filename"]);
                 unset($this->Out["images"][$Key]);
                 break;
-                
             }
         }        
         
@@ -326,7 +333,7 @@ trait ImagesTrait {
             $EcmImage->filename     =   $ImageData["filename"];
             $EcmImage->fullpath_orig=   $EcmImage->filepath;
             $EcmImage->fk_user_c    =   $user->rowid;
-            $EcmImage->entity       =   $this->Object->entity;
+            $EcmImage->entity       =   $this->Object->entity ? $this->Object->entity : $conf->entity;
             $EcmImage->gen_or_uploaded=   "uploaded";            
             $ImageUpdated   =   True;
         }
