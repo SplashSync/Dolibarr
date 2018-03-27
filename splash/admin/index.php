@@ -183,12 +183,32 @@ if ($action == 'UpdateMain')
         if ( dolibarr_set_const($db,"SPLASH_MULTIPRICE_LEVEL",$DfPrice,'chaine',0,'',$conf->entity) <= 0){
             $errors++;
         }
+    }
+
+    //====================================================================//
+    // DB Commit & Display User Message
+    if (! $error) {
+        $db->commit();
+        setEventMessage($langs->trans("SetupSaved"),'mesgs');   
+    } else {
+        $db->rollback();
+        setEventMessage($langs->trans("Error"),'errors');   
     }    
+
+//====================================================================//
+// Update of Main Module Parameters
+} elseif ($action == 'UpdateOrder')  {  
+    
+    //====================================================================//
+    // Init DB Transaction
+    $db->begin();
+    
+    $errors = 0;
 
     //====================================================================//
     // Update Default Bank Account Id
     $DfBank = GETPOST('accountid','alpha');
-    if ( $DfUser ) {
+    if ( $DfBank ) {
         if ( dolibarr_set_const($db,"SPLASH_BANK",$DfBank,'chaine',0,'',$conf->entity) <= 0){
             $errors++;
         }
@@ -197,12 +217,21 @@ if ($action == 'UpdateMain')
     //====================================================================//
     // Update Default Payment Mode Id
     $DfPayMode = GETPOST('paiementcode','alpha');
-    if ( $DfUser ) {
+    if ( $DfPayMode ) {
         if ( dolibarr_set_const($db,"SPLASH_DEFAULT_PAYMENT",$DfPayMode,'chaine',0,'',$conf->entity) <= 0){
             $errors++;
         }
     }
 
+    //====================================================================//
+    // Update Detect Tax Names Mode
+    $DetectTaxMode = GETPOST('DetectTax');
+    if ( GETPOSTISSET("DetectTax") ) {
+        if ( dolibarr_set_const($db,"SPLASH_DETECT_TAX_NAME",GETPOST('DetectTax'),'chaine',0,'',$conf->entity) <= 0){
+            $errors++;
+        }
+    }
+    
     //====================================================================//
     // DB Commit & Display User Message
     if (! $error) {
@@ -240,11 +269,12 @@ print_fiche_titre($title,$linkback,'setup');
 print "</br>" . $langs->trans("SPL_Full_Desc") . "</br></br>";
 
 //====================================================================//
-// Display Module Main Congiguration Block
+// Display Module Main Configuration Block
 include("ConfigMain.php");
 //====================================================================//
-// Display Module Local Congiguration Block
+// Display Module Local Configuration Block
 include("ConfigLocal.php");
+include("ConfigOrders.php");
 //====================================================================//
 // Display Module Self Tests
 include("ServerTests.php");

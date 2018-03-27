@@ -29,76 +29,50 @@ use Splash\Core\SplashCore as Splash;
 // Create Setup Form
 echo    '<form name="MainSetup" action="'.  filter_input(INPUT_SERVER, "php_self").'" method="POST">';
 echo    '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-echo    '<input type="hidden" name="action" value="UpdateLocal">';
+echo    '<input type="hidden" name="action" value="UpdateOrder">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), Null, $langs->trans("SPL_Local_Config") , 0, null);
+dol_fiche_head(array(), Null, $langs->trans("SPL_Orders_Config") , 0, null);
 
 
 echo '<table class="noborder" width="100%"><tbody>';
+
 //====================================================================//
-// Default Language Parameter
-
-    //====================================================================//
-    // Build Language Combo
-    $langcombo	=	'<select name="DefaultLang" id="DefaultLang" class="form-control" >';
-    foreach ($langs->get_available_languages() as $key => $value) {
-        if ($conf->global->SPLASH_LANG == $key) {
-            $langcombo .=  '<option value="' . $key . '" selected="true">' . $value . '</option>';
-        } else {
-            $langcombo .=  '<option value="' . $key . '">' . $value . '</option>';
-        }        
-    }
-    $langcombo .= '</select>';    
-
+// Default Bank Account Parameter
+require_once(DOL_DOCUMENT_ROOT."/core/class/html.form.class.php");
+$form=  new Form($db);
 echo '  <tr class="pair">';
-echo '      <td>' . $langs->trans("SPL_DfLang") . '</td>';
-echo '      <td width="30%">' . $langcombo . '</td>';
+echo '      <td>' . $langs->trans("SPL_DfBankAccount") . '</td>';
+echo '      <td>';
+$form->select_comptes($conf->global->SPLASH_BANK);
+echo '      </td>';
 echo '  </tr>';
 //====================================================================//
-// Default User Parameter
-echo '  <tr class="impair">';
-echo '      <td>' . $langs->trans("SPL_DfUser") . '</td>';
-echo '      <td>' . $form->select_dolusers($conf->global->SPLASH_USER,'user',1, Null, 0, '', '', $conf->entity ) . '</td>';
-echo '  </tr>';
-//====================================================================//
-// Default Warehouse Parameter
+// Default Payment Method Parameter
 require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
 $formproduct=new FormProduct($db);
 echo '  <tr class="pair">';
-echo '      <td>' . $langs->trans("SPL_DfStock") . '</td>';
-echo '      <td>' . $formproduct->selectWarehouses($conf->global->SPLASH_STOCK,'stock','',1) . '</td>';
+echo '      <td>' . $langs->trans("SPL_DfPayMethod") . '</td>';
+echo '      <td>'; 
+$form->select_types_paiements($conf->global->SPLASH_DEFAULT_PAYMENT,'paiementcode','',2);
+echo '      </td>';
 echo '  </tr>';
 
-
 //====================================================================//
-// If multiprices are enabled
-if (!empty($conf->global->PRODUIT_MULTIPRICES) )
-{
-    //====================================================================//
-    // Default Synchronized Product Price
-    echo '  <tr class="pair">';
-    echo '      <td>' . $langs->trans("SPL_DfMultiPrice") . '</td>';
-    echo '      <td>';
-    
-	print '<select name="price_level" class="flat">';
-	for($i=1;$i<=$conf->global->PRODUIT_MULTIPRICES_LIMIT;$i++)
-	{
-		print '<option value="'.$i.'"' ;
-		if($i == $conf->global->SPLASH_MULTIPRICE_LEVEL) { print 'selected'; }
-		print '>'. $langs->trans('SellingPrice') . " " .$i;
-		$keyforlabel='PRODUIT_MULTIPRICES_LABEL'.$i;
-		if (! empty($conf->global->$keyforlabel)) {
-                    print ' - '.$langs->trans($conf->global->$keyforlabel);
-                }
-		print '</option>';
-	}
-	print '</select>';    
-    
-    echo '      </td>';
-    echo '  </tr>';
+// Tax Name Detection Mode
+echo '  <tr class="pair">';
+echo '      <td>' . $form->textwithpicto($langs->trans("SPL_DetectTaxName"), $langs->trans("SPL_DetectTaxName_T")) . '</td>';
+if ($conf->global->SPLASH_DETECT_TAX_NAME) {
+    echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=0">';
+        echo img_picto($langs->trans("Enabled"),'switch_on');
+    echo '</a></td>';
+} else {
+    echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=1">';
+        echo img_picto($langs->trans("Disabled"),'switch_off');
+    echo '</a></td>';
 }
+echo '  </tr>';
 
 echo '</tbody></table>';
 
