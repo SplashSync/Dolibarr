@@ -48,6 +48,7 @@ trait AddressTrait {
                 ->Name( $langs->trans("CompanyZip"))
                 ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","postalCode")
+                ->AddOption('maxLength' , 20)
                 ->isLogged()
                 ->isListed();
         

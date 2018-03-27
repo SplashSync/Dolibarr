@@ -108,6 +108,7 @@ trait MainTrait {
                 ->Identifier("tva_intra")
                 ->Name($langs->trans("VATIntra"))
                 ->Group("ID")
+                ->AddOption('maxLength' , 20)
                 ->MicroData("http://schema.org/Organization","vatID");
         
         return;

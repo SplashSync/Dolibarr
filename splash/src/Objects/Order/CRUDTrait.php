@@ -32,7 +32,7 @@ trait CRUDTrait
      */
     public function Load( $Id )
     {
-        global $db, $user;        
+        global $db, $user;  
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__); 
@@ -69,7 +69,7 @@ trait CRUDTrait
      */
     public function Create()
     {
-        global $db, $user;          
+        global $db, $user;
         //====================================================================//
         // Stack Trace
         Splash::Log()->Trace(__CLASS__,__FUNCTION__);         
@@ -97,7 +97,7 @@ trait CRUDTrait
         $this->setSimple("date", $this->In["date"] );
         $this->setSimple("socid", self::Objects()->Id($this->In["socid"]) );  
         $this->setSimple("statut", \Commande::STATUS_DRAFT );  
-        
+
         //====================================================================//
         // Create Object In Database
         if ( $this->Object->create($user) <= 0) {    

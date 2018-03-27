@@ -94,6 +94,18 @@ trait BaseItemsTrait {
                 ->MicroData("http://schema.org/PriceSpecification","price")        
                 ->Association("desc@lines","qty@lines","price@lines");        
 
+        //====================================================================//
+        // Order Line Tax Name
+        $this->FieldsFactory()->Create(SPL_T_VARCHAR)        
+                ->Identifier("vat_src_code")
+                ->InList("lines")
+                ->Name($langs->trans("VATRate"))
+                ->MicroData("http://schema.org/PriceSpecification","valueAddedTaxName")        
+                ->Group($GroupName)
+                ->AddOption('maxLength' , 10)
+                ->Association("desc@lines","qty@lines","price@lines")
+                ;    
+        
     }
 
     /**
@@ -167,11 +179,16 @@ trait BaseItemsTrait {
                 return  (double) $Line->remise_percent;
                 
             //====================================================================//
-            // Order Line Quantity
+            // Order Line Price
             case 'price@lines':
                 $Price  =   (double) $Line->subprice;
                 $Vat    =   (double) $Line->tva_tx;
                 return  self::Prices()->Encode( $Price, $Vat, Null, $conf->global->MAIN_MONNAIE);
+
+            //====================================================================//
+            // Order Line Tax Name
+            case 'vat_src_code@lines':
+                return  $Line->vat_src_code;
                 
             default:
                 return Null;
@@ -255,6 +272,9 @@ trait BaseItemsTrait {
         // Update Sub-Price
         $this->setItemPrice($ItemData);
         //====================================================================//
+        // Update Vat Rate Source Name
+        $this->setItemVatSrcCode($ItemData);
+        //====================================================================//
         // Update Product Link
         $this->setItemProductLink($ItemData);
         //====================================================================//
@@ -304,7 +324,6 @@ trait BaseItemsTrait {
      *  @abstract     Write Given Price to Line Item
      * 
      *  @param        array     $ItemData       Input Item Data Array
-     *  @param        string    $FieldName              Field Identifier / Name
      * 
      *  @return         none
      */
@@ -338,6 +357,91 @@ trait BaseItemsTrait {
     }  
     
     /**
+     *  @abstract     Write Given Vat Source Code to Line Item
+     * 
+     *  @param        array     $ItemData       Input Item Data Array
+     * 
+     *  @return         none
+     */
+    private function setItemVatSrcCode($ItemData) 
+    {
+        global $conf;
+        
+        if ( !isset($ItemData["vat_src_code"]) ) {
+            return;
+        }
+        //====================================================================//
+        // Clean VAT Code
+        $CleanedTaxName = substr(preg_replace('/\s/','',$ItemData["vat_src_code"]), 0, 10);
+        //====================================================================//
+        // Update VAT Code if Needed
+        if ($this->CurrentItem->vat_src_code !== $CleanedTaxName) {
+            $this->CurrentItem->vat_src_code = $CleanedTaxName;
+            $this->ItemUpdate = TRUE;
+        //====================================================================//
+        // No Changes? => Exit
+        }  else {
+            return;
+        }
+
+        //====================================================================//
+        // Safety Check => Feature is Active        
+        if ( !$conf->global->SPLASH_DETECT_TAX_NAME ) {
+            return;
+        }        
+
+        //====================================================================//
+        // Detect VAT Rates from Vat Src Code        
+        $IdentifiedVat      =   $this->getVatIdBySrcCode($this->CurrentItem->vat_src_code);
+        if ( !$IdentifiedVat ) {
+            return;
+        }
+
+        //====================================================================//
+        // Update Rates from Vat Type
+        $this->CurrentItem->tva_tx          = $IdentifiedVat->tva_tx;
+        $this->CurrentItem->localtax1_tx    = $IdentifiedVat->localtax1_tx;
+        $this->CurrentItem->localtax1_type  = $IdentifiedVat->localtax1_type;
+        $this->CurrentItem->localtax2_tx    = $IdentifiedVat->localtax2_tx;
+        $this->CurrentItem->localtax2_type  = $IdentifiedVat->localtax2_type;
+        
+        return;
+    }  
+    
+    /**
+     *  @abstract     Identify Vat Type by Source Code
+     * 
+     *  @param        array     $ItemData       Input Item Data Array
+     *  @param        string    $FieldName              Field Identifier / Name
+     * 
+     *  @return         none
+     */
+    private function getVatIdBySrcCode($VatSrcCode = Null) 
+    {
+        global $db;
+        
+        //====================================================================//
+        // Safety Check => VAT Type Code is Not Empty        
+        if ( empty($VatSrcCode) ) {
+            return Null;
+        }
+
+        //====================================================================//
+        // Serach for VAT Type from Given Code
+	$sql  = "SELECT t.rowid, t.taux as tva_tx, t.localtax1 as localtax1_tx, t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type";
+	$sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
+	$sql .= " WHERE t.code = '" . $VatSrcCode . "' AND t.active = 1";
+
+	$resql=$db->query($sql);
+	if ($resql)
+	{
+            return  $db->fetch_object($resql);
+        }        
+        
+        return Null;
+    }
+    
+    /**
      *  @abstract     Write Given Product to Line Item
      * 
      *  @param        array     $ItemData       Input Item Data Array
@@ -366,27 +470,43 @@ trait BaseItemsTrait {
     
     private function updateItemTotals() 
     {
-        global $mysoc;        
+        global $conf, $mysoc;        
         
         if ( !$this->ItemUpdate ) {
             return;
         }
-        
-        include_once DOL_DOCUMENT_ROOT.'/core/lib/price.lib.php';
 
+        //====================================================================//
+        // Setup default VAT Rates from Current Item        
+        $VatRateOrId=   $this->CurrentItem->tva_tx;
+        $UseId      =   False;
+        
+        //====================================================================//
+        // Detect VAT Rates from Vat Src Code        
+        if ( $conf->global->SPLASH_DETECT_TAX_NAME ) {
+            $IdentifiedVat      =   $this->getVatIdBySrcCode($this->CurrentItem->vat_src_code);
+            if ($IdentifiedVat) {
+                $VatRateOrId=   $IdentifiedVat->rowid;
+                $UseId      =   True;
+            }     
+        }
+        
+        //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne a partir de
         // qty, pu, remise_percent et txtva
-        // TRES IMPORTANT: C'est au moment de l'insertion ligne qu'on doit stocker
-        // la part ht, tva et ttc, et ce au niveau de la ligne qui a son propre taux tva.
-        $localtaxes_type    =   getLocalTaxesFromRate($this->OrderLine->tva_tx,0,$this->OrderLine->socid, $mysoc);
-
+        $localtaxes_type    =   getLocalTaxesFromRate($VatRateOrId,0,$this->Object->socid, $mysoc, $UseId);
+        
+        include_once DOL_DOCUMENT_ROOT.'/core/lib/price.lib.php';
+        
         $tabprice   =   calcul_price_total(
-                $this->CurrentItem->qty, $this->CurrentItem->subprice, 
-                $this->CurrentItem->remise_percent, $this->CurrentItem->tva_tx, 
+                $this->CurrentItem->qty, 
+                $this->CurrentItem->subprice, 
+                $this->CurrentItem->remise_percent, 
+                $this->CurrentItem->tva_tx, 
                 -1,-1,
                 0, "HT", 
                 $this->CurrentItem->info_bits, $this->CurrentItem->type, 
-                '', $localtaxes_type);
+                $mysoc, $localtaxes_type);
 
         $this->CurrentItem->total_ht            = $tabprice[0];
         $this->CurrentItem->total_tva           = $tabprice[1];

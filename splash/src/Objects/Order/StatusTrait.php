@@ -17,6 +17,8 @@
 
 namespace Splash\Local\Objects\Order;
 
+use Splash\Core\SplashCore      as Splash;
+
 /**
  * @abstract    Dolibarr Customer Order Status Field  
  */

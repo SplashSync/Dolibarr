@@ -331,6 +331,7 @@ class Local
                 dolibarr_set_const($db,"MAIN_MULTILANGS"            ,0,'chaine',0,'',$conf->entity);              
                 dolibarr_set_const($db,"PRODUIT_MULTIPRICES"        ,0,'chaine',0,'',$conf->entity);          
                 dolibarr_set_const($db,"MAIN_MODULE_MULTICOMPANY"   ,0,'chaine',0,'',$conf->entity);              
+                dolibarr_set_const($db,"SPLASH_DETECT_TAX_NAME"     ,0,'chaine',0,'',$conf->entity);              
                 
                 self::configurePhpUnitExtraFields("societe",    False);
                 self::configurePhpUnitExtraFields("socpeople",  False);
