@@ -45,6 +45,10 @@ SPL_DfBankAccount   =   Compte Bancaire par défaut utilisée par le module (si 
 SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifié)
 SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-prix est actif)
 
+SPL_Orders_Config   =   Commandes & Factures
+SPL_DetectTaxName   =   Détécter les taux de taxation selon leurs codes
+SPL_DetectTaxName_T =   Lors de l'import de commandes et de factures, si un code de taux de taxation est donné et peut être identifier dans votre dictionnaire, il sera utilisé par le module à la place du taux de TVA fourni dans le prix.
+
 ################################################################################
 # Admin Page Self Tests Results
 ################################################################################

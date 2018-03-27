@@ -45,6 +45,12 @@ SPL_DfBankAccount   =   Default Bank Account used by the module (if not spécifi
 SPL_DfPayMethod     =   Default Payement Method used by the module (if not spécified)
 SPL_DfMultiPrice    =   Default Price used by the module (MultiPrices mode is enabled)
 
+SPL_Orders_Config   =   Orders & Invoices
+SPL_DetectTaxName   =   Detect tax rates using taxes codes dictionary
+SPL_DetectTaxName_T =   When importing orders and invoices, if a tax rate code is given and can be identified in your dictionary, it will be used by the module instead of the VAT rate provided in the price.
+
+
+
 ################################################################################
 # Admin Page Self Tests Results
 ################################################################################
