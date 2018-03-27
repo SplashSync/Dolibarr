@@ -123,6 +123,7 @@ script:
     - php build/bootstrap.php
     - phpunit --version
     - phpunit -c build/phpunit.xml.dist 
+    - phpunit -c build/phpunit.xml.dist --testsuite=Local
         
 notifications:
   email:         
