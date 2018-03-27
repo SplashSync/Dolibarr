@@ -67,7 +67,7 @@ trait ExtraFieldsTrait {
                     ->Identifier( $this->ExtraPrefix . $Id )
                     ->Name($this->getLabel($Id))
                     ->Group("Extra")
-                    ->AddOption('maxLength' , 15)
+                    ->AddOption('maxLength' , 14)
                     ->MicroData("http://meta.schema.org/additionalType",$Id);    
             
             if ( $this->getIsRequired($Id) ) {
