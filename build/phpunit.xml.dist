@@ -28,7 +28,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory>../splash/src</directory>
+            <directory>../splash/src/Tests</directory>
             <directory>../splash/vendor/splash/phpcore</directory>
             <exclude>
                 <directory>../vendor</directory>
