@@ -52,7 +52,12 @@ class L02TaxesByCodesTest extends ObjectsCase {
      */
     public function testCreateWithTaxCode($ObjectType, $TaxCode, $VatRate1, $VatRate2)
     {
-        $this->assertTrue(True);
+        if ( Splash::Local()->DolVersionCmp("5.0.0") >= 0) {        
+            $this->assertTrue(True);
+            return;
+        }
+
+                    
         //====================================================================//
         //   Create Fake Order Data  
         $this->Fields   =   $this->fakeFieldsList($ObjectType, ["desc@lines"], True);

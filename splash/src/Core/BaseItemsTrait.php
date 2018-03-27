@@ -96,15 +96,17 @@ trait BaseItemsTrait {
 
         //====================================================================//
         // Order Line Tax Name
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)        
-                ->Identifier("vat_src_code")
-                ->InList("lines")
-                ->Name($langs->trans("VATRate"))
-                ->MicroData("http://schema.org/PriceSpecification","valueAddedTaxName")        
-                ->Group($GroupName)
-                ->AddOption('maxLength' , 10)
-                ->Association("desc@lines","qty@lines","price@lines")
-                ;    
+        if ( Splash::Local()->DolVersionCmp("5.0.0") >= 0) {        
+            $this->FieldsFactory()->Create(SPL_T_VARCHAR)        
+                    ->Identifier("vat_src_code")
+                    ->InList("lines")
+                    ->Name($langs->trans("VATRate"))
+                    ->MicroData("http://schema.org/PriceSpecification","valueAddedTaxName")        
+                    ->Group($GroupName)
+                    ->AddOption('maxLength' , 10)
+                    ->Association("desc@lines","qty@lines","price@lines")
+                    ;    
+        }
         
     }
 

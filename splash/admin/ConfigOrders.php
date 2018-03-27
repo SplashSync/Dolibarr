@@ -61,18 +61,20 @@ echo '  </tr>';
 
 //====================================================================//
 // Tax Name Detection Mode
-echo '  <tr class="pair">';
-echo '      <td>' . $form->textwithpicto($langs->trans("SPL_DetectTaxName"), $langs->trans("SPL_DetectTaxName_T")) . '</td>';
-if ($conf->global->SPLASH_DETECT_TAX_NAME) {
-    echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=0">';
-        echo img_picto($langs->trans("Enabled"),'switch_on');
-    echo '</a></td>';
-} else {
-    echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=1">';
-        echo img_picto($langs->trans("Disabled"),'switch_off');
-    echo '</a></td>';
+if ( Splash::Local()->DolVersionCmp("5.0.0") >= 0) {        
+    echo '  <tr class="pair">';
+    echo '      <td>' . $form->textwithpicto($langs->trans("SPL_DetectTaxName"), $langs->trans("SPL_DetectTaxName_T")) . '</td>';
+    if ($conf->global->SPLASH_DETECT_TAX_NAME) {
+        echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=0">';
+            echo img_picto($langs->trans("Enabled"),'switch_on');
+        echo '</a></td>';
+    } else {
+        echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=1">';
+            echo img_picto($langs->trans("Disabled"),'switch_off');
+        echo '</a></td>';
+    }
+    echo '  </tr>';
 }
-echo '  </tr>';
 
 echo '</tbody></table>';
 
