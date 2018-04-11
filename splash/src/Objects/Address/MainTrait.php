@@ -64,7 +64,7 @@ trait MainTrait {
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("country")
                 ->Name($langs->trans("CompanyCountry"))
-                ->ReadOnly()
+                ->isReadOnly()
                 ->Group($GroupName)
                 ->isListed();
         
@@ -85,7 +85,7 @@ trait MainTrait {
                     ->Identifier("state")
                     ->Name($langs->trans("State"))
                     ->Group($GroupName)
-                    ->ReadOnly();
+                    ->isReadOnly();
 
             //====================================================================//
             // State code
@@ -95,9 +95,18 @@ trait MainTrait {
                     ->MicroData("http://schema.org/PostalAddress","addressRegion")
                     ->Group($GroupName)
                     ->isLogged()
-                    ->NotTested();
+                    ->isNotTested();
         }
 
+        return;
+    }
+
+    /**
+    *   @abstract     Build Address Fields using FieldFactory
+    */
+    protected function buildMain2Fields() {
+        global $langs;
+        
         //====================================================================//
         // Phone Pro
         $this->FieldsFactory()->Create(SPL_T_PHONE)
@@ -142,7 +151,6 @@ trait MainTrait {
         
         return;
     }
-
     
     /**
      *  @abstract     Read requested Field
@@ -151,6 +159,8 @@ trait MainTrait {
      *  @param        string    $FieldName              Field Identifier / Name
      * 
      *  @return         none
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getMainFields($Key,$FieldName)
     {
@@ -192,6 +202,8 @@ trait MainTrait {
      *  @param        mixed     $Data                   Field Data
      * 
      *  @return         none
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function setMainFields($FieldName,$Data) 
     {

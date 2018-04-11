@@ -29,7 +29,7 @@ use Splash\Client\Splash;
 // Open Connection Test Tab
 dol_fiche_head(array(), Null, $langs->trans("SPL_WsTest") , 0, null);
 
-echo Splash::Log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(True);
 
 //====================================================================//
 // List Objects
@@ -45,7 +45,7 @@ foreach ($list as $value) {
 echo '      </ul></td>';
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::Log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(True);
 echo "</br>";
 
 //====================================================================//
@@ -62,7 +62,7 @@ foreach ($Widgets as $value) {
 echo '      </ul></td>';
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::Log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(True);
 echo "</br>";
 
 //====================================================================//
@@ -78,7 +78,7 @@ if ( Splash::SelfTest() ) {
 }
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::Log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(True);
 echo "</br>";
 
 //====================================================================//
@@ -94,7 +94,7 @@ if ( Splash::Ping() ) {
 }
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::Log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(True);
 echo "</br>";
 
 //====================================================================//
@@ -110,7 +110,7 @@ if ( Splash::Connect() ) {
 }
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::Log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(True);
 echo "</br>";
 
 //====================================================================//

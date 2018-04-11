@@ -136,11 +136,11 @@ class StatGraphs extends WidgetBase
      *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
 
      */
-    public function Get($params=NULL)
+    public function get($params=NULL)
     {
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
@@ -254,14 +254,14 @@ class StatGraphs extends WidgetBase
 
         $Result     = $db->query($sql);
         $num        = $db->num_rows($Result);           // Read number of results
-        $i          = 0;
+        $index          = 0;
         $RawData    = array();
         
-        while ($i < $num)
+        while ($index < $num)
         {
             $Value = $db->fetch_array($Result);
             $RawData[$Value["step"]] = $Value["total"];
-            $i++;
+            $index++;
         }        
         
         return $this->parseDatedData($RawData);

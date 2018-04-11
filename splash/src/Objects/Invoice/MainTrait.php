@@ -47,7 +47,7 @@ trait MainTrait {
                 ->Identifier("total_ht")
                 ->Name($langs->trans("TotalHT") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Invoice","totalPaymentDue")
-                ->ReadOnly();
+                ->isReadOnly();
         
         //====================================================================//
         // Order Total Price TTC
@@ -55,7 +55,7 @@ trait MainTrait {
                 ->Identifier("total_ttc")
                 ->Name($langs->trans("TotalTTC") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Invoice","totalPaymentDueTaxIncluded")
-                ->ReadOnly();        
+                ->isReadOnly();        
         
         //====================================================================//
         // INVOICE STATUS FLAGS
@@ -69,7 +69,7 @@ trait MainTrait {
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->MicroData("http://schema.org/PaymentStatusType","InvoiceDraft")
                 ->Association( "isDraft","isCanceled","isValidated")
-                ->ReadOnly();     
+                ->isReadOnly();     
 
         //====================================================================//
         // Is Canceled
@@ -79,7 +79,7 @@ trait MainTrait {
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->MicroData("http://schema.org/PaymentStatusType","PaymentDeclined")
                 ->Association( "isDraft","isCanceled","isValidated")
-                ->ReadOnly();     
+                ->isReadOnly();     
         
         //====================================================================//
         // Is Validated
@@ -89,7 +89,7 @@ trait MainTrait {
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->MicroData("http://schema.org/PaymentStatusType","PaymentDue")
                 ->Association( "isDraft","isCanceled","isValidated")
-                ->ReadOnly();
+                ->isReadOnly();
 
         //====================================================================//
         // Is Paid
@@ -98,7 +98,7 @@ trait MainTrait {
                 ->Name($langs->trans("Invoice") . " : " . $langs->trans("Paid"))
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->MicroData("http://schema.org/PaymentStatusType","PaymentComplete")
-                ->NotTested();
+                ->isNotTested();
 
         
         return;
@@ -123,6 +123,28 @@ trait MainTrait {
             case 'date_lim_reglement':
                 $this->Out[$FieldName] = !empty($this->Object->date_lim_reglement)?dol_print_date($this->Object->date_lim_reglement, '%Y-%m-%d'):Null;
                 break;            
+
+            default:
+                return;
+        }
+        
+        unset($this->In[$Key]);
+    }
+    
+    /**
+     *  @abstract     Read requested Field
+     * 
+     *  @param        string    $Key                    Input List Key
+     *  @param        string    $FieldName              Field Identifier / Name
+     * 
+     *  @return         none
+     */
+    protected function getTotalsFields($Key,$FieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($FieldName)
+        {
             
             //====================================================================//
             // PRICE INFORMATIONS
@@ -133,6 +155,27 @@ trait MainTrait {
                 $this->getSimple($FieldName);
                 break;
             
+            default:
+                return;
+        }
+        
+        unset($this->In[$Key]);
+    }
+    
+    /**
+     *  @abstract     Read requested Field
+     * 
+     *  @param        string    $Key                    Input List Key
+     *  @param        string    $FieldName              Field Identifier / Name
+     * 
+     *  @return         none
+     */
+    protected function getStateFields($Key,$FieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($FieldName)
+        {
             //====================================================================//
             // ORDER STATUS
             //====================================================================//        
@@ -155,7 +198,7 @@ trait MainTrait {
         }
         
         unset($this->In[$Key]);
-    }
+    }    
     
     /**
      *  @abstract     Write Given Fields
@@ -189,44 +232,59 @@ trait MainTrait {
                     break;
                 }
                 $this->setSimple($FieldName,$Data);
-                break; 
+                break;    
                 
             //====================================================================//
             // PAYMENT STATUS
             //====================================================================//        
             case 'isPaid':
-                if ( $Data == $this->Object->paye ) {
-                    break;                   
-                }
-                //====================================================================//
-                // If Status Is Not Validated => Cannot Update This Flag
-                if ( $this->Object->statut < 1 ) {
-                    break;
-                }     
-                //====================================================================//
-                // Set Paid using Dolibarr Function
-                if ( $Data && ($this->Object->statut == 1) && ( $this->Object->set_paid($user) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }     
-                //====================================================================//
-                // Set UnPaid using Dolibarr Function
-                if ( !$Data && ($this->Object->statut == 2) && ( $this->Object->set_unpaid($user) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }  
-                //====================================================================//
-                // Setup Current Object not to Overite changes with Update
-                if ( $Data ) {
-                    $this->Object->paye     = 1;
-                } else {
-                    $this->Object->paye     = 0;
-                }    
-                break;         
-                
+                $this->setPaidFlag($Data);  
+                break;                   
                 
             default:
                 return;
         }
         unset($this->In[$FieldName]);
     }
+    
+    /**
+     *  @abstract     Write Given Fields
+     * 
+     *  @param        string    $FieldName              Field Identifier / Name
+     *  @param        mixed     $Data                   Field Data
+     * 
+     *  @return       bool
+     */
+    private function setPaidFlag($Data) 
+    {
+        global $user; 
+        
+        //====================================================================//
+        // If Status Is Not Validated => Cannot Update This Flag
+        if ( ( $Data == $this->Object->paye ) || ( $this->Object->statut < 1 ) ) {
+            return true;
+        }   
+        
+        if ( $Data ) {
+            //====================================================================//
+            // Set Paid using Dolibarr Function
+            if ( ($this->Object->statut == 1) && ( $this->Object->set_paid($user) != 1 ) ) {
+                return $this->CatchDolibarrErrors();
+            }     
+        } else {
+            //====================================================================//
+            // Set UnPaid using Dolibarr Function
+            if ( ($this->Object->statut == 2) && ( $this->Object->set_unpaid($user) != 1 ) ) {
+                return $this->CatchDolibarrErrors();
+            }  
+        }
+       
+        //====================================================================//
+        // Setup Current Object not to Overite changes with Update
+        $this->Object->paye     = ( $Data ? 1 : 0 );
+        
+        return true;
+    }
+    
     
 }

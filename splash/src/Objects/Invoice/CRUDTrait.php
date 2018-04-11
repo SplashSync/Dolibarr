@@ -30,18 +30,18 @@ trait CRUDTrait
      * @param       string  $Id               Object id
      * @return      mixed
      */
-    public function Load( $Id )
+    public function load( $Id )
     {
         global $db, $user;        
         global $conf;        
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__); 
+        Splash::log()->trace(__CLASS__,__FUNCTION__); 
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }             
         //====================================================================//
         // Init Object 
@@ -50,13 +50,13 @@ trait CRUDTrait
         // Fatch Object 
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
-            Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Current Entity is : " . $conf->entity);
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
+            Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Current Entity is : " . $conf->entity);
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
         }   
         //====================================================================//
         // Check Object Entity Access (MultiCompany) 
         if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Invoice (" . $Id . ").");
         }           
         $Object->fetch_lines(); 
         $this->loadPayments($Id);
@@ -70,27 +70,27 @@ trait CRUDTrait
      * 
      * @return      object     New Object
      */
-    public function Create()
+    public function create()
     {
         global $db, $user;          
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);         
+        Splash::log()->trace(__CLASS__,__FUNCTION__);         
         //====================================================================//
         // Check Order Date is given
         if ( empty($this->In["date"]) ) {
-            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"date");
+            return Splash::log()->err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"date");
         }
         //====================================================================//
         // Check Customer Id is given
         if ( empty($this->In["socid"]) || empty(self::Objects()->Id($this->In["socid"])) ) {
-            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"socid");
+            return Splash::log()->err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"socid");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }         
         //====================================================================//
         // Init Object 
@@ -107,7 +107,7 @@ trait CRUDTrait
         // Create Object In Database
         if ( $this->Object->create($user) <= 0) {    
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Invoice. ");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Invoice. ");
         }        
         
         return $this->Object;
@@ -120,12 +120,12 @@ trait CRUDTrait
      * 
      * @return      string      Object Id
      */
-    public function Update( $Needed )
+    public function update( $Needed )
     {
         global $user;
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         if ( !$Needed) {
             return (int) $this->Object->id;
         }
@@ -133,13 +133,13 @@ trait CRUDTrait
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         } 
         //====================================================================//
         // Update Object 
         if ( $this->Object->update($user)  <= 0 ) {  
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Invoice (" . $this->Object->id . ")") ;
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Invoice (" . $this->Object->id . ")") ;
         }        
         //====================================================================//
         // Update Object Extra Fields 
@@ -156,12 +156,12 @@ trait CRUDTrait
      * 
      * @return      bool                          
      */    
-    public function Delete($Id = NULL)
+    public function delete($Id = NULL)
     {
         global $db,$user,$conf;
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Object 
         $Object = new \Facture($db);
@@ -169,7 +169,7 @@ trait CRUDTrait
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }
         //====================================================================//
         // Debug Mode => Force Allow Delete
@@ -188,14 +188,14 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany) 
         unset($Object->entity);
         if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Invoice (" . $Id . ").");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Invoice (" . $Id . ").");
         }        
         //====================================================================//
         // Delete Object 
         $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
         if ( $Object->delete($Arg1) <= 0 ) {  
             $this->CatchDolibarrErrors( $Object );
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Invoice (" . $Id . ")") ;
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Invoice (" . $Id . ")") ;
         }
         return True;
     }      

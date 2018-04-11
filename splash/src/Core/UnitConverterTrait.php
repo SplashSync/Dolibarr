@@ -31,7 +31,7 @@ trait UnitConverterTrait {
      *  @param      int      $unit       Weight Unit
      *  @return     float                Weight Value in kg
      */
-    public static function C_Weight($weight,$unit)
+    public static function convertWeight($weight,$unit)
     { 		
         if ( $unit      == "-6")    {   return $weight * 1e-6;  }       // mg
         elseif ( $unit  == "-3")    {   return $weight * 1e-3;  }       // g
@@ -47,31 +47,31 @@ trait UnitConverterTrait {
      *  @param      float    $weight     Weight Raw Value
      *  @return     arrayobject          $r->weight , $r->weight_units , $r->print, $r->raw
      */
-    public static function N_Weight($weight)
+    public static function normalizeWeight($weight)
     { 		
         // Include Needed Dolibarr Functions Libraries
         require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
 
-        $r = new ArrayObject();
+        $result = new ArrayObject();
         if ( $weight    >= 1e3 )    {    
-            $r->weight              =   $weight * 1e-3;                 // Tonne
-            $r->weight_units        =   "3";                            // Tonne
+            $result->weight              =   $weight * 1e-3;                 // Tonne
+            $result->weight_units        =   "3";                            // Tonne
         }
         elseif ( $weight    >= 1 )    {    
-            $r->weight              =   $weight;                        // kg
-            $r->weight_units        =   "0";                            // kg
+            $result->weight              =   $weight;                        // kg
+            $result->weight_units        =   "0";                            // kg
         }
         elseif ( $weight    >= 1e-3 )    {    
-            $r->weight              =   $weight * 1e3;                  // g
-            $r->weight_units        =   "-3";                           // g
+            $result->weight              =   $weight * 1e3;                  // g
+            $result->weight_units        =   "-3";                           // g
         }
         elseif ( $weight    >= 1e-6 )    {    
-            $r->weight              =   $weight * 1e6;                  // mg
-            $r->weight_units        =   "-6";                           // mg
+            $result->weight              =   $weight * 1e6;                  // mg
+            $result->weight_units        =   "-6";                           // mg
         }
-        $r->print = $r->weight." ".measuring_units_string($r->weight_units,"weight");
-        $r->raw =   $weight;
-        return $r;
+        $result->print = $result->weight." ".measuring_units_string($result->weight_units,"weight");
+        $result->raw =   $weight;
+        return $result;
     }
 
     /**
@@ -81,7 +81,7 @@ trait UnitConverterTrait {
      *  @param      int      $unit       Length Unit
      *  @return     float                Length Value in m
      */
-    public static function C_Length($length,$unit)
+    public static function convertLength($length,$unit)
     { 		
         if ( $unit      == "-3")    {   return $length / 1e3;  }        // mm
         elseif ( $unit  == "-2")    {   return $length / 1e2;  }        // cm
@@ -98,31 +98,31 @@ trait UnitConverterTrait {
      *  @param      float    $length     Length Raw Value
      *  @return     arrayobject          $r->length , $r->length_units , $r->print, $r->raw
      */
-    public static function N_Length($length)
+    public static function normalizeLength($length)
     { 		
         // Include Needed Dolibarr Functions Libraries
         require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
         
-        $r = new ArrayObject();
+        $result = new ArrayObject();
         if ( $length    >= 1 )    {    
-            $r->length              =   $length;                        // m
-            $r->length_units        =   "0";                            // m
+            $result->length              =   $length;                        // m
+            $result->length_units        =   "0";                            // m
         }
         elseif ( $length    >= 1e-1 )    {    
-            $r->length              =   $length * 1e1;                  // dm
-            $r->length_units        =   "-1";                            // dm
+            $result->length              =   $length * 1e1;                  // dm
+            $result->length_units        =   "-1";                            // dm
         }
         elseif ( $length    >= 1e-2 )    {    
-            $r->length              =   $length * 1e2;                  // g
-            $r->length_units        =   "-2";                           // g
+            $result->length              =   $length * 1e2;                  // g
+            $result->length_units        =   "-2";                           // g
         }
         elseif ( $length    >= 1e-3 )    {    
-            $r->length              =   $length * 1e3;                  // mg
-            $r->length_units        =   "-3";                           // mg
+            $result->length              =   $length * 1e3;                  // mg
+            $result->length_units        =   "-3";                           // mg
         }
-        $r->print = $r->length." ".measuring_units_string($r->length_units,"size");
-        $r->raw =   $length;
-        return $r;
+        $result->print = $result->length." ".measuring_units_string($result->length_units,"size");
+        $result->raw =   $length;
+        return $result;
     }
     
     /**
@@ -132,7 +132,7 @@ trait UnitConverterTrait {
      *  @param      int      $unit       Surface Unit
      *  @return     float                Surface Value in m²
      */
-    public static function C_Surface($surface,$unit)
+    public static function convertSurface($surface,$unit)
     { 		
         if ( $unit      == "-6")    {   return $surface / 1e6;  }       // mm²
         elseif ( $unit  == "-4")    {   return $surface / 1e4;  }       // cm²
@@ -149,31 +149,31 @@ trait UnitConverterTrait {
      *  @param      float    $surface    Surface Raw Value
      *  @return     arrayobject          $r->surface , $r->surface_units , $r->print, $r->raw
      */
-    public static function N_Surface($surface)
+    public static function normalizeSurface($surface)
     { 		
         // Include Needed Dolibarr Functions Libraries
         require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
 
-        $r = new ArrayObject();
+        $result = new ArrayObject();
         if ( $surface    >= 1 )    {    
-            $r->surface              =   $surface;                      // m2
-            $r->surface_units        =   "0";                           // m2
+            $result->surface              =   $surface;                      // m2
+            $result->surface_units        =   "0";                           // m2
         }
         elseif ( $surface    >= 1e-2 )    {    
-            $r->surface              =   $surface * 1e2;                // dm2
-            $r->surface_units        =   "-2";                          // dm2
+            $result->surface              =   $surface * 1e2;                // dm2
+            $result->surface_units        =   "-2";                          // dm2
         }
         elseif ( $surface    >= 1e-4 )    {    
-            $r->surface              =   $surface * 1e4;                // cm2
-            $r->surface_units        =   "-4";                          // cm2
+            $result->surface              =   $surface * 1e4;                // cm2
+            $result->surface_units        =   "-4";                          // cm2
         }
         elseif ( $surface    >= 1e-6 )    {    
-            $r->surface              =   $surface * 1e6;                // mm2
-            $r->surface_units        =   "-6";                          // mm2
+            $result->surface              =   $surface * 1e6;                // mm2
+            $result->surface_units        =   "-6";                          // mm2
         }
-        $r->print = $r->surface." ".measuring_units_string($r->surface_units,"surface");
-        $r->raw =   $surface;
-        return $r;
+        $result->print = $result->surface." ".measuring_units_string($result->surface_units,"surface");
+        $result->raw =   $surface;
+        return $result;
     }
     
     /**
@@ -183,7 +183,7 @@ trait UnitConverterTrait {
      *  @param      int      $unit       Volume Unit
      *  @return     float                Volume Value in m3
      */
-    public static function C_Volume($volume,$unit)
+    public static function convertVolume($volume,$unit)
     { 		
         if ( $unit      == "-9")    {   return $volume * 1e-9;  }              // mm²
         elseif ( $unit  == "-6")    {   return $volume * 1e-6;  }              // cm²
@@ -203,30 +203,30 @@ trait UnitConverterTrait {
     *  @param      float    $length     Volume Raw Value
     *  @return     arrayobject          $r->volume , $r->volume_units , $r->print, $r->raw
 */
-    public static function N_Volume($volume)
+    public static function normalizeVolume($volume)
     { 		
         // Include Needed Dolibarr Functions Libraries
         require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
 
-        $r = new ArrayObject();
+        $result = new ArrayObject();
         if ( $volume    >= 1 )    {    
-            $r->volume              =   $volume;                        // m3
-            $r->volume_units        =   "0";                            // m3
+            $result->volume              =   $volume;                        // m3
+            $result->volume_units        =   "0";                            // m3
         }
         elseif ( $volume    >= 1e-3 )    {    
-            $r->volume              =   $volume * 1e3;                  // dm3
-            $r->volume_units        =   "-3";                           // dm3
+            $result->volume              =   $volume * 1e3;                  // dm3
+            $result->volume_units        =   "-3";                           // dm3
         }
         elseif ( $volume    >= 1e-6 )    {    
-            $r->volume              =   $volume * 1e6;                  // cm2
-            $r->volume_units        =   "-6";                           // cm2
+            $result->volume              =   $volume * 1e6;                  // cm2
+            $result->volume_units        =   "-6";                           // cm2
         }
         elseif ( $volume    >= 1e-9 )    {    
-            $r->volume              =   $volume * 1e9;                  // mm2
-            $r->volume_units        =   "-9";                           // mm2
+            $result->volume              =   $volume * 1e9;                  // mm2
+            $result->volume_units        =   "-9";                           // mm2
         }
-        $r->print = $r->volume." ".measuring_units_string($r->volume_units,"volume");
-        $r->raw =   $volume;
-        return $r;
+        $result->print = $result->volume." ".measuring_units_string($result->volume_units,"volume");
+        $result->raw =   $volume;
+        return $result;
     } 
 }

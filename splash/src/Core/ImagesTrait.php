@@ -65,7 +65,7 @@ trait ImagesTrait {
                 ->Name("Cover Image")
                 ->MicroData("http://schema.org/Product","isCover")
                 ->Group("Images")
-                ->NotTested();     
+                ->isNotTested();     
         
     }
     
@@ -92,7 +92,7 @@ trait ImagesTrait {
         }   
         //====================================================================//
         // Check if List field & Init List Array
-        $FieldId = self::Lists()->InitOutput( $this->Out, "images", $FieldName );
+        $FieldId = self::lists()->InitOutput( $this->Out, "images", $FieldName );
         if ( !$FieldId ) {
             return;
         }  
@@ -152,8 +152,8 @@ trait ImagesTrait {
             
             //====================================================================//
             // Insert Data in List
-            self::Lists()->Insert( $this->Out, "images", $FieldName,    $File["position"], $Image );
-            self::Lists()->Insert( $this->Out, "images", "cover",       $File["position"], $File["cover"] );
+            self::lists()->Insert( $this->Out, "images", $FieldName,    $File["position"], $Image );
+            self::lists()->Insert( $this->Out, "images", "cover",       $File["position"], $File["cover"] );
             
         }
            
@@ -203,7 +203,7 @@ trait ImagesTrait {
 
             //====================================================================//
             // Insert Data in List
-            self::Lists()->Insert( $this->Out, "images", $FieldName, $key, $Image );
+            self::lists()->Insert( $this->Out, "images", $FieldName, $key, $Image );
         }
         
     }
@@ -263,7 +263,7 @@ trait ImagesTrait {
             // Delete Object In Database
             if ( $EcmImage->delete($user) <= 0) {    
                 $this->CatchDolibarrErrors($EcmImage);
-                Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to Delete Image File. ");
+                Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to Delete Image File. ");
             }   
             //====================================================================//
             // Delete Object From Disk
@@ -294,7 +294,7 @@ trait ImagesTrait {
         //====================================================================//
         // Load Image by CheckSum
         if ( empty($ImageData["md5"]) ) {
-            Splash::Log()->War("Skipped Image Writing");
+            Splash::log()->war("Skipped Image Writing");
             return;
         }
         
@@ -363,7 +363,7 @@ trait ImagesTrait {
             // Create Object In Database
             if ( $EcmImage->create($user) <= 0) {    
                 $this->CatchDolibarrErrors($EcmImage);
-                return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Image File. ");
+                return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Image File. ");
             }  
             $EcmImage->position = $Position;
         }
@@ -371,7 +371,7 @@ trait ImagesTrait {
         // Update Object In Database
         if ( $EcmImage->update($user) <= 0) {    
             $this->CatchDolibarrErrors($EcmImage);
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to update Image File. ");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to update Image File. ");
         }       
         
         $this->Object->addThumbs($this->DolFilesDir . "/" . $EcmImage->filename);

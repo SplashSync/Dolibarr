@@ -36,7 +36,7 @@ trait MetaDatesTrait {
                 ->Name($langs->trans("DateLastModification"))
                 ->Group("Meta")
                 ->MicroData("http://schema.org/DataFeedItem","dateModified")
-                ->ReadOnly();
+                ->isReadOnly();
         
         //====================================================================//
         // datec - Creation Date 
@@ -45,7 +45,7 @@ trait MetaDatesTrait {
                 ->Name($langs->trans("DateCreation"))
                 ->Group("Meta")
                 ->MicroData("http://schema.org/DataFeedItem","dateCreated")
-                ->ReadOnly();       
+                ->isReadOnly();       
    
     }   
 

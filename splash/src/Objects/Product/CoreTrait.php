@@ -34,7 +34,7 @@ trait CoreTrait {
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref")
                 ->Name($langs->trans("ProductRef"))
-                ->IsListed()
+                ->isListed()
                 ->MicroData("http://schema.org/Product","model")
                 ->isLogged()
                 ->isRequired();
@@ -45,7 +45,7 @@ trait CoreTrait {
                 ->Create($conf->global->MAIN_MULTILANGS ? SPL_T_MVARCHAR : SPL_T_VARCHAR)
                 ->Identifier("label")
                 ->Name($langs->trans("ProductLabel") . ($conf->global->MAIN_MULTILANGS ? ' (M)' : Null))
-                ->IsListed()
+                ->isListed()
                 ->isLogged()
                 ->Group($langs->trans("Description"))
                 ->MicroData("http://schema.org/Product","name")

@@ -80,7 +80,7 @@ trait MultilangualTrait {
         // For Safety => Push First Value to Default Lang if Empty + Warning
         if( property_exists(get_class($this->Object),$FieldName) && empty($this->Object->$FieldName) ) {
             $this->Object->$FieldName    =   array_shift($Data);
-            Splash::Log()->War(
+            Splash::log()->war(
                     "Value for default Dolibarr language is missing in received Multilangual Contents. "
                     . "Please check configuration of all your sites to use the same default Language. "
                     . "Current Default Language is : " . $langs->getDefaultLang());

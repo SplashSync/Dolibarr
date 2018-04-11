@@ -85,7 +85,7 @@ trait LocalizationTrait {
         // Execute final request
         $resql = $db->query($sql);        
         if (empty($resql))  {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
         }
         
         if ( $db->num_rows($resql) == 1 ) {

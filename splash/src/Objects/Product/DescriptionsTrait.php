@@ -36,7 +36,7 @@ trait DescriptionsTrait {
                 ->Create($conf->global->MAIN_MULTILANGS ? SPL_T_MVARCHAR : SPL_T_VARCHAR)
                 ->Identifier("description")
                 ->Name($langs->trans("Description"))
-                ->IsListed()
+                ->isListed()
                 ->isLogged()
                 ->Group($GroupName)
                 ->MicroData("http://schema.org/Product","description");

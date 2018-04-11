@@ -67,7 +67,7 @@ trait AddressTrait {
                 ->Identifier("country")
                 ->Name($langs->trans("CompanyCountry"))
                 ->Group($GroupName)
-                ->ReadOnly()
+                ->isReadOnly()
                 ->isListed();
         
         //====================================================================//
@@ -85,7 +85,7 @@ trait AddressTrait {
                 ->Identifier("state")
                 ->Group($GroupName)
                 ->Name($langs->trans("State"))
-                ->ReadOnly();
+                ->isReadOnly();
         
         //====================================================================//
         // State code
@@ -94,7 +94,7 @@ trait AddressTrait {
                 ->Name($langs->trans("State Code"))
                 ->Group($GroupName)
                 ->MicroData("http://schema.org/PostalAddress","addressRegion")
-                ->NotTested();
+                ->isNotTested();
         
     }
     

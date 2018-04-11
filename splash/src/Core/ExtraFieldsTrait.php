@@ -74,7 +74,7 @@ trait ExtraFieldsTrait {
                 $this->FieldsFactory()->isRequired();
             } 
             if ( $this->getIsReadOnly($Id) ) {
-                $this->FieldsFactory()->ReadOnly();
+                $this->FieldsFactory()->isReadOnly();
             } 
             
         }

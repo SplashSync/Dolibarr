@@ -43,7 +43,7 @@ trait StatusTrait {
                 ->AddChoice("OrderInTransit",   $langs->trans("StatusOrderSent"))
                 ->AddChoice("OrderProcessing",  $langs->trans("StatusOrderSentShort"))
                 ->AddChoice("OrderDelivered",   $langs->trans("StatusOrderProcessed"))
-                ->NotTested()
+                ->isNotTested()
                 ;
 
     }
@@ -86,6 +86,9 @@ trait StatusTrait {
      *  @param        mixed     $Data                   Field Data
      * 
      *  @return         none
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *  @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function setStatusFields($FieldName,$Data) 
     {
@@ -106,7 +109,7 @@ trait StatusTrait {
         // If stock is incremented on validate order, we must increment it          
         if ( !empty($conf->stock->enabled) && $conf->global->STOCK_CALCULATE_ON_VALIDATE_ORDER == 1) {
             if ( empty($conf->global->SPLASH_STOCK ) ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans("WarehouseSourceNotDefined"));
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans("WarehouseSourceNotDefined"));
             }
         }    
         //====================================================================//
@@ -151,7 +154,7 @@ trait StatusTrait {
         //====================================================================//
         // Statut Validated || Closed => Go Valid if Draft
         if ( ( $this->Object->statut == 0 ) && ( $this->Object->valid($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-            return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Validated", $langs->trans($this->Object->error) );
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, "Set Validated", $langs->trans($this->Object->error) );
         }         
         //====================================================================//
         // Statut Not Closed but Validated Only => ReOpen 
@@ -159,7 +162,7 @@ trait StatusTrait {
             //====================================================================//
             // If Previously Closed => Re-Open
             if ( ( $this->Object->statut == 3 ) && ( $this->Object->set_reopen($user) != 1 ) ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Re-Open", $langs->trans($this->Object->error) );
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, "Re-Open", $langs->trans($this->Object->error) );
             }     
             $this->Object->statut = \Commande::STATUS_VALIDATED;
         }            
@@ -169,7 +172,7 @@ trait StatusTrait {
             //====================================================================//
             // If Previously Validated => Close
             if ( ( $this->Object->statut == 1 ) && ( $this->Object->cloture($user) != 1 ) ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Closed", $langs->trans($this->Object->error) );
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, "Set Closed", $langs->trans($this->Object->error) );
             }         
             $this->Object->statut = \Commande::STATUS_CLOSED;
         }

@@ -36,7 +36,7 @@ trait MetaTrait {
                 ->Name($langs->trans("Status").' ('.$langs->trans("Buy").')')
                 ->MicroData("http://schema.org/Product","ordered")
                 ->Group("Meta")
-               ->isListed();        
+                ->isListed();        
         
         //====================================================================//
         // On Buy

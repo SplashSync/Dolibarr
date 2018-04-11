@@ -25,7 +25,7 @@
 //
 //$list   =   Splash::Objects();
 //var_dump($list);
-//echo Splash::Log()->GetHtmlLog(True);
+//echo Splash::log()->GetHtmlLog(True);
 //
 //foreach ($list as $value) {
 //    print Splash::Validate()->isValidObjectType($value);

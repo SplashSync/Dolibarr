@@ -30,17 +30,17 @@ trait CRUDTrait
      * @param       string  $Id               Object id
      * @return      mixed
      */
-    public function Load( $Id )
+    public function load( $Id )
     {
         global $db, $user;  
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__); 
+        Splash::log()->trace(__CLASS__,__FUNCTION__); 
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }             
         //====================================================================//
         // Init Object 
@@ -49,12 +49,12 @@ trait CRUDTrait
         // Fatch Object 
         if ( $Object->fetch($Id) != 1 ) {
             $this->CatchDolibarrErrors($Object);
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
         }   
         //====================================================================//
         // Check Object Entity Access (MultiCompany) 
         if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load Customer Order (" . $Id . ").");
         }           
         $Object->fetch_lines();        
         return $Object;
@@ -67,27 +67,27 @@ trait CRUDTrait
      * 
      * @return      object     New Object
      */
-    public function Create()
+    public function create()
     {
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);         
+        Splash::log()->trace(__CLASS__,__FUNCTION__);         
         //====================================================================//
         // Check Order Date is given
         if ( empty($this->In["date"]) ) {
-            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"date");
+            return Splash::log()->err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"date");
         }
         //====================================================================//
         // Check Customer Id is given
         if ( empty($this->In["socid"]) || empty(self::Objects()->Id($this->In["socid"])) ) {
-            return Splash::Log()->Err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"socid");
+            return Splash::log()->err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"socid");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }         
         //====================================================================//
         // Init Object 
@@ -102,7 +102,7 @@ trait CRUDTrait
         // Create Object In Database
         if ( $this->Object->create($user) <= 0) {    
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Order. ");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Customer Order. ");
         }        
         return $this->Object;
     }
@@ -114,12 +114,12 @@ trait CRUDTrait
      * 
      * @return      string      Object Id
      */
-    public function Update( $Needed )
+    public function update( $Needed )
     {
         global $user;
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         if ( !$Needed) {
             return (int) $this->Object->id;
         }
@@ -127,13 +127,13 @@ trait CRUDTrait
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }        
         //====================================================================//
         // Update Product Object 
         if ( $this->Object->update($user)  <= 0 ) {  
             $this->CatchDolibarrErrors();
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Order (" . $this->Object->id . ")") ;
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update Customer Order (" . $this->Object->id . ")") ;
         }        
         //====================================================================//
         // Update Object Extra Fields 
@@ -150,12 +150,12 @@ trait CRUDTrait
      * 
      * @return      bool                          
      */    
-    public function Delete($Id = NULL)
+    public function delete($Id = NULL)
     {
         global $db,$user;
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Object 
         $Object = new \Commande($db);
@@ -163,7 +163,7 @@ trait CRUDTrait
         // LOAD USER FROM DATABASE
         Splash::Local()->LoadLocalUser();
         if ( empty($user->login) ) {
-            return Splash::Log()->Err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
         }
         //====================================================================//
         // Set Object Id, fetch not needed
@@ -172,7 +172,7 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany) 
         unset($Object->entity);
         if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Order (" . $Id . ").");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete Customer Order (" . $Id . ").");
         }               
         //====================================================================//
         // Delete Object 

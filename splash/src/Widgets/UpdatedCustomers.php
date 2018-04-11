@@ -119,12 +119,11 @@ class UpdatedCustomers extends WidgetBase
      *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
 
      */
-    public function Get($params=NULL)
+    public function get($params=NULL)
     {
-        global $db;
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
@@ -217,9 +216,9 @@ class UpdatedCustomers extends WidgetBase
         $langs->load('companies');
         $Contents   = array();
         $num        = $db->num_rows($Result);           // Read number of results
-        $i          = 0;
+        $index      = 0;
         
-        while ($i < $num)
+        while ($index < $num)
         {
             $Value = $db->fetch_array($Result);
             $Name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>' . $Value["name"];
@@ -231,7 +230,7 @@ class UpdatedCustomers extends WidgetBase
                 $Status.= $langs->trans("ActivityCeased").'</i>';
             }
             $Contents[] = array($Name, $Value["modified"], $Status);
-            $i++;
+            $index++;
         }
         //====================================================================//
         // Build Table Options

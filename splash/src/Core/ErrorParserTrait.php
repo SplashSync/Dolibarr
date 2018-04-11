@@ -45,7 +45,7 @@ trait ErrorParserTrait {
         // Simple Error        
         if ( isset($Subject->error) && !empty($Subject->error) && is_scalar($Subject->error)) {
             $Trace = (new Exception())->getTrace()[1];
-            $NoError    =    Splash::Log()->Err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans($Subject->error)));
+            $NoError    =    Splash::log()->err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans($Subject->error)));
         } 
         //====================================================================//
         // Array of Errors        
@@ -55,7 +55,7 @@ trait ErrorParserTrait {
         $Trace = (new Exception())->getTrace()[1];
         foreach ($Subject->errors as $Error) {
             if ( is_scalar($Error) && !empty($Error) ) {
-                $NoError    =    Splash::Log()->Err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans($Error)));
+                $NoError    =    Splash::log()->err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans($Error)));
             } 
         }
         return $NoError;

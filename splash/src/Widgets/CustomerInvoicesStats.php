@@ -87,17 +87,8 @@ class CustomerInvoicesStats extends WidgetBase
     public function __construct() {
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::Local()->loadDefaultLanguage();
     }
-    
-
-//    /**
-//     *      @abstract   Return Widget Customs Parameters
-//     */
-//    public function getParameters()
-//    {
-//        return array();
-//    }       
     
     /**
      *  @abstract     Return requested Customer Data
@@ -108,11 +99,11 @@ class CustomerInvoicesStats extends WidgetBase
      *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
 
      */
-    public function Get($params=NULL)
+    public function get($params=NULL)
     {
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();

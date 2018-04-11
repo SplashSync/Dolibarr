@@ -86,15 +86,6 @@ class Dashboard extends WidgetBase
         Splash::Local()->LoadDefaultLanguage();
     }
     
-
-//    /**
-//     *      @abstract   Return Widget Customs Parameters
-//     */
-//    public function getParameters()
-//    {
-//        return array();
-//    }       
-    
     /**
      *  @abstract     Return requested Customer Data
      * 
@@ -104,11 +95,11 @@ class Dashboard extends WidgetBase
      *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
 
      */
-    public function Get($params=NULL)
+    public function get()
     {
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
@@ -144,17 +135,33 @@ class Dashboard extends WidgetBase
      */
     private function getData()   {
 
-        global $user, $db, $conf;
-        
         //Array that contains all WorkboardResponse classes to process them
         $dashboardlines=array();
 
-        //
-        // Do not include sections without management permission
-        //
-
         require DOL_DOCUMENT_ROOT.'/core/class/workboardresponse.class.php';
 
+        $this->getLateActions($dashboardlines);
+        $this->getCustomerOrders($dashboardlines);
+        $this->getSupplierOrders($dashboardlines);
+        $this->getOpenPropals($dashboardlines);
+        $this->getDelayedServices($dashboardlines);
+        $this->getCustomersInvoices($dashboardlines);
+        $this->getSupplierInvoices($dashboardlines);
+        $this->getTransactionsDashboard($dashboardlines);
+        $this->getBankWire($dashboardlines);
+        $this->getMembers($dashboardlines);
+        $this->getExpenesDashboard($dashboardlines);
+        
+        return $dashboardlines;
+    }
+    
+    /**
+     * @abstract    Read Late Actions Dashboard
+     */
+    private function getLateActions(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of actions to do (late)
         if (! empty($conf->agenda->enabled) && $user->rights->agenda->myactions->read)
         {
@@ -163,7 +170,16 @@ class Dashboard extends WidgetBase
 
             $dashboardlines[] = $board->load_board($user);
         }
+        
+    }
 
+    /**
+     * @abstract    Read Customers Orders Dashboard
+     */
+    private function getCustomerOrders(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of customer orders a deal
         if (! empty($conf->commande->enabled) && $user->rights->commande->lire)
         {
@@ -173,6 +189,15 @@ class Dashboard extends WidgetBase
                 $dashboardlines[] = $board->load_board($user);
         }
 
+    }
+    
+    /**
+     * @abstract    Read Suppliers Orders Dashboard
+     */
+    private function getSupplierOrders(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of suppliers orders a deal
         if (! empty($conf->fournisseur->enabled) && $user->rights->fournisseur->commande->lire)
         {
@@ -182,6 +207,14 @@ class Dashboard extends WidgetBase
                 $dashboardlines[] = $board->load_board($user);
         }
 
+    }
+    /**
+     * @abstract    Read Suppliers Orders Dashboard
+     */
+    private function getOpenPropals(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of commercial proposals opened (expired)
         if (! empty($conf->propal->enabled) && $user->rights->propale->lire)
         {
@@ -193,6 +226,15 @@ class Dashboard extends WidgetBase
                 $dashboardlines[] = $board->load_board($user,"signed");
         }
 
+    }
+    
+    /**
+     * @abstract    Read Suppliers Orders Dashboard
+     */
+    private function getDelayedServices(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of services enabled (delayed)
         if (! empty($conf->contrat->enabled) && $user->rights->contrat->lire)
         {
@@ -203,6 +245,16 @@ class Dashboard extends WidgetBase
                 // Number of active services (expired)
             $dashboardlines[] = $board->load_board($user,"expired");
         }
+        
+    }
+    
+    /**
+     * @abstract    Read Customers Invoices Dashboard
+     */
+    private function getCustomersInvoices(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of invoices customers (has paid)
         if (! empty($conf->facture->enabled) && $user->rights->facture->lire)
         {
@@ -211,6 +263,15 @@ class Dashboard extends WidgetBase
             $dashboardlines[] = $board->load_board($user);
         }
 
+    }
+  
+    /**
+     * @abstract    Read Supplier Invoices Dashboard
+     */
+    private function getSupplierInvoices(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of supplier invoices (has paid)
         if (! empty($conf->fournisseur->enabled) && ! empty($conf->facture->enabled) && $user->rights->facture->lire)
         {
@@ -219,18 +280,35 @@ class Dashboard extends WidgetBase
             $dashboardlines[] = $board->load_board($user);
         }
 
+    }
+    
+    /**
+     * @abstract    Read Transactions Dashboard
+     */
+    private function getTransactionsDashboard(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of transactions to conciliate
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id)
         {
             include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
             $board=new \Account($db);
-            $nb = $board::countAccountToReconcile();
-            if ($nb > 0)
+            $count = $board::countAccountToReconcile();
+            if ($count > 0)
             {
                 $dashboardlines[] = $board->load_board($user);
             }
         }
+    }    
+    
+    /**
+     * @abstract    Read Bank Wire Dashboard
+     */
+    private function getBankWire(&$dashboardlines)   {
 
+        global $user, $db, $conf;
+        
         // Number of cheque to send
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id)
         {
@@ -238,6 +316,15 @@ class Dashboard extends WidgetBase
             $board=new \RemiseCheque($db);
             $dashboardlines[] = $board->load_board($user);
         }
+
+    }    
+    
+    /**
+     * @abstract    Read Bank Wire Dashboard
+     */
+    private function getMembers(&$dashboardlines)   {
+
+        global $user, $db, $conf;
 
         // Number of foundation members
         if (! empty($conf->adherent->enabled) && $user->rights->adherent->lire && ! $user->societe_id)
@@ -247,19 +334,26 @@ class Dashboard extends WidgetBase
             $dashboardlines[] = $board->load_board($user);
         }
 
+    }    
+    
+    /**
+     * @abstract    Read Expenses Dashboard
+     */
+    private function getExpenesDashboard(&$dashboardlines)   {
+
+        global $user, $db, $conf;
+        
         // Number of expense reports to pay
         if (! empty($conf->expensereport->enabled) && $user->rights->expensereport->lire)
         {
             include_once DOL_DOCUMENT_ROOT.'/expensereport/class/expensereport.class.php';
             $board=new \ExpenseReport($db);
 
-                $dashboardlines[] = $board->load_board($user);
+            $dashboardlines[] = $board->load_board($user);
         }
 
-        
-        return $dashboardlines;
     }
-        
+    
     /**
     *   @abstract     Block Building - Text Intro
     */

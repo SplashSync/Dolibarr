@@ -43,7 +43,7 @@ trait CoreTrait {
                 ->Name($langs->trans("OrderDate"))
                 ->MicroData("http://schema.org/Order","orderDate")
                 ->isRequired()
-                ->IsListed();
+                ->isListed();
         
         //====================================================================//
         // Reference
@@ -51,15 +51,15 @@ trait CoreTrait {
                 ->Identifier("ref")
                 ->Name($langs->trans("RefOrder"))
                 ->MicroData("http://schema.org/Order","name")       
-                ->ReadOnly()
-                ->IsListed();
+                ->isReadOnly()
+                ->isListed();
 
         //====================================================================//
         // Customer Reference
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_client")
                 ->Name($langs->trans("RefCustomerOrder"))
-                ->IsListed()
+                ->isListed()
                 ->MicroData("http://schema.org/Order","orderNumber");
         
         //====================================================================//
@@ -74,7 +74,7 @@ trait CoreTrait {
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_ext")
                 ->Name($langs->trans("RefExt"))
-                ->IsListed()
+                ->isListed()
                 ->MicroData("http://schema.org/Order","alternateName");
         
     }    

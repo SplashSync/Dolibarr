@@ -38,12 +38,57 @@ trait ObjectsListTrait {
      *                        $data["meta"]["total"]     ==> Total Number of results
      *                        $data["meta"]["current"]   ==> Total Number of results
      */
-    public function ObjectsList($filter=NULL,$params=NULL)
+    public function objectsList($filter=NULL,$params=NULL)
     {
         global $db,$conf;
-        Splash::Log()->Deb("MsgLocalFuncTrace",__CLASS__,__FUNCTION__);             
+        Splash::log()->deb("MsgLocalFuncTrace",__CLASS__,__FUNCTION__);             
         $data = array();
         
+        //====================================================================//
+        // Prepare SQL request for reading in Database
+        //====================================================================//
+        $sql    = $this->getSqlBaserequest($filter, $params);
+        //====================================================================//
+        // Execute request to get total number of row
+        $resqlcount = $db->query($sql);
+        if ($resqlcount)    {
+            $data["meta"]["total"]   =   $db->num_rows($resqlcount);  // Store Total Number of results
+        }
+        //====================================================================//
+        // Setup limmits
+        if ( !empty($params["max"])  ) {
+            $sql   .= " LIMIT " . $params["max"];
+        }
+        if ( !empty($params["offset"])  ) {
+            $sql   .= " OFFSET " . $params["offset"];
+        }
+        //====================================================================//
+        // Execute final request
+        $resql = $db->query($sql);
+        Splash::log()->deb("MsgLocalTpl",__CLASS__,__FUNCTION__," SQL : " . $sql);
+        if (empty($resql))  {
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
+        }
+        //====================================================================//
+        // Read Data and prepare Response Array
+        $num = $db->num_rows($resql);           // Read number of results
+        $data["meta"]["current"]   =   $num;    // Store Current Number of results
+        $index = 0;
+        //====================================================================//
+        // For each result, read information and add to $data
+        while ($index < $num)
+        {
+            $data[$index] = (array) $db->fetch_object($resql);
+            $data[$index]["price"] = round($data[$index]["price"],3) . " " . $conf->global->MAIN_MONNAIE;
+            $index++;
+        }
+        $db->free($resql);
+        Splash::log()->deb("MsgLocalTpl",__CLASS__,__FUNCTION__, " " . $index . " Products Found.");
+        return $data;
+    }
+ 
+    private function getSqlBaserequest($filter=NULL,$params=NULL)
+    {
         //====================================================================//
         // Prepare SQL request for reading in Database
         //====================================================================//
@@ -62,8 +107,6 @@ trait ObjectsListTrait {
         //====================================================================//
         // Select Database tables
         $sql   .= " FROM " . MAIN_DB_PREFIX . "product as p ";
-        
-        
         //====================================================================//
         // Entity Filter
         $sql   .= " WHERE p.entity IN (".getEntity('product', 1).")";        
@@ -91,7 +134,6 @@ trait ObjectsListTrait {
             $sql   .= " ) ";        
             
         }  
-        
         //====================================================================//
         // Setup sortorder
         //====================================================================//
@@ -99,43 +141,7 @@ trait ObjectsListTrait {
         $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
         $sql   .= " ORDER BY " . $sortfield . " " . $sortorder;   
         
-        //====================================================================//
-        // Execute request to get total number of row
-        $resqlcount = $db->query($sql);
-        if ($resqlcount)    {
-            $data["meta"]["total"]   =   $db->num_rows($resqlcount);  // Store Total Number of results
-        }
-        //====================================================================//
-        // Setup limmits
-        if ( !empty($params["max"])  ) {
-            $sql   .= " LIMIT " . $params["max"];
-        }
-        if ( !empty($params["offset"])  ) {
-            $sql   .= " OFFSET " . $params["offset"];
-        }
-        //====================================================================//
-        // Execute final request
-        $resql = $db->query($sql);
-        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__," SQL : " . $sql);
-        if (empty($resql))  {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
-        }
-        //====================================================================//
-        // Read Data and prepare Response Array
-        $num = $db->num_rows($resql);           // Read number of results
-        $data["meta"]["current"]   =   $num;    // Store Current Number of results
-        $i = 0;
-        //====================================================================//
-        // For each result, read information and add to $data
-        while ($i < $num)
-        {
-            $data[$i] = (array) $db->fetch_object($resql);
-            $data[$i]["price"] = round($data[$i]["price"],3) . " " . $conf->global->MAIN_MONNAIE;
-            $i++;
-        }
-        $db->free($resql);
-        Splash::Log()->Deb("MsgLocalTpl",__CLASS__,__FUNCTION__, " " . $i . " Products Found.");
-        return $data;
+        return $sql;
     }
     
 }

@@ -559,14 +559,14 @@ class InterfaceSplash
                     $this->Action,                  // Splash Action Type
                     $this->Login,                   // Current User Login
                     $this->Comment);                // Action Comment
-            Splash::Log()->Deb("Change Commited (Action=" . $this->Comment . ") Object => ". $this->Type);
+            Splash::log()->deb("Change Commited (Action=" . $this->Comment . ") Object => ". $this->Type);
         } else {
-            Splash::Log()->War("Commit Id Missing (Action=" . $this->Comment . ") Object => ". $this->Type);
+            Splash::log()->war("Commit Id Missing (Action=" . $this->Comment . ") Object => ". $this->Type);
         }
         
         //====================================================================//
         //  Post User Messages
-        $this->PostMessages(Splash::Log());
+        $this->PostMessages(Splash::log());
         
         return;
     
@@ -584,7 +584,7 @@ class InterfaceSplash
      */
     function run_trigger($action,$object,$user,$langs,$conf)
     {
-        Splash::Log()->Deb("Start of Splash Module Trigger Actions (Action=" . $action . ")");
+        Splash::log()->deb("Start of Splash Module Trigger Actions (Action=" . $action . ")");
             
         //====================================================================//
         // Init Action Parameters 
@@ -623,7 +623,7 @@ class InterfaceSplash
 
         //====================================================================//
         // Log Trigger Action
-        Splash::Log()->Deb("Trigger for action '$action' launched by '".$this->Login."' for Object id=".$this->Id);
+        Splash::log()->deb("Trigger for action '$action' launched by '".$this->Login."' for Object id=".$this->Id);
         
         //====================================================================//
         // No Action To Perform

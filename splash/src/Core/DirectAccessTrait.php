@@ -46,7 +46,7 @@ trait DirectAccessTrait {
         //====================================================================//
         // Safety Check
         if ( empty($_Table) || empty($_RowId) ) {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, "Wrong Input Parameters.");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__, "Wrong Input Parameters.");
         }
         //====================================================================//
         // Prepare SQL Request
@@ -59,7 +59,7 @@ trait DirectAccessTrait {
         //====================================================================//
         $result = $db->query($sql);
         if (empty($result))  {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
         }        
 
         return True;
