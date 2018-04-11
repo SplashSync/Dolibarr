@@ -109,7 +109,7 @@ trait MultiCompanyTrait {
         if ( $EntityId != $this->getMultiCompanyEntityId() ) {
             $Trace = (new Exception())->getTrace()[1];
             $langs->load("errors");
-            return  Splash::Log()->Err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans('ErrorForbidden')));
+            return  Splash::log()->err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans('ErrorForbidden')));
         } 
         
         return True;

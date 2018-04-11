@@ -136,14 +136,14 @@ class Demo extends WidgetBase
      *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
 
      */
-    public function Get($params=NULL)
+    public function get($params=NULL)
     {
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::Local()->loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations

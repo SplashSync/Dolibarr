@@ -122,7 +122,7 @@ trait BaseItemsTrait {
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $FieldId = self::Lists()->InitOutput( $this->Out, "lines", $FieldName );
+        $FieldId = self::lists()->InitOutput( $this->Out, "lines", $FieldName );
         if ( !$FieldId ) {
             return;
         } 
@@ -139,7 +139,7 @@ trait BaseItemsTrait {
             $Value  =   $this->getItemField($OrderLine,$FieldName);
             //====================================================================//
             // Insert Data in List
-            self::Lists()->Insert( $this->Out, "lines", $FieldName, $key, $Value );
+            self::lists()->Insert( $this->Out, "lines", $FieldName, $key, $Value );
         }
         unset($this->In[$Key]);
     }
@@ -255,7 +255,7 @@ trait BaseItemsTrait {
             // Create New Line Item
             $this->CurrentItem =  $this->createItem();
             if ( !$this->CurrentItem ) {
-                return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create Line Item. ");
+                return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create Line Item. ");
             } 
         }
         //====================================================================//
@@ -295,7 +295,7 @@ trait BaseItemsTrait {
         // Perform Line Update        
         if ( $this->CurrentItem->update($Arg1) <= 0) {
             $this->CatchDolibarrErrors($this->CurrentItem);
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to update Line Item. ");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to update Line Item. ");
         }
         //====================================================================//
         // Update Item Totals

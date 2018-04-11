@@ -42,7 +42,7 @@ trait StatusTrait {
                 ->AddChoice("PaymentDue",       $langs->trans("BillStatusNotPaid"))
                 ->AddChoice("PaymentComplete",  $langs->trans("BillStatusConverted"))
                 ->AddChoice("PaymentCanceled",  $langs->trans("BillStatusCanceled"))
-                ->NotTested();
+                ->isNotTested();
 
     }
     
@@ -82,6 +82,9 @@ trait StatusTrait {
      *  @param        mixed     $Data                   Field Data
      * 
      *  @return         none
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *  @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function setStatusFields($FieldName,$Data) 
     {
@@ -102,7 +105,7 @@ trait StatusTrait {
         // If stock is incremented on validate invoice, we must provide warhouse id          
         if ( !empty($conf->stock->enabled) && $conf->global->STOCK_CALCULATE_ON_BILL == 1) {
             if ( empty($conf->global->SPLASH_STOCK ) ) {
-                return Splash::Log()->Err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans("WarehouseSourceNotDefined"));
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans("WarehouseSourceNotDefined"));
             }
         }    
         $InitialStatut  =   $this->Object->statut;
@@ -116,7 +119,7 @@ trait StatusTrait {
                 //====================================================================//
                 // Whatever => Set Draft
                 if ( ( $this->Object->statut != 0 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return Splash::Log()->Err("ErrLocalTpl", __CLASS__, "Set Draft", $langs->trans($this->Object->error) );
+                    return Splash::log()->err("ErrLocalTpl", __CLASS__, "Set Draft", $langs->trans($this->Object->error) );
                 }     
                 $this->Object->statut = \Facture::STATUS_DRAFT;                
                 break;

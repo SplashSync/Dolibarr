@@ -102,31 +102,49 @@ trait MainTrait {
      * 
      *  @return         none
      */
-    protected function getMainFields($Key,$FieldName)
+    protected function getMainSpecFields($Key,$FieldName)
     {
-        global $conf;
-     
         //====================================================================//
         // READ Fields
         switch ($FieldName)
         {
-            
             //====================================================================//
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                $this->Out[$FieldName] = (float) $this->C_Weight($this->Object->weight,$this->Object->weight_units);             
+                $this->Out[$FieldName] = (float) $this->convertWeight($this->Object->weight,$this->Object->weight_units);             
                 break;
             case 'length':
-                $this->Out[$FieldName] = (float) $this->C_Length($this->Object->length,$this->Object->length_units);             
+                $this->Out[$FieldName] = (float) $this->convertLength($this->Object->length,$this->Object->length_units);             
                 break;
             case 'surface':
-                $this->Out[$FieldName] = (float) $this->C_Surface($this->Object->surface,$this->Object->surface_units);             
+                $this->Out[$FieldName] = (float) $this->convertSurface($this->Object->surface,$this->Object->surface_units);             
                 break;
             case 'volume':
-                $this->Out[$FieldName] = (float) $this->C_Volume($this->Object->volume,$this->Object->volume_units);             
+                $this->Out[$FieldName] = (float) $this->convertVolume($this->Object->volume,$this->Object->volume_units);             
                 break;
             
+            default:
+                return;
+        }
+        
+        unset($this->In[$Key]);
+    }
+
+    /**
+     *  @abstract     Read requested Field
+     * 
+     *  @param        string    $Key                    Input List Key
+     *  @param        string    $FieldName              Field Identifier / Name
+     * 
+     *  @return         none
+     */
+    protected function getMainPriceFields($Key,$FieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($FieldName)
+        {
             //====================================================================//
             // PRICE INFORMATIONS
             //====================================================================//
@@ -166,7 +184,7 @@ trait MainTrait {
         
         unset($this->In[$Key]);
     }
-
+    
     /**
      *  @abstract     Write Given Fields
      * 
@@ -175,49 +193,68 @@ trait MainTrait {
      * 
      *  @return         none
      */
-    protected function setMainFields($FieldName,$Data) 
+    protected function setMainSpecFields($FieldName,$Data) 
     {
         //====================================================================//
         // WRITE Field
         switch ($FieldName)
         {
-            
             //====================================================================//
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                if ( (string)$Data !== (string) $this->C_Weight($this->Object->weight,$this->Object->weight_units)) {   
-                    $nomalized                      =   $this->N_Weight($Data);
+                if ( (string)$Data !== (string) $this->convertWeight($this->Object->weight,$this->Object->weight_units)) {   
+                    $nomalized                      =   $this->normalizeWeight($Data);
                     $this->Object->weight           =   $nomalized->weight;
                     $this->Object->weight_units     =   $nomalized->weight_units;
                     $this->needUpdate();
                 }
                 break;
             case 'length':
-                if ( (string)$Data !== (string) $this->C_Length($this->Object->length,$this->Object->length_units)) {             
-                    $nomalized                      =   $this->N_Length($Data);
+                if ( (string)$Data !== (string) $this->convertLength($this->Object->length,$this->Object->length_units)) {             
+                    $nomalized                      =   $this->normalizeLength($Data);
                     $this->Object->length           =   $nomalized->length;
                     $this->Object->length_units     =   $nomalized->length_units;
                     $this->needUpdate();
                 }
                 break;
             case 'surface':
-                if ( (string)$Data !== (string) $this->C_Surface($this->Object->surface,$this->Object->surface_units)) {             
-                    $nomalized                      =   $this->N_Surface($Data);
+                if ( (string)$Data !== (string) $this->convertSurface($this->Object->surface,$this->Object->surface_units)) {             
+                    $nomalized                      =   $this->normalizeSurface($Data);
                     $this->Object->surface          =   $nomalized->surface;
                     $this->Object->surface_units    =   $nomalized->surface_units;
                     $this->needUpdate();
                 }
                 break;
             case 'volume':
-               if ( (string)$Data !== (string) $this->C_Volume($this->Object->volume,$this->Object->volume_units)) {             
-                    $nomalized                      =   $this->N_Volume($Data);
+               if ( (string)$Data !== (string) $this->convertVolume($this->Object->volume,$this->Object->volume_units)) {             
+                    $nomalized                      =   $this->normalizeVolume($Data);
                     $this->Object->volume           =   $nomalized->volume;
                     $this->Object->volume_units     =   $nomalized->volume_units;
                     $this->needUpdate();
                 }
                 break;             
-            
+                
+            default:
+                return;
+        }
+        unset($this->In[$FieldName]);
+    }
+    
+    /**
+     *  @abstract     Write Given Fields
+     * 
+     *  @param        string    $FieldName              Field Identifier / Name
+     *  @param        mixed     $Data                   Field Data
+     * 
+     *  @return         none
+     */
+    protected function setMainPriceFields($FieldName,$Data) 
+    {
+        //====================================================================//
+        // WRITE Field
+        switch ($FieldName)
+        {
             //====================================================================//
             // PRICES INFORMATIONS
             //====================================================================//
@@ -233,7 +270,6 @@ trait MainTrait {
         }
         unset($this->In[$FieldName]);
     }
-    
     
     /**
      *  @abstract     Write New Price

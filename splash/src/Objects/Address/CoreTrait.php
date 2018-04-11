@@ -34,7 +34,7 @@ trait CoreTrait {
                 ->Identifier("firstname")
                 ->Name($langs->trans("Firstname"))
                 ->MicroData("http://schema.org/Person","familyName")
-                ->IsListed()
+                ->isListed()
                 ->isLogged()
                 ->isRequired();
         
@@ -45,7 +45,7 @@ trait CoreTrait {
                 ->Name($langs->trans("Lastname"))
                 ->MicroData("http://schema.org/Person","givenName")        
                 ->isLogged()
-                ->IsListed();
+                ->isListed();
                 
         //====================================================================//
         // Customer
@@ -60,7 +60,7 @@ trait CoreTrait {
                 ->Identifier("ref_ext")
                 ->Name($langs->trans("CustomerCode"))
                 ->Description($langs->trans("CustomerCodeDesc"))
-                ->IsListed()
+                ->isListed()
                 ->isLogged()
                 ->MicroData("http://schema.org/PostalAddress","name");
         

@@ -53,7 +53,7 @@ trait StockTrait {
                 ->Identifier("stock_alert_flag")
                 ->Name($langs->trans("StockTooLow"))
                 ->MicroData("http://schema.org/Offer","inventoryAlertFlag")
-                ->ReadOnly();
+                ->isReadOnly();
         
         //====================================================================//
         // Stock Expected Level
@@ -68,7 +68,7 @@ trait StockTrait {
                 ->Identifier("pmp")
                 ->Name($langs->trans("EstimatedStockValueShort"))
                 ->MicroData("http://schema.org/Offer","averagePrice")
-                ->ReadOnly();
+                ->isReadOnly();
         
         return;
     }
@@ -170,7 +170,7 @@ trait StockTrait {
         //====================================================================//
         // Verify Default Product Stock is defined
         if ( empty ($conf->global->SPLASH_STOCK) ) {
-            return Splash::Log()->Err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Product : No Local WareHouse Defined.");
+            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Product : No Local WareHouse Defined.");
         }
         //====================================================================//
         // Update Product Stock

@@ -90,7 +90,7 @@ class L01MultiCompanyTest extends ObjectsCase {
         
         //====================================================================//
         //   Generate Dummy Object Data (Required Fields Only)   
-        $DummyData = $this->PrepareForTesting($ObjectType);
+        $DummyData = $this->prepareForTesting($ObjectType);
         if ( $DummyData == False ) {
             return True;
         }
@@ -206,7 +206,7 @@ class L01MultiCompanyTest extends ObjectsCase {
         return $NextObject["id"];
     }   
     
-    public function VerifyTestIsAllowed($ObjectType)
+    public function verifyTestIsAllowed($ObjectType)
     {
         $Definition = Splash::Object($ObjectType)->Description();
 
@@ -224,11 +224,11 @@ class L01MultiCompanyTest extends ObjectsCase {
         return True;
     }
     
-    public function PrepareForTesting($ObjectType)
+    public function prepareForTesting($ObjectType)
     {
         //====================================================================//
         //   Verify Test is Required   
-        if ( !$this->VerifyTestIsAllowed($ObjectType) ) {
+        if ( !$this->verifyTestIsAllowed($ObjectType) ) {
             return False;
         }
         

@@ -114,11 +114,11 @@ class BankAccounts extends WidgetBase
      *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
 
      */
-    public function Get($params=NULL)
+    public function get($params=NULL)
     {
         //====================================================================//
         // Stack Trace
-        Splash::Log()->Trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__,__FUNCTION__);  
         //====================================================================//
         // Load Default Language
         Splash::Local()->LoadDefaultLanguage();
@@ -210,12 +210,12 @@ class BankAccounts extends WidgetBase
             return array();
         } 
         
-        $i          = 0;
+        $index      = 0;
         $RawData    = array();
-        while ($i < $db->num_rows($Result))
+        while ($index < $db->num_rows($Result))
         {
-            $RawData[$i] = $db->fetch_array($Result);
-            $i++;
+            $RawData[$index] = $db->fetch_array($Result);
+            $index++;
         }    
         
         

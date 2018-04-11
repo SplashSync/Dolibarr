@@ -39,6 +39,7 @@ use Splash\Local\Core\MultiCompanyTrait;
 /**
  *	\class      SplashLocal
  *	\brief      Local Core Management Class
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Local 
 {
@@ -87,7 +88,7 @@ class Local
      * 
      *      @return         array       $parameters
      */
-    public static function Parameters()
+    public static function parameters()
     {
         global $langs;
         
@@ -137,9 +138,11 @@ class Local
      * 
      *      This is triggered by global constant SPLASH_SERVER_MODE.
      * 
-     *      @return         bool                     
+     *      @return         bool   
+     * 
+     *  @SuppressWarnings(PHPMD.UnusedLocalVariable)               
      */
-    public function Includes()
+    public function includes()
     {
 
         //====================================================================//
@@ -208,9 +211,9 @@ class Local
      * 
      *      @return         bool    global test result
      */
-    public static function SelfTest()
+    public static function selfTest()
     {
-        global $conf,$langs;
+        global $langs;
 
         //====================================================================//
         //  Load Local Translation File
@@ -218,45 +221,71 @@ class Local
         $langs->load("errors");
         
         //====================================================================//
+        //  Verify - Server Core Infos
+        if ( !self::selfTestCore() ) {
+            return false;
+        }        
+        //====================================================================//
+        //  Verify - User Config
+        if ( !self::selfTestConfig() ) {
+            return false;
+        }        
+        
+        Splash::log()->msg("MsgSelfTestOk");
+        return True;
+    }       
+    
+
+    private static function selfTestCore()
+    {
+        global $conf;
+
+        //====================================================================//
         //  Verify - Server Identifier Given
         if ( !isset($conf->global->SPLASH_WS_ID) || empty($conf->global->SPLASH_WS_ID) ) {
-            return Splash::Log()->Err("ErrSelfTestNoWsId");
+            return Splash::log()->err("ErrSelfTestNoWsId");
         }        
                 
         //====================================================================//
         //  Verify - Server Encrypt Key Given
         if ( !isset($conf->global->SPLASH_WS_KEY) || empty($conf->global->SPLASH_WS_KEY) ) {
-            return Splash::Log()->Err("ErrSelfTestNoWsKey");
+            return Splash::log()->err("ErrSelfTestNoWsKey");
         }        
         
+        return True;
+    }    
+
+    private static function selfTestConfig()
+    {
+        global $conf,$langs;
+
         //====================================================================//
         //  Verify - User Selected
         if ( !isset($conf->global->SPLASH_USER) || ($conf->global->SPLASH_USER <= 0) ) {
-            return Splash::Log()->Err("ErrSelfTestNoUser");
+            return Splash::log()->err("ErrSelfTestNoUser");
         }        
         
         //====================================================================//
         //  Verify - Stock Selected
         if ( !isset($conf->global->SPLASH_STOCK) || ($conf->global->SPLASH_STOCK <= 0) ) {
-            return Splash::Log()->Err("ErrSelfTestNoStock");
+            return Splash::log()->err("ErrSelfTestNoStock");
         }        
         
         //====================================================================//
         // Check if company name is defined (first install)
         if (empty($conf->global->MAIN_INFO_SOCIETE_NOM) || empty($conf->global->MAIN_INFO_SOCIETE_COUNTRY))
         {
-            return Splash::Log()->Err($langs->trans("WarningMandatorySetupNotComplete"));
+            return Splash::log()->err($langs->trans("WarningMandatorySetupNotComplete"));
         }
         
         //====================================================================//
         // Check Version is Above 4.0
         if (Splash::Local()->DolVersionCmp("4.0.0") < 0) {
-            return Splash::Log()->Err("Splash Module for Dolibarr require Dolibarr Version Above 4.0. Please update your system before using Splash.");
+            return Splash::log()->err("Splash Module for Dolibarr require Dolibarr Version Above 4.0. Please update your system before using Splash.");
         }
         
-        Splash::Log()->Msg("MsgSelfTestOk");
         return True;
-    }       
+    }    
     
     /**
      *  @abstract   Update Server Informations with local Data
@@ -265,7 +294,7 @@ class Local
      * 
      *  @return     arrayobject
      */
-    public function Informations($Informations)
+    public function informations($Informations)
     {
         //====================================================================//
         // Init Response Object
@@ -320,7 +349,7 @@ class Local
      * 
      *      @return         array       $Sequences
      */    
-    public static function TestSequences($Name = Null)
+    public static function testSequences($Name = Null)
     {
         global $db, $conf;
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
@@ -395,7 +424,7 @@ class Local
      *                              $list["name"]   Language Name	
      *                              $list["code"]   Language code (en_US, en_AU, fr_FR, ...)
      */    
-    public function LangsList()
+    public function langsList()
     {
         global $langs;
         //====================================================================//        
@@ -415,7 +444,7 @@ class Local
      *      @param          array       $cfg       Loacal Parameters Array
      *      @return         int                     0 if KO, >0 if OK
      */
-    public function LoadLocalUser()
+    public function loadLocalUser()
     {
         global $conf,$db,$user;
         
@@ -439,15 +468,15 @@ class Local
         // Read Local Configuration
         $userId = isset($conf->global->SPLASH_USER)?$conf->global->SPLASH_USER:Null;
         if ( empty($userId) ) {
-            return Splash::Log()->Err("Local - Dolibarr Error : No Local User Defined.");
+            return Splash::log()->err("Local - Dolibarr Error : No Local User Defined.");
         }
         //====================================================================//
         // Load Local User
 
         $user = new User($db);
         if ($user->fetch($userId) != 1) {
-            Splash::Log()->Err("Local : Unable to Load Local User");
-            return Splash::Log()->Err("Local - Dolibarr Error : " . $user->error );
+            Splash::log()->err("Local : Unable to Load Local User");
+            return Splash::log()->err("Local - Dolibarr Error : " . $user->error );
         }
         
         //====================================================================//
@@ -462,7 +491,7 @@ class Local
      *      @param          array       $cfg       Loacal Parameters Array
      *      @return         int                     0 if KO, >0 if OK
      */
-    public function LoadDefaultLanguage()
+    public function loadDefaultLanguage()
     {
         global $langs;
         //====================================================================//
@@ -484,8 +513,9 @@ class Local
     *  @return     boot         int             -1 if given version is lower then current version
     *                                           0 if given version is egal to current version
     *                                           1 if given version is above current version
+    *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
     */
-    public static function DolVersionCmp($version)
+    public static function dolVersionCmp($version)
     { 	
         $current    = explode('.',DOL_VERSION);
         $cmp        = explode('.',$version);

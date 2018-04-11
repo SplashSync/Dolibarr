@@ -40,7 +40,7 @@ trait MetaTrait {
                 ->Name($langs->trans("Active"))
                 ->Group("Meta")
                 ->MicroData("http://schema.org/Organization","active")
-                ->IsListed();        
+                ->isListed();        
         
         if ( Splash::Local()->DolVersionCmp("3.6.0") >= 0 ) {
             //====================================================================//

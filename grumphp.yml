@@ -1,0 +1,61 @@
+parameters:
+    git_dir: .
+    bin_dir:        "splash/vendor/bin"
+    ascii:
+        failed:     "grumphp-grumpy.txt"
+        succeeded:  "grumphp-happy.txt"
+    tasks:
+        composer:
+            file:           "./composer.json"
+        phplint:
+            exclude:        ['splash/vendor']
+            triggered_by:   ['php']
+        phpcs:
+            standard:       "PSR2"
+            triggered_by:   [php]
+#            ignore_patterns:
+        git_blacklist:
+            keywords:
+                - "var_dump"
+                - "dump("
+                - "console.log"
+                - "print_r"
+                - "die("
+            triggered_by: [php, js, twig]
+        jsonlint:
+            detect_key_conflicts: true
+        xmllint: ~
+        yamllint: ~
+        phpmd:
+            ruleset:        ["./build/phpmd.xml"]
+#            exclude:        
+#                - "nusoap.php"
+#                - "vendor"
+        securitychecker: ~
+        phpcpd: ~
+#            exclude:        
+#                - "Components/NuSOAP"
+#                - "vendor"               
+#        phpstan: 
+#            ignore_patterns:
+#                - NuSOAPInterface.php
+#                - nusoap.php
+#                - fatal.inc.php
+#                - server.inc.php
+
+    testsuites:
+        travis:
+            tasks:
+                - composer
+                - phplint
+                - phpcs 
+                - git_blacklist
+                - jsonlint
+                - phpmd
+                - phpcpd
+                - xmllint
+                - yamllint
+                
+        phpstan:
+            tasks: 
+                - phpstan 

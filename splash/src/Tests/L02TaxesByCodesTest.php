@@ -48,7 +48,7 @@ class L02TaxesByCodesTest extends ObjectsCase {
     
     
     /**
-     * @dataProvider TaxeTypesProvider
+     * @dataProvider taxTypesProvider
      */
     public function testCreateWithTaxCode($ObjectType, $TaxCode, $VatRate1, $VatRate2)
     {
@@ -135,7 +135,7 @@ class L02TaxesByCodesTest extends ObjectsCase {
         
     }
     
-    public function TaxeTypesProvider()
+    public function taxTypesProvider()
     {
         return array(
             //====================================================================//

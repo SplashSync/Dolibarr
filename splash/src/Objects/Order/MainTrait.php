@@ -47,7 +47,7 @@ trait MainTrait {
                 ->Identifier("total_ht")
                 ->Name($langs->trans("TotalHT") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Invoice","totalPaymentDue")
-                ->ReadOnly();
+                ->isReadOnly();
         
         //====================================================================//
         // Order Total Price TTC
@@ -55,7 +55,7 @@ trait MainTrait {
                 ->Identifier("total_ttc")
                 ->Name($langs->trans("TotalTTC") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Invoice","totalPaymentDueTaxIncluded")
-                ->ReadOnly();        
+                ->isReadOnly();        
         
         //====================================================================//
         // ORDER STATUS FLAGS
@@ -69,7 +69,7 @@ trait MainTrait {
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Draft"))
                 ->MicroData("http://schema.org/OrderStatus","OrderDraft")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
-                ->ReadOnly();     
+                ->isReadOnly();     
 
         //====================================================================//
         // Is Canceled
@@ -79,7 +79,7 @@ trait MainTrait {
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Canceled"))
                 ->MicroData("http://schema.org/OrderStatus","OrderCancelled")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
-                ->ReadOnly();     
+                ->isReadOnly();     
         
         //====================================================================//
         // Is Validated
@@ -89,7 +89,7 @@ trait MainTrait {
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Validated"))
                 ->MicroData("http://schema.org/OrderStatus","OrderProcessing")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
-                ->ReadOnly();
+                ->isReadOnly();
         
         //====================================================================//
         // Is Closed
@@ -99,7 +99,7 @@ trait MainTrait {
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->MicroData("http://schema.org/OrderStatus","OrderDelivered")
                 ->Association( "isdraft","iscanceled","isvalidated","isclosed")
-                ->ReadOnly();
+                ->isReadOnly();
 
         //====================================================================//
         // Is Paid
@@ -108,7 +108,7 @@ trait MainTrait {
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))
                 ->MicroData("http://schema.org/OrderStatus","OrderPaid")
-                ->NotTested();
+                ->isNotTested();
         
         return;
     }
@@ -134,13 +134,64 @@ trait MainTrait {
                 break;            
             
             //====================================================================//
+            // ORDER INVOICED FLAG
+            //====================================================================//        
+            case 'facturee':
+                $this->getSimple($FieldName);
+                break;            
+
+            default:
+                return;
+        }
+        
+        unset($this->In[$Key]);
+    }
+    
+    /**
+     *  @abstract     Read requested Field
+     * 
+     *  @param        string    $Key                    Input List Key
+     *  @param        string    $FieldName              Field Identifier / Name
+     * 
+     *  @return         none
+     */
+    protected function getTotalsFields($Key,$FieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($FieldName)
+        {
+            
+            //====================================================================//
             // PRICE INFORMATIONS
             //====================================================================//
             case 'total_ht':
             case 'total_ttc':
             case 'total_vat':
                 $this->getSimple($FieldName);
-                break;
+                break;           
+
+            default:
+                return;
+        }
+        
+        unset($this->In[$Key]);
+    }
+
+    /**
+     *  @abstract     Read requested Field
+     * 
+     *  @param        string    $Key                    Input List Key
+     *  @param        string    $FieldName              Field Identifier / Name
+     * 
+     *  @return         none
+     */
+    protected function getStatesFields($Key,$FieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($FieldName)
+        {
             
             //====================================================================//
             // ORDER STATUS
@@ -157,13 +208,6 @@ trait MainTrait {
                 break;
             case 'isclosed':
                 $this->Out[$FieldName]  = ( $this->Object->statut == 3 )    ?   True:False;
-                break;            
-
-            //====================================================================//
-            // ORDER INVOCE
-            //====================================================================//        
-            case 'facturee':
-                $this->getSimple($FieldName);
                 break;            
 
             default:
@@ -200,7 +244,7 @@ trait MainTrait {
                 break;   
                
             //====================================================================//
-            // ORDER INVOCED FLAG
+            // ORDER INVOICED FLAG
             //====================================================================//        
             case 'facturee':
                 if ($this->Object->facturee == $Data) {

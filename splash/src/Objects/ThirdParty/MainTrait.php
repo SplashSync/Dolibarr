@@ -122,6 +122,8 @@ trait MainTrait {
      *  @param        string    $FieldName              Field Identifier / Name
      * 
      *  @return         none
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getMainFields($Key,$FieldName)
     {
@@ -157,6 +159,8 @@ trait MainTrait {
      *  @param        mixed     $Data                   Field Data
      * 
      *  @return         none
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function setMainFields($FieldName,$Data) 
     {

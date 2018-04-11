@@ -43,7 +43,7 @@ trait CoreTrait {
                 ->Name($langs->trans("OrderDate"))
                 ->MicroData("http://schema.org/Order","orderDate")
                 ->isRequired()
-                ->IsListed();
+                ->isListed();
         
         //====================================================================//
         // Reference
@@ -51,8 +51,8 @@ trait CoreTrait {
                 ->Identifier("ref")
                 ->Name($langs->trans("InvoiceRef"))
                 ->MicroData("http://schema.org/Invoice","name")       
-                ->ReadOnly()
-                ->IsListed();
+                ->isReadOnly()
+                ->isListed();
         
         //====================================================================//
         // Customer Reference
@@ -73,7 +73,7 @@ trait CoreTrait {
         $this->FieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_ext")
                 ->Name($langs->trans("ExternalRef"))
-                ->IsListed()
+                ->isListed()
                 ->MicroData("http://schema.org/Invoice","alternateName");
         
     }    
