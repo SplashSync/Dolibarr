@@ -165,7 +165,7 @@ class Local
 
         if (!defined("DOL_DOCUMENT_ROOT")) {
         
-            global $db,$langs,$conf,$user,$hookmanager;
+            global $db,$langs,$conf,$user,$hookmanager, $dolibarr_main_url_root;
 
             //====================================================================//
             // Initiate Dolibarr Global Envirement Variables
