@@ -28,9 +28,7 @@ parameters:
         jsonlint:
             ignore_patterns:        [ "docs" ]
             detect_key_conflicts:   true
-        xmllint:
-            ignore_patterns:        
-                - "docs"            
+        xmllint: ~
         yamllint: ~
         phpmd:
             ruleset:        ["./build/phpmd.xml"]
