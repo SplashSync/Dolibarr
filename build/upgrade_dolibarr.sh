@@ -3,7 +3,7 @@ echo "Upgrading Dolibarr"
 set +e
 cd $DOL_BUILD_DIR/htdocs/install
   
-if [[ $DOL_VERSION == "develop" ]]; 
+if [[ $DOL == "develop" ]]; 
 then 
     echo "Upgrading for Dolibarr Develop"
     php upgrade.php  7.0.0 8.0.0 ignoredbversion                                > $TRAVIS_BUILD_DIR/upgrade700800.log
