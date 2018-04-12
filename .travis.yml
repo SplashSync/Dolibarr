@@ -4,8 +4,8 @@
 language: php
 
 # Specify versions of Php & Dolibarr to test against
-# DOL_VERSION   = Github Branch
-# DATA_VERSION  = Demo data Versions tu USe for Testing
+# DOL   = Github Branch
+# DATA  = Demo data Versions tu USe for Testing
 env:
     global:
         # Set to true for very verbose output
@@ -15,50 +15,50 @@ matrix:
     include:
         # Dolibarr V4.0 Branch       
         - php: 5.6
-          env: DOL_VERSION=4.0 DATA_VERSION=4.0.0     
+          env: DOL=4.0 DATA=4.0.0     
         - php: 7.0
-          env: DOL_VERSION=4.0 DATA_VERSION=4.0.0  
+          env: DOL=4.0 DATA=4.0.0  
         - php: 7.1
-          env: DOL_VERSION=4.0 DATA_VERSION=4.0.0
+          env: DOL=4.0 DATA=4.0.0
 
         # Dolibarr V5.0 Branch       
         - php: 5.6
-          env: DOL_VERSION=5.0 DATA_VERSION=5.0.0     
+          env: DOL=5.0 DATA=5.0.0     
         - php: 7.0
-          env: DOL_VERSION=5.0 DATA_VERSION=5.0.0  
+          env: DOL=5.0 DATA=5.0.0  
         - php: 7.1
-          env: DOL_VERSION=5.0 DATA_VERSION=5.0.0
+          env: DOL=5.0 DATA=5.0.0
 
         # Dolibarr V6.0 Branch       
         - php: 5.6
-          env: DOL_VERSION=6.0 DATA_VERSION=6.0.0     
+          env: DOL=6.0 DATA=6.0.0     
         - php: 7.0
-          env: DOL_VERSION=6.0 DATA_VERSION=6.0.0     
+          env: DOL=6.0 DATA=6.0.0     
         - php: 7.1
-          env: DOL_VERSION=6.0 DATA_VERSION=6.0.0     
+          env: DOL=6.0 DATA=6.0.0     
         - php: 7.2
-          env: DOL_VERSION=6.0 DATA_VERSION=6.0.0     
+          env: DOL=6.0 DATA=6.0.0     
 
         # Dolibarr V7.0 Branch       
         - php: 5.6
-          env: DOL_VERSION=7.0 DATA_VERSION=7.0.0     
+          env: DOL=7.0 DATA=7.0.0     
         - php: 7.0
-          env: DOL_VERSION=7.0 DATA_VERSION=7.0.0     
+          env: DOL=7.0 DATA=7.0.0     
         - php: 7.1
-          env: DOL_VERSION=7.0 DATA_VERSION=7.0.0     
+          env: DOL=7.0 DATA=7.0.0     
         - php: 7.2
-          env: DOL_VERSION=7.0 DATA_VERSION=7.0.0     
+          env: DOL=7.0 DATA=7.0.0     
           
         # Dolibarr Develop Branch       
         - php: 7.0
-          env: DOL_VERSION=develop DATA_VERSION=7.0.0     
+          env: DOL=develop DATA=7.0.0     
         - php: 7.1
-          env: DOL_VERSION=develop DATA_VERSION=7.0.0     
+          env: DOL=develop DATA=7.0.0     
         - php: 7.2
-          env: DOL_VERSION=develop DATA_VERSION=7.0.0     
+          env: DOL=develop DATA=7.0.0     
           
     allow_failures:
-        - env: DOL_VERSION=develop DATA_VERSION=7.0.0
+        - env: DOL=develop DATA=7.0.0
           
         
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
@@ -82,22 +82,8 @@ before_script:
       echo DOL_BUILD_DIR is $DOL_BUILD_DIR
       echo PLUGIN_SLUG is $PLUGIN_SLUG
   
-    - |
-      if [ "$DEBUG" = true ]; then
-        echo "Debugging informations"
-        # Check PHP
-        php -i
-        # Check PHPUnit installation
-        which phpunit
-        phpunit --version
-        # Check MySQL
-        mysql --version
-        mysql -e "SELECT VERSION();"
-        echo
-      fi
-  
     # Clone Dolibarr & Move to Web folder
-    - git clone --depth=1 --branch="$DOL_VERSION" https://github.com/Dolibarr/dolibarr.git $DOL_BUILD_DIR
+    - git clone --depth=1 --branch="$DOL" https://github.com/Dolibarr/dolibarr.git $DOL_BUILD_DIR
 
     # Init Database
     - bash $TRAVIS_BUILD_DIR/build/install_database.sh
