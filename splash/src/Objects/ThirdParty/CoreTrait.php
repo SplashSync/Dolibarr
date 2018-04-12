@@ -228,13 +228,13 @@ trait CoreTrait
         //====================================================================//
         // Get Current Values if Not Written
         $CurrentName = $this->decodeFullName($this->Object->name);
-        if (!empty($this->firstname) && !empty($CurrentName["firstname"])) {
+        if (empty($this->firstname) && !empty($CurrentName["firstname"])) {
             $this->firstname = $CurrentName["firstname"];
         }
-        if (!empty($this->lastname) && !empty($CurrentName["lastname"])) {
+        if (empty($this->lastname) && !empty($CurrentName["lastname"])) {
             $this->lastname = $CurrentName["lastname"];
         }
-        if (!empty($this->name) && !empty($CurrentName["name"])) {
+        if (empty($this->name) && !empty($CurrentName["name"])) {
             $this->name = $CurrentName["name"];
         }
         //====================================================================//
