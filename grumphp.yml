@@ -49,7 +49,7 @@ parameters:
                 - phplint
                 - phpcs 
                 - git_blacklist
-#                - jsonlint
+                - jsonlint
                 - phpmd
                 - phpcpd
                 - xmllint
