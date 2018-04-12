@@ -55,7 +55,7 @@ class L02TaxesByCodesTest extends ObjectsCase
     public function testCreateWithTaxCode($ObjectType, $TaxCode, $VatRate1, $VatRate2)
     {
         if (Splash::local()->DolVersionCmp("5.0.0") < 0) {
-            $this->markTestSkipped('Feature Not Available in This Version.');
+            $this->markTestIncomplete('Feature Not Available in This Version.');
             return;
         }
 
