@@ -21,6 +21,7 @@ use Splash\Core\SplashCore      as Splash;
 
 
 use EcmFiles;
+use Exception;
 
 /**
  * @abstract    Access to Dolibarr Objects Images
@@ -137,7 +138,7 @@ trait ImagesTrait
             $DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");
             try {
                 \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 Splash::log()->deb("ErrLocalTpl", __CLASS__, __FUNCTION__, $ex->getMessage());
             }
         }
