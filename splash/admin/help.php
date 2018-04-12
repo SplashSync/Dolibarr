@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- * 
- * 
+ *
+ *
  *  \Id 	$Id: help.php 345 2014-09-24 15:20:11Z Nanard33 $
  *  \version    $Revision: 345 $
  *  \ingroup    Splash - Dolibarr Synchronisation via WebService
@@ -24,9 +24,9 @@
 */
 
 //====================================================================//
-//   INCLUDES 
+//   INCLUDES
 //====================================================================//
-require( is_file("../../main.inc.php") ? "../../main.inc.php" : "../../../main.inc.php" );
+require(is_file("../../main.inc.php") ? "../../main.inc.php" : "../../../main.inc.php");
 
 //====================================================================//
 // Root Module Include
@@ -41,22 +41,24 @@ $langs->load("spl-admin@splash");
 $langs->load("spl-help@splash");
 //====================================================================//
 //====================================================================//
-//   INITIALISATION 
+//   INITIALISATION
 //====================================================================//
 //====================================================================//
     
 //====================================================================//
 // Protection if not admin user
-if (!$user->admin)	accessforbidden();
+if (!$user->admin) {
+    accessforbidden();
+}
 //====================================================================//
 // Generic Page Header
-llxHeader($header ,$langs->trans("Help"),"");
+llxHeader($header, $langs->trans("Help"), "");
 //====================================================================//
 // Specific Styles For this Page
 // NOTHING TO DO
 //====================================================================//
 //====================================================================//
-//   ACTIONS 
+//   ACTIONS
 //====================================================================//
 //====================================================================//
 // NOTHING TO DO
@@ -71,13 +73,13 @@ llxHeader($header ,$langs->trans("Help"),"");
 
 //====================================================================//
 //  Main Setup Tab
-Spl_SHOW_ConfTab($db,'help',NULL);
+Spl_SHOW_ConfTab($db, 'help', null);
 //====================================================================//
 //  Display Module Help Frame
 //====================================================================//
 //====================================================================//
 //  Main Help Contents
-print_titre($langs->trans("Help"));  
+print_titre($langs->trans("Help"));
 print _Html::Br(1);
 print $langs->trans("SPL_Help1", SPL_WEB_URL, SPL_WEB_URL);
 print $langs->trans("SPL_Help2", SPL_HELP_URL, SPL_HELP_URL, SPL_FAQ_URL, SPL_FAQ_URL);
@@ -85,7 +87,7 @@ print $langs->trans("SPL_Help3", SPL_BUG_URL, SPL_BUG_URL, SPL_UPDATE_URL, SPL_U
 print _Html::Br(2);
 //====================================================================//
 //  Module Licence
-print_titre($langs->trans("License"));  
+print_titre($langs->trans("License"));
 print _Html::Br(1);
 print $langs->trans("SPL_License", SPL_WEB_URL, SPL_HELP_URL, SPL_FAQ_URL, SPL_BUG_URL, SPL_UPDATE_URL);
 print _Html::DivEnd();
@@ -103,4 +105,3 @@ print _Html::Br(1);
 //====================================================================//
 //  Generic Page Footer
 llxFooter('$Date: 2014-09-24 17:20:11 +0200 (mer. 24 sept. 2014) $ - $Revision: 345 $');
-?>

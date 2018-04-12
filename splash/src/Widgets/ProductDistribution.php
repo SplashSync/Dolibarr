@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,10 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
  *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $ 
+ *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
  *  \ingroup    Splash - Open Synchronisation WebService
  *  \brief      Local Function Definition for Management of Customers Data
  *  \class      SplashDemo
@@ -42,33 +42,33 @@ use Splash\Core\SplashCore      as Splash;
 class ProductDistribution extends WidgetBase
 {
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "BoxProductDistribution";
+    protected static $NAME            =  "BoxProductDistribution";
     
     /**
-     *  Widget Description (Translated by Module) 
+     *  Widget Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "BoxProductDistribution";    
+    protected static $DESCRIPTION     =  "BoxProductDistribution";
     
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag) 
+     *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO            =  "fa fa-pie-chart";
+    protected static $ICO            =  "fa fa-pie-chart";
     
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
-    static $OPTIONS       = array(
+    public static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
-        "Header"        =>  True,
-        "Footer"        =>  True,
-        'UseCache'      =>  True,
-        'CacheLifeTime' =>  60,        
+        "Header"        =>  true,
+        "Footer"        =>  true,
+        'UseCache'      =>  true,
+        'CacheLifeTime' =>  60,
     );
     
     private $Mode = "Invoices";
@@ -76,17 +76,18 @@ class ProductDistribution extends WidgetBase
     private $ChartType =   "Line";
    
     //====================================================================//
-    // General Class Variables	
+    // General Class Variables
     //====================================================================//
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
 
-    public function __construct() {
+    public function __construct()
+    {
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
     }
     
     /**
@@ -95,7 +96,7 @@ class ProductDistribution extends WidgetBase
     public function getParameters()
     {
         global $langs;
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
         
         $langs->load("main");
         $langs->load("bills");
@@ -103,67 +104,79 @@ class ProductDistribution extends WidgetBase
         $langs->load("compta");
         
         $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
-        $TitleInvoices  = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
-        $TitleOrders    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Orders"));
+        $TitleInvoices  = $langs->trans(
+            "BoxProductDistributionFor",
+            $ParamTitle,
+            $langs->transnoentitiesnoconv("Invoices")
+        );
+        $TitleOrders    = $langs->trans(
+            "BoxProductDistributionFor",
+            $ParamTitle,
+            $langs->transnoentitiesnoconv("Orders")
+        );
                 
         //====================================================================//
         // Select Data Type Mode
-        $this->FieldsFactory()->Create(SPL_T_TEXT)
+        $this->fieldsFactory()->Create(SPL_T_TEXT)
                 ->Identifier("mode")
                 ->Name($langs->trans("Model"))
                 ->isRequired()
-                ->AddChoice("Invoices",         html_entity_decode($TitleInvoices))
-                ->AddChoice("InvoicesCount",    html_entity_decode($TitleInvoices . " (" . $langs->trans("NbOfLines") . ")" ))
-                ->AddChoice("Orders",           html_entity_decode($TitleOrders))
-                ->AddChoice("OrdersCount",      html_entity_decode($TitleOrders . " (" . $langs->trans("NbOfLines") . ")" ))
+                ->AddChoice("Invoices", html_entity_decode($TitleInvoices))
+                ->AddChoice(
+                    "InvoicesCount",
+                    html_entity_decode($TitleInvoices . " (" . $langs->trans("NbOfLines") . ")")
+                )
+                ->AddChoice("Orders", html_entity_decode($TitleOrders))
+                ->AddChoice("OrdersCount", html_entity_decode($TitleOrders . " (" . $langs->trans("NbOfLines") . ")"))
                 ;
       
         
         //====================================================================//
         // Select Chart Rendering Mode
-        $this->FieldsFactory()->Create(SPL_T_TEXT)
+        $this->fieldsFactory()->Create(SPL_T_TEXT)
                 ->Identifier("chart_type")
                 ->Name($langs->trans("Type"))
                 ->isRequired()
-                ->AddChoice("Pie",      "Pie Chart")
-                ->AddChoice("Bar",      "Bar Chart")
+                ->AddChoice("Pie", "Pie Chart")
+                ->AddChoice("Bar", "Bar Chart")
                 ;
         
         //====================================================================//
         // Publish Fields
-        return $this->FieldsFactory()->Publish();
-    }      
+        return $this->fieldsFactory()->Publish();
+    }
     
     /**
      *  @abstract     Return requested Customer Data
-     * 
-     *  @param        array   $params               Search parameters for result List. 
-     *                        $params["start"]      Maximum Number of results 
-     *                        $params["end"]        List Start Offset 
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
+     *
+     *  @param        array   $params               Search parameters for result List.
+     *                        $params["start"]      Maximum Number of results
+     *                        $params["end"]        List Start Offset
+     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
 
      */
-    public function get($params=NULL)
-    {        
+    public function get($params = null)
+    {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::Local()->loadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
 
-        $this->setTitle($this->getName()); 
-        $this->setIcon($this->getIcon()); 
+        $this->setTitle($this->getName());
+        $this->setIcon($this->getIcon());
         
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
-		
-        if (isset($params["mode"]) && in_array($params["mode"], ["Invoices", "InvoicesCount", "Orders", "OrdersCount"])) {
+        
+        if (isset($params["mode"])
+                && in_array($params["mode"], ["Invoices", "InvoicesCount", "Orders", "OrdersCount"])) {
             $this->Mode = $params["mode"];
         }
         
@@ -174,7 +187,7 @@ class ProductDistribution extends WidgetBase
         $this->importDates($params);
         $this->setupMode();
         
-        if ( $this->ChartType == "Bar") {
+        if ($this->ChartType == "Bar") {
             $this->buildMorrisBarBlock();
         } else {
             $this->buildMorrisDonutBlock();
@@ -182,7 +195,7 @@ class ProductDistribution extends WidgetBase
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->BlocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->Render());
 
         //====================================================================//
         // Publish Widget
@@ -194,18 +207,16 @@ class ProductDistribution extends WidgetBase
     // Blocks Generation Functions
     //====================================================================//
 
-    private function setupMode()   {
-        
+    private function setupMode()
+    {
         global $db, $langs;
         $langs->load("main");
         $langs->load("bills");
         $langs->load("compta");
         $langs->load("orders");
-        
         $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
                 
         switch ($this->Mode) {
-            
             case "Invoices":
                 //====================================================================//
                 // Load Stat Class
@@ -214,14 +225,20 @@ class ProductDistribution extends WidgetBase
                 //====================================================================//
                 // Setup Mode
                 $this->select   = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
-                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->from     = $this->stats->from.", ";
+                $this->from    .= $this->stats->from_line.", ";
+                $this->from    .= MAIN_DB_PREFIX."product as product";
                 $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
                 //====================================================================//
                 // Setup Titles
-                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices"));
+                $this->title    = $langs->trans(
+                    "BoxProductDistributionFor",
+                    $ParamTitle,
+                    $langs->transnoentitiesnoconv("Invoices")
+                );
                 $this->labels   = array($langs->trans("AmountHTShort"));
                 break;
-            
+
             case "InvoicesCount":
                 //====================================================================//
                 // Load Stat Class
@@ -230,14 +247,19 @@ class ProductDistribution extends WidgetBase
                 //====================================================================//
                 // Setup Mode
                 $this->select   = "product.ref as label, COUNT(product.ref) as value";
-                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->from     = $this->stats->from.", ";
+                $this->from    .= $this->stats->from_line.", ";
+                $this->from    .= MAIN_DB_PREFIX."product as product";
                 $this->where    = "f.rowid = tl.fk_facture AND tl.fk_product = product.rowid AND f.datef";
                 //====================================================================//
                 // Setup Titles
-                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Invoices")) . " (" . $langs->trans("NbOfLines") . ")";
+                $this->title    = $langs->trans(
+                    "BoxProductDistributionFor",
+                    $ParamTitle,
+                    $langs->transnoentitiesnoconv("Invoices")
+                ) . " (" . $langs->trans("NbOfLines") . ")";
                 $this->labels   = array($langs->trans("NbOfLines"));
                 break;
-            
             
             case "Orders":
                 //====================================================================//
@@ -247,13 +269,19 @@ class ProductDistribution extends WidgetBase
                 //====================================================================//
                 // Setup Mode
                 $this->select   = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
-                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->from     = $this->stats->from.", ";
+                $this->from    .= $this->stats->from_line.", ";
+                $this->from    .= MAIN_DB_PREFIX."product as product";
                 $this->where    = "c.rowid = tl.fk_commande AND tl.fk_product = product.rowid AND c.date_commande";
                 //====================================================================//
                 // Setup Titles
-                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Orders"));
+                $this->title    = $langs->trans(
+                    "BoxProductDistributionFor",
+                    $ParamTitle,
+                    $langs->transnoentitiesnoconv("Orders")
+                );
                 $this->labels   = array($langs->trans("AmountHTShort"));
-                break;            
+                break;
             
             case "OrdersCount":
                 //====================================================================//
@@ -263,20 +291,27 @@ class ProductDistribution extends WidgetBase
                 //====================================================================//
                 // Setup Mode
                 $this->select   = "product.ref as label, COUNT(product.ref) as value";
-                $this->from     = $this->stats->from.", ".$this->stats->from_line.", ".MAIN_DB_PREFIX."product as product";
+                $this->from     = $this->stats->from.", ";
+                $this->from    .= $this->stats->from_line.", ";
+                $this->from    .= MAIN_DB_PREFIX."product as product";
                 $this->where    = "c.rowid = tl.fk_commande AND tl.fk_product = product.rowid AND c.date_commande";
                 //====================================================================//
                 // Setup Titles
-                $this->title    = $langs->trans("BoxProductDistributionFor", $ParamTitle ,$langs->transnoentitiesnoconv("Orders")) . " (" . $langs->trans("NbOfLines") . ")";
+                $this->title    = $langs->trans(
+                    "BoxProductDistributionFor",
+                    $ParamTitle,
+                    $langs->transnoentitiesnoconv("Orders")
+                ) . " (" . $langs->trans("NbOfLines") . ")";
                 $this->labels   = array($langs->trans("NbOfLines"));
-                break;            
+                break;
         }
     }
     
     /**
      * @abstract    Read Widget Datas
      */
-    private function getData($Limit = Null)   {
+    private function getData($Limit = null)
+    {
 
         global $db;
                 
@@ -287,20 +322,19 @@ class ProductDistribution extends WidgetBase
         $sql.= " WHERE " . $this->where . " BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
         $sql.= " AND ".$this->stats->where;
         $sql.= " GROUP BY label";
-        $sql.= $db->order('value','DESC');
-        if ( $Limit ) {
+        $sql.= $db->order('value', 'DESC');
+        if ($Limit) {
             $sql.= $db->plimit($Limit);
-        } 
+        }
         
         $Result     = $db->query($sql);
         $num        = $db->num_rows($Result);           // Read number of results
         $index      = 0;
         $RawData    = array();
-        while ($index < $num)
-        {
+        while ($index < $num) {
             $RawData[$index] = $db->fetch_array($Result);
             $index++;
-        }          
+        }
         
         return $RawData;
     }
@@ -308,7 +342,8 @@ class ProductDistribution extends WidgetBase
     /**
     *   @abstract     Block Building - Morris Donut Graph
     */
-    private function buildMorrisDonutBlock()   {
+    private function buildMorrisDonutBlock()
+    {
 
         global $langs;
         
@@ -317,13 +352,13 @@ class ProductDistribution extends WidgetBase
         //====================================================================//
         $Data   = $this->getData();
 
-        if ( empty($Data) ) {
+        if (empty($Data)) {
             $langs->load("admin");
-            $this->BlocksFactory()->addNotificationsBlock(array(
+            $this->blocksFactory()->addNotificationsBlock(array(
                 "warning"   => $langs->trans("PreviewNotAvailable")
                     ));
             return;
-        }  
+        }
         
         $langs->load("compta");
         
@@ -331,24 +366,24 @@ class ProductDistribution extends WidgetBase
         //====================================================================//
         // Chart Options
         $ChartOptions = array(
-            "title"     => $this->title, 
+            "title"     => $this->title,
             "labels"    => $this->labels,
         );
         //====================================================================//
         // Block Options
         $Options = array(
-            "AllowHtml"         => True,
+            "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addMorrisDonutBlock($Data, $ChartOptions, $Options);
-        
-    }          
+        $this->blocksFactory()->addMorrisDonutBlock($Data, $ChartOptions, $Options);
+    }
     
     /**
     *   @abstract     Block Building - Morris Bar Graph
     */
-    private function buildMorrisBarBlock()   {
+    private function buildMorrisBarBlock()
+    {
 
         global $langs;
         
@@ -358,32 +393,31 @@ class ProductDistribution extends WidgetBase
         $Data   = $this->getData(5);
 
         
-        if ( empty($Data) ) {
+        if (empty($Data)) {
             $langs->load("admin");
-            $this->BlocksFactory()->addNotificationsBlock(array(
+            $this->blocksFactory()->addNotificationsBlock(array(
                 "warning"   => $langs->trans("PreviewNotAvailable")
                     ));
             return;
-        }  
+        }
         
         $langs->load("compta");
         
         //====================================================================//
         // Chart Options
         $ChartOptions = array(
-            "title"     => $this->title, 
+            "title"     => $this->title,
             "labels"    => $this->labels,
         );
         //====================================================================//
         // Block Options
         $Options = array(
-            "AllowHtml"         => True,
+            "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
-        
-    }       
+        $this->blocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
+    }
     
     //====================================================================//
     // Class Tooling Functions
@@ -398,7 +432,7 @@ class ProductDistribution extends WidgetBase
      */
     public function getName()
     {
-        global $langs;     
+        global $langs;
         $langs->load("main");
         $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$NAME));
@@ -414,9 +448,4 @@ class ProductDistribution extends WidgetBase
         $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-
 }
-
-
-
-?>

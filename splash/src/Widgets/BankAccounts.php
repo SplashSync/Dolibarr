@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,10 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
  *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $ 
+ *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
  *  \ingroup    Splash - Open Synchronisation WebService
  *  \brief      Local Function Definition for Management of Customers Data
  *  \class      SplashDemo
@@ -43,47 +43,48 @@ class BankAccounts extends WidgetBase
 {
     
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "BoxCurrentAccounts";
+    protected static $NAME            =  "BoxCurrentAccounts";
     
     /**
-     *  Widget Description (Translated by Module) 
+     *  Widget Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "BoxTitleCurrentAccounts";    
+    protected static $DESCRIPTION     =  "BoxTitleCurrentAccounts";
     
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag) 
+     *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO            =  "fa fa-money";
+    protected static $ICO            =  "fa fa-money";
     
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
-    static $OPTIONS       = array(
+    public static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
-        "Header"        =>  True,
-        "Footer"        =>  False,
-        'UseCache'      =>  True,
+        "Header"        =>  true,
+        "Footer"        =>  false,
+        'UseCache'      =>  true,
         'CacheLifeTime' =>  60,
     );
     
     //====================================================================//
-    // General Class Variables	
+    // General Class Variables
     //====================================================================//
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
-    public function __construct() {
+    public function __construct()
+    {
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
     }
     
     /**
@@ -96,39 +97,39 @@ class BankAccounts extends WidgetBase
         
         //====================================================================//
         // Use Compact Mode
-        $this->FieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("compact")
                 ->Name($langs->trans("Compact Mode"));
       
         //====================================================================//
         // Publish Fields
-        return $this->FieldsFactory()->Publish();
-    }       
+        return $this->fieldsFactory()->Publish();
+    }
     
     /**
      *  @abstract     Return requested Customer Data
-     * 
-     *  @param        array   $params               Search parameters for result List. 
-     *                        $params["start"]      Maximum Number of results 
-     *                        $params["end"]        List Start Offset 
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
+     *
+     *  @param        array   $params               Search parameters for result List.
+     *                        $params["start"]      Maximum Number of results
+     *                        $params["end"]        List Start Offset
+     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
 
      */
-    public function get($params=NULL)
+    public function get($params = null)
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
 
-        $this->setTitle($this->getName()); 
-        $this->setIcon($this->getIcon()); 
+        $this->setTitle($this->getName());
+        $this->setIcon($this->getIcon());
         
         //====================================================================//
         // Build Disabled Block
@@ -139,7 +140,7 @@ class BankAccounts extends WidgetBase
         // Build Data Blocks
         //====================================================================//
         $this->MaxItems = !empty($params["max"]) ? $params["max"] : 10;
-        if( $params["compact"]) {
+        if ($params["compact"]) {
             $this->buildSparkBlock();
         } else {
             $this->buildTableBlock();
@@ -147,7 +148,7 @@ class BankAccounts extends WidgetBase
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->BlocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->Render());
 
         //====================================================================//
         // Publish Widget
@@ -162,27 +163,29 @@ class BankAccounts extends WidgetBase
     /**
     *   @abstract     Block Building - Box is Disabled
     */
-    private function buildDisabledBlock()   {
+    private function buildDisabledBlock()
+    {
 
         global $langs, $user;
         
-        if ( !$user->rights->banque->lire ) {
+        if (!$user->rights->banque->lire) {
             $langs->load("admin");
             $Contents   = array("warning"   => $langs->trans("ReadPermissionNotAllowed"));
             //====================================================================//
             // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
+            $this->blocksFactory()->addNotificationsBlock($Contents);
         }
-    }    
+    }
   
     /**
      * @abstract    Read Widget Datas
      */
-    private function getData()   {
+    private function getData()
+    {
 
         global $langs, $user, $db, $conf;
         
-        if ( !$user->rights->banque->lire ) {
+        if (!$user->rights->banque->lire) {
             return array();
         }
         
@@ -201,22 +204,21 @@ class BankAccounts extends WidgetBase
         //====================================================================//
         // Empty Contents
         //====================================================================//
-        if ( $db->num_rows($Result) < 1 ) {
+        if ($db->num_rows($Result) < 1) {
             $langs->load("admin");
             $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
             //====================================================================//
             // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
+            $this->blocksFactory()->addNotificationsBlock($Contents);
             return array();
-        } 
+        }
         
         $index      = 0;
         $RawData    = array();
-        while ($index < $db->num_rows($Result))
-        {
+        while ($index < $db->num_rows($Result)) {
             $RawData[$index] = $db->fetch_array($Result);
             $index++;
-        }    
+        }
         
         
         return $RawData;
@@ -225,7 +227,8 @@ class BankAccounts extends WidgetBase
     /**
     *   @abstract     Block Building - Text Intro
     */
-    private function buildTableBlock()   {
+    private function buildTableBlock()
+    {
 
         global $langs, $db;
         
@@ -246,18 +249,24 @@ class BankAccounts extends WidgetBase
             $solde=$account_static->solde(0);
                     
             if ($solde < 0) {
-                $Value = '<span class="text-danger">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
-                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';     
+                $Value = '<span class="text-danger">';
+                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
+                $Value.= '</span>';
+                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';
             } elseif ($solde < $Line["min_desired"]) {
-                $Value = '<span class="text-warning">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
-                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';    
+                $Value = '<span class="text-warning">';
+                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
+                $Value.= '</span>';
+                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';
             } else {
-                $Value = '<span class="text-success">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
+                $Value = '<span class="text-success">';
+                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
+                $Value.= '</span>';
             }
             
             $Contents[] = array(
                 $Prefix . $Line["ref"], $Line["label"], $Line["bank"],
-                $Value,   
+                $Value,
             );
         }
         
@@ -265,19 +274,19 @@ class BankAccounts extends WidgetBase
         // Build Table Options
         //====================================================================//
         $Options = array(
-            "AllowHtml"         => True,
+            "AllowHtml"         => true,
             "HeadingRows"       => 0,
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addTableBlock($Contents,$Options);
-        
-    }      
+        $this->blocksFactory()->addTableBlock($Contents, $Options);
+    }
 
     /**
     *   @abstract     Block Building - Text Intro
     */
-    private function buildSparkBlock()   {
+    private function buildSparkBlock()
+    {
 
         global $langs, $db;
         
@@ -286,7 +295,7 @@ class BankAccounts extends WidgetBase
         //====================================================================//
         // Build SparkInfo Options
         //====================================================================//
-        switch(count($Data)) {
+        switch (count($Data)) {
             case 1:
                 $Width = self::SIZE_XL;
                 break;
@@ -301,7 +310,7 @@ class BankAccounts extends WidgetBase
                 break;
         }
         $Options = array(
-            "AllowHtml"         =>  True,
+            "AllowHtml"         =>  true,
             "Width"             =>  $Width
         );
         
@@ -319,31 +328,35 @@ class BankAccounts extends WidgetBase
             $solde  =   $account_static->solde(0);
             
             
-             if ($solde < 0) {
+            if ($solde < 0) {
                 $Class = "text-danger";
-                $Value = '<span class="text-danger">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
-                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';     
+                $Value = '<span class="text-danger">';
+                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
+                $Value.= '</span>';
+                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';
             } elseif ($solde < $Line["min_desired"]) {
                 $Class = "text-warning";
-                $Value = '<span class="text-warning">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
-                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';    
+                $Value = '<span class="text-warning">';
+                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
+                $Value.= '</span>';
+                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';
             } else {
                 $Class = "text-success";
-                $Value = '<span class="text-success">' . price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]) . '</span>';            
-            }           
+                $Value = '<span class="text-success">';
+                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
+                $Value.= '</span>';
+            }
             
             $Contents = array(
-                "title"     =>      $Line["ref"],   
+                "title"     =>      $Line["ref"],
                 "fa_icon"   =>      "university " . $Class,
-                "value"     =>      $Value,   
+                "value"     =>      $Value,
             );
             //====================================================================//
             // Add SparkInfo Block
-            $this->BlocksFactory()->addSparkInfoBlock($Contents, $Options );
+            $this->blocksFactory()->addSparkInfoBlock($Contents, $Options);
         }
-
-        
-    }         
+    }
     
     //====================================================================//
     // Class Tooling Functions
@@ -358,8 +371,8 @@ class BankAccounts extends WidgetBase
      */
     public function getName()
     {
-        global $langs;     
-        $langs->load("boxes");        
+        global $langs;
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$NAME));
     }
 
@@ -369,12 +382,7 @@ class BankAccounts extends WidgetBase
     public function getDesc()
     {
         global $langs;
-        $langs->load("boxes");        
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-    
 }
-
-
-
-?>

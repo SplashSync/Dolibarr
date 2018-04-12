@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- * 
- * 
+ *
+ *
  *  \Id 	$Id: ConfigLocal.php 492 2016-03-22 13:21:19Z Nanard33 $
  *  \version    $Revision: 492 $
  *  \ingroup    Splash - Dolibarr Synchronisation via WebService
@@ -33,7 +33,7 @@ echo    '<input type="hidden" name="action" value="UpdateOrder">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), Null, $langs->trans("SPL_Orders_Config") , 0, null);
+dol_fiche_head(array(), null, $langs->trans("SPL_Orders_Config"), 0, null);
 
 
 echo '<table class="noborder" width="100%"><tbody>';
@@ -54,23 +54,26 @@ require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
 $formproduct=new FormProduct($db);
 echo '  <tr class="pair">';
 echo '      <td>' . $langs->trans("SPL_DfPayMethod") . '</td>';
-echo '      <td>'; 
-$form->select_types_paiements($conf->global->SPLASH_DEFAULT_PAYMENT,'paiementcode','',2);
+echo '      <td>';
+$form->select_types_paiements($conf->global->SPLASH_DEFAULT_PAYMENT, 'paiementcode', '', 2);
 echo '      </td>';
 echo '  </tr>';
 
 //====================================================================//
 // Tax Name Detection Mode
-if ( Splash::Local()->DolVersionCmp("5.0.0") >= 0) {        
+if (Splash::local()->DolVersionCmp("5.0.0") >= 0) {
     echo '  <tr class="pair">';
-    echo '      <td>' . $form->textwithpicto($langs->trans("SPL_DetectTaxName"), $langs->trans("SPL_DetectTaxName_T")) . '</td>';
+    echo '      <td>' . $form->textwithpicto(
+        $langs->trans("SPL_DetectTaxName"),
+        $langs->trans("SPL_DetectTaxName_T")
+    ) . '</td>';
     if ($conf->global->SPLASH_DETECT_TAX_NAME) {
         echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=0">';
-            echo img_picto($langs->trans("Enabled"),'switch_on');
+            echo img_picto($langs->trans("Enabled"), 'switch_on');
         echo '</a></td>';
     } else {
         echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrder&DetectTax=1">';
-            echo img_picto($langs->trans("Disabled"),'switch_off');
+            echo img_picto($langs->trans("Disabled"), 'switch_off');
         echo '</a></td>';
     }
     echo '  </tr>';

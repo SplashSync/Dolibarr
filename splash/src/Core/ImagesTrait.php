@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace   Splash\Local\Core;
@@ -23,26 +23,29 @@ use Splash\Core\SplashCore      as Splash;
 use EcmFiles;
 
 /**
- * @abstract    Access to Dolibarr Objects Images 
+ * @abstract    Access to Dolibarr Objects Images
  */
-trait ImagesTrait {
+trait ImagesTrait
+{
     
-    private     $MinVersion     =   "6.0.0";
-    private     $ElementPath    =   array(
+    private $MinVersion     =   "6.0.0";
+    private $ElementPath    =   array(
         "product"   =>  "produit",
     );
+    private $Extensions     =   [ "gif", "jpg", "jpeg", "png", "bmp" ];
 
     /**
      *  @abstract     Build Images FieldFactory
      */
-    protected function buildImagesFields()   {
+    protected function buildImagesFields()
+    {
         global $langs;
         
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
             return;
-        }         
+        }
         
         //====================================================================//
         // Load Required Dolibarr Translation Files
@@ -50,23 +53,22 @@ trait ImagesTrait {
         
         //====================================================================//
         // Product Images List
-        $this->FieldsFactory()->Create(SPL_T_IMG)
+        $this->fieldsFactory()->Create(SPL_T_IMG)
                 ->Identifier("image")
                 ->InList("images")
                 ->Name($langs->trans("PhotoFile"))
                 ->Group("Images")
-                ->MicroData("http://schema.org/Product","image");
+                ->MicroData("http://schema.org/Product", "image");
         
         //====================================================================//
         // Product Images => Is Cover
-        $this->FieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("cover")
                 ->InList("images")
                 ->Name("Cover Image")
-                ->MicroData("http://schema.org/Product","isCover")
+                ->MicroData("http://schema.org/Product", "isCover")
                 ->Group("Images")
-                ->isNotTested();     
-        
+                ->isNotTested();
     }
     
     //====================================================================//
@@ -75,33 +77,33 @@ trait ImagesTrait {
     
     /**
      *  @abstract     Read requested Field
-     * 
+     *
      *  @param        string    $Key                    Input List Key
      *  @param        string    $FieldName              Field Identifier / Name
-     * 
+     *
      *  @return         none
      */
-    protected function getImagesFields($Key,$FieldName)
+    protected function getImagesFields($Key, $FieldName)
     {
-        global $db, $conf;
+        global $conf;
         
         //====================================================================//
         // Safety Check
-        if ( !isset($this->Out) ) {
+        if (!isset($this->Out)) {
             $this->Out = array();
-        }   
+        }
         //====================================================================//
         // Check if List field & Init List Array
-        $FieldId = self::lists()->InitOutput( $this->Out, "images", $FieldName );
-        if ( !$FieldId ) {
+        $FieldId = self::lists()->InitOutput($this->Out, "images", $FieldName);
+        if (!$FieldId) {
             return;
-        }  
+        }
                 
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
             return;
-        }         
+        }
         //====================================================================//
         // Load Object Files Path
         $Entity     =   $this->Object->entity ? $this->Object->entity : $conf->entity;
@@ -109,52 +111,54 @@ trait ImagesTrait {
         $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->Object, $this->Object->element);
         $this->DolFilesDir.= dol_sanitizeFileName($this->Object->ref);
         $this->RelFilesDir = $this->ElementPath[$this->Object->element];
-        $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->Object->ref);    	
+        $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->Object->ref);
 
         //====================================================================//
         // Fetch Object Attached Images
-        $this->getImagesArrayFromDir($Key, $FieldName);
+        $this->getImagesArrayFromDir($FieldName);
+
+        if (isset($this->In[$Key])) {
+            unset($this->In[$Key]);
+        }
     }
         
-    private function getImagesArrayFromDir($Key,$FieldName)
+    private function getImagesArrayFromDir($FieldName)
     {
-        global $db;
-        
         require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
         
         //====================================================================//
         // Refresh Object Attached Images (Manually, OR Ref Changed)
         if (function_exists("completeFileArrayWithDatabaseInfo")) {
-            $DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");   
+            $DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");
             \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
-        } 
+        }
         //====================================================================//
         // Fetch Object Attached Images from Database
-    	$FileArray = \dol_dir_list_in_database($this->RelFilesDir, "", Null, "position");
+        $FileArray = \dol_dir_list_in_database($this->RelFilesDir, "", null, "position");
         
         //====================================================================//
         // Create Images List
-        foreach ($FileArray as $key => $File) {
+        foreach ($FileArray as $File) {
             //====================================================================//
             // Filter No Images Files
-            if ( !in_array(pathinfo($File["name"], PATHINFO_EXTENSION) , [ "gif", "jpg", "jpeg", "png", "bmp" ]) ) {
+            if (!in_array(pathinfo($File["name"], PATHINFO_EXTENSION), $this->Extensions)) {
                 continue;
-            } 
+            }
             
             //====================================================================//
             // Insert Image in Output List
             $Image = self::Images()->Encode(
-                    $File["name"], 
-                    $File["name"], 
-                    $File["path"] . "/", 
-                    null );
+                $File["name"],
+                $File["name"],
+                $File["path"] . "/",
+                null
+            );
             
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert( $this->Out, "images", $FieldName,    $File["position"], $Image );
-            self::lists()->Insert( $this->Out, "images", "cover",       $File["position"], $File["cover"] );
-            
+            self::lists()->Insert($this->Out, "images", $FieldName, $File["position"], $Image);
+            self::lists()->Insert($this->Out, "images", "cover", $File["position"], $File["cover"]);
         }
            
         //====================================================================//
@@ -162,9 +166,9 @@ trait ImagesTrait {
         ksort($this->Out["images"]);
     }
     
-    protected function getImagesArrayFromEcm($Key,$FieldName)
+    protected function getImagesArrayFromEcm($FieldName)
     {
-        global $db, $conf;
+        global $db;
         
         //====================================================================//
         // Create EcmFiles Main Object
@@ -175,37 +179,36 @@ trait ImagesTrait {
         // Fetch Object Attached Images
         $Filters    =   [
                 "entity"    =>  $this->Object->entity,
-                "filepath"  =>  ( $this->ElementPath[$this->Object->element] . "/" . $this->Object->ref) 
+                "filepath"  =>  ( $this->ElementPath[$this->Object->element] . "/" . $this->Object->ref)
             ];
-        $EcmFiles->fetchAll( Null, Null, 0, 0, $Filters );
-        $this->CatchDolibarrErrors();
-        if ( empty($EcmFiles->lines) ) {
+        $EcmFiles->fetchAll(null, null, 0, 0, $Filters);
+        $this->catchDolibarrErrors();
+        if (empty($EcmFiles->lines)) {
             return;
-        }         
+        }
         
         //====================================================================//
         // Create Images List
         foreach ($EcmFiles->lines as $key => $EcmFileLine) {
-
             //====================================================================//
             // Filter No Images Files
-            if ( !in_array(pathinfo($EcmFileLine->filename, PATHINFO_EXTENSION) , [ "gif", "jpg", "jpeg", "png", "bmp" ]) ) {
+            if (!in_array(pathinfo($EcmFileLine->filename, PATHINFO_EXTENSION), $this->Extensions)) {
                 continue;
-            } 
+            }
             
             //====================================================================//
             // Insert Image in Output List
             $Image = self::Images()->Encode(
-                    $EcmFileLine->description, 
-                    $EcmFileLine->filename, 
-                    $EcmFileLine->filepath . "/", 
-                    null );
+                $EcmFileLine->description,
+                $EcmFileLine->filename,
+                $EcmFileLine->filepath . "/",
+                null
+            );
 
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert( $this->Out, "images", $FieldName, $key, $Image );
+            self::lists()->Insert($this->Out, "images", $FieldName, $key, $Image);
         }
-        
     }
     
     //====================================================================//
@@ -214,78 +217,80 @@ trait ImagesTrait {
       
     /**
      *  @abstract     Write Given Fields
-     * 
+     *
      *  @param        string    $FieldName              Field Identifier / Name
      *  @param        mixed     $Data                   Field Data
-     * 
+     *
      *  @return         none
      */
-    protected function setImagesFields($FieldName,$Data) 
+    protected function setImagesFields($FieldName, $Data)
     {
         global $db, $user;
         //====================================================================//
         // Safety Check
-        if ( $FieldName !== "images" ) {
-            return True;
-        }        
+        if ($FieldName !== "images") {
+            return true;
+        }
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
             return;
-        }          
+        }
 
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 
         //====================================================================//
         // Load Current Image Array
-        $this->getImagesFields(0,"image@images");
+        $this->getImagesFields(0, "image@images");
         
         //====================================================================//
-        // Verify Images List & Update if Needed 
+        // Verify Images List & Update if Needed
         $Position = 1;
         foreach ($Data as $Key => $ImageData) {
             //====================================================================//
             // Check if Cover Image
-            $Cover  =   isset($ImageData['cover']) ? $ImageData['cover'] : False;
+            $Cover  =   isset($ImageData['cover']) ? $ImageData['cover'] : false;
             //====================================================================//
             // Update Item Line
             $this->setImage($Position, $ImageData['image'], $Cover);
             $Position++;
-        } 
+        }
         
         //====================================================================//
         // Delete Remaining Images
         
         foreach ($this->Out["images"] as $Key => $Image) {
             $EcmImage       =   new EcmFiles($db);
-            $EcmImage->fetch(Null, Null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
+            $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
             //====================================================================//
             // Delete Object In Database
-            if ( $EcmImage->delete($user) <= 0) {    
-                $this->CatchDolibarrErrors($EcmImage);
-                Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to Delete Image File. ");
-            }   
+            if ($EcmImage->delete($user) <= 0) {
+                $this->catchDolibarrErrors($EcmImage);
+                Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to Delete Image File. ");
+            }
             //====================================================================//
             // Delete Object From Disk
-            Splash::File()->DeleteFile( $this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"] );
+            Splash::File()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
             unset($this->Out["images"][$Key]);
-        }          
+        }
 
         unset($this->In[$FieldName]);
     }
 
     /**
      *  @abstract     Write Data to Current Image
-     * 
+     *
      *  @param        int       $Position       Input Image Position on List
      *  @param        array     $ImageData      Input Image Data Array
      *  @param        bool      $Cover          Input Image is Cover
-     * 
+     *
      *  @return       none
      */
-    private function setImage($Position, $ImageData, $Cover = False) {
-        global $db, $user, $conf; 
-        $ImageUpdated   =   False;
+    private function setImage($Position, $ImageData, $Cover = false)
+    {
+        global $db;
+        
+        $this->imgUpdated   =   false;
         
         //====================================================================//
         // Create EcmFiles Main Object
@@ -293,7 +298,7 @@ trait ImagesTrait {
         
         //====================================================================//
         // Load Image by CheckSum
-        if ( empty($ImageData["md5"]) ) {
+        if (empty($ImageData["md5"])) {
             Splash::log()->war("Skipped Image Writing");
             return;
         }
@@ -301,106 +306,150 @@ trait ImagesTrait {
         //====================================================================//
         // Image Already Exits
         foreach ($this->Out["images"] as $Key => $CurrentImage) {
-            if ( ( $CurrentImage["image"]["md5"] === $ImageData["md5"] ) && ($CurrentImage["image"]["filename"] === $ImageData["filename"]) ) {
-                $EcmImage->fetch(Null, Null, $this->RelFilesDir . "/" . $CurrentImage["image"]["filename"]);
+            if (( $CurrentImage["image"]["md5"] === $ImageData["md5"] )
+                    && ($CurrentImage["image"]["filename"] === $ImageData["filename"])) {
+                $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $CurrentImage["image"]["filename"]);
                 unset($this->Out["images"][$Key]);
                 break;
             }
-        }        
+        }
         
         //====================================================================//
         // Check Image CheckSum
-        if ( $EcmImage->label != $ImageData["md5"] ) {
+        if ($EcmImage->label != $ImageData["md5"]) {
             //====================================================================//
             // Read File from Splash Server
-            $NewImageFile    =   Splash::File()->getFile($ImageData["file"],$ImageData["md5"]);
+            $NewImageFile    =   Splash::File()->getFile($ImageData["file"], $ImageData["md5"]);
             //====================================================================//
             // File Imported => Write it Here
-            if ( $NewImageFile == False ) {
-                return False;
+            if ($NewImageFile == false) {
+                return false;
             }
             //====================================================================//
             // Write Image On Folder
-            Splash::File()->WriteFile($this->DolFilesDir . "/",$ImageData["filename"],$NewImageFile["md5"],$NewImageFile["raw"]); 
-            $ImageUpdated   =   True;
+            Splash::File()->WriteFile(
+                $this->DolFilesDir . "/",
+                $ImageData["filename"],
+                $NewImageFile["md5"],
+                $NewImageFile["raw"]
+            );
+            $this->imgUpdated   =   true;
         }
 
         //====================================================================//
+        // Update Image Data
+        $this->setEcmFileData($EcmImage, $Position, $ImageData, $Cover);
+        
+        //====================================================================//
+        // Image Not Updated
+        if (!$this->imgUpdated) {
+            return;
+        }
+        
+        return $this->saveEcmFile($EcmImage, $Position);
+    }
+    
+    /**
+     *  @abstract     Write Data to Current Image
+     *
+     *  @param        EcmFiles  $EcmImage       Dolibarr File Object
+     *  @param        int       $Position       Input Image Position on List
+     *  @param        array     $ImageData      Input Image Data Array
+     *  @param        bool      $Cover          Input Image is Cover
+     *
+     *  @return       none
+     */
+    private function setEcmFileData($EcmImage, $Position, $ImageData, $Cover)
+    {
+        global $user, $conf;
+
+        //====================================================================//
         // Image Entity Is New
-        if ( empty($EcmImage->id) ) {
+        if (empty($EcmImage->id)) {
             $EcmImage->label        =   $ImageData["md5"];
             $EcmImage->filepath     =   $this->RelFilesDir;
             $EcmImage->filename     =   $ImageData["filename"];
             $EcmImage->fullpath_orig=   $EcmImage->filepath;
             $EcmImage->fk_user_c    =   $user->rowid;
             $EcmImage->entity       =   $this->Object->entity ? $this->Object->entity : $conf->entity;
-            $EcmImage->gen_or_uploaded=   "uploaded";            
-            $ImageUpdated   =   True;
+            $EcmImage->gen_or_uploaded=   "uploaded";
+            $this->imgUpdated   =   true;
         }
         
         //====================================================================//
         // Check Image Filename
-        if ( $EcmImage->position != $Position ) {
+        if ($EcmImage->position != $Position) {
             $EcmImage->position = $Position;
-            $ImageUpdated   =   True;
-        }        
+            $this->imgUpdated   =   true;
+        }
         
         //====================================================================//
         // Check Image Cover Flag
-        if ( $EcmImage->cover != $Cover ) {
+        if ($EcmImage->cover != $Cover) {
             $EcmImage->cover = $Cover;
-            $ImageUpdated   =   True;
-        }  
+            $this->imgUpdated   =   true;
+        }
+    }
+    
+    /**
+     *  @abstract     Save EcmImage to DataBase
+     *
+     *  @param        EcmFiles  $EcmImage       Dolibarr File Object
+     *  @param        int       $Position       Input Image Position on List
+     *
+     *  @return       bool
+     */
+    private function saveEcmFile($EcmImage, $Position)
+    {
+        global $user;
         
-        //====================================================================//
-        // Image Not Updated
-        if ( !$ImageUpdated ) {
-            return;
-        } 
-        
-        if ( empty($EcmImage->id) ) {
+        if (empty($EcmImage->id)) {
             //====================================================================//
             // Create Object In Database
-            if ( $EcmImage->create($user) <= 0) {    
-                $this->CatchDolibarrErrors($EcmImage);
-                return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new Image File. ");
-            }  
+            if ($EcmImage->create($user) <= 0) {
+                $this->catchDolibarrErrors($EcmImage);
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Image File. ");
+            }
             $EcmImage->position = $Position;
         }
         //====================================================================//
         // Update Object In Database
-        if ( $EcmImage->update($user) <= 0) {    
-            $this->CatchDolibarrErrors($EcmImage);
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to update Image File. ");
-        }       
+        if ($EcmImage->update($user) <= 0) {
+            $this->catchDolibarrErrors($EcmImage);
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to update Image File. ");
+        }
         
+        //====================================================================//
+        // Update Object Images Thumbs
         $this->Object->addThumbs($this->DolFilesDir . "/" . $EcmImage->filename);
-
+        
+        return true;
     }
-    
+            
     /**
      *  @abstract     Update Object Files Path if Ref Changed
-     * 
+     *
      *  @param        int       $Position       Input Image Position on List
      *  @param        array     $ImageData      Input Image Data Array
      *  @param        bool      $Cover          Input Image is Cover
-     * 
+     *
      *  @return       none
      */
-    private function updateFilesPath($Element, $Oldref, $Newref) {
-        global $db; 
+    private function updateFilesPath($Element, $Oldref, $Newref)
+    {
+        global $db;
 
         //====================================================================//
         // Check if Ref was Changed
-        if ( empty($Element) || empty($Oldref) || empty($Newref) || ($Oldref == $Newref) ) {
+        if (empty($Element) || empty($Oldref) || empty($Newref) || ($Oldref == $Newref)) {
             return;
         }
         
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if ( Splash::Local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
             return;
-        }    
+        }
         
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
                 
@@ -420,12 +469,11 @@ trait ImagesTrait {
         $resql = $db->query($sql);
         if (!$resql) {
             $EcmImage->errors[] = 'Error ' . $db->lasterror();
-            $this->CatchDolibarrErrors($EcmImage);
+            $this->catchDolibarrErrors($EcmImage);
             dol_syslog(__METHOD__ . ' ' . implode(',', $this->errors), LOG_ERR);
             $db->rollback();
             return;
         }
         $db->commit();
     }
-    
 }

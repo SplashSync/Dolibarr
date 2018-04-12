@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace   Splash\Local\Objects;
@@ -40,6 +40,7 @@ class Address extends AbstractObject
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
+    use \Splash\Local\Core\ObjectsListTrait;
         
     // Dolibarr Address Traits
     use \Splash\Local\Objects\Address\ObjectsListTrait;
@@ -48,7 +49,7 @@ class Address extends AbstractObject
     use \Splash\Local\Objects\Address\MainTrait;
         
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
@@ -59,23 +60,23 @@ class Address extends AbstractObject
     /**
      *  Object Name (Translated by Module)
      */
-    protected static    $NAME            =  "Contact Address";
+    protected static $NAME            =  "Contact Address";
     
     /**
-     *  Object Description (Translated by Module) 
+     *  Object Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "Dolibarr Contact Object";    
+    protected static $DESCRIPTION     =  "Dolibarr Contact Object";
     
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag) 
+     *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO     =  "fa fa-envelope-o";
+    protected static $ICO     =  "fa fa-envelope-o";
     
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
     
-    public static $ExtraFieldsType    =  "socpeople"; 
+    public static $ExtraFieldsType    =  "socpeople";
     
     //====================================================================//
     // Class Constructor
@@ -85,7 +86,7 @@ class Address extends AbstractObject
      *      @abstract       Class Constructor (Used only if localy necessary)
      *      @return         int                     0 if KO, >0 if OK
      */
-    function __construct()
+    public function __construct()
     {
         global $langs;
         
@@ -94,7 +95,7 @@ class Address extends AbstractObject
         require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
         //====================================================================//
         // Load Dolibarr Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");
@@ -102,8 +103,6 @@ class Address extends AbstractObject
         $langs->load("companies");
         $langs->load("other");
         
-        return True;
-    }    
-
+        return true;
+    }
 }
-

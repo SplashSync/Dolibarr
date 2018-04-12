@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -23,7 +23,7 @@ namespace   Splash\Local\Widgets;
 use Splash\Templates\Widgets\SelfTestTemplate;
 
 /**
- * @abstract    Template Widget for Splash Modules 
+ * @abstract    Template Widget for Splash Modules
  *
  * @author B. Paquier <contact@splashsync.com>
  */

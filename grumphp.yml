@@ -13,7 +13,10 @@ parameters:
         phpcs:
             standard:       "PSR2"
             triggered_by:   [php]
-#            ignore_patterns:
+            ignore_patterns:
+                - defines.inc.php
+                - modSplash.class.php
+                - interface_50_modSplash_Splash.class.php
         git_blacklist:
             keywords:
                 - "var_dump"
@@ -28,16 +31,15 @@ parameters:
         yamllint: ~
         phpmd:
             ruleset:        ["./build/phpmd.xml"]
-#            exclude:        
-#                - "nusoap.php"
-#                - "vendor"
         securitychecker: ~
         phpcpd: ~
 #            exclude:        
 #                - "Components/NuSOAP"
 #                - "vendor"               
-#        phpstan: 
+        phpstan:
+            configuration:  "build/phpstan.neon"           
 #            ignore_patterns:
+#                - git
 #                - NuSOAPInterface.php
 #                - nusoap.php
 #                - fatal.inc.php

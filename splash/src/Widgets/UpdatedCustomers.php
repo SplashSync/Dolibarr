@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,10 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
  *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $ 
+ *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
  *  \ingroup    Splash - Open Synchronisation WebService
  *  \brief      Local Function Definition for Management of Customers Data
  *  \class      SplashDemo
@@ -43,7 +43,7 @@ class UpdatedCustomers extends WidgetBase
 {
     
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
@@ -54,39 +54,42 @@ class UpdatedCustomers extends WidgetBase
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "BoxLastCustomers";
+    protected static $NAME            =  "BoxLastCustomers";
     
     /**
-     *  Widget Description (Translated by Module) 
+     *  Widget Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "BoxTitleLastModifiedCustomers";    
+    protected static $DESCRIPTION     =  "BoxTitleLastModifiedCustomers";
     
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag) 
+     *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO            =  "fa fa-users";
+    protected static $ICO            =  "fa fa-users";
     
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
-    static $OPTIONS       = array(
+    public static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
-        "Header"        =>  True,
-        "Footer"        =>  False
+        "Header"        =>  true,
+        "Footer"        =>  false
     );
     
+    private $MaxItems22   =   10;
+    
     //====================================================================//
-    // General Class Variables	
+    // General Class Variables
     //====================================================================//
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
-    public function __construct() {
+    public function __construct()
+    {
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
     }
     
 
@@ -100,39 +103,39 @@ class UpdatedCustomers extends WidgetBase
         
         //====================================================================//
         // Max Number of Entities
-        $this->FieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->Create(SPL_T_INT)
                 ->Identifier("max")
                 ->Name($langs->trans("MaxNbOfLinesForBoxes"))
-                ->Description($langs->trans("BoxTitleLastModifiedCustomers"));        
+                ->Description($langs->trans("BoxTitleLastModifiedCustomers"));
       
         //====================================================================//
         // Publish Fields
-        return $this->FieldsFactory()->Publish();
-    }       
+        return $this->fieldsFactory()->Publish();
+    }
     
     /**
      *  @abstract     Return requested Customer Data
-     * 
-     *  @param        array   $params               Search parameters for result List. 
-     *                        $params["start"]      Maximum Number of results 
-     *                        $params["end"]        List Start Offset 
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
+     *
+     *  @param        array   $params               Search parameters for result List.
+     *                        $params["start"]      Maximum Number of results
+     *                        $params["end"]        List Start Offset
+     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
 
      */
-    public function get($params=NULL)
+    public function get($params = null)
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
 
-        $this->setTitle($this->getName()); 
-        $this->setIcon($this->getIcon()); 
+        $this->setTitle($this->getName());
+        $this->setIcon($this->getIcon());
         
         //====================================================================//
         // Build Disabled Block
@@ -147,7 +150,7 @@ class UpdatedCustomers extends WidgetBase
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->BlocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->Render());
 
         //====================================================================//
         // Publish Widget
@@ -162,28 +165,29 @@ class UpdatedCustomers extends WidgetBase
     /**
     *   @abstract     Block Building - Box is Disabled
     */
-    private function buildDisabledBlock()   {
+    private function buildDisabledBlock()
+    {
 
         global $langs, $user;
         
-        if ( !$user->rights->societe->lire ) {
+        if (!$user->rights->societe->lire) {
             $langs->load("admin");
             $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
             //====================================================================//
             // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
-        }        
-        
-    }    
+            $this->blocksFactory()->addNotificationsBlock($Contents);
+        }
+    }
   
     /**
     *   @abstract     Block Building - Text Intro
     */
-    private function buildTableBlock()   {
+    private function buildTableBlock()
+    {
 
         global $langs, $db, $user;
         
-        if ( !$user->rights->societe->lire ) {
+        if (!$user->rights->societe->lire) {
             return;
         }
         
@@ -200,15 +204,15 @@ class UpdatedCustomers extends WidgetBase
         //====================================================================//
         // Empty Contents
         //====================================================================//
-        if ( $db->num_rows($Result) < 1 ) {
+        if ($db->num_rows($Result) < 1) {
             $langs->load("admin");
             $Contents   = array("warning"   => $langs->trans("NoRecordedCustomers"));
             //====================================================================//
             // Warning Block
-            $this->BlocksFactory()->addNotificationsBlock($Contents);
+            $this->blocksFactory()->addNotificationsBlock($Contents);
             
             return;
-        } 
+        }
         
         //====================================================================//
         // Build Table Contents
@@ -218,8 +222,7 @@ class UpdatedCustomers extends WidgetBase
         $num        = $db->num_rows($Result);           // Read number of results
         $index      = 0;
         
-        while ($index < $num)
-        {
+        while ($index < $num) {
             $Value = $db->fetch_array($Result);
             $Name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>' . $Value["name"];
             if ($Value["status"]) {
@@ -236,14 +239,13 @@ class UpdatedCustomers extends WidgetBase
         // Build Table Options
         //====================================================================//
         $Options = array(
-            "AllowHtml"         => True,
+            "AllowHtml"         => true,
             "HeadingRows"       => 0,
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addTableBlock($Contents,$Options);
-        
-    }      
+        $this->blocksFactory()->addTableBlock($Contents, $Options);
+    }
 
     
     //====================================================================//
@@ -259,8 +261,8 @@ class UpdatedCustomers extends WidgetBase
      */
     public function getName()
     {
-        global $langs;     
-        $langs->load("boxes");        
+        global $langs;
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$NAME));
     }
 
@@ -270,12 +272,7 @@ class UpdatedCustomers extends WidgetBase
     public function getDesc()
     {
         global $langs;
-        $langs->load("boxes");        
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-    
 }
-
-
-
-?>

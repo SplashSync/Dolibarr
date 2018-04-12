@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace Splash\Local\Objects\ThirdParty;
@@ -20,14 +20,16 @@ namespace Splash\Local\Objects\ThirdParty;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr ThirdParty Meta Fields 
+ * @abstract    Dolibarr ThirdParty Meta Fields
  */
-trait MetaTrait {
+trait MetaTrait
+{
 
     /**
     *   @abstract     Build Meta Fields using FieldFactory
     */
-    private function buildMetaFields() {
+    private function buildMetaFields()
+    {
         global $langs;
         //====================================================================//
         // STRUCTURAL INFORMATIONS
@@ -35,65 +37,64 @@ trait MetaTrait {
 
         //====================================================================//
         // Active
-        $this->FieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("status")
                 ->Name($langs->trans("Active"))
                 ->Group("Meta")
-                ->MicroData("http://schema.org/Organization","active")
-                ->isListed();        
+                ->MicroData("http://schema.org/Organization", "active")
+                ->isListed();
         
-        if ( Splash::Local()->DolVersionCmp("3.6.0") >= 0 ) {
+        if (Splash::local()->DolVersionCmp("3.6.0") >= 0) {
             //====================================================================//
             // isProspect
-            $this->FieldsFactory()->Create(SPL_T_BOOL)
+            $this->fieldsFactory()->Create(SPL_T_BOOL)
                     ->Identifier("prospect")
                     ->Name($langs->trans("Prospect"))
                     ->Group("Meta")
-                    ->MicroData("http://schema.org/Organization","prospect");        
+                    ->MicroData("http://schema.org/Organization", "prospect");
         }
 
         //====================================================================//
         // isCustomer
-        $this->FieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("client")
                 ->Name($langs->trans("Customer"))
                 ->Group("Meta")
-                ->MicroData("http://schema.org/Organization","customer");        
+                ->MicroData("http://schema.org/Organization", "customer");
 
         //====================================================================//
         // isSupplier
-        $this->FieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("fournisseur")
                 ->Name($langs->trans("Supplier"))
                 ->Group("Meta")
-                ->MicroData("http://schema.org/Organization","supplier");        
+                ->MicroData("http://schema.org/Organization", "supplier");
 
         
         //====================================================================//
         // isVAT
-        $this->FieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->Create(SPL_T_BOOL)
                 ->Identifier("tva_assuj")
                 ->Name($langs->trans("VATIsUsed"))
                 ->Group("Meta")
-                ->MicroData("http://schema.org/Organization","UseVAT");        
-        
-    }       
+                ->MicroData("http://schema.org/Organization", "UseVAT");
+    }
     
     /**
      *  @abstract     Read requested Field
-     * 
+     *
      *  @param        string    $Key                    Input List Key
      *  @param        string    $FieldName              Field Identifier / Name
-     * 
+     *
      *  @return         none
      */
-    private function getMetaFields($Key,$FieldName) {
+    private function getMetaFields($Key, $FieldName)
+    {
 
         
         //====================================================================//
         // READ Fields
-        switch ($FieldName)
-        {
+        switch ($FieldName) {
             //====================================================================//
             // STRUCTURAL INFORMATIONS
             //====================================================================//
@@ -102,49 +103,48 @@ trait MetaTrait {
             case 'tva_assuj':
             case 'fournisseur':
                 $this->getSimpleBool($FieldName);
-                break;                
+                break;
 
             case 'client':
                 $this->getSimpleBit('client', 0);
-                break;                
+                break;
 
             case 'prospect':
-                $this->Object->prospect     =   $this->Object->client;  
+                $this->Object->prospect     =   $this->Object->client;
                 $this->getSimpleBit('prospect', 1);
-                break;                
+                break;
 
             default:
                 return;
         }
         
         unset($this->In[$Key]);
-    }    
+    }
     
     /**
      *  @abstract     Write Given Fields
-     * 
+     *
      *  @param        string    $FieldName              Field Identifier / Name
      *  @param        mixed     $Data                   Field Data
-     * 
+     *
      *  @return         none
      */
-    private function setMetaFields($FieldName,$Data) 
+    private function setMetaFields($FieldName, $Data)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName)
-        {
+        switch ($FieldName) {
             //====================================================================//
             // Direct Writtings
             case 'status':
             case 'tva_assuj':
             case 'fournisseur':
-                $this->setSimple($FieldName,$Data);
-                break; 
+                $this->setSimple($FieldName, $Data);
+                break;
                 
             case 'client':
                 $this->setSimpleBit('client', 0, $Data);
-                break;                
+                break;
 
             case 'prospect':
                 $this->setSimpleBit('client', 1, $Data);
@@ -154,6 +154,5 @@ trait MetaTrait {
                 return;
         }
         unset($this->In[$FieldName]);
-    }    
-    
+    }
 }

@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace Splash\Local\Objects\Invoice;
@@ -20,43 +20,44 @@ namespace Splash\Local\Objects\Invoice;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Customer Invoice Status Field  
+ * @abstract    Dolibarr Customer Invoice Status Field
  */
-trait StatusTrait {
+trait StatusTrait
+{
 
     /**
      *  @abstract     Build Customer Order Status Fields using FieldFactory
      */
-    protected function buildStatusFields()   {
+    protected function buildStatusFields()
+    {
         
         global $langs;
         
         //====================================================================//
         // Invoice Current Status
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("status")
                 ->Name($langs->trans("Status"))
                 ->Group(html_entity_decode($langs->trans("Status")))
-                ->MicroData("http://schema.org/Invoice","paymentStatus")
-                ->AddChoice("PaymentDraft",     $langs->trans("BillStatusDraft"))
-                ->AddChoice("PaymentDue",       $langs->trans("BillStatusNotPaid"))
-                ->AddChoice("PaymentComplete",  $langs->trans("BillStatusConverted"))
-                ->AddChoice("PaymentCanceled",  $langs->trans("BillStatusCanceled"))
+                ->MicroData("http://schema.org/Invoice", "paymentStatus")
+                ->AddChoice("PaymentDraft", $langs->trans("BillStatusDraft"))
+                ->AddChoice("PaymentDue", $langs->trans("BillStatusNotPaid"))
+                ->AddChoice("PaymentComplete", $langs->trans("BillStatusConverted"))
+                ->AddChoice("PaymentCanceled", $langs->trans("BillStatusCanceled"))
                 ->isNotTested();
-
     }
     
     /**
      *  @abstract     Read requested Field
-     * 
+     *
      *  @param        string    $Key                    Input List Key
      *  @param        string    $FieldName              Field Identifier / Name
-     * 
+     *
      *  @return         none
      */
-    protected function getStatusFields($Key,$FieldName)
+    protected function getStatusFields($Key, $FieldName)
     {
-        if ( $FieldName != 'status')  {
+        if ($FieldName != 'status') {
             return;
         }
         
@@ -77,40 +78,45 @@ trait StatusTrait {
     
     /**
      *  @abstract     Write Given Fields
-     * 
+     *
      *  @param        string    $FieldName              Field Identifier / Name
      *  @param        mixed     $Data                   Field Data
-     * 
+     *
      *  @return         none
-     * 
+     *
      *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *  @SuppressWarnings(PHPMD.NPathComplexity)
+     *  @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function setStatusFields($FieldName,$Data) 
+    protected function setStatusFields($FieldName, $Data)
     {
         global $conf,$langs,$user;
         
-        if ( $FieldName != 'status')  {
+        if ($FieldName != 'status') {
             return;
         }
         unset($this->In[$FieldName]);
 
         //====================================================================//
         // Safety Check
-        if ( empty($this->Object->id) ) {
-            return False;
+        if (empty($this->Object->id)) {
+            return false;
         }
         //====================================================================//
         // Verify Stock Is Defined if Required
-        // If stock is incremented on validate invoice, we must provide warhouse id          
-        if ( !empty($conf->stock->enabled) && $conf->global->STOCK_CALCULATE_ON_BILL == 1) {
-            if ( empty($conf->global->SPLASH_STOCK ) ) {
-                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $langs->trans("WarehouseSourceNotDefined"));
+        // If stock is incremented on validate invoice, we must provide warhouse id
+        if (!empty($conf->stock->enabled) && $conf->global->STOCK_CALCULATE_ON_BILL == 1) {
+            if (empty($conf->global->SPLASH_STOCK)) {
+                return Splash::log()->err(
+                    "ErrLocalTpl",
+                    __CLASS__,
+                    __FUNCTION__,
+                    $langs->trans("WarehouseSourceNotDefined")
+                );
             }
-        }    
+        }
         $InitialStatut  =   $this->Object->statut;
-        switch ($Data)
-        {
+        switch ($Data) {
             //====================================================================//
             // Status Draft
             //====================================================================//
@@ -118,10 +124,16 @@ trait StatusTrait {
             case "PaymentDraft":
                 //====================================================================//
                 // Whatever => Set Draft
-                if ( ( $this->Object->statut != 0 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return Splash::log()->err("ErrLocalTpl", __CLASS__, "Set Draft", $langs->trans($this->Object->error) );
-                }     
-                $this->Object->statut = \Facture::STATUS_DRAFT;                
+                if (( $this->Object->statut != 0 )
+                        && ( $this->Object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
+                    return Splash::log()->err(
+                        "ErrLocalTpl",
+                        __CLASS__,
+                        "Set Draft",
+                        $langs->trans($this->Object->error)
+                    );
+                }
+                $this->Object->statut = \Facture::STATUS_DRAFT;
                 break;
             //====================================================================//
             // Status Validated
@@ -131,21 +143,24 @@ trait StatusTrait {
             case "PaymentPastDue":
                 //====================================================================//
                 // If Already Paid => Set Draft
-                if ( ( $this->Object->statut == 2 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }     
+                if (( $this->Object->statut == 2 )
+                        && ( $this->Object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
+                    return $this->catchDolibarrErrors();
+                }
                 //====================================================================//
                 // If Already Canceled => Set Draft
-                if ( ( $this->Object->statut == 3 ) && ( $this->Object->set_draft($user,$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }  
+                if (( $this->Object->statut == 3 )
+                        && ( $this->Object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
+                    return $this->catchDolibarrErrors();
+                }
                 //====================================================================//
                 // If Not Valdidated => Set Validated
-                if ( ( $this->Object->statut != 1 ) && ( $this->Object->validate($user,"",$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }        
+                if (( $this->Object->statut != 1 )
+                        && ( $this->Object->validate($user, "", $conf->global->SPLASH_STOCK) != 1 )) {
+                    return $this->catchDolibarrErrors();
+                }
                 $this->Object->paye = 0;
-                $this->Object->statut = \Facture::STATUS_VALIDATED;                     
+                $this->Object->statut = \Facture::STATUS_VALIDATED;
                 break;
             //====================================================================//
             // Status Paid
@@ -153,33 +168,33 @@ trait StatusTrait {
             case "PaymentComplete":
                 //====================================================================//
                 // If Draft => Set Validated
-                if ( ( $this->Object->statut == 0 ) && ( $this->Object->validate($user,"",$conf->global->SPLASH_STOCK) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }                
+                if (( $this->Object->statut == 0 )
+                        && ( $this->Object->validate($user, "", $conf->global->SPLASH_STOCK) != 1 )) {
+                    return $this->catchDolibarrErrors();
+                }
                 //====================================================================//
                 // If Validated => Set Paid
-                if ( ( $this->Object->statut == 1 ) && ( $this->Object->set_paid($user) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
+                if (( $this->Object->statut == 1 ) && ( $this->Object->set_paid($user) != 1 )) {
+                    return $this->catchDolibarrErrors();
                 }
                 $this->Object->paye = 1;
                 $this->Object->statut = \Facture::STATUS_CLOSED;
-                break; 
+                break;
             //====================================================================//
             // Status Canceled
             //====================================================================//
             case "PaymentCanceled":
                 //====================================================================//
                 // Whatever => Set Canceled
-                if ( ( $this->Object->statut != 3 ) && ( $this->Object->set_canceled($user) != 1 ) ) {
-                    return $this->CatchDolibarrErrors();
-                }   
+                if (( $this->Object->statut != 3 ) && ( $this->Object->set_canceled($user) != 1 )) {
+                    return $this->catchDolibarrErrors();
+                }
                 $this->Object->paye = 0;
                 $this->Object->statut = \Facture::STATUS_ABANDONED;
-                break;                  
-        }  
-        if ( $InitialStatut != $this->Object->statut) {
+                break;
+        }
+        if ($InitialStatut != $this->Object->statut) {
             $this->needUpdate();
         }
-    }    
-    
+    }
 }

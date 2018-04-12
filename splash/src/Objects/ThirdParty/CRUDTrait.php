@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace Splash\Local\Objects\ThirdParty;
@@ -26,157 +26,176 @@ trait CRUDTrait
 {
     
     /**
-     * @abstract    Load Request Object 
+     * @abstract    Load Request Object
      * @param       string  $Id               Object id
      * @return      mixed
      */
-    public function load( $Id )
+    public function load($Id)
     {
-        global $db;        
+        global $db;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__); 
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
-        // Init Object 
-        $Object = new \Societe ($db);
+        // Init Object
+        $Object = new \Societe($db);
         //====================================================================//
-        // Fetch Object 
-        if ( $Object->fetch($Id) != 1 ) {
-            $this->CatchDolibarrErrors($Object);
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load ThirdPaty (" . $Id . ").");
-        }        
+        // Fetch Object
+        if ($Object->fetch($Id) != 1) {
+            $this->catchDolibarrErrors($Object);
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Unable to load ThirdPaty (" . $Id . ")."
+            );
+        }
         //====================================================================//
-        // Check Object Entity Access (MultiCompany) 
-        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to load ThirdPaty (" . $Id . ").");
-        }        
+        // Check Object Entity Access (MultiCompany)
+        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Unable to load ThirdPaty (" . $Id . ")."
+            );
+        }
         return $Object;
-    }    
+    }
 
     /**
-     * @abstract    Create Request Object 
-     * 
+     * @abstract    Create Request Object
+     *
      * @param       array   $List         Given Object Data
-     * 
+     *
      * @return      object     New Object
      */
     public function create()
     {
-        global $db, $user;          
+        global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);         
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Customer Name is given
-        if ( empty($this->In["name"]) ) {
-            return Splash::log()->err("ErrLocalFieldMissing",__CLASS__,__FUNCTION__,"name");
+        if (empty($this->In["name"])) {
+            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "name");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::Local()->LoadLocalUser();
-        if ( empty($user->login) ) {
-            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
-        }         
+        Splash::local()->LoadLocalUser();
+        if (empty($user->login)) {
+            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+        }
         //====================================================================//
-        // Init Object 
-        $this->Object = new \Societe($db);        
+        // Init Object
+        $this->Object = new \Societe($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("name", $this->In["name"] );
+        $this->setSimple("name", $this->In["name"]);
         //====================================================================//
         // Dolibarr infos
         $this->Object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
         $this->Object->prospect           = 0;        // 0=no prospect, 1=prospect
         $this->Object->fournisseur        = 0;        // 0=no supplier, 1=supplier
         $this->Object->code_client        = -1;       // If not erased, will be created by system
-        $this->Object->code_fournisseur   = -1;       // If not erased, will be created by system        
+        $this->Object->code_fournisseur   = -1;       // If not erased, will be created by system
         //====================================================================//
         // Create Object In Database
-        if ( $this->Object->create($user) <= 0) {    
-            $this->CatchDolibarrErrors();
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__,"Unable to create new ThirdPaty. ");
-        }        
+        if ($this->Object->create($user) <= 0) {
+            $this->catchDolibarrErrors();
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdPaty. ");
+        }
         
         return $this->Object;
     }
     
     /**
-     * @abstract    Update Request Object 
-     * 
+     * @abstract    Update Request Object
+     *
      * @param       array   $Needed         Is This Update Needed
-     * 
+     *
      * @return      string      Object Id
      */
-    public function update( $Needed )
+    public function update($Needed)
     {
         global $user;
         //====================================================================//
         // Compute Changes on Customer Name
-        $this->updateFullName();        
+        $this->updateFullName();
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
-        if ( !$Needed) {
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        if (!$Needed) {
             return (int) $this->Object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::Local()->LoadLocalUser();
-        if ( empty($user->login) ) {
-            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
-        }        
+        Splash::local()->LoadLocalUser();
+        if (empty($user->login)) {
+            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+        }
         //====================================================================//
-        // Update Object 
-        if ( $this->Object->update($this->Object->id,$user,1,$this->allowmodcodeclient) <= 0) {  
-            $this->CatchDolibarrErrors();
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Update ThirdParty (" . $this->Object->id . ")");
-        }      
+        // Update Object
+        if ($this->Object->update($this->Object->id, $user, 1, $this->allowmodcodeclient) <= 0) {
+            $this->catchDolibarrErrors();
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Unable to Update ThirdParty (" . $this->Object->id . ")"
+            );
+        }
         //====================================================================//
-        // Update Object Extra Fields 
-        if ( $this->Object->insertExtraFields()  <= 0 ) {  
-            $this->CatchDolibarrErrors();
-        }        
+        // Update Object Extra Fields
+        if ($this->Object->insertExtraFields()  <= 0) {
+            $this->catchDolibarrErrors();
+        }
         return (int) $this->Object->id;
-    }  
+    }
     
     /**
      * @abstract    Delete requested Object
-     * 
+     *
      * @param       int     $Id     Object Id.  If NULL, Object needs to be created.
-     * 
-     * @return      bool                          
-     */    
-    public function delete($Id = NULL)
+     *
+     * @return      bool
+     */
+    public function delete($Id = null)
     {
         global $db,$user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
-        // Load Object 
+        // Load Object
         $Object = new \Societe($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::Local()->LoadLocalUser();
-        if ( empty($user->login) ) {
-            return Splash::log()->err("ErrLocalUserMissing",__CLASS__,__FUNCTION__);
+        Splash::local()->LoadLocalUser();
+        if (empty($user->login)) {
+            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Set Object Id, fetch not needed
         $Object->id = $Id;
         //====================================================================//
-        // Check Object Entity Access (MultiCompany) 
+        // Check Object Entity Access (MultiCompany)
         unset($Object->entity);
-        if ( !Splash::Local()->isMultiCompanyAllowed($Object) ) {
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__," Unable to Delete ThirdParty (" . $Id . ").");
-        }       
-        //====================================================================//
-        // Delete Object 
-//        $Arg1 = ( Splash::Local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;
-        if ( $Object->delete($Id) <= 0 ) {  
-            return $this->CatchDolibarrErrors( $Object );
+        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Unable to Delete ThirdParty (" . $Id . ")."
+            );
         }
-        return True;
-    }      
-    
+        //====================================================================//
+        // Delete Object
+//        $Arg1 = ( Splash::local()->DolVersionCmp("6.0.0") > 0 ) ? $user : 0;
+        if ($Object->delete($Id) <= 0) {
+            return $this->catchDolibarrErrors($Object);
+        }
+        return true;
+    }
 }

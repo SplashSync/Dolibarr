@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace   Splash\Local\Core;
@@ -21,44 +21,88 @@ use Exception;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Push Dolibarr Errors Array to Splash Log 
+ * @abstract    Push Dolibarr Errors Array to Splash Log
  */
-trait ErrorParserTrait {
+trait ErrorParserTrait
+{
     
     /**
      * @abstract    Catch Dolibarr Common Objects Errors and Push to Splash Logger
-     * 
+     *
      * @param   object  $Subject    Focus on a specific object
-     * 
+     *
      * @return  bool                False if Error was Found
      */
-    protected function CatchDolibarrErrors( $Subject = Null ) {
+    protected function catchDolibarrErrors($Subject = null)
+    {
+        
+        //====================================================================//
+        // Use Current Parser Object
+        if (is_null($Subject)) {
+            $Subject    = $this->Object;
+        }
+        
+        return $this->catchSimpleErrors($Subject) & $this->catchArrayErrors($Subject);
+    }
+    
+    /**
+     * @abstract    Catch Dolibarr Common Objects Simple Errors
+     *
+     * @param   object  $Subject    Focus on a specific object
+     *
+     * @return  bool                False if Error was Found
+     */
+    private function catchSimpleErrors($Subject = null)
+    {
         
         global $langs;
-        $NoError    =   True;        
+        
         //====================================================================//
-        // Use Current Parser Object        
-        if ( is_null($Subject) ) {
-            $Subject    = $this->Object;
-        } 
-        //====================================================================//
-        // Simple Error        
-        if ( isset($Subject->error) && !empty($Subject->error) && is_scalar($Subject->error)) {
+        // Simple Error
+        if (isset($Subject->error) && !empty($Subject->error) && is_scalar($Subject->error)) {
             $Trace = (new Exception())->getTrace()[1];
-            $NoError    =    Splash::log()->err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans($Subject->error)));
-        } 
+            return  Splash::log()->err(
+                "ErrLocalTpl",
+                $Trace["class"],
+                $Trace["function"],
+                html_entity_decode($langs->trans($Subject->error))
+            );
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @abstract    Catch Dolibarr Common Objects Array Errors
+     *
+     * @param   object  $Subject    Focus on a specific object
+     *
+     * @return  bool                False if Error was Found
+     */
+    protected function catchArrayErrors($Subject = null)
+    {
+        
+        global $langs;
+        
+        $NoError    =   true;
+        
         //====================================================================//
-        // Array of Errors        
-        if ( !isset($Subject->errors) || empty($Subject->errors)) {
-            return $NoError;
+        // Array of Errors
+        if (!isset($Subject->errors) || empty($Subject->errors)) {
+            return true;
         }
         $Trace = (new Exception())->getTrace()[1];
         foreach ($Subject->errors as $Error) {
-            if ( is_scalar($Error) && !empty($Error) ) {
-                $NoError    =    Splash::log()->err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans($Error)));
-            } 
+            if (is_scalar($Error) && !empty($Error)) {
+                $NoError    =    Splash::log()->err(
+                    "ErrLocalTpl",
+                    $Trace["class"],
+                    $Trace["function"],
+                    html_entity_decode($langs->trans($Error))
+                );
+            }
         }
+        
         return $NoError;
     }
-    
 }

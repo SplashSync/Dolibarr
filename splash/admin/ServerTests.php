@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- * 
- * 
+ *
+ *
  *  \Id 	$Id: ServerTests.php 527 2016-05-25 10:18:55Z Nanard33 $
  *  \version    $Revision: 527 $
  *  \ingroup    Splash - Dolibarr Synchronisation via WebService
@@ -27,9 +27,9 @@ use Splash\Client\Splash;
 
 //====================================================================//
 // Open Connection Test Tab
-dol_fiche_head(array(), Null, $langs->trans("SPL_WsTest") , 0, null);
+dol_fiche_head(array(), null, $langs->trans("SPL_WsTest"), 0, null);
 
-echo Splash::log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(true);
 
 //====================================================================//
 // List Objects
@@ -45,7 +45,7 @@ foreach ($list as $value) {
 echo '      </ul></td>';
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(true);
 echo "</br>";
 
 //====================================================================//
@@ -62,7 +62,7 @@ foreach ($Widgets as $value) {
 echo '      </ul></td>';
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(true);
 echo "</br>";
 
 //====================================================================//
@@ -71,14 +71,14 @@ echo "</br>";
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="impair">';
 echo '      <td width="60%">' . $langs->trans("SPL_SelfTest") . '</td>';
-if ( Splash::SelfTest() ) {
-    echo '      <td>' . img_picto("Ok","tick") . "&nbsp;" . $langs->trans("SPL_SelfTestOk") . '</td>';
+if (Splash::SelfTest()) {
+    echo '      <td>' . img_picto("Ok", "tick") . "&nbsp;" . $langs->trans("SPL_SelfTestOk") . '</td>';
 } else {
-    echo '      <td>' . img_picto("Ko","high") . "&nbsp;" . $langs->trans("SPL_SelfTestKo") . '</td>';
+    echo '      <td>' . img_picto("Ko", "high") . "&nbsp;" . $langs->trans("SPL_SelfTestKo") . '</td>';
 }
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(true);
 echo "</br>";
 
 //====================================================================//
@@ -87,14 +87,14 @@ echo "</br>";
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="impair">';
 echo '      <td width="60%">' . $langs->trans("SPL_WsTestPing") . '</td>';
-if ( Splash::Ping() ) {
-    echo '      <td>' . img_picto("Ok","tick") . "&nbsp;" . $langs->trans("SPL_WsPingOk") . '</td>';
+if (Splash::Ping()) {
+    echo '      <td>' . img_picto("Ok", "tick") . "&nbsp;" . $langs->trans("SPL_WsPingOk") . '</td>';
 } else {
-    echo '      <td>' . img_picto("Ko","high") . "&nbsp;" . $langs->trans("SPL_WsPingKo") . '</td>';
+    echo '      <td>' . img_picto("Ko", "high") . "&nbsp;" . $langs->trans("SPL_WsPingKo") . '</td>';
 }
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(true);
 echo "</br>";
 
 //====================================================================//
@@ -103,17 +103,16 @@ echo "</br>";
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="pair">';
 echo '      <td width="60%">' . $langs->trans("SPL_WsTestConnect") . '</td>';
-if ( Splash::Connect() ) {
-    echo '      <td>' . img_picto("Ok","tick") . "&nbsp;" . $langs->trans("SPL_WsConnectOk") . '</td>';
+if (Splash::Connect()) {
+    echo '      <td>' . img_picto("Ok", "tick") . "&nbsp;" . $langs->trans("SPL_WsConnectOk") . '</td>';
 } else {
-    echo '      <td>' . img_picto("Ko","high") . "&nbsp;" . $langs->trans("SPL_WsConnectKo") . '</td>';
+    echo '      <td>' . img_picto("Ko", "high") . "&nbsp;" . $langs->trans("SPL_WsConnectKo") . '</td>';
 }
 echo '  </tr>';
 echo '</tbody></table>';
-echo Splash::log()->GetHtmlLog(True);
+echo Splash::log()->GetHtmlLog(true);
 echo "</br>";
 
 //====================================================================//
 // Close Connection Test Tab
 echo    '</div>';
-

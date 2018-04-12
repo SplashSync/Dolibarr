@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace Splash\Local\Objects\Order;
@@ -22,14 +22,15 @@ use Splash\Core\SplashCore      as Splash;
 /**
  * @abstract    Dolibarr Customer Orders Items Fields
  */
-trait ItemsTrait {
+trait ItemsTrait
+{
 
     /**
      *  @abstract     Create a New Line Item
-     * 
+     *
      *  @return         OrderLine
      */
-    protected function createItem() 
+    protected function createItem()
     {
         global $db;
         
@@ -38,39 +39,20 @@ trait ItemsTrait {
         //====================================================================//
         // Pre-Setup of Item
         $Item->fk_commande = $this->Object->id;
-        $Item->subprice                     = 0;
-        $Item->price                        = 0;
-        $Item->qty                          = 0;
         
-        $Item->total_ht                     = 0;
-        $Item->total_tva                    = 0;
-        $Item->total_ttc                    = 0;
-        $Item->total_localtax1              = 0;
-        $Item->total_localtax2              = 0;
-        
-        $Item->fk_multicurrency             = "NULL";
-        $Item->multicurrency_code           = "NULL";
-        $Item->multicurrency_subprice       = "0.0";
-        $Item->multicurrency_total_ht       = "0.0";
-        $Item->multicurrency_total_tva      = "0.0";
-        $Item->multicurrency_total_ttc      = "0.0";
-            
-        if ( $Item->insert() <= 0) { 
-            $this->CatchDolibarrErrors($Item);
-            return Null;
-        }
-                
-        return $Item;
+        //====================================================================//
+        // Pre-Setup of Item with Common Values & Insert
+        return $this->insertItem($Item);
     }
     
     /**
      *  @abstract     Delete a Line Item
-     * 
+     *
      *  @param        OrderLine     $OrderLine  Order OrderLine Item
-     * 
+     *
      *  @return         bool
      */
-    protected function deleteItem( $OrderLine ) 
+    protected function deleteItem($OrderLine)
     {
         global $user;
         //====================================================================//
@@ -79,14 +61,13 @@ trait ItemsTrait {
         $this->Object->brouillon      = 1;
         //====================================================================//
         // Prepare Args
-        $Arg1 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
-        $Arg2 = ( Splash::Local()->DolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : Null;
+        $Arg1 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
+        $Arg2 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : null;
         //====================================================================//
         // Perform Line Delete
-        if ( $this->Object->deleteline($Arg1, $Arg2) <= 0) { 
-            return $this->CatchDolibarrErrors();
+        if ($this->Object->deleteline($Arg1, $Arg2) <= 0) {
+            return $this->catchDolibarrErrors();
         }
-        return True;
+        return true;
     }
-    
 }

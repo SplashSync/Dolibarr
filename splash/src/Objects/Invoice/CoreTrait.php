@@ -8,90 +8,90 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace Splash\Local\Objects\Invoice;
 
 /**
- * @abstract    Dolibarr Customer Invoice Fields (Required) 
+ * @abstract    Dolibarr Customer Invoice Fields (Required)
  */
-trait CoreTrait {
+trait CoreTrait
+{
 
     /**
      *  @abstract     Build Core Fields using FieldFactory
      */
-    protected function buildCoreFields()   {
+    protected function buildCoreFields()
+    {
         global $langs;
         
         //====================================================================//
         // Customer Object
-        $this->FieldsFactory()->Create(self::Objects()->Encode( "ThirdParty" , SPL_T_ID))
+        $this->fieldsFactory()->Create(self::Objects()->Encode("ThirdParty", SPL_T_ID))
                 ->Identifier("socid")
                 ->Name($langs->trans("Company"))
-                ->MicroData("http://schema.org/Invoice","customer")
-                ->isRequired();  
+                ->MicroData("http://schema.org/Invoice", "customer")
+                ->isRequired();
         
         //====================================================================//
-        // Order Date 
-        $this->FieldsFactory()->Create(SPL_T_DATE)
+        // Order Date
+        $this->fieldsFactory()->Create(SPL_T_DATE)
                 ->Identifier("date")
                 ->Name($langs->trans("OrderDate"))
-                ->MicroData("http://schema.org/Order","orderDate")
+                ->MicroData("http://schema.org/Order", "orderDate")
                 ->isRequired()
                 ->isListed();
         
         //====================================================================//
         // Reference
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref")
                 ->Name($langs->trans("InvoiceRef"))
-                ->MicroData("http://schema.org/Invoice","name")       
+                ->MicroData("http://schema.org/Invoice", "name")
                 ->isReadOnly()
                 ->isListed();
         
         //====================================================================//
         // Customer Reference
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_client")
                 ->Name($langs->trans("RefCustomer"))
-                ->MicroData("http://schema.org/Invoice","confirmationNumber");
+                ->MicroData("http://schema.org/Invoice", "confirmationNumber");
         
         //====================================================================//
         // Internal Reference
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_int")
                 ->Name($langs->trans("RefCustomer") . " " . $langs->trans("Internal"))
-                ->MicroData("http://schema.org/Invoice","description");
+                ->MicroData("http://schema.org/Invoice", "description");
                 
         //====================================================================//
         // External Reference
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("ref_ext")
                 ->Name($langs->trans("ExternalRef"))
                 ->isListed()
-                ->MicroData("http://schema.org/Invoice","alternateName");
-        
-    }    
+                ->MicroData("http://schema.org/Invoice", "alternateName");
+    }
 
     /**
      *  @abstract     Read requested Field
-     * 
+     *
      *  @param        string    $Key                    Input List Key
      *  @param        string    $FieldName              Field Identifier / Name
-     * 
+     *
      *  @return         none
      */
-    protected function getCoreFields($Key,$FieldName)
+    protected function getCoreFields($Key, $FieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName)
-        {
+        switch ($FieldName) {
             //====================================================================//
             // Direct Readings
             case 'ref':
@@ -102,15 +102,16 @@ trait CoreTrait {
                 break;
             
             //====================================================================//
-            // Contact ThirdParty Id 
+            // Contact ThirdParty Id
             case 'socid':
-                $this->Out[$FieldName] = self::Objects()->Encode( "ThirdParty" , $this->Object->$FieldName);
+                $this->Out[$FieldName] = self::Objects()->Encode("ThirdParty", $this->Object->$FieldName);
                 break;
 
             //====================================================================//
             // Order Official Date
             case 'date':
-                $this->Out[$FieldName] = !empty($this->Object->date)?dol_print_date($this->Object->date, '%Y-%m-%d'):Null;
+                $date   =   $this->Object->date;
+                $this->Out[$FieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
                 break;
             
             default:
@@ -122,54 +123,52 @@ trait CoreTrait {
 
     /**
      *  @abstract     Write Given Fields
-     * 
+     *
      *  @param        string    $FieldName              Field Identifier / Name
      *  @param        mixed     $Data                   Field Data
-     * 
+     *
      *  @return         none
      */
-    protected function setCoreFields($FieldName,$Data) 
+    protected function setCoreFields($FieldName, $Data)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName)
-        {
+        switch ($FieldName) {
             //====================================================================//
             // Direct Readings
             case 'ref':
             case 'ref_client':
-                $this->setSimple($FieldName,$Data);
+                $this->setSimple($FieldName, $Data);
                 break;
             
-            case 'ref_ext':                
+            case 'ref_ext':
             case 'ref_int':
                 //====================================================================//
                 //  Compare Field Data
-                if ( $this->Object->$FieldName != $Data ) {
+                if ($this->Object->$FieldName != $Data) {
                     //====================================================================//
                     //  Update Field Data
-                    $this->Object->setValueFrom($FieldName,$Data);
+                    $this->Object->setValueFrom($FieldName, $Data);
                     $this->needUpdate();
-                }  
-                break;            
+                }
+                break;
             
             //====================================================================//
-            // Order Company Id 
+            // Order Company Id
             case 'socid':
-                $this->setSimple($FieldName,self::Objects()->Id( $Data ));
-                break;                 
+                $this->setSimple($FieldName, self::Objects()->Id($Data));
+                break;
             
             //====================================================================//
             // Order Official Date
             case 'date':
-                $this->setSimple('date',$Data);
-                $this->setSimple('date_commande',$Data);
-                break;     
+                $this->setSimple('date', $Data);
+                $this->setSimple('date_commande', $Data);
+                break;
 
             default:
                 return;
         }
         unset($this->In[$FieldName]);
     }
-    
 }

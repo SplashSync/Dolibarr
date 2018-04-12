@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,10 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
  *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $ 
+ *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
  *  \ingroup    OSWS - Open Synchronisation WebService
  *  \brief      Local Function Definition for Management of Customers Data
  *  \class      OsWs_Local_Customers
@@ -36,7 +36,6 @@
 
 namespace   Splash\Local\Objects;
 
-
 use Splash\Core\SplashCore      as Splash;
 
 use Splash\Models\AbstractObject;
@@ -47,8 +46,8 @@ use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\ListsTrait;
 
 /**
- *	\class      Order
- *	\brief      Customers Invoices Management Class
+ *  \class      Order
+ *  \brief      Customers Invoices Management Class
  */
 class Invoice extends AbstractObject
 {
@@ -65,7 +64,8 @@ class Invoice extends AbstractObject
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\BaseItemsTrait;
-    use \Splash\Local\Core\ExtraFieldsTrait;    
+    use \Splash\Local\Core\ExtraFieldsTrait;
+    use \Splash\Local\Core\ObjectsListTrait;
     
     // Dolibarr Invoices Traits
     use \Splash\Local\Objects\Invoice\ObjectsListTrait;
@@ -77,7 +77,7 @@ class Invoice extends AbstractObject
     use \Splash\Local\Objects\Invoice\StatusTrait;
     
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
@@ -88,23 +88,23 @@ class Invoice extends AbstractObject
     /**
      *  Object Name (Translated by Module)
      */
-    protected static    $NAME            =  "Customer Invoice";
+    protected static $NAME            =  "Customer Invoice";
     
     /**
-     *  Object Description (Translated by Module) 
+     *  Object Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "Dolibarr Customers Invoice Object";    
+    protected static $DESCRIPTION     =  "Dolibarr Customers Invoice Object";
     
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag) 
+     *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO     =  "fa fa-money";
+    protected static $ICO     =  "fa fa-money";
     
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
     
-    public static $ExtraFieldsType    =  "facture"; 
+    public static $ExtraFieldsType    =  "facture";
     
     //====================================================================//
     // Class Constructor
@@ -114,7 +114,7 @@ class Invoice extends AbstractObject
      *      @abstract       Class Constructor (Used only if localy necessary)
      *      @return         int                     0 if KO, >0 if OK
      */
-    function __construct()
+    public function __construct()
     {
         global $langs;
         //====================================================================//
@@ -122,7 +122,7 @@ class Invoice extends AbstractObject
         require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
         //====================================================================//
         // Load Dolibarr Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");
@@ -130,16 +130,11 @@ class Invoice extends AbstractObject
         $langs->load("companies");
         $langs->load("orders");
         $langs->load("bills");
-        $langs->load("other");        
-        $langs->load("stocks");  
+        $langs->load("other");
+        $langs->load("stocks");
         //====================================================================//
         //  Load Local Translation File
-        Splash::Translator()->Load("objects@local");         
-        return True;
-    }    
-    
+        Splash::Translator()->Load("objects@local");
+        return true;
+    }
 }
-
-
-
-?>

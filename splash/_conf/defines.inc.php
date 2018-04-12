@@ -36,17 +36,17 @@ dol_include_once("/splash/vendor/autoload.php");
 
 //====================================================================//
 // Show Debug Messages
-define("SPL_SHOW_DEBUG"			,0);
-define("SPL_SHOW_DEV"			,0);
+define("SPL_SHOW_DEBUG", 0);
+define("SPL_SHOW_DEV", 0);
 
 //====================================================================//
 // Module Version
-define("SPL_MOD_VERSION"	,'1.4.0-beta');
-define("SPL_MOD_ID"		,9200);
-define("SPL_MOD_NAME"           ,'splash');
-define("SPL_MOD_CATEGORIE"	,'technic');
-define("SPL_MOD_PICTO"          ,'splash@splash');
-define("SPL_FULL_NAME"          ,'Splash Server Module for Dolibarr');
+define("SPL_MOD_VERSION", '1.4.0-beta');
+define("SPL_MOD_ID", 9200);
+define("SPL_MOD_NAME", 'splash');
+define("SPL_MOD_CATEGORIE", 'technic');
+define("SPL_MOD_PICTO", 'splash@splash');
+define("SPL_FULL_NAME", 'Splash Server Module for Dolibarr');
 
 //====================================================================//
 // Parameters
@@ -54,47 +54,45 @@ define("SPL_FULL_NAME"          ,'Splash Server Module for Dolibarr');
 
 //====================================================================//
 // Databases Names
-define('SPL_NODES'	,	'spl_nodes');
-define('SPL_LINKS'	,	'spl_links');
-define('SPL_LOG'        ,	'spl_log');
+define('SPL_NODES', 'spl_nodes');
+define('SPL_LINKS', 'spl_links');
+define('SPL_LOG', 'spl_log');
 
 
 //====================================================================//
 // Standard Strings
-define('SPL_NAME'	,	'Splash Server ');
-define('SPL_LOGPREFIX'  ,	SPL_NAME.'- ');
-define('SPL_WS'		,       'WebService ');
-define('SPL_WSL'		,   SPL_NAME.SPL_WS.'- ');
-define('SPL_CHAR_BR'	,	'</br>');
-define('SPL_LOGO'	,	"/Splash-ico.png");
-define('SPL_WEB_URL'	,	"http://www.dolibarr-addct.com");
-define('SPL_HELP_URL'   ,	"http://www.dolibarr-addct.com");
-define('SPL_FAQ_URL'	,	"http://www.dolibarr-addct.com");
-define('SPL_BUG_URL'	,	"http://www.dolibarr-addct.com");
-define('SPL_UPDATE_URL' ,	"http://www.dolistore.com");
+define('SPL_NAME', 'Splash Server ');
+define('SPL_LOGPREFIX', SPL_NAME.'- ');
+define('SPL_WS', 'WebService ');
+define('SPL_WSL', SPL_NAME.SPL_WS.'- ');
+define('SPL_CHAR_BR', '</br>');
+define('SPL_LOGO', "/Splash-ico.png");
+define('SPL_WEB_URL', "http://www.dolibarr-addct.com");
+define('SPL_HELP_URL', "http://www.dolibarr-addct.com");
+define('SPL_FAQ_URL', "http://www.dolibarr-addct.com");
+define('SPL_BUG_URL', "http://www.dolibarr-addct.com");
+define('SPL_UPDATE_URL', "http://www.dolistore.com");
 
 //====================================================================//
 // Function standard returns
-define('SPL_OK'      ,	1);
-define('SPL_KO'      ,	0);
-define('SPL_NOK'     ,	0);
+define('SPL_OK', 1);
+define('SPL_KO', 0);
+define('SPL_NOK', 0);
 
 
 //====================================================================//
 // Folders Definition for this Module
-define('SPL_FOLDER'	,	"/splash/vendor/splash/phpcore");
-define('SPL_ROOT'	,	DOL_DOCUMENT_ROOT.SPL_FOLDER);
-define('SPL_CORE'	,	"/core");
-define('SPL_CFG'	,	"/_conf");
-define('SPL_INC'	,	"/inc");
-define('SPL_CLASS'	,	"/class");
-define('SPL_PCHART'	,	"/pChart");
-define('SPL_NUSOAP'	,	"/Nusoap");
-define('SPL_FONTS'	,	"/fonts");
-define('SPL_IMG'	,	SPL_FOLDER."/img");
-define('SPL_ICO'	,	SPL_FOLDER."/img/ico");
-define('SPL_FRAMES'	,	DOL_URL_ROOT.SPL_FOLDER."/frames");
-define('SPL_TEMP'	,	DOL_DATA_ROOT.SPL_FOLDER."/temp");
-define('SPL_DIRBAK'	,	DOL_DATA_ROOT.SPL_FOLDER."/nodes");
-
-?>
+define('SPL_FOLDER', "/splash/vendor/splash/phpcore");
+define('SPL_ROOT', DOL_DOCUMENT_ROOT.SPL_FOLDER);
+define('SPL_CORE', "/core");
+define('SPL_CFG', "/_conf");
+define('SPL_INC', "/inc");
+define('SPL_CLASS', "/class");
+define('SPL_PCHART', "/pChart");
+define('SPL_NUSOAP', "/Nusoap");
+define('SPL_FONTS', "/fonts");
+define('SPL_IMG', SPL_FOLDER."/img");
+define('SPL_ICO', SPL_FOLDER."/img/ico");
+define('SPL_FRAMES', DOL_URL_ROOT.SPL_FOLDER."/frames");
+define('SPL_TEMP', DOL_DATA_ROOT.SPL_FOLDER."/temp");
+define('SPL_DIRBAK', DOL_DATA_ROOT.SPL_FOLDER."/nodes");

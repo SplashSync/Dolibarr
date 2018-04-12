@@ -21,40 +21,47 @@ use Splash\Core\SplashCore  as Splash;
  * @abstract    MultiCompany Module Manager
  * @author      B. Paquier <contact@splashsync.com>
  */
-trait MultiCompanyTrait {
+trait MultiCompanyTrait
+{
     
-    static $DEFAULT_ENTITY    =   1;
+    private static $DEFAULT_ENTITY    =   1;
     
 
-    public function isMultiCompany() {
-        return (bool) Splash::Local()->getParameter("MAIN_MODULE_MULTICOMPANY");
+    public function isMultiCompany()
+    {
+        return (bool) Splash::local()->getParameter("MAIN_MODULE_MULTICOMPANY");
     }
     
-    protected function isMultiCompanyDefaultEntity() {
+    protected function isMultiCompanyDefaultEntity()
+    {
         return $this->isMultiCompany() && ( $this->getMultiCompanyEntityId() == static::$DEFAULT_ENTITY );
-    }  
+    }
     
-    protected function isMultiCompanyChildEntity() {
+    protected function isMultiCompanyChildEntity()
+    {
         return $this->isMultiCompany() && ( $this->getMultiCompanyEntityId() != static::$DEFAULT_ENTITY );
-    }    
+    }
     
     
-    protected function getMultiCompanyEntityId() {
+    protected function getMultiCompanyEntityId()
+    {
         global $conf;
         return $conf->entity;
-    }     
+    }
 
-    protected function setupMultiCompany() {
+    protected function setupMultiCompany()
+    {
         global $conf, $db, $user;
         
         //====================================================================//
-        // Detect MultiCompany Module 
-        if ( !$this->isMultiCompany() ) {
+        // Detect MultiCompany Module
+        if (!$this->isMultiCompany()) {
             return;
         }
         //====================================================================//
         // Detect Required to Switch Entity
-        if ( empty(Splash::Input("Entity", INPUT_GET)) || ( Splash::Input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY) ) {
+        if (empty(Splash::Input("Entity", INPUT_GET))
+                || ( Splash::Input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY)) {
             return;
         }
         //====================================================================//
@@ -64,55 +71,65 @@ trait MultiCompanyTrait {
         $user->entity   =   $conf->entity;
 
         return $conf->entity;
-    }     
+    }
     
-    protected function getMultiCompanyServerPath() {
+    protected function getMultiCompanyServerPath()
+    {
         
-        $ServerRoot     =   realpath(Splash::Input( "DOCUMENT_ROOT") );  
+        $ServerRoot     =   realpath(Splash::Input("DOCUMENT_ROOT"));
         $Prefix         =   isMultiCompanyChildEntity ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
         $FullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $Prefix;
-        $RelativePath   =   explode($ServerRoot,$FullPath);
+        $RelativePath   =   explode($ServerRoot, $FullPath);
         
-        if ( isset($RelativePath[1]) ) {
+        if (isset($RelativePath[1])) {
             return  $RelativePath[1];
         }
         
-        return   Null;
-    }    
+        return   null;
+    }
     
     /**
      * @abstract    Ensure Dolibarr Object Access is Allowed from this Entity
-     * 
+     *
      * @param   object  $Subject    Focus on a specific object
-     * 
+     *
      * @return  bool                False if Error was Found
      */
-    public function isMultiCompanyAllowed( $Subject = Null ) {
+    public function isMultiCompanyAllowed($Subject = null)
+    {
         
         global $langs;
         
         //====================================================================//
-        // Detect MultiCompany Module 
-        if ( !$this->isMultiCompany() ) {
-            return True;
+        // Detect MultiCompany Module
+        if (!$this->isMultiCompany()) {
+            return true;
         }
         //====================================================================//
-        // Check Object        
-        if ( is_null($Subject) ) {
-            return False;
-        } 
+        // Check Object
+        if (is_null($Subject)) {
+            return false;
+        }
         //====================================================================//
-        // Load Object Entity        
-        $EntityId   =   isset($Subject->entity) ? $Subject->entity : $Subject->getValueFrom($Subject->table_element, $Subject->id, "entity");
+        // Load Object Entity
+        if (isset($Subject->entity)) {
+            $EntityId   =   $Subject->entity;
+        } else {
+            $EntityId   =   $Subject->getValueFrom($Subject->table_element, $Subject->id, "entity");
+        }
         //====================================================================//
-        // Check Object Entity        
-        if ( $EntityId != $this->getMultiCompanyEntityId() ) {
+        // Check Object Entity
+        if ($EntityId != $this->getMultiCompanyEntityId()) {
             $Trace = (new Exception())->getTrace()[1];
             $langs->load("errors");
-            return  Splash::log()->err("ErrLocalTpl",$Trace["class"],$Trace["function"], html_entity_decode($langs->trans('ErrorForbidden')));
-        } 
+            return  Splash::log()->err(
+                "ErrLocalTpl",
+                $Trace["class"],
+                $Trace["function"],
+                html_entity_decode($langs->trans('ErrorForbidden'))
+            );
+        }
         
-        return True;
-    }    
-    
+        return true;
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,10 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
  *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $ 
+ *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
  *  \ingroup    Splash - Open Synchronisation WebService
  *  \brief      Local Function Definition for Management of Customers Data
  *  \class      SplashDemo
@@ -42,78 +42,79 @@ use Splash\Core\SplashCore      as Splash;
 class CustomerInvoicesStats extends WidgetBase
 {
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
      *  Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
-    protected static    $DISABLED        =  True;
+    protected static $DISABLED        =  true;
     
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "CustomersInvoices";
+    protected static $NAME            =  "CustomersInvoices";
     
     /**
-     *  Widget Description (Translated by Module) 
+     *  Widget Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "CustomersInvoices";    
+    protected static $DESCRIPTION     =  "CustomersInvoices";
     
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag) 
+     *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO            =  "fa fa-line-chart";
+    protected static $ICO            =  "fa fa-line-chart";
     
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
-    static $OPTIONS       = array(
+    public static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
-        "Header"        =>  True,
-        "Footer"        =>  True,
-        'UseCache'      =>  True,
-        'CacheLifeTime' =>  60,        
+        "Header"        =>  true,
+        "Footer"        =>  true,
+        'UseCache'      =>  true,
+        'CacheLifeTime' =>  60,
     );
     
     //====================================================================//
-    // General Class Variables	
+    // General Class Variables
     //====================================================================//
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
-    public function __construct() {
+    public function __construct()
+    {
         //====================================================================//
         // Load Default Language
-        Splash::Local()->loadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
     }
     
     /**
      *  @abstract     Return requested Customer Data
-     * 
-     *  @param        array   $params               Search parameters for result List. 
-     *                        $params["start"]      Maximum Number of results 
-     *                        $params["end"]        List Start Offset 
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
+     *
+     *  @param        array   $params               Search parameters for result List.
+     *                        $params["start"]      Maximum Number of results
+     *                        $params["end"]        List Start Offset
+     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
 
      */
-    public function get($params=NULL)
+    public function get($params = null)
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
 
-        $this->setTitle($this->getName()); 
-        $this->setIcon($this->getIcon()); 
+        $this->setTitle($this->getName());
+        $this->setIcon($this->getIcon());
         
         //====================================================================//
         // Build Data Blocks
@@ -126,7 +127,7 @@ class CustomerInvoicesStats extends WidgetBase
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->BlocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->Render());
 
         //====================================================================//
         // Publish Widget
@@ -143,7 +144,8 @@ class CustomerInvoicesStats extends WidgetBase
     /**
      * @abstract    Read Widget Datas
      */
-    private function getData()   {
+    private function getData()
+    {
 
         global $db;
         
@@ -161,15 +163,14 @@ class CustomerInvoicesStats extends WidgetBase
         $sql.= " WHERE f.datef BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
         $sql.= " AND ".$stats->where;
         $sql.= " GROUP BY step";
-        $sql.= $db->order('step','ASC');
+        $sql.= $db->order('step', 'ASC');
 
         $Result = $db->query($sql);
 
         $RawData = array();
-        foreach (mysqli_fetch_all($Result,MYSQLI_ASSOC) as $Value)
-        {
+        foreach (mysqli_fetch_all($Result, MYSQLI_ASSOC) as $Value) {
             $RawData[$Value["step"]] = $Value["total"];
-        } 
+        }
         
         return $this->parseDatedData($RawData);
     }
@@ -178,7 +179,8 @@ class CustomerInvoicesStats extends WidgetBase
     /**
     *   @abstract     Block Building - Morris Bar Graph
     */
-    private function buildMorrisBarBlock()   {
+    private function buildMorrisBarBlock()
+    {
 
         global $langs;
         
@@ -198,13 +200,12 @@ class CustomerInvoicesStats extends WidgetBase
         //====================================================================//
         // Block Options
         $Options = array(
-            "AllowHtml"         => True,
+            "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->BlocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
-        
-    }       
+        $this->blocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
+    }
     
     //====================================================================//
     // Class Tooling Functions
@@ -219,9 +220,9 @@ class CustomerInvoicesStats extends WidgetBase
      */
     public function getName()
     {
-        global $langs;     
+        global $langs;
         $langs->load("main");
-        $langs->load("boxes");        
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$NAME));
     }
 
@@ -232,12 +233,7 @@ class CustomerInvoicesStats extends WidgetBase
     {
         global $langs;
         $langs->load("main");
-        $langs->load("boxes");        
+        $langs->load("boxes");
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-
 }
-
-
-
-?>

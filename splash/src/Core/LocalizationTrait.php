@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace   Splash\Local\Core;
@@ -20,60 +20,62 @@ namespace   Splash\Local\Core;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Access to Dolibarr States & Countries  
+ * @abstract    Access to Dolibarr States & Countries
  */
-trait LocalizationTrait {
+trait LocalizationTrait
+{
     
     /**
      *  @abstract   Search for a Country by Code
      *  @return     string  $code         Country Iso Code
      *  @return     int                   Country Dolibarr Id, else 0
      */
-    function getCountryByCode($code)
-    {   
+    protected function getCountryByCode($code)
+    {
         global $db;
-        if (Splash::Local()->DolVersionCmp("3.7.0") >= 0) {
+        if (Splash::local()->DolVersionCmp("3.7.0") >= 0) {
             require_once DOL_DOCUMENT_ROOT . '/core/class/ccountry.class.php';
             $pays = new \Ccountry($db);
-            if ( $pays->fetch(Null,$code) > 0 ) {
-                return $pays->id; 
+            if ($pays->fetch(null, $code) > 0) {
+                return $pays->id;
             }
         } else {
             require_once DOL_DOCUMENT_ROOT . '/core/class/cpays.class.php';
             $pays = new \Cpays($db);
-            if ( $pays->fetch(Null,$code) > 0 ) {
-                return $pays->id; 
+            if ($pays->fetch(null, $code) > 0) {
+                return $pays->id;
             }
         }
-        return False;
+        return false;
     }
     
     /**
      *      @abstract   Search For State Dolibarr Id using State Code & Country Id
      *      @param      string  $StateCode          State Iso Code
      *      @return     string  $CountryId          Country Dolibarr Id
-     * 
+     *
      *      @return     int                   State Dolibarr Id, else 0
      * @deprecated since version 1.3.0
-     * 
-     */  
+     *
+     */
 
 
-    function getStateByCode( $StateCode , $CountryId)
-    {   
+    protected function getStateByCode($StateCode, $CountryId)
+    {
         global $db;
         
-        if ( empty($CountryId) ) {
-            return False;
-        } 
+        if (empty($CountryId)) {
+            return false;
+        }
         
         //====================================================================//
         // Select State Id &œ Code
         $sql =  "SELECT d.rowid as id, d.code_departement as code";
-        if (Splash::Local()->DolVersionCmp("3.7.0") >= 0) {
-            $sql .= " FROM ".MAIN_DB_PREFIX ."c_departements as d, ".MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_country as p";
+        $sql .= " FROM ".MAIN_DB_PREFIX ."c_departements as d, ";
+        if (Splash::local()->DolVersionCmp("3.7.0") >= 0) {
+            $sql .= MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_country as p";
         } else {
-            $sql .= " FROM ".MAIN_DB_PREFIX ."c_departements as d, ".MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_pays as p";
+            $sql .= MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_pays as p";
         }
         //====================================================================//
         // Search by Country & State Code
@@ -83,17 +85,15 @@ trait LocalizationTrait {
         
         //====================================================================//
         // Execute final request
-        $resql = $db->query($sql);        
-        if (empty($resql))  {
-            return Splash::log()->err("ErrLocalTpl",__CLASS__,__FUNCTION__, $db->lasterror());
+        $resql = $db->query($sql);
+        if (empty($resql)) {
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->lasterror());
         }
         
-        if ( $db->num_rows($resql) == 1 ) {
+        if ($db->num_rows($resql) == 1) {
             return $db->fetch_object($resql)->id;
         }
                 
-        return False;
-    }    
-
-    
+        return false;
+    }
 }

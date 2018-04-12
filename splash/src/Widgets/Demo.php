@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -16,10 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
  *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $ 
+ *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
  *  \ingroup    Splash - Open Synchronisation WebService
  *  \brief      Local Function Definition for Management of Customers Data
  *  \class      SplashDemo
@@ -40,45 +40,45 @@ use Splash\Models\WidgetBase;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- *	\class      Address
- *	\brief      Address - Thirdparty Contacts Management Class
+ *  \class      Address
+ *  \brief      Address - Thirdparty Contacts Management Class
  */
 class Demo extends WidgetBase
 {
     
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
      *  Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
-    protected static    $DISABLED        =  True;
+    protected static $DISABLED        =  true;
     
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static    $NAME            =  "Demo Widget";
+    protected static $NAME            =  "Demo Widget";
     
     /**
-     *  Widget Description (Translated by Module) 
+     *  Widget Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "TEST & DEMONSTRATION WIDGET";    
+    protected static $DESCRIPTION     =  "TEST & DEMONSTRATION WIDGET";
     
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag) 
+     *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO            =  "fa fa-magic";
+    protected static $ICO            =  "fa fa-magic";
     
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
-    static $OPTIONS       = array(
+    public static $OPTIONS       = array(
         "Width"     =>      self::SIZE_XL
     );
     
     //====================================================================//
-    // General Class Variables	
+    // General Class Variables
     //====================================================================//
 
     //====================================================================//
@@ -94,9 +94,9 @@ class Demo extends WidgetBase
 //        //====================================================================//
 //        // Place Here Any SPECIFIC Initialisation Code
 //        //====================================================================//
-//        
+//
 //        return True;
-//    }    
+//    }
     
     //====================================================================//
     // Class Main Functions
@@ -109,48 +109,48 @@ class Demo extends WidgetBase
     {
         //====================================================================//
         // Reference
-        $this->FieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("text_input")
                 ->Name("Text Input")
-                ->Description("Widget Specific Custom text Input");        
+                ->Description("Widget Specific Custom text Input");
         
         //====================================================================//
         // Reference
-        $this->FieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->Create(SPL_T_INT)
                 ->Identifier("integer_input")
                 ->Name("Numeric Input")
-                ->Description("Widget Specific Custom Numeric Input"); 
+                ->Description("Widget Specific Custom Numeric Input");
         
         //====================================================================//
         // Publish Fields
-        return $this->FieldsFactory()->Publish();
+        return $this->fieldsFactory()->Publish();
 //        return array();
-    }        
+    }
     
     /**
      *  @abstract     Return requested Customer Data
-     * 
-     *  @param        array   $params               Search parameters for result List. 
-     *                        $params["start"]      Maximum Number of results 
-     *                        $params["end"]        List Start Offset 
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)    
+     *
+     *  @param        array   $params               Search parameters for result List.
+     *                        $params["start"]      Maximum Number of results
+     *                        $params["end"]        List Start Offset
+     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
 
      */
-    public function get($params=NULL)
+    public function get($params = null)
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__,__FUNCTION__);  
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::Local()->loadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
         //====================================================================//
 
-        $this->setTitle($this->getName()); 
-        $this->setIcon($this->getIcon()); 
+        $this->setTitle($this->getName());
+        $this->setIcon($this->getIcon());
         
         //====================================================================//
         // Build Intro Text Block
@@ -160,16 +160,16 @@ class Demo extends WidgetBase
         //====================================================================//
         // Build Inputs Block
         //====================================================================//
-        $this->buildParametersBlock($params);        
+        $this->buildParametersBlock($params);
         
         //====================================================================//
         // Build Inputs Block
         //====================================================================//
-        $this->buildNotificationsBlock();        
+        $this->buildNotificationsBlock();
 
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->BlocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->Render());
 
         //====================================================================//
         // Publish Widget
@@ -184,22 +184,27 @@ class Demo extends WidgetBase
     /**
     *   @abstract     Block Building - Text Intro
     */
-    private function buildIntroBlock()   {
+    private function buildIntroBlock()
+    {
         //====================================================================//
         // Into Text Block
-        $this->BlocksFactory()->addTextBlock("This is a Demo Text Block!!" . "You can repeat me as much as you want!");
-    }    
+        $this->blocksFactory()
+                ->addTextBlock("This is a Demo Text Block!!" . "You can repeat me as much as you want!");
+    }
   
     /**
     *   @abstract     Block Building - Inputs Parameters
     */
-    private function buildParametersBlock($Inputs = array())   {
+    private function buildParametersBlock($Inputs = array())
+    {
 
         //====================================================================//
         // verify Inputs
-        if( !is_array($Inputs) && !is_a($Inputs, "ArrayObject") ) {
-            $this->BlocksFactory()->addNotificationsBlock(array("warning" => "Inputs is not an Array! Is " . get_class($Inputs)));
-        } 
+        if (!is_array($Inputs) && !is_a($Inputs, "ArrayObject")) {
+            $this->blocksFactory()->addNotificationsBlock(
+                array("warning" => "Inputs is not an Array! Is " . get_class($Inputs))
+            );
+        }
         
         //====================================================================//
         // Parameters Table Block
@@ -209,13 +214,14 @@ class Demo extends WidgetBase
             $TableContents[]    =   array($key, $value);
         }
         
-        $this->BlocksFactory()->addTableBlock($TableContents,array("Width" => self::SIZE_M));
-    } 
+        $this->blocksFactory()->addTableBlock($TableContents, array("Width" => self::SIZE_M));
+    }
     
     /**
     *   @abstract     Block Building - Notifications Parameters
     */
-    private function buildNotificationsBlock()   {
+    private function buildNotificationsBlock()
+    {
 
         //====================================================================//
         // Notifications Block
@@ -228,15 +234,10 @@ class Demo extends WidgetBase
         );
         
         
-        $this->BlocksFactory()->addNotificationsBlock($Notifications,array("Width" => self::SIZE_M));
-    } 
+        $this->blocksFactory()->addNotificationsBlock($Notifications, array("Width" => self::SIZE_M));
+    }
     
     //====================================================================//
     // Class Tooling Functions
     //====================================================================//
-
 }
-
-
-
-?>

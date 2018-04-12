@@ -8,11 +8,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace   Splash\Local\Objects;
@@ -25,8 +25,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 
 /**
- *	\class      ThirdParty
- *	\brief      ThirdParty - Customers / Supplier Management Class
+ *  \class      ThirdParty
+ *  \brief      ThirdParty - Customers / Supplier Management Class
  */
 class ThirdParty extends AbstractObject
 {
@@ -40,6 +40,7 @@ class ThirdParty extends AbstractObject
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
+    use \Splash\Local\Core\ObjectsListTrait;
     
     // Dolibarr ThirdParty Traits
     use \Splash\Local\Objects\ThirdParty\ObjectsListTrait;
@@ -50,7 +51,7 @@ class ThirdParty extends AbstractObject
     use \Splash\Local\Objects\ThirdParty\MetaTrait;
     
     //====================================================================//
-    // Object Definition Parameters	
+    // Object Definition Parameters
     //====================================================================//
     
     /**
@@ -61,23 +62,23 @@ class ThirdParty extends AbstractObject
     /**
      *  Object Name (Translated by Module)
      */
-    protected static    $NAME            =  "Company";
+    protected static $NAME            =  "Company";
     
     /**
-     *  Object Description (Translated by Module) 
+     *  Object Description (Translated by Module)
      */
-    protected static    $DESCRIPTION     =  "Dolibarr Company Object";    
+    protected static $DESCRIPTION     =  "Dolibarr Company Object";
     
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag) 
+     *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static    $ICO     =  "fa fa-user";
+    protected static $ICO     =  "fa fa-user";
     
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
     
-    public static  $ExtraFieldsType    =  "societe"; 
+    public static $ExtraFieldsType    =  "societe";
         
     //====================================================================//
     // Class Constructor
@@ -87,13 +88,13 @@ class ThirdParty extends AbstractObject
      *      @abstract       Class Constructor (Used only if localy necessary)
      *      @return         int                     0 if KO, >0 if OK
      */
-    function __construct()
+    public function __construct()
     {
         global $langs;
         
         //====================================================================//
         // Load Dolibarr Default Language
-        Splash::Local()->LoadDefaultLanguage();
+        Splash::local()->LoadDefaultLanguage();
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");
@@ -101,11 +102,6 @@ class ThirdParty extends AbstractObject
         $langs->load("companies");
         $langs->load("other");
 
-        return True;
-    } 
-    
+        return true;
+    }
 }
-
-
-
-?>
