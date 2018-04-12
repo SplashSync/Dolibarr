@@ -9,11 +9,11 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  *  @author    Splash Sync <www.splashsync.com>
  *  @copyright 2015-2017 Splash Sync
  *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- * 
+ *
  **/
 
 namespace Splash\Local\Objects\Order;
@@ -23,24 +23,25 @@ use Splash\Client\Splash;
 /**
  * @abstract    Order Dolibarr Trigger trait
  */
-trait TriggersTrait {
+trait TriggersTrait
+{
     
     /**
      *      @abstract      Prepare Object Commit for Order
-     * 
+     *
      *      @param  string      $Action      Code de l'evenement
      *      @param  object      $Object      Objet concerne
-     * 
+     *
      *      @return bool        Commit is required
      */
     protected function doOrderCommit($Action, $Object)
-    {    
+    {
         global $db;
 
         //====================================================================//
         // Check if Commit is Requierd
         if (!$this->isOrderCommitRequired($Action)) {
-            return False;
+            return false;
         }
         
         //====================================================================//
@@ -48,25 +49,25 @@ trait TriggersTrait {
         $db->Commit();
         
         //====================================================================//
-        // Store Global Action Parameters 
+        // Store Global Action Parameters
         $this->setOrderObjectId($Object);
         $this->setOrderParameters($Action);
         
-        return True;
-    }    
+        return true;
+    }
 
     /**
      * @abstract      Check if Commit is Requiered
-     * 
+     *
      * @param  string      $Action      Code de l'evenement
-     * 
+     *
      * @return bool
      */
     private function isOrderCommitRequired($Action)
-    {    
+    {
         //====================================================================//
-        // Filter Triggered Actions 
-        return in_array($Action,array(
+        // Filter Triggered Actions
+        return in_array($Action, array(
             // Order Actions
             'ORDER_CREATE',
             'ORDER_VALIDATE',
@@ -85,21 +86,20 @@ trait TriggersTrait {
             'COMMANDE_ADD_CONTACT',
             'COMMANDE_DELETE_CONTACT',
         ));
-    }     
+    }
     
     /**
      *      @abstract      Identify Order Id from Given Object
-     * 
+     *
      *      @param  object      $Object      Objet concerne
-     * 
+     *
      *      @return void
      */
     private function setOrderObjectId($Object)
-    {    
+    {
         //====================================================================//
-        // Identify Order Id         
-        if (is_a($Object, "OrderLine")) 
-        {
+        // Identify Order Id
+        if (is_a($Object, "OrderLine")) {
             if ($Object->fk_commande) {
                 $this->Id        = $Object->fk_commande;
             } else {
@@ -107,25 +107,25 @@ trait TriggersTrait {
             }
         } else {
             $this->Id        = $Object->id;
-        } 
-    }  
+        }
+    }
     
     /**
      *      @abstract      Prepare Object Commit for Product
-     * 
+     *
      *      @param  string      $Action      Code de l'evenement
-     * 
+     *
      *      @return void
-     * 
+     *
      *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setOrderParameters($Action)
-    {    
+    {
         //====================================================================//
-        // Store Global Action Parameters 
+        // Store Global Action Parameters
         $this->Type      = "Order";
         
-        switch($Action) {
+        switch ($Action) {
             case 'ORDER_CREATE':
                 $this->Action       = SPL_A_CREATE;
                 $this->Comment      = "Order Created on Dolibarr";
@@ -151,10 +151,8 @@ trait TriggersTrait {
                 $this->Action       = SPL_A_DELETE;
                 $this->Comment      = "Order Deleted on Dolibarr";
                 break;
-            
         }
         
-        return True;
-    }  
-    
+        return true;
+    }
 }

@@ -24,8 +24,8 @@ use Splash\Core\SplashCore      as Splash;
  */
 trait CoreTrait
 {
-    private $firstname  = null; 
-    private $lastname   = null; 
+    private $firstname  = null;
+    private $lastname   = null;
     private $name       = null;
             
     /**

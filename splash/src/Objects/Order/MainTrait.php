@@ -25,7 +25,7 @@ use Splash\Core\SplashCore      as Splash;
 trait MainTrait
 {
 
-    private $updateBilled = Null;
+    private $updateBilled = null;
     
     /**
      *  @abstract     Build Address Fields using FieldFactory

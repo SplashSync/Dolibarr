@@ -23,7 +23,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 // Objects Classes
 include_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
-include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';                        
+include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
         
@@ -32,7 +32,7 @@ require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 require_once(DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php');
 include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
 include_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
-include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';            
+include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
 include_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
 include_once DOL_DOCUMENT_ROOT.'/contrat/class/contrat.class.php';
 include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
