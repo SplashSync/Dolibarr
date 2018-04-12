@@ -108,15 +108,15 @@ before_script:
     - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
-    - cp -rf "$TRAVIS_BUILD_DIR/.git"       "$DOL_BUILD_DIR/htdocs/.git"
-    - cp -rf "$TRAVIS_BUILD_DIR/build"      "$DOL_BUILD_DIR/htdocs/build"
-    - cp -rf "$TRAVIS_BUILD_DIR/splash"     "$DOL_BUILD_DIR/htdocs/splash"
-    - cp "$TRAVIS_BUILD_DIR/.travis.yml"    "$DOL_BUILD_DIR/htdocs/.travis.yml"
-    - cp "$TRAVIS_BUILD_DIR/grumphp.yml"    "$DOL_BUILD_DIR/htdocs/grumphp.yml"
-    - cp "$TRAVIS_BUILD_DIR/composer.json"  "$DOL_BUILD_DIR/htdocs/composer.json"
+    - cp -Rf "$TRAVIS_BUILD_DIR/*"          "$DOL_BUILD_DIR/htdocs/custom/"
+#    - cp -rf "$TRAVIS_BUILD_DIR/build"      "$DOL_BUILD_DIR/htdocs/custom/build"
+#    - cp -rf "$TRAVIS_BUILD_DIR/splash"     "$DOL_BUILD_DIR/htdocs/custom/splash"
+#    - cp "$TRAVIS_BUILD_DIR/.travis.yml"    "$DOL_BUILD_DIR/htdocs/.travis.yml"
+#    - cp "$TRAVIS_BUILD_DIR/grumphp.yml"    "$DOL_BUILD_DIR/htdocs/grumphp.yml"
+#    - cp "$TRAVIS_BUILD_DIR/composer.json"  "$DOL_BUILD_DIR/htdocs/composer.json"
 
     # Run Composer
-    - cd "$DOL_BUILD_DIR/htdocs/"
+    - cd "$DOL_BUILD_DIR/htdocs/custom/"
     # With PHP 7 => Load Phpstan   
     - if [[ ${TRAVIS_PHP_VERSION:0:1} == "7" ]]; then composer require phpstan/phpstan-shim --no-update; fi
     - composer update 
@@ -127,7 +127,7 @@ before_script:
 script: 
     
     # Move to Dolibarr Root Dir
-    - cd "$DOL_BUILD_DIR/htdocs"    
+    - cd "$DOL_BUILD_DIR/htdocs/custom"    
     
     # Run Grump Main Test Sequence
     - php ./splash/vendor/bin/grumphp run --testsuite=travis
