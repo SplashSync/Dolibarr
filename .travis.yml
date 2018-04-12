@@ -67,6 +67,7 @@ matrix:
 install:
     # Disable Xdebug ...
     - phpenv config-rm xdebug.ini
+    - phpenv config-add build/x_memory.ini
     
 before_script:
   
