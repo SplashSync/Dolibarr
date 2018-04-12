@@ -60,7 +60,8 @@ matrix:
           env: DOL=develop DATA=7.0.0 STAN=1    
           
     allow_failures:
-        - env: DOL=develop DATA=7.0.0
+        - env: DOL=develop DATA=7.0.0 STAN=0 
+        - env: DOL=develop DATA=7.0.0 STAN=1    
           
         
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
