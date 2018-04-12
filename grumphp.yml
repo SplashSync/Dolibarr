@@ -38,7 +38,7 @@ parameters:
         phpcpd:
             exclude:        
                 - "docs"
-#                - "vendor"               
+                - "splash/vendor"               
         phpstan:
             configuration:  "build/phpstan.neon"           
             ignore_patterns:
