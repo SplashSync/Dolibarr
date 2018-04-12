@@ -110,7 +110,7 @@ before_script:
     - cp -rf "$TRAVIS_BUILD_DIR/.git"       "$DOL_BUILD_DIR/htdocs/.git"
     - cp -rf "$TRAVIS_BUILD_DIR/build"      "$DOL_BUILD_DIR/htdocs/build"
     - cp -rf "$TRAVIS_BUILD_DIR/splash"     "$DOL_BUILD_DIR/htdocs/splash"
-    - cp "$TRAVIS_BUILD_DIR/travis.yml"     "$DOL_BUILD_DIR/htdocs/travis.yml"
+    - cp "$TRAVIS_BUILD_DIR/.travis.yml"    "$DOL_BUILD_DIR/htdocs/.travis.yml"
     - cp "$TRAVIS_BUILD_DIR/grumphp.yml"    "$DOL_BUILD_DIR/htdocs/grumphp.yml"
     - cp "$TRAVIS_BUILD_DIR/composer.json"  "$DOL_BUILD_DIR/htdocs/composer.json"
 
