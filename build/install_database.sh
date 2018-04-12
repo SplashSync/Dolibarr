@@ -6,18 +6,18 @@ mysql -e 'FLUSH PRIVILEGES;'
 
 echo "Loading demo Data"
 
-FILE=$DOL_BUILD_DIR/dev/initdemo/mysqldump_dolibarr_$DATA_VERSION.sql    
+FILE=$DOL_BUILD_DIR/dev/initdemo/mysqldump_dolibarr_$DATA.sql    
 if [ -f $FILE ]; then
-   mysql -D travis < $DOL_BUILD_DIR/dev/initdemo/mysqldump_dolibarr_$DATA_VERSION.sql
+   mysql -D travis < $DOL_BUILD_DIR/dev/initdemo/mysqldump_dolibarr_$DATA.sql
 else
-    FILE2=$DOL_BUILD_DIR/dev/initdata/mysqldump_dolibarr_$DATA_VERSION.sql    
+    FILE2=$DOL_BUILD_DIR/dev/initdata/mysqldump_dolibarr_$DATA.sql    
     if [ -f $FILE2 ]; then
-        mysql -D travis < $DOL_BUILD_DIR/dev/initdata/mysqldump_dolibarr_$DATA_VERSION.sql
+        mysql -D travis < $DOL_BUILD_DIR/dev/initdata/mysqldump_dolibarr_$DATA.sql
     fi
 fi
 
 
-VERSION=`expr substr $DOL_VERSION 1 1`
+VERSION=`expr substr $DOL 1 1`
 if [ "$VERSION" = "5" ];  
 then 
     echo "BugFix Update for Dolibarr 5.0.0"
@@ -30,7 +30,7 @@ then
     mysql -D travis -e "ALTER TABLE llx_socpeople CHANGE zip zip varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;"
 fi 
 
-if [ "$DOL_VERSION" = "develop" ];  
+if [ "$DOL" = "develop" ];  
 then 
     echo "Database Migrations for Dolibarr Develop"
     mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
