@@ -29,6 +29,8 @@ dolibarr_set_const($db, "SPLASH_BANK", 1, 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", "CB", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", 1, 'chaine', 0, '', $conf->entity);
 
+var_dump(dolGetModulesDirs());
+
 //====================================================================//
 // Activate Splash Module
 activateModule("modSplash");
