@@ -108,7 +108,7 @@ before_script:
     - bash $TRAVIS_BUILD_DIR/build/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
-    - cp -Rrf $TRAVIS_BUILD_DIR/*            $DOL_BUILD_DIR/htdocs/custom/
+    - cp -Rrf $TRAVIS_BUILD_DIR/            $DOL_BUILD_DIR/htdocs/custom/
 #    - cp -Rf $TRAVIS_BUILD_DIR/.git/            $DOL_BUILD_DIR/htdocs/custom/.git/
 #    - cp -rf "$TRAVIS_BUILD_DIR/build"      "$DOL_BUILD_DIR/htdocs/custom/build"
 #    - cp -rf "$TRAVIS_BUILD_DIR/splash"     "$DOL_BUILD_DIR/htdocs/custom/splash"
