@@ -50,7 +50,7 @@ trait ObjectsListTrait
         
         //====================================================================//
         // Prepare SQL request for reading in Database
-        $sql    = $this->getSqlBaserequest($filter, $params);
+        $sql    = $this->getSqlBaseRequest($filter, $params);
         
         //====================================================================//
         // Execute request to get total number of row

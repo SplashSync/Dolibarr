@@ -58,7 +58,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Product Identifier
-        $this->fieldsFactory()->Create(self::Objects()->Encode("Product", SPL_T_ID))
+        $this->fieldsFactory()->Create(self::objects()->Encode("Product", SPL_T_ID))
                 ->Identifier("fk_product")
                 ->InList("lines")
                 ->Name($langs->trans("Product"))
@@ -168,7 +168,7 @@ trait BaseItemsTrait
             //====================================================================//
             // Order Line Product Id
             case 'fk_product@lines':
-                return ($Line->fk_product)?self::Objects()->Encode("Product", $Line->fk_product):null;
+                return ($Line->fk_product)?self::objects()->Encode("Product", $Line->fk_product):null;
                 
             //====================================================================//
             // Order Line Quantity
@@ -185,7 +185,7 @@ trait BaseItemsTrait
             case 'price@lines':
                 $Price  =   (double) $Line->subprice;
                 $Vat    =   (double) $Line->tva_tx;
-                return  self::Prices()->Encode($Price, $Vat, null, $conf->global->MAIN_MONNAIE);
+                return  self::prices()->Encode($Price, $Vat, null, $conf->global->MAIN_MONNAIE);
 
             //====================================================================//
             // Order Line Tax Name
@@ -460,7 +460,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Update Product Link
-        $ProductId = self::Objects()->Id($ItemData["fk_product"]);
+        $ProductId = self::objects()->Id($ItemData["fk_product"]);
         if ($this->CurrentItem->fk_product == $ProductId) {
             return;
         }

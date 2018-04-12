@@ -134,7 +134,7 @@ class Invoice extends AbstractObject
         $langs->load("stocks");
         //====================================================================//
         //  Load Local Translation File
-        Splash::Translator()->Load("objects@local");
+        Splash::translator()->Load("objects@local");
         return true;
     }
 }

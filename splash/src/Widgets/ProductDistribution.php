@@ -71,14 +71,20 @@ class ProductDistribution extends WidgetBase
         'CacheLifeTime' =>  60,
     );
     
-    private $Mode = "Invoices";
-    
-    private $ChartType =   "Line";
-   
     //====================================================================//
     // General Class Variables
     //====================================================================//
 
+    private $stats;
+    private $select;
+    private $where;
+    private $from;
+    private $title;
+    private $labels;
+
+    private $Mode       = "Invoices";
+    private $ChartType  =   "Line";
+    
     //====================================================================//
     // Class Main Functions
     //====================================================================//
@@ -143,7 +149,7 @@ class ProductDistribution extends WidgetBase
         
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->Publish();
+        return $this->fieldsFactory()->publish();
     }
     
     /**
@@ -199,7 +205,7 @@ class ProductDistribution extends WidgetBase
 
         //====================================================================//
         // Publish Widget
-        return $this->Render();
+        return $this->render();
     }
         
 

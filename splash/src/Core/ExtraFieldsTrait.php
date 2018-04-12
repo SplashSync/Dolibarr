@@ -140,7 +140,7 @@ trait ExtraFieldsTrait
                 break;
          
             case SPL_T_PRICE:
-                $this->Out[$FieldName]  = PricesTrait::Prices()->Encode(
+                $this->Out[$FieldName]  = PricesTrait::prices()->Encode(
                     (double) $FieldData,
                     (double) 0,
                     null,
@@ -207,7 +207,7 @@ trait ExtraFieldsTrait
                 break;
             
             case SPL_T_PRICE:
-                $PriceHT  = PricesTrait::Prices()->TaxExcluded($Data);
+                $PriceHT  = PricesTrait::prices()->TaxExcluded($Data);
                 if ($CurrentData != $PriceHT) {
                     $this->Object->array_options[$FieldName] = $PriceHT;
                     $this->needUpdate();
@@ -423,7 +423,7 @@ trait ExtraFieldsTrait
      *
      *  @return         none
      */
-    protected static function configurePhpUnitExtraFields($ElementType, $Visible = true)
+    public static function configurePhpUnitExtraFields($ElementType, $Visible = true)
     {
         global $db;
         //====================================================================//

@@ -43,7 +43,7 @@ use Splash\Local\Core\MultiCompanyTrait;
  */
 class Local
 {
-    use ExtraFieldsTrait;
+//    use ExtraFieldsTrait;
     use MultiCompanyTrait;
     
 //====================================================================//
@@ -152,11 +152,11 @@ class Local
             dol_include_once("/splash/_conf/defines.inc.php");
             //====================================================================//
             // Load Default Language
-            $this->LoadDefaultLanguage();
+            $this->loadDefaultLanguage();
             
             //====================================================================//
             // Load Default User
-            $this->LoadLocalUser();
+            $this->loadLocalUser();
             
             //====================================================================//
             // Manage MultiCompany
@@ -189,7 +189,7 @@ class Local
 
         //====================================================================//
         //  Load Local Translation File
-        Splash::Translator()->Load("main@local");
+        Splash::translator()->load("main@local");
         $langs->load("errors");
         
         //====================================================================//
@@ -264,9 +264,9 @@ class Local
     /**
      *  @abstract   Update Server Informations with local Data
      *
-     *  @param     arrayobject  $Informations   Informations Inputs
+     *  @param      ArrayObject  $Informations   Informations Inputs
      *
-     *  @return     arrayobject
+     *  @return     ArrayObject
      */
     public function informations($Informations)
     {
@@ -287,7 +287,7 @@ class Local
         
         //====================================================================//
         // Server Logo & Images
-        $Response->icoraw           =   Splash::File()->ReadFileContents(DOL_DOCUMENT_ROOT . "/favicon.ico");
+        $Response->icoraw           =   Splash::file()->readFileContents(DOL_DOCUMENT_ROOT . "/favicon.ico");
         $Response->logourl          =   "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
         
         //====================================================================//
@@ -335,11 +335,11 @@ class Local
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", 0, 'chaine', 0, '', $conf->entity);
                 
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
                 return;
                 
             case "Multilangual":
@@ -355,11 +355,11 @@ class Local
                 dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", rand(1, 3), 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
                 
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
                 return;
 
             case "ExtraFields":
@@ -367,11 +367,11 @@ class Local
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
                 
-                self::configurePhpUnitExtraFields("societe", true);
-                self::configurePhpUnitExtraFields("socpeople", true);
-                self::configurePhpUnitExtraFields("product", true);
-                self::configurePhpUnitExtraFields("commande", true);
-                self::configurePhpUnitExtraFields("facture", true);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", true);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", true);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("product", true);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", true);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", true);
                 return;
 
                 
@@ -468,8 +468,8 @@ class Local
         //====================================================================//
         // Load Default Language
         //====================================================================//
-        if (!empty(Splash::Configuration()->DefaultLanguage)) {
-            $langs->setDefaultLang(Splash::Configuration()->DefaultLanguage);
+        if (!empty(Splash::configuration()->DefaultLanguage)) {
+            $langs->setDefaultLang(Splash::configuration()->DefaultLanguage);
         }
     }
     
@@ -481,7 +481,7 @@ class Local
     *  Compare Dolibarr version is lower/greater then version given.
     *
     *  @param      string       $version        Dolibarr Version to compare (ie : 3.3.3)
-    *  @return     boot         int             -1 if given version is lower then current version
+    *  @return     bool         int             -1 if given version is lower then current version
     *                                           0 if given version is egal to current version
     *                                           1 if given version is above current version
     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)

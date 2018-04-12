@@ -244,7 +244,7 @@ trait PaymentsTrait
     {
         //====================================================================//
         // Read Next Payment Line
-        $this->PaymentData = array_shift($this->Payments);
+        $PaymentData = array_shift($this->Payments);
 
         //====================================================================//
         // Existing Line
@@ -253,10 +253,10 @@ trait PaymentsTrait
         // => If Amount is Different, delete Payment & Re-Create
         // => If Payment method is different => Do nothing!!
         //====================================================================//
-        if ($this->PaymentData) {
+        if ($PaymentData) {
             //====================================================================//
             // Update Payment Infos, If No Need to rRe-Create => EXIT
-            if (!$this->updatePaymentItem($this->PaymentData->id, $LineData)) {
+            if (!$this->updatePaymentItem($PaymentData->id, $LineData)) {
                 return;
             }
         }

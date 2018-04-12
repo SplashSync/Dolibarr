@@ -123,7 +123,7 @@ class Demo extends WidgetBase
         
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->Publish();
+        return $this->fieldsFactory()->publish();
 //        return array();
     }
     
@@ -173,7 +173,7 @@ class Demo extends WidgetBase
 
         //====================================================================//
         // Publish Widget
-        return $this->Render();
+        return $this->render();
     }
         
 

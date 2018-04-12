@@ -30,6 +30,17 @@ use Splash\Components\Logger;
 class InterfaceSplash
 {
     private $db;
+    private $name;
+    private $family;
+    private $version;
+    private $description;
+    
+    private $Id         =   null;
+    private $Action     =   null;
+    private $Type       =   null; 
+    private $Login      =   "Unknown User";
+    private $Comment    =   "Dolibarr Commit";
+    
     
     //====================================================================//
     // Import Commit Triggers Action from Objects Namespaces
@@ -106,8 +117,9 @@ class InterfaceSplash
     /**
      *  @abstract    Read all log messages posted by OsWs and post it on dolibarr
      *
-     *  @param       SpashLog                Input Log Class
-     *  @return      None
+     *  @param       Logger $log    Input Log Class
+     * 
+     *  @return      void
      */
     public function postMessages(Logger $log)
     {
@@ -233,7 +245,7 @@ class InterfaceSplash
     {
         //====================================================================//
         // Prevent Repeated Commit if Needed
-        if (($this->Action == SPL_A_UPDATE) && Splash::Object($this->Type)->isLocked()) {
+        if (($this->Action == SPL_A_UPDATE) && Splash::object($this->Type)->isLocked()) {
             return;
         }
 
@@ -242,7 +254,7 @@ class InterfaceSplash
         if ($this->Id > 0) {
             //====================================================================//
             // Commit Change to OsWs Module
-            Splash::Commit(
+            Splash::commit(
                 $this->Type,                    // Object Type
                 $this->Id,                      // Object Identifier (RowId ro Array of RowId)
                 $this->Action,                  // Splash Action Type

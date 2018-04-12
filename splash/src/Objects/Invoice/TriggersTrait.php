@@ -33,7 +33,7 @@ trait TriggersTrait {
      * 
      *      @return bool        Commit is required
      */
-    function doInvoiceCommit($Action, $Object)
+    protected function doInvoiceCommit($Action, $Object)
     {    
         global $db;
         
@@ -113,7 +113,7 @@ trait TriggersTrait {
         } elseif (is_a($Object, "Paiement")) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts 
-            $Amounts = Splash::Object("Invoice")->getPaiementAmounts($Object->id);
+            $Amounts = Splash::object("Invoice")->getPaiementAmounts($Object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array  
             $this->Id        = array_keys($Amounts);
@@ -128,6 +128,8 @@ trait TriggersTrait {
      *      @param  string      $Action      Code de l'evenement
      * 
      *      @return void
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setInvoiceParameters($Action)
     {    
@@ -151,7 +153,7 @@ trait TriggersTrait {
             case 'LINEBILL_INSERT':
             case 'LINEBILL_UPDATE':
             case 'LINEBILL_DELETE':
-                $this->Action       = (Splash::Object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->Action       = (Splash::object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
                 $this->Comment      = "Invoice Updated on Dolibarr";
                 break;
 

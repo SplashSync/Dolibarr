@@ -33,7 +33,7 @@ trait TriggersTrait {
      * 
      *      @return bool        Commit is required
      */
-    function doOrderCommit($Action, $Object)
+    protected function doOrderCommit($Action, $Object)
     {    
         global $db;
 
@@ -116,6 +116,8 @@ trait TriggersTrait {
      *      @param  string      $Action      Code de l'evenement
      * 
      *      @return void
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setOrderParameters($Action)
     {    
@@ -141,7 +143,7 @@ trait TriggersTrait {
             case 'LINEORDER_DELETE':
             case 'COMMANDE_ADD_CONTACT':
             case 'COMMANDE_DELETE_CONTACT':
-                $this->Action       = (Splash::Object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->Action       = (Splash::object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
                 $this->Comment      = "Order Updated on Dolibarr";
                 break;
 

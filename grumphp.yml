@@ -38,12 +38,9 @@ parameters:
 #                - "vendor"               
         phpstan:
             configuration:  "build/phpstan.neon"           
-#            ignore_patterns:
-#                - git
-#                - NuSOAPInterface.php
-#                - nusoap.php
-#                - fatal.inc.php
-#                - server.inc.php
+            ignore_patterns:
+                - LocalizationTrait.php
+                - splash/admin
 
     testsuites:
         travis:

@@ -23,8 +23,6 @@
  *  \brief      Page d'administration/configuration du module OsCommerce
 */
 
-use Splash\Client\Splash;
-
 //====================================================================//
 //   INCLUDES
 //====================================================================//

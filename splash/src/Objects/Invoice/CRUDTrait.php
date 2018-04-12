@@ -90,7 +90,7 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Customer Id is given
-        if (empty($this->In["socid"]) || empty(self::Objects()->Id($this->In["socid"]))) {
+        if (empty($this->In["socid"]) || empty(self::objects()->Id($this->In["socid"]))) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "socid");
         }
         //====================================================================//
@@ -110,7 +110,7 @@ trait CRUDTrait
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("date", $this->In["date"]);
-        $this->setSimple("socid", self::Objects()->Id($this->In["socid"]));
+        $this->setSimple("socid", self::objects()->Id($this->In["socid"]));
         $this->setSimple("statut", Facture::STATUS_DRAFT);
         $this->Object->statut = Facture::STATUS_DRAFT;
         $this->Object->paye = 0;

@@ -113,6 +113,8 @@ before_script:
 
     # Run Composer
     - cd "$DOL_BUILD_DIR/htdocs/"
+    # With PHP 7 => Load Phpstan   
+    - if [[ ${TRAVIS_PHP_VERSION:0:1} == "7" ]]; then composer require phpstan/phpstan-shim --no-update; fi
     - composer update 
     
     # Move to Dolibarr Root Dir
@@ -120,9 +122,17 @@ before_script:
     
 
 script: 
+    # Execute Bootstrap file    
     - php build/bootstrap.php
+    # Run Grump Main Test Sequence
+    - php ./splash/vendor/bin/grumphp run --testsuite=travis
+    # With PHP 7 => Execute Phpstan 
+    - if [[ ${TRAVIS_PHP_VERSION:0:1} == "7" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=phpstan; fi     
+    # Show PhpUnit Version
     - phpunit --version
+    # Run PhpUnit Main Sequence
     - phpunit -c build/phpunit.xml.dist 
+    # Run PhpUnit Main Local Testsuite
     - phpunit -c build/phpunit.xml.dist --testsuite=Local
         
 notifications:

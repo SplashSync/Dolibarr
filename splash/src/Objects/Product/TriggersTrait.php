@@ -33,7 +33,7 @@ trait TriggersTrait {
      * 
      *      @return bool        Commit is required
      */
-    function doProductCommit($Action, $Object)
+    protected function doProductCommit($Action, $Object)
     {    
         global $db;
         
@@ -93,18 +93,20 @@ trait TriggersTrait {
     }  
     
     /**
-     *      @abstract      Prepare Object Commit for Product
+     * @abstract      Prepare Object Commit for Product
      * 
-     *      @param  string      $Action      Code de l'evenement
-     *      @param  object      $Object      Objet concerne
+     * @param  string      $Action      Code de l'evenement
+     * @param  object      $Object      Objet concerne
      * 
-     *      @return void
+     * @return void
+     * 
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setProductParameters($Action)
     {    
         //====================================================================//
         // Check if object if in Remote Create Mode 
-        $isLockedForCreation    =    Splash::Object("Product")->isLocked();
+        $isLockedForCreation    =    Splash::object("Product")->isLocked();
         
         //====================================================================//
         // Store Global Action Parameters 

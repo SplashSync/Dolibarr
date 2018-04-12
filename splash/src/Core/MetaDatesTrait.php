@@ -23,7 +23,8 @@ namespace   Splash\Local\Core;
 trait MetaDatesTrait
 {
 
-
+    private $infoloaded;
+    
     /**
     *   @abstract     Build Meta Fields using FieldFactory
     */

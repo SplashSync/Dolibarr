@@ -32,7 +32,7 @@ trait CoreTrait
         
         //====================================================================//
         // Customer Object
-        $this->fieldsFactory()->Create(self::Objects()->Encode("ThirdParty", SPL_T_ID))
+        $this->fieldsFactory()->Create(self::objects()->Encode("ThirdParty", SPL_T_ID))
                 ->Identifier("socid")
                 ->Name($langs->trans("Company"))
                 ->MicroData("http://schema.org/Invoice", "customer")
@@ -104,7 +104,7 @@ trait CoreTrait
             //====================================================================//
             // Contact ThirdParty Id
             case 'socid':
-                $this->Out[$FieldName] = self::Objects()->Encode("ThirdParty", $this->Object->$FieldName);
+                $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->$FieldName);
                 break;
 
             //====================================================================//
@@ -156,7 +156,7 @@ trait CoreTrait
             //====================================================================//
             // Order Company Id
             case 'socid':
-                $this->setSimple($FieldName, self::Objects()->Id($Data));
+                $this->setSimple($FieldName, self::objects()->Id($Data));
                 break;
             
             //====================================================================//

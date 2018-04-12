@@ -62,8 +62,8 @@ class L02TaxesByCodesTest extends ObjectsCase
                     
         //====================================================================//
         //   Create Fake Order Data
-        $this->Fields   =   $this->fakeFieldsList($ObjectType, ["desc@lines"], true);
-        $FakeData       =   $this->fakeObjectData($this->Fields);
+        $Fields         =   $this->fakeFieldsList($ObjectType, ["desc@lines"], true);
+        $FakeData       =   $this->fakeObjectData($Fields);
         
         //====================================================================//
         //   Setup Tax Names
@@ -73,13 +73,13 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Execute Action Directly on Module
-        Splash::Object($ObjectType)->Lock();
-        $ObjectId = Splash::Object($ObjectType)->Set(null, $FakeData);
+        Splash::object($ObjectType)->Lock();
+        $ObjectId = Splash::object($ObjectType)->Set(null, $FakeData);
         $this->assertNotEmpty($ObjectId);
 
         //====================================================================//
         //   Read Order Data
-        $ObjectData  =   Splash::Object($ObjectType)
+        $ObjectData  =   Splash::object($ObjectType)
                 ->Get($ObjectId, ["desc@lines", "price@lines", "vat_src_code@lines"]);
         
         //====================================================================//
@@ -91,7 +91,7 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Load Order Object
-        $Object  =   Splash::Object($ObjectType)->Load($ObjectId);
+        $Object  =   Splash::object($ObjectType)->Load($ObjectId);
         //====================================================================//
         //   Verify Tax Values
         foreach ($Object->lines as $Line) {
@@ -108,13 +108,13 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Execute Action Directly on Module
-        Splash::Object($ObjectType)->Lock($ObjectId);
-        $WriteId = Splash::Object($ObjectType)->Set($ObjectId, $FakeData);
+        Splash::object($ObjectType)->Lock($ObjectId);
+        $WriteId = Splash::object($ObjectType)->Set($ObjectId, $FakeData);
         $this->assertNotEmpty($WriteId);
 
         //====================================================================//
         //   Read Order Data
-        $ObjectData2  =   Splash::Object($ObjectType)
+        $ObjectData2  =   Splash::object($ObjectType)
                 ->Get($ObjectId, ["desc@lines", "price@lines", "vat_src_code@lines"]);
         
         //====================================================================//

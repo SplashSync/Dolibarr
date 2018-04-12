@@ -32,7 +32,7 @@ trait TriggersTrait {
      * 
      *      @return bool        Commit is required
      */
-    function doAddressCommit($Action, $Object)
+    protected function doAddressCommit($Action, $Object)
     {    
         global $db;
         

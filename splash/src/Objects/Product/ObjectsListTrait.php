@@ -30,7 +30,7 @@ trait ObjectsListTrait
      *
      * @return string
      */
-    protected function getSqlBaserequest($filter = null, $params = null)
+    protected function getSqlBaseRequest($filter = null, $params = null)
     {
         //====================================================================//
         // Prepare SQL request for reading in Database

@@ -46,17 +46,17 @@ class modSplash extends DolibarrModules
     public function __construct($db)
     {
             global $langs;
+            parent::__construct($db);
+
             //====================================================================//
             // Load traductions files required by by page
             $langs->load("admin");
             $langs->load("splash@splash");
 
-            $this->db = $db;
-
             //====================================================================//
             // Module Editor Infos
-            $this->editor_name = "Splash Sync";
-            $this->editor_web = "www.splashsync.com";
+            $this->editor_name  = "Splash Sync";
+            $this->editor_url   = "www.splashsync.com";
 
             //====================================================================//
             // Id for module (must be unique).
@@ -124,7 +124,7 @@ class modSplash extends DolibarrModules
 
             //====================================================================//
             // Main menu entries
-            $this->menus = array();         // List of menus to add
+            $this->menu = array();         // List of menus to add
     }
 
     private function getConstants()

@@ -45,11 +45,11 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         //   Get Readable Object Fields List
-        $Fields = $this->reduceFieldList(Splash::Object($ObjectType)->Fields(), true, false);
+        $Fields = $this->reduceFieldList(Splash::object($ObjectType)->Fields(), true, false);
         
         //====================================================================//
         //   Execute Action Directly on Module
-        $Allowed = Splash::Object($ObjectType)->Get($ObjectId, $Fields);
+        $Allowed = Splash::object($ObjectType)->Get($ObjectId, $Fields);
         
         //====================================================================//
         //   Verify Response
@@ -61,7 +61,7 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Execute Action Directly on Module
-        $Rejected = Splash::Object($ObjectType)->Get($ObjectId, $Fields);
+        $Rejected = Splash::object($ObjectType)->Get($ObjectId, $Fields);
         
         //====================================================================//
         //   Verify Response
@@ -97,11 +97,11 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Create a New Object on Module
-        $ObjectId = Splash::Object($ObjectType)->Set(null, $DummyData);
+        $ObjectId = Splash::object($ObjectType)->Set(null, $DummyData);
         
         //====================================================================//
         // Lock New Objects To Avoid Action Commit
-        Splash::Object($ObjectType)->Lock($ObjectId);
+        Splash::object($ObjectType)->Lock($ObjectId);
         
         //====================================================================//
         //   Simulate Logged on another Entity
@@ -109,7 +109,7 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Delete Object on Module
-        $Rejected = Splash::Object($ObjectType)->Delete($ObjectId);
+        $Rejected = Splash::object($ObjectType)->Delete($ObjectId);
         
         //====================================================================//
         //   Verify Response
@@ -121,7 +121,7 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Delete Object on Module
-        $Allowed = Splash::Object($ObjectType)->Delete($ObjectId);
+        $Allowed = Splash::object($ObjectType)->Delete($ObjectId);
         
         //====================================================================//
         //   Verify Response
@@ -171,7 +171,7 @@ class L01MultiCompanyTest extends ObjectsCase
         if (!isset($this->ObjectList[$ObjectType])) {
             //====================================================================//
             //   Get Object List from Module
-            $List = Splash::Object($ObjectType)->ObjectsList();
+            $List = Splash::object($ObjectType)->ObjectsList();
 
             //====================================================================//
             //   Get Object Count
@@ -205,7 +205,7 @@ class L01MultiCompanyTest extends ObjectsCase
     
     public function verifyTestIsAllowed($ObjectType)
     {
-        $Definition = Splash::Object($ObjectType)->Description();
+        $Definition = Splash::object($ObjectType)->Description();
 
         $this->assertNotEmpty($Definition);
         //====================================================================//
@@ -233,7 +233,7 @@ class L01MultiCompanyTest extends ObjectsCase
         // Read Required Fields & Prepare Dummy Data
         //====================================================================//
         $Write          = false;
-        $Fields         = Splash::Object($ObjectType)->Fields();
+        $Fields         = Splash::object($ObjectType)->Fields();
         foreach ($Fields as $Key => $Field) {
             //====================================================================//
             // Skip Non Required Fields
@@ -255,7 +255,7 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         // Lock New Objects To Avoid Action Commit
-        Splash::Object($ObjectType)->Lock();
+        Splash::object($ObjectType)->Lock();
         
         //====================================================================//
         // Clean Objects Commited Array

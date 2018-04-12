@@ -25,6 +25,8 @@ use Splash\Core\SplashCore      as Splash;
 trait MainTrait
 {
 
+    private $updateBilled = Null;
+    
     /**
      *  @abstract     Build Address Fields using FieldFactory
      */
@@ -272,7 +274,7 @@ trait MainTrait
         global $user;
         
         // Not Required
-        if (!isset($this->updateBilled)) {
+        if (is_null($this->updateBilled)) {
             return;
         }
         // Not Possible

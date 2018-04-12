@@ -131,7 +131,7 @@ class CustomerInvoicesStats extends WidgetBase
 
         //====================================================================//
         // Publish Widget
-        return $this->Render();
+        return $this->render();
     }
         
 

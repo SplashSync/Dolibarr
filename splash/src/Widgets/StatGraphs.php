@@ -38,7 +38,7 @@ namespace   Splash\Local\Widgets;
 
 use Splash\Models\WidgetBase;
 use Splash\Core\SplashCore      as Splash;
-
+                
 class StatGraphs extends WidgetBase
 {
     //====================================================================//
@@ -71,8 +71,17 @@ class StatGraphs extends WidgetBase
         'CacheLifeTime' =>  60,
     );
     
-    private $Mode = "CustomerInvoices";
+    //====================================================================//
+    // General Class Variables
+    //====================================================================//
     
+    private $stats;
+    private $select;
+    private $where;
+    private $title;
+    private $labels;
+    
+    private $Mode = "CustomerInvoices";
     private $ChartType =   "Line";
     
     //====================================================================//
@@ -177,7 +186,7 @@ class StatGraphs extends WidgetBase
 
         //====================================================================//
         // Publish Widget
-        return $this->Render();
+        return $this->render();
     }
         
 

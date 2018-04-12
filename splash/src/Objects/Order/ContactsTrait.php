@@ -35,14 +35,14 @@ trait ContactsTrait
         
         //====================================================================//
         // Billing Address
-        $this->fieldsFactory()->Create(self::Objects()->Encode("Address", SPL_T_ID))
+        $this->fieldsFactory()->Create(self::objects()->Encode("Address", SPL_T_ID))
                 ->Identifier("BILLING")
                 ->Name($langs->trans("TypeContact_commande_external_BILLING"))
                 ->MicroData("http://schema.org/Order", "billingAddress");
         
         //====================================================================//
         // Shipping Address
-        $this->fieldsFactory()->Create(self::Objects()->Encode("Address", SPL_T_ID))
+        $this->fieldsFactory()->Create(self::objects()->Encode("Address", SPL_T_ID))
                 ->Identifier("SHIPPING")
                 ->Name($langs->trans("TypeContact_commande_external_SHIPPING"))
                 ->MicroData("http://schema.org/Order", "orderDelivery");
@@ -65,7 +65,7 @@ trait ContactsTrait
             case 'BILLING':
                 $ContactsArray   =  $this->Object->liste_contact(-1, 'external', 1, $FieldName);
                 if (!empty($ContactsArray)) {
-                    $this->Out[$FieldName] = self::Objects()->Encode("Address", array_shift($ContactsArray));
+                    $this->Out[$FieldName] = self::objects()->Encode("Address", array_shift($ContactsArray));
                 } else {
                     $this->Out[$FieldName] = null;
                 }
@@ -98,7 +98,7 @@ trait ContactsTrait
 
                 //====================================================================//
                 // Compare to Expected
-                $Expected = self::Objects()->Id($Data);
+                $Expected = self::objects()->Id($Data);
                 if ($Current && ($Current["id"] == $Expected)) {
                     break;
                 }

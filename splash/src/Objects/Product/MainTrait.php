@@ -179,14 +179,14 @@ trait MainTrait
                 }
 
                 if ($PriceType === 'TTC') {
-                    $this->Out[$FieldName] = self::Prices()->Encode(
+                    $this->Out[$FieldName] = self::prices()->Encode(
                         null,
                         $PriceVAT,
                         $PriceTTC,
                         $conf->global->MAIN_MONNAIE
                     );
                 } else {
-                    $this->Out[$FieldName] = self::Prices()->Encode(
+                    $this->Out[$FieldName] = self::prices()->Encode(
                         $PriceHT,
                         $PriceVAT,
                         null,
@@ -197,7 +197,7 @@ trait MainTrait
 
             case 'cost_price':
                     $PriceHT    = (double) $this->Object->cost_price;
-                    $this->Out[$FieldName] = self::Prices()
+                    $this->Out[$FieldName] = self::prices()
                             ->Encode($PriceHT, (double)$this->Object->tva_tx, null, $conf->global->MAIN_MONNAIE);
                 break;
 
@@ -316,10 +316,10 @@ trait MainTrait
         
         //====================================================================//
         // Read Current Product Price (Via Out Buffer)
-        $this->getMainFields(0, "price");
+        $this->getMainPriceFields(0, "price");
         //====================================================================//
         // Compare Prices
-        if (self::Prices()->Compare($this->Out["price"], $NewPrice)) {
+        if (self::prices()->Compare($this->Out["price"], $NewPrice)) {
             return true;
         }
                         

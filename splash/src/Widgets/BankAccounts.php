@@ -76,6 +76,8 @@ class BankAccounts extends WidgetBase
     // General Class Variables
     //====================================================================//
 
+    private $MaxItems   =   10;
+    
     //====================================================================//
     // Class Main Functions
     //====================================================================//
@@ -152,7 +154,7 @@ class BankAccounts extends WidgetBase
 
         //====================================================================//
         // Publish Widget
-        return $this->Render();
+        return $this->render();
     }
         
 

@@ -34,7 +34,7 @@ echo Splash::log()->GetHtmlLog(true);
 //====================================================================//
 // List Objects
 //====================================================================//
-$list   =   Splash::Objects();
+$list   =   Splash::objects();
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="pair">';
 echo '      <td width="60%">' . $langs->trans("SPL_ObjectsList") . '</td>';

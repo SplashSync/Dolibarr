@@ -75,12 +75,12 @@ class UpdatedCustomers extends WidgetBase
         "Footer"        =>  false
     );
     
-    private $MaxItems22   =   10;
-    
     //====================================================================//
     // General Class Variables
     //====================================================================//
 
+    private $MaxItems   =   10;
+    
     //====================================================================//
     // Class Main Functions
     //====================================================================//
@@ -154,7 +154,7 @@ class UpdatedCustomers extends WidgetBase
 
         //====================================================================//
         // Publish Widget
-        return $this->Render();
+        return $this->render();
     }
         
 

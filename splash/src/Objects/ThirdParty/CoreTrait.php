@@ -24,7 +24,10 @@ use Splash\Core\SplashCore      as Splash;
  */
 trait CoreTrait
 {
-
+    private $firstname  = null; 
+    private $lastname   = null; 
+    private $name       = null;
+            
     /**
     *   @abstract     Build Core Fields using FieldFactory
     */
@@ -164,9 +167,6 @@ trait CoreTrait
         $last       = preg_replace('/[-,]/', '', trim($Lastname));
         $comp       = preg_replace('/[-,]/', '', trim($Company));
         
-//        $FullName = preg_replace('/[^A-Za-z0-9\-]/', '', trim($Firstname));
-//        $last = preg_replace('/[^A-Za-z0-9\-]/', '', trim($Lastname));
-//        $comp = preg_replace('/[^A-Za-z0-9\-]/', '', trim($Company));
         //====================================================================//
         // Encode Full Name
         if (!empty($last)) {
@@ -228,13 +228,13 @@ trait CoreTrait
         //====================================================================//
         // Get Current Values if Not Written
         $CurrentName = $this->decodeFullName($this->Object->name);
-        if (!isset($this->firstname) && !empty($CurrentName["firstname"])) {
+        if (!empty($this->firstname) && !empty($CurrentName["firstname"])) {
             $this->firstname = $CurrentName["firstname"];
         }
-        if (!isset($this->lastname) && !empty($CurrentName["lastname"])) {
+        if (!empty($this->lastname) && !empty($CurrentName["lastname"])) {
             $this->lastname = $CurrentName["lastname"];
         }
-        if (!isset($this->name) && !empty($CurrentName["name"])) {
+        if (!empty($this->name) && !empty($CurrentName["name"])) {
             $this->name = $CurrentName["name"];
         }
         //====================================================================//

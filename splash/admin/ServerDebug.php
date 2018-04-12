@@ -23,7 +23,7 @@
  *  \brief      Display Module Tests Results
 */
 //
-//$list   =   Splash::Objects();
+//$list   =   Splash::objects();
 //var_dump($list);
 //echo Splash::log()->GetHtmlLog(True);
 //

@@ -34,6 +34,10 @@ trait ImagesTrait
     );
     private $Extensions     =   [ "gif", "jpg", "jpeg", "png", "bmp" ];
 
+    private $DolFilesDir;
+    private $RelFilesDir;
+    private $imgUpdated;
+
     /**
      *  @abstract     Build Images FieldFactory
      */
@@ -148,7 +152,7 @@ trait ImagesTrait
             
             //====================================================================//
             // Insert Image in Output List
-            $Image = self::Images()->Encode(
+            $Image = self::images()->Encode(
                 $File["name"],
                 $File["name"],
                 $File["path"] . "/",
@@ -198,7 +202,7 @@ trait ImagesTrait
             
             //====================================================================//
             // Insert Image in Output List
-            $Image = self::Images()->Encode(
+            $Image = self::images()->Encode(
                 $EcmFileLine->description,
                 $EcmFileLine->filename,
                 $EcmFileLine->filepath . "/",
@@ -270,7 +274,7 @@ trait ImagesTrait
             }
             //====================================================================//
             // Delete Object From Disk
-            Splash::File()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
+            Splash::file()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
             unset($this->Out["images"][$Key]);
         }
 
@@ -319,7 +323,7 @@ trait ImagesTrait
         if ($EcmImage->label != $ImageData["md5"]) {
             //====================================================================//
             // Read File from Splash Server
-            $NewImageFile    =   Splash::File()->getFile($ImageData["file"], $ImageData["md5"]);
+            $NewImageFile    =   Splash::file()->getFile($ImageData["file"], $ImageData["md5"]);
             //====================================================================//
             // File Imported => Write it Here
             if ($NewImageFile == false) {
@@ -327,7 +331,7 @@ trait ImagesTrait
             }
             //====================================================================//
             // Write Image On Folder
-            Splash::File()->WriteFile(
+            Splash::file()->WriteFile(
                 $this->DolFilesDir . "/",
                 $ImageData["filename"],
                 $NewImageFile["md5"],
@@ -470,7 +474,7 @@ trait ImagesTrait
         if (!$resql) {
             $EcmImage->errors[] = 'Error ' . $db->lasterror();
             $this->catchDolibarrErrors($EcmImage);
-            dol_syslog(__METHOD__ . ' ' . implode(',', $this->errors), LOG_ERR);
+            dol_syslog(__METHOD__ . ' ' . implode(',', $EcmImage->errors), LOG_ERR);
             $db->rollback();
             return;
         }

@@ -137,7 +137,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object
-        if ($this->Object->update($this->Object->id, $user, 1, $this->allowmodcodeclient) <= 0) {
+        if ($this->Object->update($this->Object->id, $user, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",

@@ -60,13 +60,13 @@ trait MultiCompanyTrait
         }
         //====================================================================//
         // Detect Required to Switch Entity
-        if (empty(Splash::Input("Entity", INPUT_GET))
-                || ( Splash::Input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY)) {
+        if (empty(Splash::input("Entity", INPUT_GET))
+                || ( Splash::input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY)) {
             return;
         }
         //====================================================================//
         // Switch Entity
-        $conf->entity   =   (int)   Splash::Input("Entity", INPUT_GET);
+        $conf->entity   =   (int)   Splash::input("Entity", INPUT_GET);
         $conf->setValues($db);
         $user->entity   =   $conf->entity;
 
@@ -76,7 +76,7 @@ trait MultiCompanyTrait
     protected function getMultiCompanyServerPath()
     {
         
-        $ServerRoot     =   realpath(Splash::Input("DOCUMENT_ROOT"));
+        $ServerRoot     =   realpath(Splash::input("DOCUMENT_ROOT"));
         $Prefix         =   isMultiCompanyChildEntity ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
         $FullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $Prefix;
         $RelativePath   =   explode($ServerRoot, $FullPath);
