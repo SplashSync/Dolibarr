@@ -3,13 +3,13 @@
  * Bootstrap Dolibarr testing environment.
  */
 
-require dirname(__DIR__) . "/splash/vendor/autoload.php";
+require __DIR__ . "/splash/vendor/autoload.php";
 
 global $db,$langs,$conf,$user,$hookmanager;
 
 //====================================================================//
 // Initiate Dolibarr Global Envirement Variables
-require_once( dirname(__DIR__) . "/master.inc.php");  
+require_once( __DIR__ . "/master.inc.php");  
 //====================================================================//
 // Functions Dolibarr
 require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
