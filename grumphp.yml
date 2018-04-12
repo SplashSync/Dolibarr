@@ -33,9 +33,9 @@ parameters:
         phpmd:
             ruleset:        ["./build/phpmd.xml"]
         securitychecker: ~
-        phpcpd: ~
-#            exclude:        
-#                - "Components/NuSOAP"
+        phpcpd:
+            exclude:        
+                - "docs"
 #                - "vendor"               
         phpstan:
             configuration:  "build/phpstan.neon"           
