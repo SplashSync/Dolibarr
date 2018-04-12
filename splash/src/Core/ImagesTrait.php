@@ -135,7 +135,11 @@ trait ImagesTrait
         // Refresh Object Attached Images (Manually, OR Ref Changed)
         if (function_exists("completeFileArrayWithDatabaseInfo")) {
             $DiskFileArray = \dol_dir_list($this->DolFilesDir, "files");
-            \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
+            try {
+                \completeFileArrayWithDatabaseInfo($DiskFileArray, $this->RelFilesDir);
+            } catch (\Exception $ex) {
+                Splash::log()->deb("ErrLocalTpl", __CLASS__, __FUNCTION__, $ex->getMessage());
+            }
         }
         //====================================================================//
         // Fetch Object Attached Images from Database
