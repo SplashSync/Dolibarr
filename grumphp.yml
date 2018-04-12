@@ -26,7 +26,8 @@ parameters:
                 - "die("
             triggered_by: [php, js, twig]
         jsonlint:
-            detect_key_conflicts: true
+            ignore_patterns:        [ "docs" ]
+            detect_key_conflicts:   true
         xmllint: ~
         yamllint: ~
         phpmd:
