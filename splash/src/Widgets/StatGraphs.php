@@ -112,7 +112,7 @@ class StatGraphs extends WidgetBase
         
         //====================================================================//
         // Select Data Type Mode
-        $this->fieldsFactory()->Create(SPL_T_TEXT)
+        $this->fieldsFactory()->create(SPL_T_TEXT)
                 ->Identifier("mode")
                 ->Name($langs->trans("Model"))
                 ->isRequired()
@@ -123,7 +123,7 @@ class StatGraphs extends WidgetBase
       
         //====================================================================//
         // Select Chart Rendering Mode
-        $this->fieldsFactory()->Create(SPL_T_TEXT)
+        $this->fieldsFactory()->create(SPL_T_TEXT)
                 ->Identifier("chart_type")
                 ->Name($langs->trans("Type"))
                 ->isRequired()
@@ -134,7 +134,7 @@ class StatGraphs extends WidgetBase
         
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->Publish();
+        return $this->fieldsFactory()->publish();
     }
     
     /**
@@ -182,7 +182,7 @@ class StatGraphs extends WidgetBase
 
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->render());
 
         //====================================================================//
         // Publish Widget

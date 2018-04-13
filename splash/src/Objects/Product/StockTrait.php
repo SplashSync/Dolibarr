@@ -38,7 +38,7 @@ trait StockTrait
         
         //====================================================================//
         // Stock Reel
-        $this->fieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_INT)
                 ->Identifier("stock_reel")
                 ->Name($langs->trans("RealStock"))
                 ->MicroData("http://schema.org/Offer", "inventoryLevel")
@@ -46,14 +46,14 @@ trait StockTrait
 
         //====================================================================//
         // Stock Alerte Level
-        $this->fieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_INT)
                 ->Identifier("seuil_stock_alerte")
                 ->Name($langs->trans("StockLimit"))
                 ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
                 
         //====================================================================//
         // Stock Alerte Flag
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("stock_alert_flag")
                 ->Name($langs->trans("StockTooLow"))
                 ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
@@ -61,14 +61,14 @@ trait StockTrait
         
         //====================================================================//
         // Stock Expected Level
-        $this->fieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_INT)
                 ->Identifier("desiredstock")
                 ->Name($langs->trans("DesiredStock"))
                 ->MicroData("http://schema.org/Offer", "inventoryTargetLevel");
 
         //====================================================================//
         // Average Purchase price value
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("pmp")
                 ->Name($langs->trans("EstimatedStockValueShort"))
                 ->MicroData("http://schema.org/Offer", "averagePrice")

@@ -37,17 +37,17 @@ trait MetaTrait
 
         //====================================================================//
         // Active
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("status")
                 ->Name($langs->trans("Active"))
                 ->Group("Meta")
                 ->MicroData("http://schema.org/Organization", "active")
                 ->isListed();
         
-        if (Splash::local()->DolVersionCmp("3.6.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.6.0") >= 0) {
             //====================================================================//
             // isProspect
-            $this->fieldsFactory()->Create(SPL_T_BOOL)
+            $this->fieldsFactory()->create(SPL_T_BOOL)
                     ->Identifier("prospect")
                     ->Name($langs->trans("Prospect"))
                     ->Group("Meta")
@@ -56,7 +56,7 @@ trait MetaTrait
 
         //====================================================================//
         // isCustomer
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("client")
                 ->Name($langs->trans("Customer"))
                 ->Group("Meta")
@@ -64,7 +64,7 @@ trait MetaTrait
 
         //====================================================================//
         // isSupplier
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("fournisseur")
                 ->Name($langs->trans("Supplier"))
                 ->Group("Meta")
@@ -73,7 +73,7 @@ trait MetaTrait
         
         //====================================================================//
         // isVAT
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("tva_assuj")
                 ->Name($langs->trans("VATIsUsed"))
                 ->Group("Meta")

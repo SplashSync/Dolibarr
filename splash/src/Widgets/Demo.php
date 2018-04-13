@@ -109,14 +109,14 @@ class Demo extends WidgetBase
     {
         //====================================================================//
         // Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("text_input")
                 ->Name("Text Input")
                 ->Description("Widget Specific Custom text Input");
         
         //====================================================================//
         // Reference
-        $this->fieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_INT)
                 ->Identifier("integer_input")
                 ->Name("Numeric Input")
                 ->Description("Widget Specific Custom Numeric Input");
@@ -169,7 +169,7 @@ class Demo extends WidgetBase
 
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->render());
 
         //====================================================================//
         // Publish Widget

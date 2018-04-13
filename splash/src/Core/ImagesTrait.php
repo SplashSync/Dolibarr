@@ -48,7 +48,7 @@ trait ImagesTrait
         
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->dolVersionCmp($this->MinVersion) < 0) {
             return;
         }
         
@@ -58,7 +58,7 @@ trait ImagesTrait
         
         //====================================================================//
         // Product Images List
-        $this->fieldsFactory()->Create(SPL_T_IMG)
+        $this->fieldsFactory()->create(SPL_T_IMG)
                 ->Identifier("image")
                 ->InList("images")
                 ->Name($langs->trans("PhotoFile"))
@@ -67,7 +67,7 @@ trait ImagesTrait
         
         //====================================================================//
         // Product Images => Is Cover
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("cover")
                 ->InList("images")
                 ->Name("Cover Image")
@@ -106,7 +106,7 @@ trait ImagesTrait
                 
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->dolVersionCmp($this->MinVersion) < 0) {
             return;
         }
         //====================================================================//
@@ -242,7 +242,7 @@ trait ImagesTrait
         }
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->dolVersionCmp($this->MinVersion) < 0) {
             return;
         }
 
@@ -456,7 +456,7 @@ trait ImagesTrait
         
         //====================================================================//
         // Ensure Dolibarr Version is Compatible
-        if (Splash::local()->DolVersionCmp($this->MinVersion) < 0) {
+        if (Splash::local()->dolVersionCmp($this->MinVersion) < 0) {
             return;
         }
         

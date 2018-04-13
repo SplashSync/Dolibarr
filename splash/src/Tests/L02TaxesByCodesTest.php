@@ -54,7 +54,7 @@ class L02TaxesByCodesTest extends ObjectsCase
      */
     public function testCreateWithTaxCode($ObjectType, $TaxCode, $VatRate1, $VatRate2)
     {
-        if (Splash::local()->DolVersionCmp("5.0.0") < 0) {
+        if (Splash::local()->dolVersionCmp("5.0.0") < 0) {
             $this->markTestIncomplete('Feature Not Available in This Version.');
             return;
         }
@@ -73,14 +73,14 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Execute Action Directly on Module
-        Splash::object($ObjectType)->Lock();
-        $ObjectId = Splash::object($ObjectType)->Set(null, $FakeData);
+        Splash::object($ObjectType)->lock();
+        $ObjectId = Splash::object($ObjectType)->set(null, $FakeData);
         $this->assertNotEmpty($ObjectId);
 
         //====================================================================//
         //   Read Order Data
         $ObjectData  =   Splash::object($ObjectType)
-                ->Get($ObjectId, ["desc@lines", "price@lines", "vat_src_code@lines"]);
+                ->get($ObjectId, ["desc@lines", "price@lines", "vat_src_code@lines"]);
         
         //====================================================================//
         //   verify Tax Values
@@ -109,13 +109,13 @@ class L02TaxesByCodesTest extends ObjectsCase
         //====================================================================//
         //   Execute Action Directly on Module
         Splash::object($ObjectType)->Lock($ObjectId);
-        $WriteId = Splash::object($ObjectType)->Set($ObjectId, $FakeData);
+        $WriteId = Splash::object($ObjectType)->set($ObjectId, $FakeData);
         $this->assertNotEmpty($WriteId);
 
         //====================================================================//
         //   Read Order Data
         $ObjectData2  =   Splash::object($ObjectType)
-                ->Get($ObjectId, ["desc@lines", "price@lines", "vat_src_code@lines"]);
+                ->get($ObjectId, ["desc@lines", "price@lines", "vat_src_code@lines"]);
         
         //====================================================================//
         //   verify Tax Values

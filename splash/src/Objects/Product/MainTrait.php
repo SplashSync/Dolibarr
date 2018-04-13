@@ -38,7 +38,7 @@ trait MainTrait
 
         //====================================================================//
         // Weight
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("weight")
                 ->Name($langs->trans("Weight"))
                 ->Description($langs->trans("Weight") . "(" . $langs->trans("WeightUnitkg") . ")")
@@ -46,7 +46,7 @@ trait MainTrait
         
         //====================================================================//
         // Lenght
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("length")
                 ->Name($langs->trans("Length"))
                 ->Description($langs->trans("Length") . "(" . $langs->trans("LengthUnitm") . ")")
@@ -54,7 +54,7 @@ trait MainTrait
         
         //====================================================================//
         // Surface
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("surface")
                 ->Name($langs->trans("Surface"))
                 ->Description($langs->trans("Surface") . "(" . $langs->trans("SurfaceUnitm2") . ")")
@@ -62,7 +62,7 @@ trait MainTrait
         
         //====================================================================//
         // Volume
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("volume")
                 ->Name($langs->trans("Volume"))
                 ->Description($langs->trans("Volume") . "(" . $langs->trans("VolumeUnitm3") . ")")
@@ -74,17 +74,17 @@ trait MainTrait
         
         //====================================================================//
         // Product Selling Price
-        $this->fieldsFactory()->Create(SPL_T_PRICE)
+        $this->fieldsFactory()->create(SPL_T_PRICE)
                 ->Identifier("price")
                 ->Name($langs->trans("SellingPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Product", "price")
                 ->isLogged()
                 ->isListed();
         
-        if (Splash::local()->DolVersionCmp("4.0.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("4.0.0") >= 0) {
             //====================================================================//
             // WholeSale Price
-            $this->fieldsFactory()->Create(SPL_T_PRICE)
+            $this->fieldsFactory()->create(SPL_T_PRICE)
                     ->Identifier("cost_price")
                     ->Name($langs->trans("CostPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
                     ->Description($langs->trans("CostPriceDescription"))
@@ -351,7 +351,7 @@ trait MainTrait
         // Commit Price Update on Product Object
         //====================================================================//
         // For compatibility with previous versions => V3.5.0 or Above
-        if (Splash::local()->DolVersionCmp("3.5.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.5.0") >= 0) {
             $Result = $this->Object->updatePrice($Price, $PriceBase, $user, $NewPrice["vat"], '', $PriceLevel);
         //====================================================================//
         // For compatibility with previous versions => Below V3.5.0

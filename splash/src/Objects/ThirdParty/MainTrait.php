@@ -33,7 +33,7 @@ trait MainTrait
         
         //====================================================================//
         // Phone
-        $this->fieldsFactory()->Create(SPL_T_PHONE)
+        $this->fieldsFactory()->create(SPL_T_PHONE)
                 ->Identifier("phone")
                 ->Name($langs->trans("Phone"))
                 ->isLogged()
@@ -42,7 +42,7 @@ trait MainTrait
 
         //====================================================================//
         // Email
-        $this->fieldsFactory()->Create(SPL_T_EMAIL)
+        $this->fieldsFactory()->create(SPL_T_EMAIL)
                 ->Identifier("email")
                 ->Name($langs->trans("Email"))
                 ->MicroData("http://schema.org/ContactPoint", "email")
@@ -51,14 +51,14 @@ trait MainTrait
         
         //====================================================================//
         // WebSite
-        $this->fieldsFactory()->Create(SPL_T_URL)
+        $this->fieldsFactory()->create(SPL_T_URL)
                 ->Identifier("url")
                 ->Name($langs->trans("PublicUrl"))
                 ->MicroData("http://schema.org/Organization", "url");
 
         //====================================================================//
         // Id Professionnal 1 SIREN
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("idprof1")
                 ->Group("ID")
                 ->Name($langs->trans("ProfId1Short"))
@@ -66,7 +66,7 @@ trait MainTrait
         
         //====================================================================//
         // Id Professionnal 2 SIRET
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("idprof2")
                 ->Group("ID")
                 ->Name($langs->trans("ProfId2Short"))
@@ -74,7 +74,7 @@ trait MainTrait
 
         //====================================================================//
         // Id Professionnal 3 APE
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("idprof3")
                 ->Group("ID")
                 ->Name($langs->trans("ProfId3Short"))
@@ -82,7 +82,7 @@ trait MainTrait
         
         //====================================================================//
         // Id Professionnal 4 RCS
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("idprof4")
                 ->Group("ID")
                 ->Name($langs->trans("ProfId4Short"))
@@ -90,7 +90,7 @@ trait MainTrait
         
         //====================================================================//
         // Id Professionnal 5
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("idprof5")
                 ->Group("ID")
                 ->Name($langs->trans("ProfId5Short"));
@@ -98,7 +98,7 @@ trait MainTrait
         
         //====================================================================//
         // Id Professionnal 6
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("idprof6")
                 ->Name($langs->trans("ProfId6Short"))
                 ->Group("ID")
@@ -106,7 +106,7 @@ trait MainTrait
 
         //====================================================================//
         // VAT Number
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("tva_intra")
                 ->Name($langs->trans("VATIntra"))
                 ->Group("ID")

@@ -34,7 +34,7 @@ trait MetaDatesTrait
         
         //====================================================================//
         // TMS - Last Change Date
-        $this->fieldsFactory()->Create(SPL_T_DATE)
+        $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date_modification")
                 ->Name($langs->trans("DateLastModification"))
                 ->Group("Meta")
@@ -43,7 +43,7 @@ trait MetaDatesTrait
         
         //====================================================================//
         // datec - Creation Date
-        $this->fieldsFactory()->Create(SPL_T_DATE)
+        $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date_creation")
                 ->Name($langs->trans("DateCreation"))
                 ->Group("Meta")

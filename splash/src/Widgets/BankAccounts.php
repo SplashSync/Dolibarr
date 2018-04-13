@@ -99,13 +99,13 @@ class BankAccounts extends WidgetBase
         
         //====================================================================//
         // Use Compact Mode
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("compact")
                 ->Name($langs->trans("Compact Mode"));
       
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->Publish();
+        return $this->fieldsFactory()->publish();
     }
     
     /**
@@ -150,7 +150,7 @@ class BankAccounts extends WidgetBase
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->render());
 
         //====================================================================//
         // Publish Widget

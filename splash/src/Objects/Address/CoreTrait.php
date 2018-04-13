@@ -32,7 +32,7 @@ trait CoreTrait
 
         //====================================================================//
         // Firstname
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("firstname")
                 ->Name($langs->trans("Firstname"))
                 ->MicroData("http://schema.org/Person", "familyName")
@@ -42,7 +42,7 @@ trait CoreTrait
         
         //====================================================================//
         // Lastname
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("lastname")
                 ->Name($langs->trans("Lastname"))
                 ->MicroData("http://schema.org/Person", "givenName")
@@ -51,14 +51,14 @@ trait CoreTrait
                 
         //====================================================================//
         // Customer
-        $this->fieldsFactory()->Create(self::objects()->Encode("ThirdParty", SPL_T_ID))
+        $this->fieldsFactory()->create(self::objects()->Encode("ThirdParty", SPL_T_ID))
                 ->Identifier("socid")
                 ->Name($langs->trans("Company"))
                 ->MicroData("http://schema.org/Organization", "ID");
         
         //====================================================================//
         // Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref_ext")
                 ->Name($langs->trans("CustomerCode"))
                 ->Description($langs->trans("CustomerCodeDesc"))

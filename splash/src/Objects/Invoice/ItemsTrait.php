@@ -58,8 +58,8 @@ trait ItemsTrait
 //        global $user;
 //        //====================================================================//
 //        // Prepare Args
-//        $Arg1 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $user : $FactureLigne->id;
-//        $Arg2 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $FactureLigne->id : Null;
+//        $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : $FactureLigne->id;
+//        $Arg2 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $FactureLigne->id : Null;
         //====================================================================//
         // Debug Mode => Force Allow Delete
         if (defined("SPLASH_DEBUG") && SPLASH_DEBUG) {

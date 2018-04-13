@@ -219,7 +219,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Delete Object
-        $Arg1 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
+        $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : 0;
         if ($Object->delete($Arg1) <= 0) {
             $this->catchDolibarrErrors($Object);
             return Splash::log()->err(

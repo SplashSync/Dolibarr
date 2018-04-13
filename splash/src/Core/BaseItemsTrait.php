@@ -50,7 +50,7 @@ trait BaseItemsTrait
         
         //====================================================================//
         // Order Line Description
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("desc")
                 ->InList("lines")
                 ->Name($langs->trans("Description"))
@@ -60,7 +60,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Product Identifier
-        $this->fieldsFactory()->Create(self::objects()->Encode("Product", SPL_T_ID))
+        $this->fieldsFactory()->create(self::objects()->Encode("Product", SPL_T_ID))
                 ->Identifier("fk_product")
                 ->InList("lines")
                 ->Name($langs->trans("Product"))
@@ -70,7 +70,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Quantity
-        $this->fieldsFactory()->Create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_INT)
                 ->Identifier("qty")
                 ->InList("lines")
                 ->Name($langs->trans("Quantity"))
@@ -80,7 +80,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Discount
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("remise_percent")
                 ->InList("lines")
                 ->Name($langs->trans("Discount"))
@@ -90,7 +90,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Unit Price
-        $this->fieldsFactory()->Create(SPL_T_PRICE)
+        $this->fieldsFactory()->create(SPL_T_PRICE)
                 ->Identifier("price")
                 ->InList("lines")
                 ->Name($langs->trans("Price"))
@@ -100,8 +100,8 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Tax Name
-        if (Splash::local()->DolVersionCmp("5.0.0") >= 0) {
-            $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        if (Splash::local()->dolVersionCmp("5.0.0") >= 0) {
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
                     ->Identifier("vat_src_code")
                     ->InList("lines")
                     ->Name($langs->trans("VATRate"))
@@ -293,7 +293,7 @@ trait BaseItemsTrait
         
         //====================================================================//
         // Prepare Args
-        $Arg1 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $user : 0;
+        $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : 0;
         //====================================================================//
         // Perform Line Update
         if ($this->CurrentItem->update($Arg1) <= 0) {

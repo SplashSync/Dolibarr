@@ -33,7 +33,7 @@ trait LocalizationTrait
     protected function getCountryByCode($code)
     {
         global $db;
-        if (Splash::local()->DolVersionCmp("3.7.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.7.0") >= 0) {
             require_once DOL_DOCUMENT_ROOT . '/core/class/ccountry.class.php';
             $pays = new \Ccountry($db);
             if ($pays->fetch(null, $code) > 0) {
@@ -72,7 +72,7 @@ trait LocalizationTrait
         // Select State Id &œ Code
         $sql =  "SELECT d.rowid as id, d.code_departement as code";
         $sql .= " FROM ".MAIN_DB_PREFIX ."c_departements as d, ";
-        if (Splash::local()->DolVersionCmp("3.7.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.7.0") >= 0) {
             $sql .= MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_country as p";
         } else {
             $sql .= MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_pays as p";

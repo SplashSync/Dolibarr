@@ -137,7 +137,7 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         // Check Dolibarr Version Is Compatible
-        if (Splash::local()->DolVersionCmp("5.0.0") < 0) {
+        if (Splash::local()->dolVersionCmp("5.0.0") < 0) {
             $this->markTestIncomplete('This Feature is Not Implemented on Current Dolibarr Release.');
         }
         

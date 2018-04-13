@@ -61,7 +61,7 @@ echo '  </tr>';
 
 //====================================================================//
 // Tax Name Detection Mode
-if (Splash::local()->DolVersionCmp("5.0.0") >= 0) {
+if (Splash::local()->dolVersionCmp("5.0.0") >= 0) {
     echo '  <tr class="pair">';
     echo '      <td>' . $form->textwithpicto(
         $langs->trans("SPL_DetectTaxName"),

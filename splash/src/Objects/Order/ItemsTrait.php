@@ -61,8 +61,8 @@ trait ItemsTrait
         $this->Object->brouillon      = 1;
         //====================================================================//
         // Prepare Args
-        $Arg1 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
-        $Arg2 = ( Splash::local()->DolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : null;
+        $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
+        $Arg2 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : null;
         //====================================================================//
         // Perform Line Delete
         if ($this->Object->deleteline($Arg1, $Arg2) <= 0) {

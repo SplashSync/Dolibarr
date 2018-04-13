@@ -89,12 +89,6 @@ class Dashboard extends WidgetBase
     
     /**
      *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
-     *                        $params["start"]      Maximum Number of results
-     *                        $params["end"]        List Start Offset
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
-
      */
     public function get()
     {
@@ -119,7 +113,7 @@ class Dashboard extends WidgetBase
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->Render());
+        $this->setBlocks($this->blocksFactory()->render());
 
         //====================================================================//
         // Publish Widget
@@ -431,7 +425,7 @@ class Dashboard extends WidgetBase
      */
     public static function getIsDisabled()
     {
-        if (Splash::local()->DolVersionCmp("3.9.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.9.0") >= 0) {
             return static::$DISABLED;
         }
         return false;

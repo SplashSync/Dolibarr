@@ -35,14 +35,14 @@ trait ContactsTrait
         
         //====================================================================//
         // Billing Address
-        $this->fieldsFactory()->Create(self::objects()->Encode("Address", SPL_T_ID))
+        $this->fieldsFactory()->create(self::objects()->Encode("Address", SPL_T_ID))
                 ->Identifier("BILLING")
                 ->Name($langs->trans("TypeContact_commande_external_BILLING"))
                 ->MicroData("http://schema.org/Order", "billingAddress");
         
         //====================================================================//
         // Shipping Address
-        $this->fieldsFactory()->Create(self::objects()->Encode("Address", SPL_T_ID))
+        $this->fieldsFactory()->create(self::objects()->Encode("Address", SPL_T_ID))
                 ->Identifier("SHIPPING")
                 ->Name($langs->trans("TypeContact_commande_external_SHIPPING"))
                 ->MicroData("http://schema.org/Order", "orderDelivery");

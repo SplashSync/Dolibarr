@@ -50,7 +50,7 @@ trait ObjectsListTrait
         $sql   .= " c.email as email,";                 // Email
         $sql   .= " c.zip as zip,";                     // ZipCode
         $sql   .= " c.town as town,";                   // City Name
-        if (Splash::local()->DolVersionCmp("3.7.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.7.0") >= 0) {
             $sql   .= " p.label as country,";          // Country Name
         } else {
             $sql   .= " p.libelle as country,";        // Country Name
@@ -61,7 +61,7 @@ trait ObjectsListTrait
         // Select Database tables
         $sql   .= " FROM " . MAIN_DB_PREFIX . "socpeople as c ";
         
-        if (Splash::local()->DolVersionCmp("3.7.0") >= 0) {
+        if (Splash::local()->dolVersionCmp("3.7.0") >= 0) {
             $sql   .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_country as p on c.fk_pays = p.rowid";
         } else {
             $sql   .= " LEFT JOIN " . MAIN_DB_PREFIX . "c_pays as p on c.fk_pays = p.rowid";

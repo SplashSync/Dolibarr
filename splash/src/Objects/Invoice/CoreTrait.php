@@ -32,7 +32,7 @@ trait CoreTrait
         
         //====================================================================//
         // Customer Object
-        $this->fieldsFactory()->Create(self::objects()->Encode("ThirdParty", SPL_T_ID))
+        $this->fieldsFactory()->create(self::objects()->Encode("ThirdParty", SPL_T_ID))
                 ->Identifier("socid")
                 ->Name($langs->trans("Company"))
                 ->MicroData("http://schema.org/Invoice", "customer")
@@ -40,7 +40,7 @@ trait CoreTrait
         
         //====================================================================//
         // Order Date
-        $this->fieldsFactory()->Create(SPL_T_DATE)
+        $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date")
                 ->Name($langs->trans("OrderDate"))
                 ->MicroData("http://schema.org/Order", "orderDate")
@@ -49,7 +49,7 @@ trait CoreTrait
         
         //====================================================================//
         // Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref")
                 ->Name($langs->trans("InvoiceRef"))
                 ->MicroData("http://schema.org/Invoice", "name")
@@ -58,21 +58,21 @@ trait CoreTrait
         
         //====================================================================//
         // Customer Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref_client")
                 ->Name($langs->trans("RefCustomer"))
                 ->MicroData("http://schema.org/Invoice", "confirmationNumber");
         
         //====================================================================//
         // Internal Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref_int")
                 ->Name($langs->trans("RefCustomer") . " " . $langs->trans("Internal"))
                 ->MicroData("http://schema.org/Invoice", "description");
                 
         //====================================================================//
         // External Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref_ext")
                 ->Name($langs->trans("ExternalRef"))
                 ->isListed()

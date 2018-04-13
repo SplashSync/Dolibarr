@@ -251,7 +251,7 @@ class Local
         
         //====================================================================//
         // Check Version is Above 4.0
-        if (Splash::local()->DolVersionCmp("4.0.0") < 0) {
+        if (Splash::local()->dolVersionCmp("4.0.0") < 0) {
             return Splash::log()->err(
                 "Splash Module for Dolibarr require Dolibarr Version Above 4.0. "
                     . "Please update your system before using Splash."
@@ -481,7 +481,7 @@ class Local
     *  Compare Dolibarr version is lower/greater then version given.
     *
     *  @param      string       $version        Dolibarr Version to compare (ie : 3.3.3)
-    *  @return     bool         int             -1 if given version is lower then current version
+    *  @return     int                          -1 if given version is lower then current version
     *                                           0 if given version is egal to current version
     *                                           1 if given version is above current version
     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)

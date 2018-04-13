@@ -36,7 +36,7 @@ trait MainTrait
         
         //====================================================================//
         // Delivry Estimated Date
-        $this->fieldsFactory()->Create(SPL_T_DATE)
+        $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date_livraison")
                 ->Name($langs->trans("DeliveryDate"))
                 ->MicroData("http://schema.org/ParcelDelivery", "expectedArrivalUntil");
@@ -47,7 +47,7 @@ trait MainTrait
         
         //====================================================================//
         // Order Total Price HT
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("total_ht")
                 ->Name($langs->trans("TotalHT") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Invoice", "totalPaymentDue")
@@ -55,7 +55,7 @@ trait MainTrait
         
         //====================================================================//
         // Order Total Price TTC
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("total_ttc")
                 ->Name($langs->trans("TotalTTC") . " (" . $conf->global->MAIN_MONNAIE . ")")
                 ->MicroData("http://schema.org/Invoice", "totalPaymentDueTaxIncluded")
@@ -67,7 +67,7 @@ trait MainTrait
 
         //====================================================================//
         // Is Draft
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("isdraft")
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Draft"))
@@ -77,7 +77,7 @@ trait MainTrait
 
         //====================================================================//
         // Is Canceled
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("iscanceled")
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Canceled"))
@@ -87,7 +87,7 @@ trait MainTrait
         
         //====================================================================//
         // Is Validated
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("isvalidated")
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Validated"))
@@ -97,7 +97,7 @@ trait MainTrait
         
         //====================================================================//
         // Is Closed
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("isclosed")
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Closed"))
                 ->Group(html_entity_decode($langs->trans("Status")))
@@ -107,7 +107,7 @@ trait MainTrait
 
         //====================================================================//
         // Is Paid
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("facturee")
                 ->Group(html_entity_decode($langs->trans("Status")))
                 ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))

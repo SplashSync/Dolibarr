@@ -44,7 +44,7 @@ trait PaymentsTrait
         
         //====================================================================//
         // Payment Line Payment Method
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("mode")
                 ->InList("payments")
                 ->Name($ListName . $langs->trans("PaymentMode"))
@@ -60,7 +60,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Payment Line Date
-        $this->fieldsFactory()->Create(SPL_T_DATE)
+        $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date")
                 ->InList("payments")
                 ->Name($ListName . $langs->trans("Date"))
@@ -69,7 +69,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Payment Line Payment Identifier
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("number")
                 ->InList("payments")
                 ->Name($ListName . $langs->trans('Numero'))
@@ -78,7 +78,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Payment Line Amount
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
                 ->Identifier("amount")
                 ->InList("payments")
                 ->Name($ListName . $langs->trans("PaymentAmount"))

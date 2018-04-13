@@ -33,7 +33,7 @@ trait MainTrait
         $GroupName = $langs->trans("CompanyAddress");
         //====================================================================//
         // Addess
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("address")
                 ->Name($langs->trans("CompanyAddress"))
                 ->Group($GroupName)
@@ -42,7 +42,7 @@ trait MainTrait
 
         //====================================================================//
         // Zip Code
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("zip")
                 ->Name($langs->trans("CompanyZip"))
                 ->MicroData("http://schema.org/PostalAddress", "postalCode")
@@ -53,7 +53,7 @@ trait MainTrait
         
         //====================================================================//
         // City Name
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("town")
                 ->Name($langs->trans("CompanyTown"))
                 ->MicroData("http://schema.org/PostalAddress", "addressLocality")
@@ -63,7 +63,7 @@ trait MainTrait
         
         //====================================================================//
         // Country Name
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("country")
                 ->Name($langs->trans("CompanyCountry"))
                 ->isReadOnly()
@@ -72,7 +72,7 @@ trait MainTrait
         
         //====================================================================//
         // Country ISO Code
-        $this->fieldsFactory()->Create(SPL_T_COUNTRY)
+        $this->fieldsFactory()->create(SPL_T_COUNTRY)
                 ->Identifier("country_code")
                 ->Name($langs->trans("CountryCode"))
                 ->Group($GroupName)
@@ -82,7 +82,7 @@ trait MainTrait
         if (empty($conf->global->SOCIETE_DISABLE_STATE)) {
             //====================================================================//
             // State Name
-            $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
                     ->Identifier("state")
                     ->Name($langs->trans("State"))
                     ->Group($GroupName)
@@ -90,7 +90,7 @@ trait MainTrait
 
             //====================================================================//
             // State code
-            $this->fieldsFactory()->Create(SPL_T_STATE)
+            $this->fieldsFactory()->create(SPL_T_STATE)
                     ->Identifier("state_code")
                     ->Name($langs->trans("State Code"))
                     ->MicroData("http://schema.org/PostalAddress", "addressRegion")
@@ -111,7 +111,7 @@ trait MainTrait
         
         //====================================================================//
         // Phone Pro
-        $this->fieldsFactory()->Create(SPL_T_PHONE)
+        $this->fieldsFactory()->create(SPL_T_PHONE)
                 ->Identifier("phone_pro")
                 ->Name($langs->trans("PhonePro"))
                 ->MicroData("http://schema.org/Organization", "telephone")
@@ -120,7 +120,7 @@ trait MainTrait
 
         //====================================================================//
         // Phone Perso
-        $this->fieldsFactory()->Create(SPL_T_PHONE)
+        $this->fieldsFactory()->create(SPL_T_PHONE)
                 ->Identifier("phone_perso")
                 ->Name($langs->trans("PhonePerso"))
                 ->isLogged()
@@ -128,7 +128,7 @@ trait MainTrait
         
         //====================================================================//
         // Mobile Phone
-        $this->fieldsFactory()->Create(SPL_T_PHONE)
+        $this->fieldsFactory()->create(SPL_T_PHONE)
                 ->Identifier("phone_mobile")
                 ->Name($langs->trans("PhoneMobile"))
                 ->MicroData("http://schema.org/Person", "telephone")
@@ -137,7 +137,7 @@ trait MainTrait
 
         //====================================================================//
         // Email
-        $this->fieldsFactory()->Create(SPL_T_EMAIL)
+        $this->fieldsFactory()->create(SPL_T_EMAIL)
                 ->Identifier("email")
                 ->Name($langs->trans("Email"))
                 ->MicroData("http://schema.org/ContactPoint", "email")
@@ -146,7 +146,7 @@ trait MainTrait
         
         //====================================================================//
         // Active
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("statut")
                 ->Name($langs->trans("Active"))
                 ->MicroData("http://schema.org/Person", "active");

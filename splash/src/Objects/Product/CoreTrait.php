@@ -33,7 +33,7 @@ trait CoreTrait
 
         //====================================================================//
         // Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref")
                 ->Name($langs->trans("ProductRef"))
                 ->isListed()

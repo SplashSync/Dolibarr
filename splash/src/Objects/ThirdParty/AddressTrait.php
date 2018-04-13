@@ -36,7 +36,7 @@ trait AddressTrait
         $GroupName = $langs->trans("CompanyAddress");
         //====================================================================//
         // Addess
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("address")
                 ->Name($langs->trans("CompanyAddress"))
                 ->Group($GroupName)
@@ -45,7 +45,7 @@ trait AddressTrait
 
         //====================================================================//
         // Zip Code
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("zip")
                 ->Name($langs->trans("CompanyZip"))
                 ->Group($GroupName)
@@ -56,7 +56,7 @@ trait AddressTrait
         
         //====================================================================//
         // City Name
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("town")
                 ->Name($langs->trans("CompanyTown"))
                 ->Group($GroupName)
@@ -65,7 +65,7 @@ trait AddressTrait
         
         //====================================================================//
         // Country Name
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("country")
                 ->Name($langs->trans("CompanyCountry"))
                 ->Group($GroupName)
@@ -74,7 +74,7 @@ trait AddressTrait
         
         //====================================================================//
         // Country ISO Code
-        $this->fieldsFactory()->Create(SPL_T_COUNTRY)
+        $this->fieldsFactory()->create(SPL_T_COUNTRY)
                 ->Identifier("country_code")
                 ->Name($langs->trans("CountryCode"))
                 ->Group($GroupName)
@@ -83,7 +83,7 @@ trait AddressTrait
         
         //====================================================================//
         // State Name
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("state")
                 ->Group($GroupName)
                 ->Name($langs->trans("State"))
@@ -91,7 +91,7 @@ trait AddressTrait
         
         //====================================================================//
         // State code
-        $this->fieldsFactory()->Create(SPL_T_STATE)
+        $this->fieldsFactory()->create(SPL_T_STATE)
                 ->Identifier("state_code")
                 ->Name($langs->trans("State Code"))
                 ->Group($GroupName)

@@ -35,7 +35,7 @@ trait StatusTrait
         
         //====================================================================//
         // Invoice Current Status
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("status")
                 ->Name($langs->trans("Status"))
                 ->Group(html_entity_decode($langs->trans("Status")))

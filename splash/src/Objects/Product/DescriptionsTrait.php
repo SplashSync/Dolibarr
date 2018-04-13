@@ -45,7 +45,7 @@ trait DescriptionsTrait
 
         //====================================================================//
         // Note
-            $this->fieldsFactory()->Create(SPL_T_TEXT)
+            $this->fieldsFactory()->create(SPL_T_TEXT)
                 ->Identifier("note")
                 ->Name($langs->trans("Note"))
                 ->Group($GroupName)

@@ -33,7 +33,7 @@ trait MetaTrait
         
         //====================================================================//
         // On Sell
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("status_buy")
                 ->Name($langs->trans("Status").' ('.$langs->trans("Buy").')')
                 ->MicroData("http://schema.org/Product", "ordered")
@@ -42,7 +42,7 @@ trait MetaTrait
         
         //====================================================================//
         // On Buy
-        $this->fieldsFactory()->Create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SPL_T_BOOL)
                 ->Identifier("status")
                 ->Name($langs->trans("Status").' ('.$langs->trans("Sell").')')
                 ->MicroData("http://schema.org/Product", "offered")

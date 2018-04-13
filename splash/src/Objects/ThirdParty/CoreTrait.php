@@ -37,7 +37,7 @@ trait CoreTrait
         
         //====================================================================//
         // Company
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("name")
                 ->Name($langs->trans("CompanyName"))
                 ->isLogged()
@@ -48,7 +48,7 @@ trait CoreTrait
 
         //====================================================================//
         // Firstname
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("firstname")
                 ->Name($langs->trans("Firstname"))
                 ->isLogged()
@@ -57,7 +57,7 @@ trait CoreTrait
         
         //====================================================================//
         // Lastname
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("lastname")
                 ->Name($langs->trans("Lastname"))
                 ->isLogged()
@@ -66,7 +66,7 @@ trait CoreTrait
                 
         //====================================================================//
         // Reference
-        $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("code_client")
                 ->Name($langs->trans("CustomerCode"))
                 ->Description($langs->trans("CustomerCodeDesc"))
