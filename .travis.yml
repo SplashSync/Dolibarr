@@ -3,14 +3,14 @@
 # Tell Travis CI we're using PHP
 language: php
 
+# Tell Travis CI we're using Cache
+cache:
+  directories:
+    - $HOME/.composer/cache
+    
 # Specify versions of Php & Dolibarr to test against
 # DOL   = Github Branch
 # DATA  = Demo data Versions tu USe for Testing
-env:
-    global:
-        # Set to true for very verbose output
-        - DEBUG=false  
-        
 matrix:
     include:
         # Dolibarr V4.0 Branch       
