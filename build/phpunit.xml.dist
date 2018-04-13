@@ -12,7 +12,7 @@
     stopOnFailure               = "true"
     syntaxCheck                 = "false"
     bootstrap                   = "../splash/vendor/autoload.php" 
-    verbose                     = "true"
+    verbose                     = "false"
     debug                       = "false"    
     timeoutForLargeTests        = "120"  
 >

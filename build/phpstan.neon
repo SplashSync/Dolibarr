@@ -1,4 +1,8 @@
 parameters:
     bootstrap: "./build/phpstan.php"
+    universalObjectCratesClasses:
+            - FactureStats
+            - CommandeStats
+
     ignoreErrors: 
         - '#Function completeFileArrayWithDatabaseInfo not found.#'

@@ -93,7 +93,7 @@ class ProductDistribution extends WidgetBase
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
     }
     
     /**
@@ -102,7 +102,7 @@ class ProductDistribution extends WidgetBase
     public function getParameters()
     {
         global $langs;
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
         
         $langs->load("main");
         $langs->load("bills");

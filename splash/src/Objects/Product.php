@@ -103,7 +103,7 @@ class Product extends AbstractObject
         require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
         //====================================================================//
         // Load Dolibarr Default Language
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
         
         //====================================================================//
         // Load Required Dolibarr Translation Files

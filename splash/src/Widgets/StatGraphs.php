@@ -96,7 +96,7 @@ class StatGraphs extends WidgetBase
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
     }
     
 
@@ -106,7 +106,7 @@ class StatGraphs extends WidgetBase
     public function getParameters()
     {
         global $langs;
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
         $langs->load("compta");
         $langs->load("bills");
         
@@ -153,7 +153,7 @@ class StatGraphs extends WidgetBase
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations

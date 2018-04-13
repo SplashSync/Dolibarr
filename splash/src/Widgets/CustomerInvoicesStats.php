@@ -107,7 +107,7 @@ class CustomerInvoicesStats extends WidgetBase
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->LoadDefaultLanguage();
+        Splash::local()->loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations

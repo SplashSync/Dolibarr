@@ -14,6 +14,7 @@ parameters:
             standard:       "PSR2"
             triggered_by:   [php]
             ignore_patterns:
+                - phpstan.php
                 - defines.inc.php
                 - modSplash.class.php
                 - interface_50_modSplash_Splash.class.php
