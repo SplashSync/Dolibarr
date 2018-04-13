@@ -44,3 +44,9 @@ include_once DOL_DOCUMENT_ROOT.'/expensereport/class/expensereport.class.php';
 // Splash Dolibarr Specific Classes
 include_once dirname(__DIR__) . '/splash/core/modules/modSplash.class.php';
 include_once dirname(__DIR__) . '/splash/core/triggers/interface_50_modSplash_Splash.class.php';
+
+//====================================================================//
+// Include Splash Constants Definitions
+require_once(dirname(dirname(__FILE__)) . "/splash/vendor/splash/phpcore/inc/Splash.Inc.php");
+require_once(dirname(dirname(__FILE__)) . "/splash/vendor/splash/phpcore/inc/defines.inc.php");
+define("SPLASH_SERVER_MODE", 0);

@@ -44,6 +44,8 @@ trait BaseItemsTrait
             $GroupName  = $langs->trans("OrderLine");
         } elseif (is_a($this, 'Splash\Local\Objects\Invoice')) {
             $GroupName  = $langs->trans("InvoiceLine");
+        } else {
+            $GroupName  = "Items";
         }
         
         //====================================================================//

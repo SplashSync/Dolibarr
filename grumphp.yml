@@ -38,6 +38,7 @@ parameters:
                 - "docs"
                 - "splash/vendor"               
         phpstan:
+            level: 1
             configuration:  "build/phpstan.neon"           
             ignore_patterns:
                 - LocalizationTrait.php

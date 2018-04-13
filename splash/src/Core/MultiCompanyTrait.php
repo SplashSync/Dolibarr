@@ -77,7 +77,7 @@ trait MultiCompanyTrait
     {
         
         $ServerRoot     =   realpath(Splash::input("DOCUMENT_ROOT"));
-        $Prefix         =   isMultiCompanyChildEntity ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
+        $Prefix         =   $this->isMultiCompanyChildEntity() ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
         $FullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $Prefix;
         $RelativePath   =   explode($ServerRoot, $FullPath);
         

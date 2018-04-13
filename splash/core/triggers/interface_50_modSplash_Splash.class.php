@@ -142,9 +142,7 @@ class InterfaceSplash
             setEventMessage($log->GetHtml($log->deb), 'warnings');
         }
         
-        if (isset($log)) {
-            $log->CleanLog();
-        }
+        $log->CleanLog();
     }
 
     

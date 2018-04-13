@@ -1,2 +1,4 @@
 parameters:
-	bootstrap: "./build/phpstan.php"
+    bootstrap: "./build/phpstan.php"
+    ignoreErrors: 
+        - '#Function completeFileArrayWithDatabaseInfo not found.#'
