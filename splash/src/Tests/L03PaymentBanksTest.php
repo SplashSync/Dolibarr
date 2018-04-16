@@ -5,7 +5,7 @@ use Splash\Tests\Tools\ObjectsCase;
 use Splash\Client\Splash;
 
 /**
- * @abstract    Local Test Suite - Verify Mapping of Invoices Payments Lines to Selected Bank Accounts 
+ * @abstract    Local Test Suite - Verify Mapping of Invoices Payments Lines to Selected Bank Accounts
  *
  * @author SplashSync <contact@splashsync.com>
  */
