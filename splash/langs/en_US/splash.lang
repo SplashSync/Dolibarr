@@ -22,8 +22,8 @@ SPL_Welcome         =   Splash Module is Now Activated
 # Admin Page Index
 ################################################################################
 SPL_Name            =   Splash Sync Module
-SPL_Short_Desc      =   Splash Sync Connector for Dolibarr. (Version > 3.5.x).
-SPL_Full_Desc       =   Splash Sync Connector for Dolibarr. Open-Source Synchronisation system for Dolibarr (Version > 3.5.x). More information on <a href="http://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Short_Desc      =   Splash Sync Connector for Dolibarr. (Version > 4.0.0).
+SPL_Full_Desc       =   Splash Sync Connector for Dolibarr. Open-Source Synchronisation system for Dolibarr (Version > 4.0.0). More information on <a href="https://www.splashsync.com" target="_blank">www.splashsync.com</a>
 SPL_Help_Msg        =   I Need Help 
 
 ################################################################################
@@ -75,7 +75,6 @@ SPL_Orders_Email    =   Try to detect Exiting Customer using it's Email
 SPL_Payment_Config  =   Payments Import
 SPL_DfBankAccount   =   Default Bank Account used by the module (if not spécified)
 SPL_BankAccountFor  =   Bank Account used for <b>%s</b> payments (%s)
-
 
 ################################################################################
 # Admin Page Self Tests Results
