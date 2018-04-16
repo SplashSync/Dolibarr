@@ -1,27 +1,16 @@
 <?php
 /*
- * Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com>
+ * This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (C) Splash Sync <www.splashsync.com>
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: ConfigMain.php 493 2016-03-24 23:01:42Z Nanard33 $
- *  \version    $Revision: 493 $
- *  \ingroup    Splash - Dolibarr Synchronisation via WebService
- *  \brief      Display Module Tests Results
-*/
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 
 //====================================================================//
@@ -112,7 +101,8 @@ echo "</div>";
 echo    '<div class="tabsAction">';
 echo    '      <div class="inline-block" >';
 echo    '           <a href="' . $langs->trans("SPL_Main_Help") . '" target="_blank">';
-echo    '               <i class="fa fa-external-link">&nbsp;</i>' . $langs->trans("SPL_Help_Msg") . '<i class="fa fa-question">&nbsp;</i>';
+echo    '               <i class="fa fa-external-link">&nbsp;</i>';
+echo                    $langs->trans("SPL_Help_Msg") . '<i class="fa fa-question">&nbsp;</i>';
 echo    '           </a>';
 echo    '       </div>';
 echo    '       <input type="submit" class="butAction" align="right" value="'.$langs->trans("Save").'">';

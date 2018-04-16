@@ -97,7 +97,7 @@ trait PaymentsTrait
         
         //====================================================================//
         // Prepare SQL Request
-    // Payments already done (from payment on this invoice)
+        // Payments already done (from payment on this invoice)
         $sql = 'SELECT p.datep as date, p.num_paiement as number, p.rowid as id, p.fk_bank,';
         $sql .= ' c.code as code, c.libelle as payment_label,';
         $sql .= ' pf.amount as amount,';
@@ -122,7 +122,7 @@ trait PaymentsTrait
         if ($Count == 0) {
             return true;
         }
-    //====================================================================//
+        //====================================================================//
         // Fetch Results
         $index = 0;
         while ($index < $Count) {
@@ -303,7 +303,7 @@ trait PaymentsTrait
             // Amounts are Similar => No Recreate
             return false;
         }
-            
+         
         //====================================================================//
         // Try to delete Payment
         if ($Payment->delete() <= 0) {
@@ -361,7 +361,7 @@ trait PaymentsTrait
      */
     private function createPaymentItem($LineData)
     {
-        global $db,$conf,$user;
+        global $db,$user;
         
         //====================================================================//
         // Verify Minimal Fields Ar available
@@ -398,7 +398,15 @@ trait PaymentsTrait
 
         //====================================================================//
         // Setup Payment Account Id
-        $Result = $Payment->addPaymentToBank($user, 'payment', '(Payment)', $conf->global->SPLASH_BANK, "", "");
+        $Result = $Payment->addPaymentToBank(
+            $user,
+            'payment',
+            '(Payment)',
+            $this->identifyBankAccountId($this->identifyPaymentMethod($LineData["mode"])),
+            "",
+            ""
+        );
+        
         if ($Result < 0) {
             Splash::log()->err(
                 "ErrLocalTpl",
@@ -518,6 +526,29 @@ trait PaymentsTrait
         //====================================================================//
         // Default Payment Method Id
         return 0;
+    }
+    
+    /**
+     *  @abstract     Identify Bank Accopunt Id using Splash Configuration
+     *
+     *  @param        int       $PaymentTypeId        Payment Method Id
+     *
+     *  @return       int
+     */
+    private function identifyBankAccountId($PaymentTypeId)
+    {
+        global $conf;
+        
+        //====================================================================//
+        // Detect Bank Account Id From Method Code
+        $ParameterName   =   "SPLASH_BANK_FOR_".$PaymentTypeId;
+        if (isset($conf->global->$ParameterName) && !empty($conf->global->$ParameterName)) {
+            return $conf->global->$ParameterName;
+        }
+        
+        //====================================================================//
+        // Default Payment Account Id
+        return $conf->global->SPLASH_BANK;
     }
     
     /**

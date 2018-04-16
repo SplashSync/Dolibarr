@@ -144,10 +144,15 @@ class modSplash extends DolibarrModules
                 array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),
                 array('SPLASH_USER',    'chaine',   '',  'Local User to use for Splash Server Transactions', 0),
                 array('SPLASH_STOCK',   'chaine',   '',  'Local Warhouse to use for Splash Server Transactions', 0),
+                array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),
+                //====================================================================//
+                // Splash Order & Invoices Parameters
+                array('SPLASH_DETECT_TAX_NAME', 'chaine', '0', 'Use Tax Names to detect Vat Types', 0),
                 array('SPLASH_BANK',    'chaine',   '',  'Local Default Bank Account Id', 0),
                 array('SPLASH_DEFAULT_PAYMENT', 'chaine', 'CHQ', 'Local Default Payment Method', 0),
-                array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),
-                array('SPLASH_DETECT_TAX_NAME', 'chaine', '0', 'Use Tax Names to detect Vat Types', 0),
+                array('SPLASH_GUEST_ORDERS_ALLOW', 'chaine', '', 'Allow Import of Guests Orders & Invoices', 0),
+                array('SPLASH_GUEST_ORDERS_CUSTOMER', 'chaine', '', 'Select Guest Orders Customer', 0),
+                array('SPLASH_GUEST_ORDERS_EMAIL', 'chaine', '', 'Try to detect Customer Using Email ', 0),
             );
     }
         

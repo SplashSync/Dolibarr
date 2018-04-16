@@ -68,183 +68,30 @@ if (!$user->admin) {
 }
 
 //====================================================================//
+// Create Dolibarr Form Class
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
+$form   =   new Form($db);
+
+//====================================================================//
 // *******************************************************************//
 // ACTIONS
 // *******************************************************************//
 //====================================================================//
 
 //====================================================================//
-// Update of Main Module Parameters
-if ($action == 'UpdateMode') {
-    //====================================================================//
-    // Update Server Expert Mode
-    $WsExpert = GETPOST('WsExpert')?1:0;
-    dolibarr_set_const($db, "SPLASH_WS_EXPERT", $WsExpert, 'int', 0, '', $conf->entity);
-    if (!$WsExpert) {
-        dolibarr_set_const($db, "SPLASH_WS_HOST", "", 'chaine', 0, '', $conf->entity);
-    }
-    header("location:" . filter_input(INPUT_SERVER, "PHP_SELF"));
-}
-
+// Update Main Parameters
+include("UpdateMain.php");
 //====================================================================//
-// Update of Main Module Parameters
-if ($action == 'UpdateMain') {
-    //====================================================================//
-    // Init DB Transaction
-    $db->begin();
-    
-    $errors = 0;
-    //====================================================================//
-    // Update Server Id
-    $WsId = GETPOST('WsId', 'alpha');
-    if ($WsId) {
-        if (dolibarr_set_const($db, "SPLASH_WS_ID", $WsId, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // Update Server Encryption Key
-    $WsKey = GETPOST('WsKey', 'alpha');
-    if ($WsKey) {
-        if (dolibarr_set_const($db, "SPLASH_WS_KEY", $WsKey, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // Update Server Host Url
-    $WsHost = GETPOST('WsHost', 'alpha');
-    if ($WsKey) {
-        if (dolibarr_set_const($db, "SPLASH_WS_HOST", $WsHost, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // Update Protocl
-    $WsMethod = GETPOST('WsMethod', 'alpha');
-    if ($WsMethod) {
-        if (dolibarr_set_const($db, "SPLASH_WS_METHOD", $WsMethod, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // DB Commit & Display User Message
-    if (! $error) {
-        $db->commit();
-        setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-    } else {
-        $db->rollback();
-        setEventMessage($langs->trans("Error"), 'errors');
-    }
-    
+// Update of Local Module Parameters
+include("UpdateLocal.php");
 //====================================================================//
-// Update of Main Module Parameters
-} elseif ($action == 'UpdateLocal') {
-    //====================================================================//
-    // Init DB Transaction
-    $db->begin();
-    
-    $errors = 0;
-    //====================================================================//
-    // Update Default Lang
-    $DfLang = GETPOST('DefaultLang', 'alpha');
-    if ($DfLang) {
-        if (dolibarr_set_const($db, "SPLASH_LANG", $DfLang, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-
-    //====================================================================//
-    // Update Default User
-    $DfUser = GETPOST('user', 'alpha');
-    if ($DfUser) {
-        if (dolibarr_set_const($db, "SPLASH_USER", $DfUser, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-
-    //====================================================================//
-    // Update Default Stock
-    $DfStock = GETPOST('stock', 'alpha');
-    if ($DfUser) {
-        if (dolibarr_set_const($db, "SPLASH_STOCK", $DfStock, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // Update Default MultiPrice
-    $DfPrice = GETPOST('price_level', 'alpha');
-    if ($DfUser) {
-        if (dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", $DfPrice, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-
-    //====================================================================//
-    // DB Commit & Display User Message
-    if (! $error) {
-        $db->commit();
-        setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-    } else {
-        $db->rollback();
-        setEventMessage($langs->trans("Error"), 'errors');
-    }
-
+// Update of Orders & Invoices Parameters
+include("UpdateOrders.php");
 //====================================================================//
-// Update of Main Module Parameters
-} elseif ($action == 'UpdateOrder') {
-    //====================================================================//
-    // Init DB Transaction
-    $db->begin();
-    
-    $errors = 0;
+// Update of Payments Parameters
+include("UpdatePayments.php");
 
-    //====================================================================//
-    // Update Default Bank Account Id
-    $DfBank = GETPOST('accountid', 'alpha');
-    if ($DfBank) {
-        if (dolibarr_set_const($db, "SPLASH_BANK", $DfBank, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // Update Default Payment Mode Id
-    $DfPayMode = GETPOST('paiementcode', 'alpha');
-    if ($DfPayMode) {
-        if (dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", $DfPayMode, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
 
-    //====================================================================//
-    // Update Detect Tax Names Mode
-    $DetectTaxMode = GETPOST('DetectTax');
-    if (GETPOSTISSET("DetectTax")) {
-        if (dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", $DetectTaxMode, 'chaine', 0, '', $conf->entity) <= 0) {
-            $errors++;
-        }
-    }
-    
-    //====================================================================//
-    // DB Commit & Display User Message
-    if (! $error) {
-        $db->commit();
-        setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-    } else {
-        $db->rollback();
-        setEventMessage($langs->trans("Error"), 'errors');
-    }
-}
-
-//====================================================================//
-// Create Dolibarr Form Class
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
-$form   =   new Form($db);
 
 //====================================================================//
 //====================================================================//
@@ -273,10 +120,10 @@ include("ConfigMain.php");
 // Display Module Local Configuration Block
 include("ConfigLocal.php");
 include("ConfigOrders.php");
+include("ConfigPayments.php");
 //====================================================================//
 // Display Module Self Tests
 include("ServerTests.php");
-include("ServerDebug.php");
 
 //====================================================================//
 //  Generic Page Footer
