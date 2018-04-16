@@ -44,6 +44,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\ImagesTrait;
 
 /**
  *  \class      Order
@@ -58,7 +59,8 @@ class Order extends AbstractObject
     use ObjectsTrait;
     use PricesTrait;
     use ListsTrait;
-    
+    use ImagesTrait;
+        
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\LocalizationTrait;
