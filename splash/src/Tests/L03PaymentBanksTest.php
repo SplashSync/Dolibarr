@@ -23,7 +23,7 @@ class L02TaxesByCodesTest extends ObjectsCase
 //            $this->markTestIncomplete('Feature Not Available in This Version.');
 //            return;
 //        }
-//        
+//
         //====================================================================//
         //   Create Bank Account for this Payment Type
         $Account = $this->createBankAccount($paymentType);
@@ -66,26 +66,25 @@ class L02TaxesByCodesTest extends ObjectsCase
             $this->assertEquals($Payment->baid, $Account->rowid);
             $this->assertEquals($Payment->code, $paymentType);
         }
-        
     }
     
     /**
      * @abstract    Create a Dedicated Bank Account
-     * 
+     *
      * @return  Account
      */
     public function createBankAccount($paymentType)
     {
         global $db, $user;
 
-        require_once(DOL_DOCUMENT_ROOT."/compta/bank/class/account.class.php");       
+        require_once(DOL_DOCUMENT_ROOT."/compta/bank/class/account.class.php");
         
         //====================================================================//
         //   Load Bank Account for this Payment Type
         $Account = new \Account($db);
         
         $Account->fetch(null, $paymentType);
-        if ( $Account->rowid ) {
+        if ($Account->rowid) {
             $this->assertNotEmpty($Account);
             $this->assertEquals($paymentType, $Account->ref);
             $this->assertEquals($paymentType, $Account->label);
@@ -105,14 +104,14 @@ class L02TaxesByCodesTest extends ObjectsCase
         
         $this->assertGreaterThan(0, $Account->create($user, 0));
         $this->assertEquals($paymentType, $Account->ref);
-        $this->assertEquals($paymentType, $Account->label);        
+        $this->assertEquals($paymentType, $Account->label);
         $Account->rowid = $Account->id;
         return $Account;
     }
     
     /**
      * @abstract    Setup Payment Method to Bank Account
-     * 
+     *
      * @return  Account
      */
     public function setupBankAccount($paymentType, $Account)
@@ -130,13 +129,13 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Activate Payment Method if Disabled
-        require_once(DOL_DOCUMENT_ROOT."/compta/paiement/class/cpaiement.class.php");       
+        require_once(DOL_DOCUMENT_ROOT."/compta/paiement/class/cpaiement.class.php");
         $Payment    =   new \Cpaiement($db);
         $Payment->fetch($PaymentMethodId);
         if (!$Payment->active) {
             $Payment->active = 1;
             $Payment->update($user, false);
-        } 
+        }
         
         //====================================================================//
         //   Map Payment Method to Dedicated Account
@@ -144,9 +143,9 @@ class L02TaxesByCodesTest extends ObjectsCase
         dolibarr_set_const($db, $ParameterName, $Account->rowid, 'chaine', 0, '', $conf->entity);
         
         $this->assertEquals(
-                $Account->rowid,
-                $conf->global->$ParameterName
-                );        
+            $Account->rowid,
+            $conf->global->$ParameterName
+        );
     }
 
     public function paymentsTypesProvider()
