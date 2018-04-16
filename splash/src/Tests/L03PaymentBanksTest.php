@@ -5,11 +5,11 @@ use Splash\Tests\Tools\ObjectsCase;
 use Splash\Client\Splash;
 
 /**
- * @abstract    Local Test Suite - Verify Writing of Orders & Invoices Lines with VAT Taxe Names Options
+ * @abstract    Local Test Suite - Verify Mapping of Invoices Payments Lines to Selected Bank Accounts 
  *
  * @author SplashSync <contact@splashsync.com>
  */
-class L02TaxesByCodesTest extends ObjectsCase
+class L03PaymentBanksTest extends ObjectsCase
 {
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
     
