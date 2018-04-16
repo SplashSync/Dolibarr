@@ -24,8 +24,14 @@ SPL_Welcome         =   Splash Module is Now Activated
 SPL_Name            =   Splash Sync Module
 SPL_Short_Desc      =   Splash Sync Connector for Dolibarr. (Version > 3.5.x).
 SPL_Full_Desc       =   Splash Sync Connector for Dolibarr. Open-Source Synchronisation system for Dolibarr (Version > 3.5.x). More information on <a href="http://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Help_Msg        =   I Need Help 
+
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
 
 SPL_Main_Config     =   Main Parameters
+SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/configuration
 SPL_SiteId          =   Unique Identifier for this website on Splash Servers (8 Char Max). 
 SPL_SiteId_Tooltip  =   This parameter is provided when you create a new Server on our website. 
 SPL_WsKey           =   Unique Encryption Key
@@ -37,7 +43,12 @@ SPL_WsHost          =   Url of Splash Server
 SPL_WsHost_Tooltip  =   Only modify uppon our request! Default value : www.splashsync.com/ws/soap 
 SPL_WsMethod        =   WebService Protocol to Use
 
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
+
 SPL_Local_Config    =   Local Parameters 
+SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#setup-default-parameters
 SPL_DfLang          =   Default Language used by the module
 SPL_DfUser          =   User to use for all remote operations
 SPL_DfStock         =   Default Whareouse used by the module (if not spécified)
@@ -45,7 +56,12 @@ SPL_DfBankAccount   =   Default Bank Account used by the module (if not spécifi
 SPL_DfPayMethod     =   Default Payement Method used by the module (if not spécified)
 SPL_DfMultiPrice    =   Default Price used by the module (MultiPrices mode is enabled)
 
+################################################################################
+# Admin Page Index - Orders & Invoices
+################################################################################
+
 SPL_Orders_Config   =   Orders & Invoices
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/configuration
 SPL_DetectTaxName   =   Detect tax rates using taxes codes dictionary
 SPL_DetectTaxName_T =   When importing orders and invoices, if a tax rate code is given and can be identified in your dictionary, it will be used by the module instead of the VAT rate provided in the price.
 

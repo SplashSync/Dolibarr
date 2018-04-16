@@ -6,3 +6,5 @@
 /composer.lock
 /.directory
 /nbproject/
+
+.directory

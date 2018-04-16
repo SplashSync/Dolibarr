@@ -37,12 +37,10 @@ dol_fiche_head(array(), null, $langs->trans("SPL_Local_Config"), 0, null);
 
 
 echo '<table class="noborder" width="100%"><tbody>';
-//====================================================================//
-// Default Language Parameter
 
-    //====================================================================//
-    // Build Language Combo
-    $langcombo  =   '<select name="DefaultLang" id="DefaultLang" class="form-control" >';
+//====================================================================//
+// Build Language Combo
+$langcombo  =   '<select name="DefaultLang" id="DefaultLang" class="form-control" >';
 foreach ($langs->get_available_languages() as $key => $value) {
     if ($conf->global->SPLASH_LANG == $key) {
         $langcombo .=  '<option value="' . $key . '" selected="true">' . $value . '</option>';
@@ -104,14 +102,20 @@ if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
 
 echo '</tbody></table>';
 
+
 //====================================================================//
 // Close Local Configuration Tab
 echo "</div>";
 
 //====================================================================//
-// Display Form Submit Btn
+// Display Save Btn | Help Link
 echo    '<div class="tabsAction">';
-echo    '   <input type="submit" class="butAction" align="right" value="'.$langs->trans("Save").'">';
+echo    '      <div class="inline-block" >';
+echo    '           <a href="' . $langs->trans("SPL_Local_Help") . '" target="_blank">';
+echo    '               <i class="fa fa-external-link">&nbsp;</i>' . $langs->trans("SPL_Help_Msg") . '<i class="fa fa-question">&nbsp;</i>';
+echo    '           </a>';
+echo    '       </div>';
+echo    '       <input type="submit" class="butAction" align="right" value="'.$langs->trans("Save").'">';
 echo    '</div>';
 
 //====================================================================//

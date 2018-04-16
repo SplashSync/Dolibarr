@@ -108,9 +108,14 @@ echo '</tbody></table>';
 echo "</div>";
 
 //====================================================================//
-// Display Form Submit Btn
+// Display Save Btn | Help Link
 echo    '<div class="tabsAction">';
-echo    '   <input type="submit" class="butAction" align="right" value="'.$langs->trans("Save").'">';
+echo    '      <div class="inline-block" >';
+echo    '           <a href="' . $langs->trans("SPL_Main_Help") . '" target="_blank">';
+echo    '               <i class="fa fa-external-link">&nbsp;</i>' . $langs->trans("SPL_Help_Msg") . '<i class="fa fa-question">&nbsp;</i>';
+echo    '           </a>';
+echo    '       </div>';
+echo    '       <input type="submit" class="butAction" align="right" value="'.$langs->trans("Save").'">';
 echo    '</div>';
 
 //====================================================================//
