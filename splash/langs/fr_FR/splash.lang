@@ -22,10 +22,16 @@ SPL_Welcome         =   Module Splash Activé
 # Admin Page Index
 ################################################################################
 SPL_Name            =   Splash Sync Module
-SPL_Short_Desc      =   Splash Sync, Connecteur pour Dolibarr. (Version > 3.5.x).
-SPL_Full_Desc       =   Splash Sync, Connecteur pour Dolibarr. Le système de Synchronisation Open-Source pour Dolibarr (Version > 3.5.x). Plus d'informations sur <a href="http://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Short_Desc      =   Splash Sync, Connecteur pour Dolibarr. (Version > 4.0.0).
+SPL_Full_Desc       =   Splash Sync, Connecteur pour Dolibarr. Le système de Synchronisation Open-Source pour Dolibarr (Version > 4.0.0). Plus d'informations sur <a href="https://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Help_Msg        =   I Need Help 
+
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
 
 SPL_Main_Config     =   Paramètres généraux
+SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/configuration
 SPL_SiteId          =   Identifiant unique pour ce site sur le server Splash (8 Char Max). 
 SPL_SiteId_Tooltip  =   Ce parametre est fourni lors de la création d'un serveur sur le site. 
 SPL_WsKey           =   Clef Unique de Cryptage
@@ -37,24 +43,45 @@ SPL_WsHost          =   Adresse du Server Splash Sync à Utiliser
 SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. Valeur par défaut : www.splashsync.com/ws/soap 
 SPL_WsMethod        =   Protocole de WebService à Utiliser
 
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
+
 SPL_Local_Config    =   Paramètres Locaux
+SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#setup-default-parameters
 SPL_DfLang          =   Langue par défaut utilisée par le module
 SPL_DfUser          =   Utilisateur utilisée par le module lors des opération réalisée à distance
 SPL_DfStock         =   Entrepot par défaut utilisée par le module (si non spécifié)
-SPL_DfBankAccount   =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
 SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifié)
 SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-prix est actif)
 
+################################################################################
+# Admin Page Index - Orders & Invoices
+################################################################################
+
 SPL_Orders_Config   =   Commandes & Factures
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/configuration
 SPL_DetectTaxName   =   Détécter les taux de taxation selon leurs codes
 SPL_DetectTaxName_T =   Lors de l'import de commandes et de factures, si un code de taux de taxation est donné et peut être identifier dans votre dictionnaire, il sera utilisé par le module à la place du taux de TVA fourni dans le prix.
+SPL_Orders_Guest    =   Autoriser l'import de Commandes et de Factures en mode Invité
+SPL_Orders_Guest_T  =   Ce mode permet l'importation des commandes et des factures transmises par le mode Invité sur les plateformes de E-Commerce modernes.
+SPL_Orders_Guest_U  =   Sélectionnez le client par défaut auquel toutes les factures invités seront attachées.
+SPL_Orders_Email    =   Essayez de détecter le client en utilisant son adresse e-mail
+
+################################################################################
+# Admin Page Index - Payments
+################################################################################
+
+SPL_Payment_Config      =   Import ds Paiements
+SPL_DfBankAccount       =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
+SPL_BankAccountFor      =   Compte Bancaire pour les paiements par <b>%s</b> (%s)
 
 ################################################################################
 # Admin Page Self Tests Results
 ################################################################################
 
-SPL_ObjectsList     = Liste des objets disponibles
-SPL_WidgetsList      = Liste des widgets disponibles
+SPL_ObjectsList         = Liste des objets disponibles
+SPL_WidgetsList         = Liste des widgets disponibles
 
 ################################################################################
 # Admin Page Connect Tests Results
@@ -71,6 +98,5 @@ SPL_WsPingOk            = Le ping du serveur a réussi.
 SPL_WsPingKo            = Le ping du serveur à échoué.
 SPL_WsConnectOk         = La connexion au serveur a réussi.
 SPL_WsConnectKo         = La connexion au serveur à échouée.
-
 
 
