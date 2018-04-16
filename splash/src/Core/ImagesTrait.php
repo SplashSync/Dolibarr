@@ -156,7 +156,7 @@ trait ImagesTrait
             if (!in_array(pathinfo($File["name"], PATHINFO_EXTENSION), $this->Extensions)) {
                 continue;
             }
-var_dump($File);
+
             //====================================================================//
             // Insert Image in Output List
             $Image = self::images()->Encode(
