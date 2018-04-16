@@ -32,6 +32,7 @@ trait ImagesTrait
     private $MinVersion     =   "6.0.0";
     private $ElementPath    =   array(
         "product"   =>  "produit",
+        "commande"  =>  "commande"
     );
     private $Extensions     =   [ "gif", "jpg", "jpeg", "png", "bmp" ];
 
@@ -112,10 +113,11 @@ trait ImagesTrait
         //====================================================================//
         // Load Object Files Path
         $Entity     =   $this->Object->entity ? $this->Object->entity : $conf->entity;
-        $this->DolFilesDir = $conf->product->multidir_output[$Entity];
+        $Element    =   $this->Object->element;
+        $this->DolFilesDir = $conf->$Element->multidir_output[$Entity];
         $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->Object, $this->Object->element);
         $this->DolFilesDir.= dol_sanitizeFileName($this->Object->ref);
-        $this->RelFilesDir = $this->ElementPath[$this->Object->element];
+        $this->RelFilesDir = $this->ElementPath[$Element];
         $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->Object->ref);
 
         //====================================================================//
