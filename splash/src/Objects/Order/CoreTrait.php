@@ -17,6 +17,8 @@
 
 namespace Splash\Local\Objects\Order;
 
+use DateTime;
+
 /**
  * @abstract    Dolibarr Customer Orders Fields (Required)
  */
@@ -163,8 +165,9 @@ trait CoreTrait
             //====================================================================//
             // Order Official Date
             case 'date':
-                $this->setSimple('date', $Data);
-                $this->setSimple('date_commande', $Data);
+                $DateTime   =   new DateTime($Data);
+                $this->setSimple('date', $DateTime->getTimestamp());
+                $this->setSimple('date_commande', $DateTime->getTimestamp());
                 break;
 
             default:
