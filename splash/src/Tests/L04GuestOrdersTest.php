@@ -15,6 +15,16 @@ class L04GuestOrdersTest extends ObjectsCase
 {
     
     /**
+     * @var array
+     */
+    private $Fields;
+
+    /**
+     * @var array
+     */
+    private $Field;
+    
+    /**
      * @abstract    Test Objects Have Corrects Fields Definitions
      * @dataProvider ObjectTypesProvider
      */

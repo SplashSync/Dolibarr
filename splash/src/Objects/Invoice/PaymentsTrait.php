@@ -330,6 +330,7 @@ trait PaymentsTrait
         if (array_key_exists("date", $LineData)
             && (dol_print_date($Payment->datepaye, 'standard') !== $LineData["date"]) ) {
             $Payment->update_date($LineData["date"]);
+            $this->catchDolibarrErrors($Payment);
         }
             
         //====================================================================//
@@ -337,6 +338,7 @@ trait PaymentsTrait
         if (array_key_exists("number", $LineData)
             && ($Payment->num_paiement !== $LineData["number"]) ) {
             $Payment->update_num($LineData["number"]);
+            $this->catchDolibarrErrors($Payment);
         }
             
         //====================================================================//
@@ -348,6 +350,7 @@ trait PaymentsTrait
             $CurrentMethodId    = $this->identifyPaymentType($Payment->type_code);
             if ($NewMethodId && ($CurrentMethodId !== $NewMethodId)) {
                 $Payment->setValueFrom("fk_paiement", $NewMethodId);
+                $this->catchDolibarrErrors($Payment);
             }
         }
     }
