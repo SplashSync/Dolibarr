@@ -334,6 +334,7 @@ class Local
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", 0, 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -346,6 +347,7 @@ class Local
                 dolibarr_set_const($db, "MAIN_MULTILANGS", 1, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", 0, 'chaine', 0, '', $conf->entity);
                 return;
             
             case "MultiPrices":
@@ -354,6 +356,7 @@ class Local
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", 3, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", rand(1, 3), 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", 0, 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -366,6 +369,7 @@ class Local
                 dolibarr_set_const($db, "MAIN_MULTILANGS", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", 0, 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", true);
@@ -374,11 +378,28 @@ class Local
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", true);
                 return;
 
+            case "GuestOrders":
+                dolibarr_set_const($db, "MAIN_MULTILANGS", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", 1, 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", 1, 'chaine', 0, '', $conf->entity);
+                
+                
+                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
+                return;
+
                 
             case "List":
-                return array("Monolangual", "Multilangual", "MultiPrices", "ExtraFields" );
+//                return array("Monolangual", "Multilangual", "MultiPrices", "GuestOrders", "ExtraFields" );
 //                return array("Monolangual");
 //                return array("Multilangual");
+//                return array("MultiPrices");
+//                return array( "GuestOrders" );
 //                return array( "ExtraFields" );
         }
     }

@@ -72,6 +72,7 @@ trait CRUDTrait
         }
         $Object->fetch_lines();
         $this->loadPayments($Id);
+        $this->initCustomerDetection();
         return $Object;
     }
 
@@ -89,11 +90,6 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
-        // Check Customer Id is given
-        if (empty($this->In["socid"]) || empty(self::objects()->Id($this->In["socid"]))) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "socid");
-        }
-        //====================================================================//
         // Check Order Date is given
         if (empty($this->In["date"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
@@ -110,7 +106,7 @@ trait CRUDTrait
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("date", $this->In["date"]);
-        $this->setSimple("socid", self::objects()->Id($this->In["socid"]));
+        $this->doCustomerDetection($this->In);
         $this->setSimple("statut", Facture::STATUS_DRAFT);
         $this->Object->statut = Facture::STATUS_DRAFT;
         $this->Object->paye = 0;

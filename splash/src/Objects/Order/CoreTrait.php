@@ -33,14 +33,6 @@ trait CoreTrait
         global $langs;
         
         //====================================================================//
-        // Customer Object
-        $this->fieldsFactory()->create(self::objects()->Encode("ThirdParty", SPL_T_ID))
-                ->Identifier("socid")
-                ->Name($langs->trans("Company"))
-                ->MicroData("http://schema.org/Organization", "ID")
-                ->isRequired();
-        
-        //====================================================================//
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date")
@@ -111,12 +103,6 @@ trait CoreTrait
                 $this->Out[$FieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
                 break;
             
-            //====================================================================//
-            // Contact ThirdParty Id
-            case 'socid':
-                $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->$FieldName);
-                break;
-
             default:
                 return;
         }
@@ -154,12 +140,6 @@ trait CoreTrait
                     $this->Object->setValueFrom($FieldName, $Data);
                     $this->needUpdate();
                 }
-                break;
-            
-            //====================================================================//
-            // Order Company Id
-            case 'socid':
-                $this->setSimple($FieldName, self::objects()->Id($Data));
                 break;
             
             //====================================================================//

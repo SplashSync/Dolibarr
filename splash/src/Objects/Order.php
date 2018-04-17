@@ -69,6 +69,7 @@ class Order extends AbstractObject
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\ImagesTrait;
+    use \Splash\Local\Core\CustomerTrait;
     
     // Dolibarr Orders Traits
     use \Splash\Local\Objects\Order\ObjectsListTrait;

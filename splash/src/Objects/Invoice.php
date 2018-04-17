@@ -66,6 +66,7 @@ class Invoice extends AbstractObject
     use \Splash\Local\Core\BaseItemsTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
+    use \Splash\Local\Core\CustomerTrait;
     
     // Dolibarr Invoices Traits
     use \Splash\Local\Objects\Invoice\ObjectsListTrait;

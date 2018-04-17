@@ -69,6 +69,7 @@ trait CRUDTrait
             );
         }
         $Object->fetch_lines();
+        $this->initCustomerDetection();
         return $Object;
     }
 
@@ -89,11 +90,6 @@ trait CRUDTrait
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
         }
         //====================================================================//
-        // Check Customer Id is given
-        if (empty($this->In["socid"]) || empty(self::objects()->Id($this->In["socid"]))) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "socid");
-        }
-        //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::local()->LoadLocalUser();
         if (empty($user->login)) {
@@ -105,7 +101,7 @@ trait CRUDTrait
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("date", $this->In["date"]);
-        $this->setSimple("socid", self::objects()->Id($this->In["socid"]));
+        $this->doCustomerDetection($this->In);
         $this->setSimple("statut", Commande::STATUS_DRAFT);
 
         //====================================================================//

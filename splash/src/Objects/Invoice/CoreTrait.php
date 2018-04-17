@@ -33,14 +33,6 @@ trait CoreTrait
         global $langs;
         
         //====================================================================//
-        // Customer Object
-        $this->fieldsFactory()->create(self::objects()->Encode("ThirdParty", SPL_T_ID))
-                ->Identifier("socid")
-                ->Name($langs->trans("Company"))
-                ->MicroData("http://schema.org/Invoice", "customer")
-                ->isRequired();
-        
-        //====================================================================//
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
                 ->Identifier("date")
@@ -102,12 +94,6 @@ trait CoreTrait
             case 'ref_ext':
                 $this->getSimple($FieldName);
                 break;
-            
-            //====================================================================//
-            // Contact ThirdParty Id
-            case 'socid':
-                $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->$FieldName);
-                break;
 
             //====================================================================//
             // Order Official Date
@@ -153,12 +139,6 @@ trait CoreTrait
                     $this->Object->setValueFrom($FieldName, $Data);
                     $this->needUpdate();
                 }
-                break;
-            
-            //====================================================================//
-            // Order Company Id
-            case 'socid':
-                $this->setSimple($FieldName, self::objects()->Id($Data));
                 break;
             
             //====================================================================//
