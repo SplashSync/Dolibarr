@@ -115,11 +115,12 @@ trait ImagesTrait
         $Entity     =   $this->Object->entity ? $this->Object->entity : $conf->entity;
         $Element    =   $this->Object->element;
         $this->DolFilesDir = $conf->$Element->multidir_output[$Entity];
-        $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->Object, $this->Object->element);
-        $this->DolFilesDir.= dol_sanitizeFileName($this->Object->ref);
+//      In Next Releases we Will Use this function but now it's not generic
+//        $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->Object, $this->Object->element);
+        $this->DolFilesDir.= '/'. dol_sanitizeFileName($this->Object->ref);
         $this->RelFilesDir = $this->ElementPath[$Element];
         $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->Object->ref);
-
+        
         //====================================================================//
         // Fetch Object Attached Images
         $this->getImagesArrayFromDir($FieldName);
