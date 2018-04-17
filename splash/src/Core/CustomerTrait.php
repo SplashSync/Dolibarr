@@ -68,8 +68,7 @@ trait CustomerTrait
                     ->Name($langs->trans("Email"))
                     ->MicroData("http://schema.org/ContactPoint", "email")
                     ->isWriteOnly()
-                    ->isNotTested()
-                    ->isListed();
+                    ->isNotTested();
         }
     }
 
@@ -171,7 +170,7 @@ trait CustomerTrait
                 //====================================================================//
                 // Standard Mode => A SocId is Requiered
                 if (!$this->isAllowedGuest()) {
-                    $this->setSimple($FieldName, $Data);
+                    $this->setSimple($FieldName, self::Objects()->Id($Data));
                     break;
                 }
                 $this->setSimple($FieldName, $this->getGuestCustomer($this->In));
