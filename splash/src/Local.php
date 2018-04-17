@@ -384,7 +384,7 @@ class Local
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", 0, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", 1, 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", 1, 'chaine', 0, '', $conf->entity);
-                
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", 1, 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);

@@ -47,6 +47,10 @@ class L03PaymentBanksTest extends ObjectsCase
         $this->assertNotEmpty($ObjectId);
 
         //====================================================================//
+        //   Add Object Id to Created List
+        $this->addTestedObject($ObjectType, $ObjectId);
+        
+        //====================================================================//
         //   Read Order Data
         $ObjectData  =   Splash::object($ObjectType)
                 ->get($ObjectId, ["mode@payments", "number@payments", "amount@payments"]);

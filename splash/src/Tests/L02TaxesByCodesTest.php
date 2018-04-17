@@ -39,6 +39,15 @@ class L02TaxesByCodesTest extends ObjectsCase
     {
         
         global $db;
+        
+        //====================================================================//
+        //   Ensure Not Already Defined
+        if ($this->isTaxeCode($CountryId, $VatRate, $Code)) {
+            return;
+        }
+        
+        //====================================================================//
+        //   Update Tax Code
         $sql = "UPDATE " . MAIN_DB_PREFIX . "c_tva as t SET code = '" . $Code;
         $sql.= "' WHERE t.fk_pays = " . $CountryId . " AND t.taux = " . $VatRate;
         $resql = $db->query($sql);
@@ -48,6 +57,22 @@ class L02TaxesByCodesTest extends ObjectsCase
         $db->free($resql);
     }
     
+    private function isTaxeCode($CountryId, $VatRate, $Code)
+    {
+        
+        global $db;
+        
+        $sql = "SELECT * FROM " . MAIN_DB_PREFIX . "c_tva as t";
+        $sql.= " WHERE t.fk_pays = " . $CountryId . " AND t.taux = " . $VatRate;
+        $sql.= " AND t.code = '" . $Code . "'";
+        
+        $resql = $db->query($sql);
+        if (!$resql) {
+            dol_print_error($db);
+        }
+        
+        return (bool) ($db->num_rows($resql) > 0);
+    }
     
     /**
      * @dataProvider taxTypesProvider
@@ -77,6 +102,10 @@ class L02TaxesByCodesTest extends ObjectsCase
         $ObjectId = Splash::object($ObjectType)->set(null, $FakeData);
         $this->assertNotEmpty($ObjectId);
 
+        //====================================================================//
+        //   Add Object Id to Created List
+        $this->addTestedObject($ObjectType, $ObjectId);
+        
         //====================================================================//
         //   Read Order Data
         $ObjectData  =   Splash::object($ObjectType)
