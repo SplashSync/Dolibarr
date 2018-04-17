@@ -395,7 +395,7 @@ class Local
 
                 
             case "List":
-//                return array("Monolangual", "Multilangual", "MultiPrices", "GuestOrders", "ExtraFields" );
+                return array("Monolangual", "Multilangual", "MultiPrices", "GuestOrders", "ExtraFields" );
 //                return array("Monolangual");
 //                return array("Multilangual");
 //                return array("MultiPrices");
