@@ -132,7 +132,7 @@ trait CustomerTrait
             //====================================================================//
             // ThirdParty Id
             case 'socid':
-                $this->Out[$FieldName] = self::Objects()->Encode("ThirdParty", $this->Object->$FieldName);
+                $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->$FieldName);
                 break;
             
             default:
