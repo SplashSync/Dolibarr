@@ -170,7 +170,7 @@ trait CustomerTrait
                 //====================================================================//
                 // Standard Mode => A SocId is Requiered
                 if (!$this->isAllowedGuest()) {
-                    $this->setSimple($FieldName, self::Objects()->Id($Data));
+                    $this->setSimple($FieldName, self::objects()->Id($Data));
                     break;
                 }
                 $this->setSimple($FieldName, $this->getGuestCustomer($this->In));
