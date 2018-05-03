@@ -75,6 +75,18 @@
      <changefreq>daily</changefreq>
     </url>
         
+    <url>
+     <loc>/fr/orders/</loc>
+     <lastmod>2018-05-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/fr/payments/</loc>
+     <lastmod>2018-05-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
     
 
 </urlset>
