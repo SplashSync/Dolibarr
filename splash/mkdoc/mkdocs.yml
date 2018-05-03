@@ -7,7 +7,7 @@ theme: readthedocs
 
 repo_url: https://github.com/SplashSync/Dolibarr
 
-copyright:  <i class="fa fa-copyright" aria-hidden="true"></i> Copyright Splash Sync 2017 
+copyright:  <i class="fa fa-copyright" aria-hidden="true"></i> Copyright Splash Sync 2018 
 
 ###########################################################
 # Site Contents
@@ -25,6 +25,6 @@ pages:
         - Fonctionnalités:      fr/features.md
         - Installation:         fr/install.md
         - Configuration:        fr/configuration.md  
-        - Orders & Invoices:    fr/orders.md
-        - Payments:             fr/payments.md        
+        - Commandes & Factures: fr/orders.md
+        - Paiements:            fr/payments.md        
 #    - About: about.md
