@@ -17,10 +17,14 @@ pages:
     - Features:                 features.md
     - Installation:             install.md
     - Configuration:            configuration.md
+    - Orders & Invoices:        orders.md
+    - Payments:                 payments.md
 #    - Test & Connect: connect.md
     - Documentation Française :
         - Accueil :             fr/index.md
         - Fonctionnalités:      fr/features.md
         - Installation:         fr/install.md
-        - Configuration:        fr/configuration.md        
+        - Configuration:        fr/configuration.md  
+        - Orders & Invoices:    fr/orders.md
+        - Payments:             fr/payments.md        
 #    - About: about.md
