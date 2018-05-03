@@ -60,7 +60,7 @@ SPL_DfMultiPrice    =   Default Price used by the module (MultiPrices mode is en
 ################################################################################
 
 SPL_Orders_Config   =   Orders & Invoices
-SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/configuration
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/orders
 SPL_DetectTaxName   =   Detect tax rates using taxes codes dictionary
 SPL_DetectTaxName_T =   When importing orders and invoices, if a tax rate code is given and can be identified in your dictionary, it will be used by the module instead of the VAT rate provided in the price.
 SPL_Orders_Guest    =   Allow Import of Guests Orders & Invoices
@@ -73,6 +73,7 @@ SPL_Orders_Email    =   Try to detect Exiting Customer using it's Email
 ################################################################################
 
 SPL_Payment_Config  =   Payments Import
+SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/payments
 SPL_DfBankAccount   =   Default Bank Account used by the module (if not spécified)
 SPL_BankAccountFor  =   Bank Account used for <b>%s</b> payments (%s)
 

@@ -31,7 +31,7 @@ SPL_Help_Msg        =   I Need Help
 ################################################################################
 
 SPL_Main_Config     =   Paramètres généraux
-SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/configuration
+SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/fr/configuration
 SPL_SiteId          =   Identifiant unique pour ce site sur le server Splash (8 Char Max). 
 SPL_SiteId_Tooltip  =   Ce parametre est fourni lors de la création d'un serveur sur le site. 
 SPL_WsKey           =   Clef Unique de Cryptage
@@ -48,7 +48,7 @@ SPL_WsMethod        =   Protocole de WebService à Utiliser
 ################################################################################
 
 SPL_Local_Config    =   Paramètres Locaux
-SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#setup-default-parameters
+SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/fr/configuration/#setup-default-parameters
 SPL_DfLang          =   Langue par défaut utilisée par le module
 SPL_DfUser          =   Utilisateur utilisée par le module lors des opération réalisée à distance
 SPL_DfStock         =   Entrepot par défaut utilisée par le module (si non spécifié)
@@ -60,7 +60,7 @@ SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-
 ################################################################################
 
 SPL_Orders_Config   =   Commandes & Factures
-SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/configuration
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/fr/orders
 SPL_DetectTaxName   =   Détécter les taux de taxation selon leurs codes
 SPL_DetectTaxName_T =   Lors de l'import de commandes et de factures, si un code de taux de taxation est donné et peut être identifier dans votre dictionnaire, il sera utilisé par le module à la place du taux de TVA fourni dans le prix.
 SPL_Orders_Guest    =   Autoriser l'import de Commandes et de Factures en mode Invité
@@ -72,9 +72,10 @@ SPL_Orders_Email    =   Essayez de détecter le client en utilisant son adresse 
 # Admin Page Index - Payments
 ################################################################################
 
-SPL_Payment_Config      =   Import ds Paiements
-SPL_DfBankAccount       =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
-SPL_BankAccountFor      =   Compte Bancaire pour les paiements par <b>%s</b> (%s)
+SPL_Payment_Config  =   Import ds Paiements
+SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/fr/payments
+SPL_DfBankAccount   =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
+SPL_BankAccountFor  =   Compte Bancaire pour les paiements par <b>%s</b> (%s)
 
 ################################################################################
 # Admin Page Self Tests Results
