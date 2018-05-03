@@ -112,7 +112,7 @@
         }, 
         {
             "location": "/orders/", 
-            "text": "Configure Import Features\n\n\nSince v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders \n Invoice imports parameters. \n\n\n\n\nEnable the Module\n\n\nConfiguration of you module is available in \nSettings \n Modules \n Interfaces \n Splash\n \n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n \n \nAdd a Server\n and note your id \n encryption keys. \n\n\n\n\nThen, enter the keys on Module's configuration (take care not to forget any character). \n\n\n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "text": "Configure Import Features\n\n\nSince v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders \n Invoice imports parameters. \n\n\n\n\nDefault payment Method\n\n\nWhen an Invoice payments are imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n \n \nAdd a Server\n and note your id \n encryption keys. \n\n\n\n\nThen, enter the keys on Module's configuration (take care not to forget any character). \n\n\n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
             "title": "Orders & Invoices"
         }, 
         {
@@ -121,9 +121,9 @@
             "title": "Configure Import Features"
         }, 
         {
-            "location": "/orders/#enable-the-module", 
-            "text": "Configuration of you module is available in  Settings   Modules   Interfaces   Splash", 
-            "title": "Enable the Module"
+            "location": "/orders/#default-payment-method", 
+            "text": "When an Invoice payments are imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.", 
+            "title": "Default payment Method"
         }, 
         {
             "location": "/orders/#connect-to-your-splash-account", 
