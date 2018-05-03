@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Features - Dolibarr Splash Bundle</title>
+  <title>Orders & Invoices - Dolibarr Splash Bundle</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Features";
-    var mkdocs_page_input_path = "features.md";
-    var mkdocs_page_url = "/features/";
+    var mkdocs_page_name = "Orders & Invoices";
+    var mkdocs_page_input_path = "orders.md";
+    var mkdocs_page_url = "/orders/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -52,27 +52,9 @@
     <a class="" href="..">Home</a>
 	    </li>
           
-            <li class="toctree-l1 current">
+            <li class="toctree-l1">
 		
-    <a class="current" href="./">Features</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#key-features-benefits">Key features &amp; benefits</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l3" href="#centralize-your-sales-workflow">Centralize your sales workflow</a></li>
-        
-            <li><a class="toctree-l3" href="#synchronize-products-stocks">Synchronize Products Stocks</a></li>
-        
-            <li><a class="toctree-l3" href="#merge-all-your-customers-data">Merge all your customers data</a></li>
-        
-            <li><a class="toctree-l3" href="#consolidate-simplify-your-financial-analytics">Consolidate &amp; Simplify your Financial Analytics</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../features/">Features</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -85,9 +67,37 @@
     <a class="" href="../configuration/">Configuration</a>
 	    </li>
           
-            <li class="toctree-l1">
+            <li class="toctree-l1 current">
 		
-    <a class="" href="../orders/">Orders & Invoices</a>
+    <a class="current" href="./">Orders & Invoices</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#configure-import-features">Configure Import Features</a></li>
+    
+
+    <li class="toctree-l2"><a href="#enable-the-module">Enable the Module</a></li>
+    
+
+    <li class="toctree-l2"><a href="#connect-to-your-splash-account">Connect to your Splash Account</a></li>
+    
+
+    <li class="toctree-l2"><a href="#setup-default-parameters">Setup default Parameters</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#default-language">Default Language</a></li>
+        
+            <li><a class="toctree-l3" href="#default-user">Default User</a></li>
+        
+            <li><a class="toctree-l3" href="#default-warehouse-bank-account-payment-method">Default Warehouse / Bank Account / Payment Method</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#check-results-of-self-tests">Check results of Self-Tests</a></li>
+    
+
+    </ul>
 	    </li>
           
             <li class="toctree-l1">
@@ -140,10 +150,10 @@
     
       
     
-    <li>Features</li>
+    <li>Orders & Invoices</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/SplashSync/Dolibarr/edit/master/docs/features.md"
+        <a href="https://github.com/SplashSync/Dolibarr/edit/master/docs/orders.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -153,20 +163,32 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="key-features-benefits">Key features &amp; benefits</h2>
-<p>Dolibarr is one of the major Open-Source ERP project you could find on the web. It's now working for more than 10 years and its very simple approach make it suitable for small and medium business.  </p>
-<p>This module will give Splash access to Third Party, Products, Customer Orders &amp; Invoice.</p>
-<h4 id="centralize-your-sales-workflow">Centralize your sales workflow</h4>
-<p>This module was designed to transform Dolibarr into the heart of your business organization.
-By importing and synchronizing all your sales informations, you can access all you sales in a single place, whatever the sales channels.</p>
-<h4 id="synchronize-products-stocks">Synchronize Products Stocks</h4>
-<p>Centralize your products stocks from Dolibarr to any kind of applications.</p>
-<h4 id="merge-all-your-customers-data">Merge all your customers data</h4>
-<p>Once all your modules connected, use the Object Linked to identify and merge all your customers profiles into a single Splash entity. 
-This way, all similar informations will be shared and synchronized anywhere, from CRM to E-Commerce.</p>
-<h4 id="consolidate-simplify-your-financial-analytics">Consolidate &amp; Simplify your Financial Analytics</h4>
-<p>Orders and invoices will be automatically imported from your E-Commerce, point-of-sale, or any other applications you may connect! </p>
-<p>Your financial analytics is easier... and with no efforts.</p>
+                <h3 id="configure-import-features">Configure Import Features</h3>
+<p>Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders &amp; Invoice imports parameters. </p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_6.png" /></p>
+<h3 id="enable-the-module">Enable the Module</h3>
+<p>Configuration of you module is available in <strong>Settings &gt;&gt; Modules &gt;&gt; Interfaces &gt;&gt; Splash</strong> </p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_1.png" /></p>
+<h3 id="connect-to-your-splash-account">Connect to your Splash Account</h3>
+<p>First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to <strong>Servers</strong> &gt;&gt; <strong>Add a Server</strong> and note your id &amp; encryption keys. </p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_2.png" /></p>
+<p>Then, enter the keys on Module's configuration (take care not to forget any character). </p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_3.png" /></p>
+<h3 id="setup-default-parameters">Setup default Parameters</h3>
+<p>To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.</p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_4.png" /></p>
+<h5 id="default-language">Default Language</h5>
+<p>Select which language package module should use for communication with Splash Server.</p>
+<h5 id="default-user">Default User</h5>
+<p>Select which user will be used for all actions executed by Splash Module. </p>
+<p>We highly recommend creation of a dedicated user for Splash. </p>
+<p>Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.</p>
+<h5 id="default-warehouse-bank-account-payment-method">Default Warehouse / Bank Account / Payment Method</h5>
+<p>Define these values to be used if no value is specified. </p>
+<h3 id="check-results-of-self-tests">Check results of Self-Tests</h3>
+<p>Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. 
+Ensure all tests are passed... this is critical!</p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_5.png" /></p>
               
             </div>
           </div>
@@ -174,10 +196,10 @@ This way, all similar informations will be shared and synchronized anywhere, fro
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../install/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../payments/" class="btn btn-neutral float-right" title="Payments">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../configuration/" class="btn btn-neutral" title="Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -207,10 +229,10 @@ This way, all similar informations will be shared and synchronized anywhere, fro
           <a href="https://github.com/SplashSync/Dolibarr/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../configuration/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../install/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../payments/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

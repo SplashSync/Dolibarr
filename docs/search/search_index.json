@@ -111,6 +111,96 @@
             "title": "Check results of Self-Tests"
         }, 
         {
+            "location": "/orders/", 
+            "text": "Configure Import Features\n\n\nSince v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders \n Invoice imports parameters. \n\n\n\n\nEnable the Module\n\n\nConfiguration of you module is available in \nSettings \n Modules \n Interfaces \n Splash\n \n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n \n \nAdd a Server\n and note your id \n encryption keys. \n\n\n\n\nThen, enter the keys on Module's configuration (take care not to forget any character). \n\n\n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "title": "Orders & Invoices"
+        }, 
+        {
+            "location": "/orders/#configure-import-features", 
+            "text": "Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders   Invoice imports parameters.", 
+            "title": "Configure Import Features"
+        }, 
+        {
+            "location": "/orders/#enable-the-module", 
+            "text": "Configuration of you module is available in  Settings   Modules   Interfaces   Splash", 
+            "title": "Enable the Module"
+        }, 
+        {
+            "location": "/orders/#connect-to-your-splash-account", 
+            "text": "First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to  Servers     Add a Server  and note your id   encryption keys.    Then, enter the keys on Module's configuration (take care not to forget any character).", 
+            "title": "Connect to your Splash Account"
+        }, 
+        {
+            "location": "/orders/#setup-default-parameters", 
+            "text": "To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.", 
+            "title": "Setup default Parameters"
+        }, 
+        {
+            "location": "/orders/#default-language", 
+            "text": "Select which language package module should use for communication with Splash Server.", 
+            "title": "Default Language"
+        }, 
+        {
+            "location": "/orders/#default-user", 
+            "text": "Select which user will be used for all actions executed by Splash Module.   We highly recommend creation of a dedicated user for Splash.   Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.", 
+            "title": "Default User"
+        }, 
+        {
+            "location": "/orders/#default-warehouse-bank-account-payment-method", 
+            "text": "Define these values to be used if no value is specified.", 
+            "title": "Default Warehouse / Bank Account / Payment Method"
+        }, 
+        {
+            "location": "/orders/#check-results-of-self-tests", 
+            "text": "Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "title": "Check results of Self-Tests"
+        }, 
+        {
+            "location": "/payments/", 
+            "text": "Configuration\n\n\nEnable the Module\n\n\nConfiguration of you module is available in \nSettings \n Modules \n Interfaces \n Splash\n \n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n \n \nAdd a Server\n and note your id \n encryption keys. \n\n\n\n\nThen, enter the keys on Module's configuration (take care not to forget any character). \n\n\n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "title": "Payments"
+        }, 
+        {
+            "location": "/payments/#configuration", 
+            "text": "", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/payments/#enable-the-module", 
+            "text": "Configuration of you module is available in  Settings   Modules   Interfaces   Splash", 
+            "title": "Enable the Module"
+        }, 
+        {
+            "location": "/payments/#connect-to-your-splash-account", 
+            "text": "First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to  Servers     Add a Server  and note your id   encryption keys.    Then, enter the keys on Module's configuration (take care not to forget any character).", 
+            "title": "Connect to your Splash Account"
+        }, 
+        {
+            "location": "/payments/#setup-default-parameters", 
+            "text": "To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.", 
+            "title": "Setup default Parameters"
+        }, 
+        {
+            "location": "/payments/#default-language", 
+            "text": "Select which language package module should use for communication with Splash Server.", 
+            "title": "Default Language"
+        }, 
+        {
+            "location": "/payments/#default-user", 
+            "text": "Select which user will be used for all actions executed by Splash Module.   We highly recommend creation of a dedicated user for Splash.   Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.", 
+            "title": "Default User"
+        }, 
+        {
+            "location": "/payments/#default-warehouse-bank-account-payment-method", 
+            "text": "Define these values to be used if no value is specified.", 
+            "title": "Default Warehouse / Bank Account / Payment Method"
+        }, 
+        {
+            "location": "/payments/#check-results-of-self-tests", 
+            "text": "Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "title": "Check results of Self-Tests"
+        }, 
+        {
             "location": "/fr/", 
             "text": "Module Splash Sync pour Dolibarr\n\n\nBienvenue sur la documentation fran\u00e7aise du Module Dolibarr!\n\n\nCe module impl\u00e9mente le connecteur Splash Sync pour l'ERP Dolibarr. Il donne acc\u00e8s \u00e0 de multiples objets pour permettre leur synchronisation automatique via le protocole Splash Sync. \n\n\nSommaire\n\n\nCette documentation traite de:\n\n\n\n\nFonctionnalit\u00e9s \n Avantages\n\n\nInstallation du Module\n\n\nConfiguration du Module\n\n\n\n\nEn savoir plus sur Splash\n\n\nCe module fait parti du projet \nSplashSync\n. \n\n\nPour plus d'informations sur Splash Sync, la fa\u00e7on dont fonctionne la synchronisation et comment y connecter toutes vos applications, rendez-vous sur la \ndocumentation en ligne\n.", 
             "title": "Accueil"
