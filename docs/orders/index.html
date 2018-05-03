@@ -78,7 +78,7 @@
     <li class="toctree-l2"><a href="#default-payment-method">Default payment Method</a></li>
     
 
-    <li class="toctree-l2"><a href="#connect-to-your-splash-account">Connect to your Splash Account</a></li>
+    <li class="toctree-l2"><a href="#tax-rates-detection-new">Tax Rates Detection (NEW)</a></li>
     
 
     <li class="toctree-l2"><a href="#setup-default-parameters">Setup default Parameters</a></li>
@@ -168,11 +168,17 @@
 <p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_6.png" /></p>
 <h3 id="default-payment-method">Default payment Method</h3>
 <p>When an Invoice payments are imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.</p>
-<h3 id="connect-to-your-splash-account">Connect to your Splash Account</h3>
-<p>First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to <strong>Servers</strong> &gt;&gt; <strong>Add a Server</strong> and note your id &amp; encryption keys. </p>
-<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_2.png" /></p>
-<p>Then, enter the keys on Module's configuration (take care not to forget any character). </p>
-<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_3.png" /></p>
+<h3 id="tax-rates-detection-new">Tax Rates Detection (NEW)</h3>
+<p>When importing orders &amp; Invoices lines, Splash Module is now able to identify line's tax rate using a shared Tax Code. </p>
+<p>This feature is usefull for countries that have multiple or complex VAT rates (i.e. Canada).</p>
+<p><strong>How to configure it ?</strong></p>
+<p>First, you need to create define, on each servers, the same Codes for VAT Rates. For Dolibarr, this setup is  available in <strong>Settings &gt;&gt; Dictionary &gt;&gt; VAT Rates or Sales Tax Rates</strong>  </p>
+<p>With Dolibarr, VAT Rate name is "Code", this value is empty by default. Generaly, you can use codes used by your E-Commerce.  </p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_8.png" /></p>
+<p><strong>How it works ?</strong></p>
+<p>If you have a look at the data that are now available for Orders &amp; Invoices objects, you will see a new field called "VAT Rate". </p>
+<p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_9.png" /></p>
+<p>When Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line. </p>
 <h3 id="setup-default-parameters">Setup default Parameters</h3>
 <p>To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.</p>
 <p><img alt="" src="https://splashsync.github.io/Dolibarr/img/screenshot_4.png" /></p>
