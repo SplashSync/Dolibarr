@@ -112,93 +112,33 @@
         }, 
         {
             "location": "/orders/", 
-            "text": "Configure Import Features\n\n\nSince v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders \n Invoice imports parameters. \n\n\n\n\nDefault payment Method\n\n\nWhen an Invoice payments are imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.\n\n\nTax Rates Detection (NEW)\n\n\nWhen importing orders \n Invoices lines, Splash Module is now able to identify line's tax rate using a shared Tax Code. \n\n\nThis feature is usefull for countries that have multiple or complex VAT rates (i.e. Canada).\n\n\nHow to configure it ?\n\n\nFirst, you need to create define, on each servers, the same Codes for VAT Rates. For Dolibarr, this setup is  available in \nSettings \n Dictionary \n VAT Rates or Sales Tax Rates\n  \n\n\nWith Dolibarr, VAT Rate name is \"Code\", this value is empty by default. Generaly, you can use codes used by your E-Commerce.  \n\n\n\n\nHow it works ?\n\n\nIf you have a look at the data that are now available for Orders \n Invoices objects, you will see a new field called \"VAT Rate\". \n\n\n\n\nWhen Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line. \n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "text": "Configure Import Features\n\n\nSince v1.4 of Splash Module for Dolibarr, a dedicated configuration block group all Orders \n Invoice imports parameters. \n\n\n\n\nTax Rates Detection (NEW)\n\n\nWhen importing orders \n Invoices lines, Splash Module is now able to identify line's tax rate using a shared Tax Code. \n\n\nThis feature is usefull for countries that have multiple or complex VAT rates (i.e. Canada).\n\n\nHow to configure it ?\n\n\nFirst, you need to create define, on each servers, the same Codes for VAT Rates. For Dolibarr, this setup is  available in \nSettings \n Dictionary \n VAT Rates or Sales Tax Rates\n  \n\n\nWith Dolibarr, VAT Rate name is \"Code\", this value is empty by default. Generaly, you can use codes used by your E-Commerce.  \n\n\n\n\nHow it works ?\n\n\nIf you have a look at the data that are now available for Orders \n Invoices objects, you will see a new field called \"VAT Rate\". \n\n\n\n\nWhen Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line. \n\n\nLimitations\n\n\nUp to now, only part of our modules are compatible with this feature.\n\n\nTo use this feature, you must ensure VAT Rates Codes are \nstrictly\n similar on all connected applications.\n\n\nImport of Guests Orders (NEW)\n\n\nWhy ?\n\n\nMost parts of moderns E-Commerce platforms now offer to customers the possibility to place an order without creating any customer account.\nOn the ERP side, it is not possible to create an Order (or Invoice) without pointing to a customer. \nTo solve this problem, we developped a specific feature. \n\n\nWhat is does ?\n\n\nWhen you enable \nImport of Guests Orders \n Invoices\n, Splash will remove the \nrequiered\n flag for customers link. This way, Spalsh Server will push all new Orders \n Invoices to Dolibarr.\nWhatever if they have a customer defined or not.\n\n\nIn this mode, any Order (or Invoice) that has no customer defined will be attached to a predefined default customer.\n\n\nConfiguration\n\n\nTo Use this Mode, just enable the feature and select the default customer to use. We highly recommand creation of a dedicated customer.\n\n\nEmail detection\n\n\nThis additionnal feature may be used to detect already known customers using their Email if provided by the Server. \nIf the give Email belong to an existing ThirdParty, the order will be attached to this customer and not to default customer.", 
             "title": "Orders & Invoices"
         }, 
         {
             "location": "/orders/#configure-import-features", 
-            "text": "Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block groiup all Orders   Invoice imports parameters.", 
+            "text": "Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block group all Orders   Invoice imports parameters.", 
             "title": "Configure Import Features"
         }, 
         {
-            "location": "/orders/#default-payment-method", 
-            "text": "When an Invoice payments are imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.", 
-            "title": "Default payment Method"
-        }, 
-        {
             "location": "/orders/#tax-rates-detection-new", 
-            "text": "When importing orders   Invoices lines, Splash Module is now able to identify line's tax rate using a shared Tax Code.   This feature is usefull for countries that have multiple or complex VAT rates (i.e. Canada).  How to configure it ?  First, you need to create define, on each servers, the same Codes for VAT Rates. For Dolibarr, this setup is  available in  Settings   Dictionary   VAT Rates or Sales Tax Rates     With Dolibarr, VAT Rate name is \"Code\", this value is empty by default. Generaly, you can use codes used by your E-Commerce.     How it works ?  If you have a look at the data that are now available for Orders   Invoices objects, you will see a new field called \"VAT Rate\".    When Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line.", 
+            "text": "When importing orders   Invoices lines, Splash Module is now able to identify line's tax rate using a shared Tax Code.   This feature is usefull for countries that have multiple or complex VAT rates (i.e. Canada).  How to configure it ?  First, you need to create define, on each servers, the same Codes for VAT Rates. For Dolibarr, this setup is  available in  Settings   Dictionary   VAT Rates or Sales Tax Rates     With Dolibarr, VAT Rate name is \"Code\", this value is empty by default. Generaly, you can use codes used by your E-Commerce.     How it works ?  If you have a look at the data that are now available for Orders   Invoices objects, you will see a new field called \"VAT Rate\".    When Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line.   Limitations  Up to now, only part of our modules are compatible with this feature.  To use this feature, you must ensure VAT Rates Codes are  strictly  similar on all connected applications.", 
             "title": "Tax Rates Detection (NEW)"
         }, 
         {
-            "location": "/orders/#setup-default-parameters", 
-            "text": "To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.", 
-            "title": "Setup default Parameters"
-        }, 
-        {
-            "location": "/orders/#default-language", 
-            "text": "Select which language package module should use for communication with Splash Server.", 
-            "title": "Default Language"
-        }, 
-        {
-            "location": "/orders/#default-user", 
-            "text": "Select which user will be used for all actions executed by Splash Module.   We highly recommend creation of a dedicated user for Splash.   Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.", 
-            "title": "Default User"
-        }, 
-        {
-            "location": "/orders/#default-warehouse-bank-account-payment-method", 
-            "text": "Define these values to be used if no value is specified.", 
-            "title": "Default Warehouse / Bank Account / Payment Method"
-        }, 
-        {
-            "location": "/orders/#check-results-of-self-tests", 
-            "text": "Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
-            "title": "Check results of Self-Tests"
+            "location": "/orders/#import-of-guests-orders-new", 
+            "text": "Why ?  Most parts of moderns E-Commerce platforms now offer to customers the possibility to place an order without creating any customer account.\nOn the ERP side, it is not possible to create an Order (or Invoice) without pointing to a customer. \nTo solve this problem, we developped a specific feature.   What is does ?  When you enable  Import of Guests Orders   Invoices , Splash will remove the  requiered  flag for customers link. This way, Spalsh Server will push all new Orders   Invoices to Dolibarr.\nWhatever if they have a customer defined or not.  In this mode, any Order (or Invoice) that has no customer defined will be attached to a predefined default customer.  Configuration  To Use this Mode, just enable the feature and select the default customer to use. We highly recommand creation of a dedicated customer.  Email detection  This additionnal feature may be used to detect already known customers using their Email if provided by the Server. \nIf the give Email belong to an existing ThirdParty, the order will be attached to this customer and not to default customer.", 
+            "title": "Import of Guests Orders (NEW)"
         }, 
         {
             "location": "/payments/", 
-            "text": "Configuration\n\n\nEnable the Module\n\n\nConfiguration of you module is available in \nSettings \n Modules \n Interfaces \n Splash\n \n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n \n \nAdd a Server\n and note your id \n encryption keys. \n\n\n\n\nThen, enter the keys on Module's configuration (take care not to forget any character). \n\n\n\n\nSetup default Parameters\n\n\nTo work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.\n\n\n\n\nDefault Language\n\n\nSelect which language package module should use for communication with Splash Server.\n\n\nDefault User\n\n\nSelect which user will be used for all actions executed by Splash Module. \n\n\nWe highly recommend creation of a dedicated user for Splash. \n\n\nBe aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.\n\n\nDefault Warehouse / Bank Account / Payment Method\n\n\nDefine these values to be used if no value is specified. \n\n\nCheck results of Self-Tests\n\n\nEach time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
+            "text": "Select Bank Account (NEW)\n\n\nSince v1.4 of Splash Module for Dolibarr, it is possible to select, for each active Payment Method, the bank account you want to use. \n\n\n\n\nDefault Payment Method\n\n\nWhen an Invoice payment is imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.\n\n\nDefault Bank Account\n\n\nWhen an Invoice payment is imported, if no specific Bank Account is given, Splash will use this default value.\n\n\nBank Account per Method\n\n\nFor each \nactive\n payyment method, select target Bank Account to use.", 
             "title": "Payments"
         }, 
         {
-            "location": "/payments/#configuration", 
-            "text": "", 
-            "title": "Configuration"
-        }, 
-        {
-            "location": "/payments/#enable-the-module", 
-            "text": "Configuration of you module is available in  Settings   Modules   Interfaces   Splash", 
-            "title": "Enable the Module"
-        }, 
-        {
-            "location": "/payments/#connect-to-your-splash-account", 
-            "text": "First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to  Servers     Add a Server  and note your id   encryption keys.    Then, enter the keys on Module's configuration (take care not to forget any character).", 
-            "title": "Connect to your Splash Account"
-        }, 
-        {
-            "location": "/payments/#setup-default-parameters", 
-            "text": "To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.", 
-            "title": "Setup default Parameters"
-        }, 
-        {
-            "location": "/payments/#default-language", 
-            "text": "Select which language package module should use for communication with Splash Server.", 
-            "title": "Default Language"
-        }, 
-        {
-            "location": "/payments/#default-user", 
-            "text": "Select which user will be used for all actions executed by Splash Module.   We highly recommend creation of a dedicated user for Splash.   Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.", 
-            "title": "Default User"
-        }, 
-        {
-            "location": "/payments/#default-warehouse-bank-account-payment-method", 
-            "text": "Define these values to be used if no value is specified.", 
-            "title": "Default Warehouse / Bank Account / Payment Method"
-        }, 
-        {
-            "location": "/payments/#check-results-of-self-tests", 
-            "text": "Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. \nEnsure all tests are passed... this is critical!", 
-            "title": "Check results of Self-Tests"
+            "location": "/payments/#select-bank-account-new", 
+            "text": "Since v1.4 of Splash Module for Dolibarr, it is possible to select, for each active Payment Method, the bank account you want to use.    Default Payment Method  When an Invoice payment is imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.  Default Bank Account  When an Invoice payment is imported, if no specific Bank Account is given, Splash will use this default value.  Bank Account per Method  For each  active  payyment method, select target Bank Account to use.", 
+            "title": "Select Bank Account (NEW)"
         }, 
         {
             "location": "/fr/", 
