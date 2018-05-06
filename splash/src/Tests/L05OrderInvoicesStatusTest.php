@@ -4,7 +4,8 @@ namespace Splash\Local\Tests;
 use Splash\Tests\Tools\ObjectsCase;
 use Splash\Client\Splash;
 
-use Commande, Facture;
+use Commande;
+use Facture;
 
 /**
  * @abstract    Local Test Suite - Verify Writing of Orders & Invoices Status
@@ -18,10 +19,10 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     
     public function testCreateObjects()
     {
-        $this->loadLocalTestSequence("Monolangual");        
+        $this->loadLocalTestSequence("Monolangual");
         
-        $this->createObject("Order",    "OrderDraft");
-        $this->createObject("Invoice",  "PaymentDraft");
+        $this->createObject("Order", "OrderDraft");
+        $this->createObject("Invoice", "PaymentDraft");
     }
     
     private function createObject($ObjectType, $Status)
@@ -46,7 +47,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Load Object
         $Object  =   Splash::object($ObjectType)->Load($Id);
         $this->assertNotEmpty($Object);
-        $this->assertEquals(Commande::STATUS_DRAFT, $Object->statut);        
+        $this->assertEquals(Commande::STATUS_DRAFT, $Object->statut);
         
         return $Object;
     }
@@ -61,7 +62,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         Splash::object($ObjectType)->lock();
         $Id = Splash::object($ObjectType)->set(self::$Ids[$ObjectType], ["status" => $SplashStatus]);
         $this->assertNotEmpty($Id);
-        $this->assertEquals(self::$Ids[$ObjectType] , $Id);
+        $this->assertEquals(self::$Ids[$ObjectType], $Id);
 
         //====================================================================//
         //   Load Object
@@ -72,9 +73,9 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //====================================================================//
         //   Verify Reference
         $this->assertContains($ExpectedRef, $Object->ref, "Splash Status: " . $SplashStatus);
-        if( $ExpectedRef != "PROV" ) {
+        if ($ExpectedRef != "PROV") {
             $this->assertContains(dol_print_date($Object->date, '%y%m'), $Object->ref);
-        } 
+        }
         
         return;
     }
@@ -140,10 +141,10 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //====================================================================//
         //   Verify Reference
         $this->assertContains($ExpectedRef, $Object->ref, "Splash Status: " . $SplashStatus);
-        if( $ExpectedRef != "PROV" ) {
+        if ($ExpectedRef != "PROV") {
             $this->assertContains(dol_print_date($Object->date, '%y%m'), $Object->ref);
             $this->assertContains(dol_print_date($FakeData["date"], '%y%m'), $Object->ref);
-        } 
+        }
         
         return;
     }
@@ -174,5 +175,5 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Invoice",    "PaymentDue",       Facture::STATUS_VALIDATED,  "FA"),
             array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
         );
-    }    
+    }
 }
