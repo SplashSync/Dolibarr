@@ -29,8 +29,9 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     {
         //====================================================================//
         //   Create Fake Order Data
-        $Fields         =   $this->fakeFieldsList($ObjectType, ["status" => $Status], true);
+        $Fields         =   $this->fakeFieldsList($ObjectType, [], true);
         $FakeData       =   $this->fakeObjectData($Fields);
+        $FakeData["status"] =   $SplashStatus;
         
         //====================================================================//
         //   Execute Action Directly on Module
