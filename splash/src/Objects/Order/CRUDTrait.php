@@ -18,6 +18,7 @@
 namespace Splash\Local\Objects\Order;
 
 use Commande;
+use DateTime;
 
 use Splash\Core\SplashCore      as Splash;
 
@@ -100,7 +101,9 @@ trait CRUDTrait
         $this->Object = new Commande($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("date", $this->In["date"]);
+        $DateTime   =   new DateTime($this->In["date"]);
+        $this->setSimple('date', $DateTime->getTimestamp());
+        $this->setSimple('date_commande', $DateTime->getTimestamp());
         $this->doCustomerDetection($this->In);
         $this->setSimple("statut", Commande::STATUS_DRAFT);
 
