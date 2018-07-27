@@ -270,7 +270,6 @@ trait ImagesTrait
         
         //====================================================================//
         // Delete Remaining Images
-        
         foreach ($this->Out["images"] as $Key => $Image) {
             $EcmImage       =   new EcmFiles($db);
             $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
@@ -413,9 +412,16 @@ trait ImagesTrait
      */
     private function saveEcmFile($EcmImage, $Position)
     {
-        global $user;
+        global $db, $user;
         
         if (empty($EcmImage->id)) {
+            //====================================================================//
+            // Search for Already Created/Updated Image In Database
+            $ExistingImage  =   new EcmFiles($db);
+            $ExistingImage->fetch(null, null, $EcmImage->filepath . "/" . $EcmImage->filename);
+            if (!empty($ExistingImage->id)) {
+                return true;
+            }
             //====================================================================//
             // Create Object In Database
             if ($EcmImage->create($user) <= 0) {
@@ -441,9 +447,9 @@ trait ImagesTrait
     /**
      *  @abstract     Update Object Files Path if Ref Changed
      *
-     *  @param        int       $Position       Input Image Position on List
-     *  @param        array     $ImageData      Input Image Data Array
-     *  @param        bool      $Cover          Input Image is Cover
+     *  @param        string    $Element
+     *  @param        string    $Oldref
+     *  @param        string    $Newref
      *
      *  @return       none
      */

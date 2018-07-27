@@ -37,7 +37,7 @@ trait MainTrait
                 ->Identifier("phone")
                 ->Name($langs->trans("Phone"))
                 ->isLogged()
-                ->MicroData("http://schema.org/PostalAddress", "telephone")
+                ->MicroData("http://schema.org/Person", "telephone")
                 ->isListed();
 
         //====================================================================//

@@ -311,6 +311,7 @@ trait ExtraFieldsTrait
         switch ($Type) {
             case "varchar":
             case "password":
+            case "select":
                 return SPL_T_VARCHAR;
                 
             case "text":
