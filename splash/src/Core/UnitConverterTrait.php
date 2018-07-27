@@ -34,21 +34,22 @@ trait UnitConverterTrait
      */
     public static function convertWeight($weight, $unit)
     {
+        // mg
         if ($unit      == "-6") {
             return $weight * 1e-6;
-        } // mg
-        elseif ($unit  == "-3") {
+        // g
+        } elseif ($unit  == "-3") {
             return $weight * 1e-3;
-        } // g
-        elseif ($unit  == "0") {
+        // kg
+        } elseif ($unit  == "0") {
             return $weight;
-        } // kg
-        elseif ($unit  == "3") {
+        // Tonne
+        } elseif ($unit  == "3") {
             return $weight * 1e3;
-        } // Tonne
-        elseif ($unit  == "99") {
+        // livre
+        } elseif ($unit  == "99") {
             return $weight * 0.45359237;
-        } // livre
+        }
         return 0;
     }
 
@@ -91,24 +92,25 @@ trait UnitConverterTrait
      */
     public static function convertLength($length, $unit)
     {
+        // mm
         if ($unit      == "-3") {
             return $length / 1e3;
-        } // mm
-        elseif ($unit  == "-2") {
+        // cm
+        } elseif ($unit  == "-2") {
             return $length / 1e2;
-        } // cm
-        elseif ($unit  == "-1") {
+        // dm
+        } elseif ($unit  == "-1") {
             return $length / 10;
-        } // dm
-        elseif ($unit  == "0") {
+        // m
+        } elseif ($unit  == "0") {
             return $length;
-        } // m
-        elseif ($unit  == "98") {
+        // foot
+        } elseif ($unit  == "98") {
             return $length * 0.3048;
-        } // foot
-        elseif ($unit  == "99") {
+        // inch
+        } elseif ($unit  == "99") {
             return $length * 0.0254;
-        }     // inch
+        }
         return 0;
     }
     
@@ -151,24 +153,25 @@ trait UnitConverterTrait
      */
     public static function convertSurface($surface, $unit)
     {
+        // mm²
         if ($unit      == "-6") {
             return $surface / 1e6;
-        } // mm²
-        elseif ($unit  == "-4") {
+        // cm²
+        } elseif ($unit  == "-4") {
             return $surface / 1e4;
-        } // cm²
-        elseif ($unit  == "-2") {
+        // dm²
+        } elseif ($unit  == "-2") {
             return $surface / 1e2;
-        } // dm²
-        elseif ($unit  == "0") {
+        // m²
+        } elseif ($unit  == "0") {
             return $surface;
-        } // m²
-        elseif ($unit  == "98") {
+        // foot²
+        } elseif ($unit  == "98") {
             return $surface * 0.092903;
-        } // foot²
-        elseif ($unit  == "99") {
+        // inch²
+        } elseif ($unit  == "99") {
             return $surface * 0.00064516;
-        }// inch²
+        }
         return 0;
     }
     
@@ -214,33 +217,34 @@ trait UnitConverterTrait
      */
     public static function convertVolume($volume, $unit)
     {
+        // mm²
         if ($unit      == "-9") {
             return $volume * 1e-9;
-        } // mm²
-        elseif ($unit  == "-6") {
+        // cm²
+        } elseif ($unit  == "-6") {
             return $volume * 1e-6;
-        } // cm²
-        elseif ($unit  == "-3") {
+        // dm²
+        } elseif ($unit  == "-3") {
             return $volume * 1e-3;
-        } // dm²
-        elseif ($unit  == "0") {
+        // m²
+        } elseif ($unit  == "0") {
             return $volume;
-        } // m²
-        elseif ($unit  == "88") {
+        // foot²
+        } elseif ($unit  == "88") {
             return $volume * 0.0283168;
-        } // foot²
-        elseif ($unit  == "89") {
+        // inch²
+        } elseif ($unit  == "89") {
             return $volume * 1.6387e-5;
-        } // inch²
-        elseif ($unit  == "97") {
+        // ounce
+        } elseif ($unit  == "97") {
             return $volume * 2.9574e-5;
-        } // ounce
-        elseif ($unit  == "98") {
+        // litre
+        } elseif ($unit  == "98") {
             return $volume * 1e-3;
-        } // litre
-        elseif ($unit  == "99") {
+        // gallon
+        } elseif ($unit  == "99") {
             return $volume * 0.00378541;
-        }         // gallon
+        }
         return 0;
     }
     

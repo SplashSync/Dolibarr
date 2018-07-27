@@ -128,10 +128,10 @@ class Local
         //====================================================================//
         if (SPLASH_SERVER_MODE) {
             define('NOCSRFCHECK', 1);    // This is Webservice Access. We must be able to go on it from outside.
-        } //====================================================================//
+        //====================================================================//
         // When Library is called in client mode ONLY
         //====================================================================//
-        else {
+        } else {
             // NOTHING TO DO
         }
 
