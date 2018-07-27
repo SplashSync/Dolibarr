@@ -17,7 +17,7 @@ class L04GuestOrdersTest extends ObjectsCase
     /**
      * @var array
      */
-    private $Fields;
+    protected $Fields;
 
     /**
      * @var array
