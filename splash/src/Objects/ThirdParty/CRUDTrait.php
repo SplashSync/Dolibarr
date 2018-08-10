@@ -126,7 +126,7 @@ trait CRUDTrait
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
-        if (!$Needed && !$this->isToUpdate() ) {
+        if (!$Needed && !$this->isToUpdate()) {
             return (int) $this->Object->id;
         }
         //====================================================================//
