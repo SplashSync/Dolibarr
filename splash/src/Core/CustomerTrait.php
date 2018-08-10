@@ -259,6 +259,7 @@ trait CustomerTrait
         // Detect ThirdParty Using Given Email
         if ($this->isAllowedEmailDetection() && isset($Data["email"]) && !empty($Data["email"])) {
             $this->SocId  =   $this->getCustomerByEmail($Data["email"]);
+            Splash::log()->war("Customer Email Identified : Id " .  $this->SocId);
         }
         //====================================================================//
         // Select ThirdParty Using Default Parameters
