@@ -113,7 +113,7 @@ trait CRUDTrait
     /**
      * @abstract    Update Request Object
      *
-     * @param       array   $Needed         Is This Update Needed
+     * @param       bool   $Needed         Is This Update Needed
      *
      * @return      string      Object Id
      */
@@ -126,7 +126,7 @@ trait CRUDTrait
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
-        if (!$Needed) {
+        if (!$Needed && !$this->isToUpdate() ) {
             return (int) $this->Object->id;
         }
         //====================================================================//
