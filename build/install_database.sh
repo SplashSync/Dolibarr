@@ -39,6 +39,8 @@ then
 
     echo "Database Migrations for Dolibarr 8.0"
     sed -i '53d;59d;' $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
+    cat -n $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
+
     mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
 fi 
 
