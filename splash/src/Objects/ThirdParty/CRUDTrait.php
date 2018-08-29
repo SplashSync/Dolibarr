@@ -47,7 +47,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load ThirdPaty (" . $Id . ")."
+                " Unable to load ThirdParty (" . $Id . ")."
             );
         }
         //====================================================================//
@@ -57,7 +57,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load ThirdPaty (" . $Id . ")."
+                " Unable to load ThirdParty (" . $Id . ")."
             );
         }
         return $Object;
