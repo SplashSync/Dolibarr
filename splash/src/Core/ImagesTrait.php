@@ -75,6 +75,26 @@ trait ImagesTrait
                 ->MicroData("http://schema.org/Product", "isCover")
                 ->Group("Images")
                 ->isNotTested();
+        
+        //====================================================================//
+        // Product Images => Is Visible
+        $this->fieldsFactory()->create(SPL_T_BOOL)
+                ->Identifier("visible")
+                ->InList("images")
+                ->Name("Visible Image")
+                ->MicroData("http://schema.org/Product", "isVisibleImage")
+                ->Group("Images")
+                ->isNotTested();                
+        
+        //====================================================================//
+        // Product Images => Is Visible
+        $this->fieldsFactory()->create(SPL_T_INT)
+                ->Identifier("position")
+                ->InList("images")
+                ->Name("Position")
+                ->MicroData("http://schema.org/Product", "positionImage")
+                ->Group("Images")
+                ->isReadOnly();        
     }
     
     //====================================================================//
@@ -171,6 +191,8 @@ trait ImagesTrait
             // Insert Data in List
             self::lists()->Insert($this->Out, "images", $FieldName, $File["position"], $Image);
             self::lists()->Insert($this->Out, "images", "cover", $File["position"], $File["cover"]);
+            self::lists()->Insert($this->Out, "images", "visible", $File["position"], true);
+            self::lists()->Insert($this->Out, "images", "position", $File["position"], $File["position"]);
         }
            
         //====================================================================//
