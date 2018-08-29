@@ -130,7 +130,7 @@ script:
     # Execute Bootstrap file    
     - php build/bootstrap.php
     # Show PhpUnit Version
-    - phpunit --version
+    - splash/vendor/phpunit/phpunit/phpunit --version
     # Run PhpUnit Main Sequence
     - phpunit -c build/phpunit.xml.dist 
     # Run PhpUnit Main Local Testsuite
