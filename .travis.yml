@@ -13,65 +13,65 @@ cache:
 # DATA  = Demo data Versions tu USe for Testing
 matrix:
     include:
-#        # Dolibarr V4.0 Branch       
-#        - php: 5.6
-#          env: DOL=4.0 DATA=4.0.0 STAN=0   
+        # Dolibarr V4.0 Branch       
+        - php: 5.6
+          env: DOL=4.0 DATA=4.0.0 STAN=0   
 #        - php: 7.0
 #          env: DOL=4.0 DATA=4.0.0 STAN=0
-#        - php: 7.1
-#          env: DOL=4.0 DATA=4.0.0 STAN=0
-#
-#        # Dolibarr V5.0 Branch       
-#        - php: 5.6
-#          env: DOL=5.0 DATA=5.0.0 STAN=0     
+        - php: 7.1
+          env: DOL=4.0 DATA=4.0.0 STAN=0
+
+        # Dolibarr V5.0 Branch       
+        - php: 5.6
+          env: DOL=5.0 DATA=5.0.0 STAN=0     
 #        - php: 7.0
 #          env: DOL=5.0 DATA=5.0.0 STAN=0  
-#        - php: 7.1
-#          env: DOL=5.0 DATA=5.0.0 STAN=0
-#
-#        # Dolibarr V6.0 Branch       
-#        - php: 5.6
-#          env: DOL=6.0 DATA=6.0.0 STAN=0    
+        - php: 7.1
+          env: DOL=5.0 DATA=5.0.0 STAN=0
+
+        # Dolibarr V6.0 Branch       
+        - php: 5.6
+          env: DOL=6.0 DATA=6.0.0 STAN=0    
 #        - php: 7.0
 #          env: DOL=6.0 DATA=6.0.0 STAN=1     
-#        - php: 7.1
-#          env: DOL=6.0 DATA=6.0.0 STAN=1     
+        - php: 7.1
+          env: DOL=6.0 DATA=6.0.0 STAN=1     
 #        - php: 7.2
 #          env: DOL=6.0 DATA=6.0.0 STAN=1     
 #
-#        # Dolibarr V7.0 Branch       
-#        - php: 5.6
-#          env: DOL=7.0 DATA=7.0.0 STAN=0    
-#        - php: 7.0
-#          env: DOL=7.0 DATA=7.0.0 STAN=1       
+        # Dolibarr V7.0 Branch       
+        - php: 5.6
+          env: DOL=7.0 DATA=7.0.0 STAN=0    
+        - php: 7.0
+          env: DOL=7.0 DATA=7.0.0 STAN=1       
 #        - php: 7.1
 #          env: DOL=7.0 DATA=7.0.0 STAN=1     
-#        - php: 7.2
-#          env: DOL=7.0 DATA=7.0.0 STAN=1     
-#          
-#        # Dolibarr V8.0 Branch       
-#        - php: 5.6
-#          env: DOL=8.0 DATA=7.0.0 STAN=0    
+        - php: 7.2
+          env: DOL=7.0 DATA=7.0.0 STAN=1     
+          
+        # Dolibarr V8.0 Branch       
+        - php: 5.6
+          env: DOL=8.0 DATA=7.0.0 STAN=0    
 #        - php: 7.0
 #          env: DOL=8.0 DATA=7.0.0 STAN=1       
         - php: 7.1
           env: DOL=8.0 DATA=7.0.0 STAN=1     
         - php: 7.2
           env: DOL=8.0 DATA=7.0.0 STAN=1     
-#          
-#        # Dolibarr Develop Branch       
-#        - php: 5.6
-#          env: DOL=develop DATA=7.0.0 STAN=0        
-#        - php: 7.0
-#          env: DOL=develop DATA=7.0.0 STAN=1    
+          
+        # Dolibarr Develop Branch       
+        - php: 5.6
+          env: DOL=develop DATA=7.0.0 STAN=0        
+        - php: 7.0
+          env: DOL=develop DATA=7.0.0 STAN=1    
 #        - php: 7.1
 #          env: DOL=develop DATA=7.0.0 STAN=1    
-#        - php: 7.2
-#          env: DOL=develop DATA=7.0.0 STAN=1    
-#          
-#    allow_failures:
-#        - env: DOL=develop DATA=7.0.0 STAN=0 
-#        - env: DOL=develop DATA=7.0.0 STAN=1    
+        - php: 7.2
+          env: DOL=develop DATA=7.0.0 STAN=1    
+          
+    allow_failures:
+        - env: DOL=develop DATA=7.0.0 STAN=0 
+        - env: DOL=develop DATA=7.0.0 STAN=1    
           
         
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
