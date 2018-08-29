@@ -32,6 +32,11 @@ fi
 
 if [ "$VERSION" = "8" ];  
 then 
+    echo "BugFix Update for Dolibarr 4.0.0"
+    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN fk_user_creat;"
+    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN fk_user_modif;"
+    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN type_container;"
+
     echo "Database Migrations for Dolibarr 8.0"
     mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
 fi 
