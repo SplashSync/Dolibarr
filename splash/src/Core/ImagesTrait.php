@@ -84,7 +84,7 @@ trait ImagesTrait
                 ->Name("Visible Image")
                 ->MicroData("http://schema.org/Product", "isVisibleImage")
                 ->Group("Images")
-                ->isNotTested();                
+                ->isNotTested();
         
         //====================================================================//
         // Product Images => Is Visible
@@ -94,7 +94,7 @@ trait ImagesTrait
                 ->Name("Position")
                 ->MicroData("http://schema.org/Product", "positionImage")
                 ->Group("Images")
-                ->isReadOnly();        
+                ->isReadOnly();
     }
     
     //====================================================================//
