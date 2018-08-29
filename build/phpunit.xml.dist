@@ -11,7 +11,7 @@
     processIsolation            = "false"
     stopOnFailure               = "true"
     bootstrap                   = "../splash/vendor/autoload.php" 
-    verbose                     = "true"
+    verbose                     = "false"
     timeoutForLargeTests        = "120"  
 >
 
@@ -35,6 +35,7 @@
     </filter>
     
     <php>
+        <ini    name="display_errors"   value="true"/>
         <const  name="SPLASH_DEBUG"     value="true" />
         <server name="SPLASH_TRAVIS"    value="true" />
         <server name="SERVER_NAME"      value="http://localhost/Dolibarr/Tests"/>
