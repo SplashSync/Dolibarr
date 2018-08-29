@@ -104,7 +104,7 @@ trait CRUDTrait
         // Create Object In Database
         if ($this->Object->create($user) <= 0) {
             $this->catchDolibarrErrors();
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdPaty. ");
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdParty. ");
         }
         
         return $this->Object;
