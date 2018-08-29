@@ -19,11 +19,6 @@ class L03PaymentBanksTest extends ObjectsCase
     public function testSetupBankAccount($ObjectType, $paymentType, $SplashMethod)
     {
         
-//        if (Splash::local()->dolVersionCmp("5.0.0") < 0) {
-//            $this->markTestIncomplete('Feature Not Available in This Version.');
-//            return;
-//        }
-//
         //====================================================================//
         //   Create Bank Account for this Payment Type
         $Account = $this->createBankAccount($paymentType);
