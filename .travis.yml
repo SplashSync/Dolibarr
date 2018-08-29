@@ -132,9 +132,9 @@ script:
     # Show PhpUnit Version
     - splash/vendor/phpunit/phpunit/phpunit --version
     # Run PhpUnit Main Sequence
-    - phpunit -c build/phpunit.xml.dist 
+    - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist 
     # Run PhpUnit Main Local Testsuite
-    - phpunit -c build/phpunit.xml.dist --testsuite=Local
+    - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist --testsuite=Local
         
 notifications:
   email:         
