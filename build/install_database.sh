@@ -38,7 +38,7 @@ then
     mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN type_container;"
 
     echo "Database Migrations for Dolibarr 8.0"
-    $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql < sed -e '53d' $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
+    $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql << sed -e '53d' $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
     mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
 fi 
 
