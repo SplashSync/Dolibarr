@@ -228,7 +228,7 @@ trait ImagesTrait
         // There is A Cover Image
         if ($hasCover) {
             return;
-        } 
+        }
         //====================================================================//
         // Set First Image as Cover
         foreach ($FileArray as $Key => $File) {
