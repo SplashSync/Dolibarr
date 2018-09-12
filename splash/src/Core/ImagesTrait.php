@@ -168,7 +168,9 @@ trait ImagesTrait
         //====================================================================//
         // Fetch Object Attached Images from Database
         $FileArray = \dol_dir_list_in_database($this->RelFilesDir, "", null, "position");
-        
+        //====================================================================//
+        // Detect if List has Cover Image or Force it
+        $this->detectCoverImage($FileArray);
         //====================================================================//
         // Create Images List
         foreach ($FileArray as $File) {
@@ -198,6 +200,48 @@ trait ImagesTrait
         //====================================================================//
         // Sort Image Array to Update Images Positions
         ksort($this->Out["images"]);
+    }
+
+    /**
+     * @abstract    Detect if List has Cover Image or Force First Image as Cover
+     * @param   array   $FileArray
+     * @return  void
+     */
+    private function detectCoverImage(&$FileArray)
+    {
+        $hasCover   =   false;
+        //====================================================================//
+        // Walk on Images List
+        foreach ($FileArray as $File) {
+            //====================================================================//
+            // Filter No Images Files
+            if (!in_array(pathinfo($File["name"], PATHINFO_EXTENSION), $this->Extensions)) {
+                continue;
+            }
+            //====================================================================//
+            // Check if Cover Flag is Set
+            if (isset($File["cover"]) && $File["cover"]) {
+                $hasCover   =   true;
+            }
+        }
+        //====================================================================//
+        // There is A Cover Image
+        if ($hasCover) {
+            return;
+        } 
+        //====================================================================//
+        // Set First Image as Cover
+        foreach ($FileArray as $Key => $File) {
+            //====================================================================//
+            // Filter No Images Files
+            if (!in_array(pathinfo($File["name"], PATHINFO_EXTENSION), $this->Extensions)) {
+                continue;
+            }
+            //====================================================================//
+            // Set Image Cover Flag
+            $FileArray[$Key]["cover"] = true;
+            return;
+        }
     }
     
     protected function getImagesArrayFromEcm($FieldName)
