@@ -251,7 +251,7 @@ trait CustomerTrait
         //====================================================================//
         // Standard Mode => A SocId is Given
         if (isset($Data["socid"]) && !empty(self::objects()->Id($Data["socid"]))) {
-            Splash::log()->war("Customer Id Given : Id " .  self::objects()->Id($Data["socid"]));
+            Splash::log()->deb("Customer Id Given : Id " .  self::objects()->Id($Data["socid"]));
             $this->SocId = self::objects()->Id($Data["socid"]);
             return $this->SocId;
         }
@@ -259,13 +259,13 @@ trait CustomerTrait
         // Detect ThirdParty Using Given Email
         if ($this->isAllowedEmailDetection() && isset($Data["email"]) && !empty($Data["email"])) {
             $this->SocId  =   $this->getCustomerByEmail($Data["email"]);
-            Splash::log()->war("Customer Email Identified : Id " .  $this->SocId);
+            Splash::log()->deb("Customer Email Identified : Id " .  $this->SocId);
         }
         //====================================================================//
         // Select ThirdParty Using Default Parameters
         if (empty($this->SocId)) {
             $this->SocId  =   $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER;
-            Splash::log()->war("Default Customer Used : Id " .  $this->SocId);
+            Splash::log()->deb("Default Customer Used : Id " .  $this->SocId);
         }
 
         return $this->SocId;
@@ -296,7 +296,7 @@ trait CustomerTrait
             return 0;
         }
         $Customer = $db->fetch_object($resql);
-        Splash::log()->war("Customer Detected by Email : " . $Email . " => Id " .  $Customer->rowid);
+        Splash::log()->deb("Customer Detected by Email : " . $Email . " => Id " .  $Customer->rowid);
         
         //====================================================================//
         // Return Customer Id
