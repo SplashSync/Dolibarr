@@ -381,22 +381,15 @@ trait ImagesTrait
         }
         
         //====================================================================//
-        // Image Already Exits
-        foreach ($this->Out["images"] as $Key => $CurrentImage) {
-            if (( $CurrentImage["image"]["md5"] === $ImageData["md5"] )
-                    && ($CurrentImage["image"]["filename"] === $ImageData["filename"])) {
-                $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $CurrentImage["image"]["filename"]);
-                unset($this->Out["images"][$Key]);
-                break;
-            }
-        }
+        // Check if Image Already Exits
+        $this->identifyImage($EcmImage, $ImageData);
 
         //====================================================================//
         // Image New but May Be A Duplicate
-        if ( empty($EcmImage->id) && $this->isExistingEcmFile($this->RelFilesDir . "/" . $ImageData["filename"]) ) {
+        if (empty($EcmImage->id) && $this->isExistingEcmFile($this->RelFilesDir . "/" . $ImageData["filename"])) {
             Splash::log()->deb("Skipped Duplicate Image Writing");
             return;
-        } 
+        }
         
         //====================================================================//
         // Check Image CheckSum
@@ -433,6 +426,26 @@ trait ImagesTrait
         return $this->saveEcmFile($EcmImage, $Position);
     }
     
+    /**
+     *  @abstract     Search for this Image in Current DataSet & Fetch EcmFile if Found
+     *
+     *  @param        EcmFiles  $EcmImage       Dolibarr File Object
+     *  @param        array     $ImageData      Input Image Data Array
+     *
+     *  @return       void
+     */
+    private function identifyImage(&$EcmImage, $ImageData)
+    {
+        foreach ($this->Out["images"] as $Key => $CurrentImage) {
+            if (( $CurrentImage["image"]["md5"] === $ImageData["md5"] )
+                    && ($CurrentImage["image"]["filename"] === $ImageData["filename"])) {
+                $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $CurrentImage["image"]["filename"]);
+                unset($this->Out["images"][$Key]);
+                break;
+            }
+        }
+    }
+        
     /**
      *  @abstract     Write Data to Current Image
      *
@@ -573,10 +586,10 @@ trait ImagesTrait
      *
      *  @return       bool
      */
-    private function isExistingEcmFile($FullPath)  
+    private function isExistingEcmFile($FullPath)
     {
         global $db;
         $EcmFile    =   new EcmFiles($db);
         return (bool) $EcmFile->fetch(null, null, $FullPath);
-    }  
+    }
 }
