@@ -390,6 +390,13 @@ trait ImagesTrait
                 break;
             }
         }
+
+        //====================================================================//
+        // Image New but May Be A Duplicate
+        if ( empty($EcmImage->id) && $this->isExistingEcmFile($this->RelFilesDir . "/" . $ImageData["filename"]) ) {
+            Splash::log()->deb("Skipped Duplicate Image Writing");
+            return;
+        } 
         
         //====================================================================//
         // Check Image CheckSum
@@ -478,14 +485,12 @@ trait ImagesTrait
      */
     private function saveEcmFile($EcmImage, $Position)
     {
-        global $db, $user;
+        global $user;
         
         if (empty($EcmImage->id)) {
             //====================================================================//
             // Search for Already Created/Updated Image In Database
-            $ExistingImage  =   new EcmFiles($db);
-            $ExistingImage->fetch(null, null, $EcmImage->filepath . "/" . $EcmImage->filename);
-            if (!empty($ExistingImage->id)) {
+            if ($this->isExistingEcmFile($EcmImage->filepath . "/" . $EcmImage->filename)) {
                 return true;
             }
             //====================================================================//
@@ -560,4 +565,17 @@ trait ImagesTrait
         }
         $db->commit();
     }
-}
+    
+    /**
+     *  @abstract     Check if A File Already Exists in Ecm Files
+     *
+     *  @param        string    $FullPath
+     *
+     *  @return       bool
+     */
+    private function isExistingEcmFile($FullPath)  
+    {
+        global $db;
+        $EcmFile    =   new EcmFiles($db);
+        return (bool) $EcmFile->fetch(null, null, $FullPath);
+    }  
