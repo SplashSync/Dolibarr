@@ -579,3 +579,4 @@ trait ImagesTrait
         $EcmFile    =   new EcmFiles($db);
         return (bool) $EcmFile->fetch(null, null, $FullPath);
     }  
+}
