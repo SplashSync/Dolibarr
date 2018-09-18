@@ -307,7 +307,6 @@ trait ImagesTrait
      */
     protected function setImagesFields($FieldName, $Data)
     {
-        global $db, $user;
         //====================================================================//
         // Safety Check
         if ($FieldName !== "images") {
@@ -345,20 +344,8 @@ trait ImagesTrait
         
         //====================================================================//
         // Delete Remaining Images
-        foreach ($this->Out["images"] as $Key => $Image) {
-            $EcmImage       =   new EcmFiles($db);
-            $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
-            //====================================================================//
-            // Delete Object In Database
-            if (!empty($EcmImage->label) && ($EcmImage->delete($user) <= 0)) {
-                $this->catchDolibarrErrors($EcmImage);
-                Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to Delete Image File. ");
-            }
-            //====================================================================//
-            // Delete Object From Disk
-            Splash::file()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
-            unset($this->Out["images"][$Key]);
-        }
+        $this->deleteRemainingImages();
+
 
         unset($this->In[$FieldName]);
     }
@@ -434,6 +421,31 @@ trait ImagesTrait
         
         return $this->saveEcmFile($EcmImage, $Position);
     }
+    
+    /**
+     *  @abstract     Delete Unexpected Images
+     *
+     *  @return       none
+     */
+    private function deleteRemainingImages()
+    {
+        global $db, $user;
+        
+        foreach ($this->Out["images"] as $Key => $Image) {
+            $EcmImage       =   new EcmFiles($db);
+            $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
+            //====================================================================//
+            // Delete Object In Database
+            if (!empty($EcmImage->label) && ($EcmImage->delete($user) <= 0)) {
+                $this->catchDolibarrErrors($EcmImage);
+                Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to Delete Image File. ");
+            }
+            //====================================================================//
+            // Delete Object From Disk
+            Splash::file()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
+            unset($this->Out["images"][$Key]);
+        } 
+    }   
     
     /**
      *  @abstract     Search for this Image in Current DataSet & Fetch EcmFile if Found
