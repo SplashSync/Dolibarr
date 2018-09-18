@@ -179,7 +179,11 @@ trait ImagesTrait
             if (!in_array(pathinfo($File["name"], PATHINFO_EXTENSION), $this->Extensions)) {
                 continue;
             }
-
+            //====================================================================//
+            // File Not Found on Disk
+            if (!file_exists($File["fullname"])) {
+                continue;
+            }            
             //====================================================================//
             // Insert Image in Output List
             $Image = self::images()->Encode(
@@ -320,7 +324,7 @@ trait ImagesTrait
         //====================================================================//
         // Load Current Image Array
         $this->getImagesFields(0, "image@images");
-        
+       
         //====================================================================//
         // Verify Images List & Update if Needed
         $Position = 1;
@@ -345,8 +349,8 @@ trait ImagesTrait
             $EcmImage       =   new EcmFiles($db);
             $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
             //====================================================================//
-            // Delete Object In Database
-            if ($EcmImage->delete($user) <= 0) {
+            // Delete Object In Database           
+            if (!empty($EcmImage->label) && ($EcmImage->delete($user) <= 0)) {
                 $this->catchDolibarrErrors($EcmImage);
                 Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to Delete Image File. ");
             }
@@ -392,7 +396,7 @@ trait ImagesTrait
         //====================================================================//
         // Image New but May Be A Duplicate
         if (empty($EcmImage->id) && $this->isExistingEcmFile($this->RelFilesDir . "/" . $ImageData["filename"])) {
-            Splash::log()->deb("Skipped Duplicate Image Writing");
+            Splash::log()->war("Skipped Duplicate Image Writing");
             return;
         }
         
