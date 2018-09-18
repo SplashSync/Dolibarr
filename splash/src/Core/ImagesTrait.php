@@ -183,7 +183,7 @@ trait ImagesTrait
             // File Not Found on Disk
             if (!file_exists($File["fullname"])) {
                 continue;
-            }            
+            }
             //====================================================================//
             // Insert Image in Output List
             $Image = self::images()->Encode(
@@ -349,7 +349,7 @@ trait ImagesTrait
             $EcmImage       =   new EcmFiles($db);
             $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
             //====================================================================//
-            // Delete Object In Database           
+            // Delete Object In Database
             if (!empty($EcmImage->label) && ($EcmImage->delete($user) <= 0)) {
                 $this->catchDolibarrErrors($EcmImage);
                 Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to Delete Image File. ");
