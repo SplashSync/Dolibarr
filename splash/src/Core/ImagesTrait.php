@@ -383,7 +383,7 @@ trait ImagesTrait
         //====================================================================//
         // Image New but May Be A Duplicate
         if (empty($EcmImage->id) && $this->isExistingEcmFile($this->RelFilesDir . "/" . $ImageData["filename"])) {
-            Splash::log()->war("Skipped Duplicate Image Writing");
+            Splash::log()->deb("Skipped Duplicate Image Writing");
             return;
         }
         
