@@ -55,7 +55,8 @@ trait CoreTrait
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("ref_client")
                 ->Name($langs->trans("RefCustomer"))
-                ->MicroData("http://schema.org/Invoice", "confirmationNumber");
+                ->MicroData("http://schema.org/Invoice", "confirmationNumber")
+                ->isListed();
         
         //====================================================================//
         // Internal Reference
