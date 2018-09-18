@@ -444,8 +444,8 @@ trait ImagesTrait
             // Delete Object From Disk
             Splash::file()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
             unset($this->Out["images"][$Key]);
-        } 
-    }   
+        }
+    }
     
     /**
      *  @abstract     Search for this Image in Current DataSet & Fetch EcmFile if Found
