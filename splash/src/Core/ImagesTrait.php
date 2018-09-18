@@ -327,7 +327,7 @@ trait ImagesTrait
         //====================================================================//
         // Verify Images List & Update if Needed
         $Position = 1;
-        foreach ($Data as $Key => $ImageData) {
+        foreach ($Data as $ImageData) {
             //====================================================================//
             // Check if Visible Image
             if (isset($ImageData['visible']) && empty($ImageData['visible'])) {
