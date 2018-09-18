@@ -326,6 +326,11 @@ trait ImagesTrait
         $Position = 1;
         foreach ($Data as $Key => $ImageData) {
             //====================================================================//
+            // Check if Visible Image
+            if (isset($ImageData['visible']) && empty($ImageData['visible'])) {
+                continue;
+            }
+            //====================================================================//
             // Check if Cover Image
             $Cover  =   isset($ImageData['cover']) ? $ImageData['cover'] : false;
             //====================================================================//
