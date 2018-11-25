@@ -422,7 +422,7 @@ class Local implements LocalClassInterface
         // Init Parameters Array
         return array();
         // CHANGE SOMETHING
-    }    
+    }
     
 //====================================================================//
 // *******************************************************************//
