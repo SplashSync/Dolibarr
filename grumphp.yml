@@ -2,8 +2,8 @@ parameters:
     git_dir: .
     bin_dir:        "splash/vendor/bin"
     ascii:
-        failed:     "./splash/vendor/splash/phpcore/Resources/ascii/grumphp-grumpy.txt"
-        succeeded:  "./splash/vendor/splash/phpcore/Resources/ascii/grumphp-happy.txt"
+        failed:     "./splash/vendor/splash/phpcore/Resources/grumphp/grumphp-grumpy.txt"
+        succeeded:  "./splash/vendor/splash/phpcore/Resources/grumphp/grumphp-happy.txt"
     tasks:
         composer:
             file:           "./composer.json"
