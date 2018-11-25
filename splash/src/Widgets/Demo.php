@@ -36,14 +36,14 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\WidgetBase;
+use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
 
 /**
  *  \class      Address
  *  \brief      Address - Thirdparty Contacts Management Class
  */
-class Demo extends WidgetBase
+class Demo extends AbstractWidget
 {
     
     //====================================================================//

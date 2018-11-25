@@ -36,10 +36,10 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\WidgetBase;
+use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
 
-class ProductDistribution extends WidgetBase
+class ProductDistribution extends AbstractWidget
 {
     //====================================================================//
     // Object Definition Parameters

@@ -36,10 +36,10 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\WidgetBase;
+use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
                 
-class StatGraphs extends WidgetBase
+class StatGraphs extends AbstractWidget
 {
     //====================================================================//
     // Object Definition Parameters

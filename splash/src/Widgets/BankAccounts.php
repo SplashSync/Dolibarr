@@ -36,10 +36,10 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\WidgetBase;
+use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
 
-class BankAccounts extends WidgetBase
+class BankAccounts extends AbstractWidget
 {
     
     //====================================================================//
