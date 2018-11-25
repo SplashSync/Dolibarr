@@ -64,7 +64,7 @@ class Local implements LocalClassInterface
      *
      *      @return         array       $parameters
      */
-    public static function parameters()
+    public function parameters()
     {
         global $langs;
         
