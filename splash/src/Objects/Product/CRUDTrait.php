@@ -97,7 +97,6 @@ trait CRUDTrait
         $this->object->barcode     = -1;
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::local()->LoadLocalUser();
         if (empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
@@ -130,7 +129,6 @@ trait CRUDTrait
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::local()->LoadLocalUser();
         if (empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
@@ -171,7 +169,6 @@ trait CRUDTrait
         $Object = new \Product($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::local()->LoadLocalUser();
         if (empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
