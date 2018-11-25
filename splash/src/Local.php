@@ -36,6 +36,8 @@ use ArrayObject;
 use Splash\Local\Core\MultiCompanyTrait;
 use Splash\Models\LocalClassInterface;
 
+use Splash\Local\Core\ExtraFieldsTrait;
+
 /**
  * @abstract    Local Core Management Class
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
