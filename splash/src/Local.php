@@ -181,7 +181,7 @@ class Local implements LocalClassInterface
      *
      *      @return         bool    global test result
      */
-    public static function selfTest()
+    public function selfTest()
     {
         global $langs;
 
