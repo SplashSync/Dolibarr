@@ -321,7 +321,7 @@ class Local implements LocalClassInterface
      *
      *      @return         array       $Sequences
      */
-    public static function testSequences($Name = null)
+    public function testSequences($Name = null)
     {
         global $db, $conf;
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
