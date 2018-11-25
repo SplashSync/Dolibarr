@@ -78,7 +78,6 @@ trait CRUDTrait
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        Splash::local()->LoadLocalUser();
         if (empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
