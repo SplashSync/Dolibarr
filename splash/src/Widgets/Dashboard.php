@@ -91,8 +91,8 @@ class Dashboard extends AbstractWidget
      *  @abstract     Return requested Customer Data
      *
      *  @param        array   $params               Search parameters for result List.
-     * 
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function get($params = null)
     {
