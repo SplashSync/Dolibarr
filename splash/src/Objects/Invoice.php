@@ -121,9 +121,7 @@ class Invoice extends AbstractObject
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
-        //====================================================================//
-        // Load Dolibarr Default Language
-        Splash::local()->loadDefaultLanguage();
+
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");

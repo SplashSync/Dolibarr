@@ -78,7 +78,7 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Customer Name is given
-        if (empty($this->In["firstname"])) {
+        if (empty($this->in["firstname"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "firstname");
         }
         //====================================================================//
@@ -89,13 +89,13 @@ trait CRUDTrait
         }
         //====================================================================//
         // Init Object
-        $this->Object = new \Contact($db);
+        $this->object = new \Contact($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("firstname", $this->In["firstname"]);
+        $this->setSimple("firstname", $this->in["firstname"]);
         //====================================================================//
         // Create Object In Database
-        if ($this->Object->create($user) <= 0) {
+        if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",
@@ -105,7 +105,7 @@ trait CRUDTrait
             );
         }
         
-        return $this->Object;
+        return $this->object;
     }
     
     /**
@@ -122,7 +122,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$Needed) {
-            return (int) $this->Object->id;
+            return (int) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -132,21 +132,21 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object
-        if ($this->Object->update($this->Object->id, $user) <= 0) {
+        if ($this->object->update($this->object->id, $user) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Contact Address (" . $this->Object->id . ")"
+                " Unable to Update Contact Address (" . $this->object->id . ")"
             ) ;
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->Object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->Object->id;
+        return (int) $this->object->id;
     }
     
     /**

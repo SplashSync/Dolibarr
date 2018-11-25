@@ -99,15 +99,15 @@ trait CoreTrait
             //====================================================================//
             // Order Official Date
             case 'date':
-                $date = $this->Object->date;
-                $this->Out[$FieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
+                $date = $this->object->date;
+                $this->out[$FieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
                 break;
             
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -134,10 +134,10 @@ trait CoreTrait
             case 'ref_int':
                 //====================================================================//
                 //  Compare Field Data
-                if ($this->Object->$FieldName != $Data) {
+                if ($this->object->$FieldName != $Data) {
                     //====================================================================//
                     //  Update Field Data
-                    $this->Object->setValueFrom($FieldName, $Data);
+                    $this->object->setValueFrom($FieldName, $Data);
                     $this->needUpdate();
                 }
                 break;
@@ -153,6 +153,6 @@ trait CoreTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }

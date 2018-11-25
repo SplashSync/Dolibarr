@@ -70,16 +70,16 @@ trait MetaDatesTrait
             case 'date_creation':
             case 'date_modification':
                 if (!$this->infoloaded) {
-                    $this->Object->info($this->Object->id);
+                    $this->object->info($this->object->id);
                     $this->infoloaded = true;
                 }
-                $this->Out[$FieldName] = dol_print_date($this->Object->$FieldName, 'dayrfc');
+                $this->out[$FieldName] = dol_print_date($this->object->$FieldName, 'dayrfc');
                 break;
 
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 }

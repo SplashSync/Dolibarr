@@ -93,9 +93,6 @@ class ThirdParty extends AbstractObject
         global $langs;
         
         //====================================================================//
-        // Load Dolibarr Default Language
-        Splash::local()->loadDefaultLanguage();
-        //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");
         $langs->load("admin");

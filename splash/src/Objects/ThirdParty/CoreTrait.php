@@ -91,7 +91,7 @@ trait CoreTrait
     {
         //====================================================================//
         // Read Company FullName => Firstname, Lastname - Compagny
-        $fullname = $this->decodeFullName($this->Object->name);
+        $fullname = $this->decodeFullName($this->object->name);
         
         //====================================================================//
         // READ Fields
@@ -101,7 +101,7 @@ trait CoreTrait
             case 'name':
             case 'firstname':
             case 'lastname':
-                $this->Out[$FieldName] = $fullname[$FieldName];
+                $this->out[$FieldName] = $fullname[$FieldName];
                 break;
             
             //====================================================================//
@@ -113,7 +113,7 @@ trait CoreTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -145,7 +145,7 @@ trait CoreTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     //====================================================================//
@@ -227,7 +227,7 @@ trait CoreTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Get Current Values if Not Written
-        $CurrentName = $this->decodeFullName($this->Object->name);
+        $CurrentName = $this->decodeFullName($this->object->name);
         if (empty($this->firstname) && !empty($CurrentName["firstname"])) {
             $this->firstname = $CurrentName["firstname"];
         }

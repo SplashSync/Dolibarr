@@ -112,27 +112,27 @@ trait MainTrait
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                $this->Out[$FieldName] = (float) $this->convertWeight(
-                    $this->Object->weight,
-                    $this->Object->weight_units
+                $this->out[$FieldName] = (float) $this->convertWeight(
+                    $this->object->weight,
+                    $this->object->weight_units
                 );
                 break;
             case 'length':
-                $this->Out[$FieldName] = (float) $this->convertLength(
-                    $this->Object->length,
-                    $this->Object->length_units
+                $this->out[$FieldName] = (float) $this->convertLength(
+                    $this->object->length,
+                    $this->object->length_units
                 );
                 break;
             case 'surface':
-                $this->Out[$FieldName] = (float) $this->convertSurface(
-                    $this->Object->surface,
-                    $this->Object->surface_units
+                $this->out[$FieldName] = (float) $this->convertSurface(
+                    $this->object->surface,
+                    $this->object->surface_units
                 );
                 break;
             case 'volume':
-                $this->Out[$FieldName] = (float) $this->convertVolume(
-                    $this->Object->volume,
-                    $this->Object->volume_units
+                $this->out[$FieldName] = (float) $this->convertVolume(
+                    $this->object->volume,
+                    $this->object->volume_units
                 );
                 break;
             
@@ -140,7 +140,7 @@ trait MainTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -167,26 +167,26 @@ trait MainTrait
                 if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
                     $CfgPriceLevel = $conf->global->SPLASH_MULTIPRICE_LEVEL;
                     $PriceLevel = !empty($CfgPriceLevel) ? $CfgPriceLevel : 1;
-                    $PriceType  = $this->Object->multiprices_base_type[$PriceLevel];
-                    $PriceHT    = (double) $this->Object->multiprices[$PriceLevel];
-                    $PriceTTC   = (double) $this->Object->multiprices_ttc[$PriceLevel];
-                    $PriceVAT   = (double) $this->Object->multiprices_tva_tx[$PriceLevel];
+                    $PriceType  = $this->object->multiprices_base_type[$PriceLevel];
+                    $PriceHT    = (double) $this->object->multiprices[$PriceLevel];
+                    $PriceTTC   = (double) $this->object->multiprices_ttc[$PriceLevel];
+                    $PriceVAT   = (double) $this->object->multiprices_tva_tx[$PriceLevel];
                 } else {
-                    $PriceType  = $this->Object->price_base_type;
-                    $PriceHT    = (double) $this->Object->price;
-                    $PriceTTC   = (double) $this->Object->price_ttc;
-                    $PriceVAT   = (double) $this->Object->tva_tx;
+                    $PriceType  = $this->object->price_base_type;
+                    $PriceHT    = (double) $this->object->price;
+                    $PriceTTC   = (double) $this->object->price_ttc;
+                    $PriceVAT   = (double) $this->object->tva_tx;
                 }
 
                 if ($PriceType === 'TTC') {
-                    $this->Out[$FieldName] = self::prices()->Encode(
+                    $this->out[$FieldName] = self::prices()->Encode(
                         null,
                         $PriceVAT,
                         $PriceTTC,
                         $conf->global->MAIN_MONNAIE
                     );
                 } else {
-                    $this->Out[$FieldName] = self::prices()->Encode(
+                    $this->out[$FieldName] = self::prices()->Encode(
                         $PriceHT,
                         $PriceVAT,
                         null,
@@ -196,16 +196,16 @@ trait MainTrait
                 break;
 
             case 'cost_price':
-                    $PriceHT    = (double) $this->Object->cost_price;
-                    $this->Out[$FieldName] = self::prices()
-                            ->Encode($PriceHT, (double)$this->Object->tva_tx, null, $conf->global->MAIN_MONNAIE);
+                    $PriceHT    = (double) $this->object->cost_price;
+                    $this->out[$FieldName] = self::prices()
+                            ->Encode($PriceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
                 break;
 
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -227,45 +227,45 @@ trait MainTrait
             case 'weight':
                 if ((string)$Data !== (string) $this->convertWeight(
                         
-                    $this->Object->weight,
-                    $this->Object->weight_units
+                    $this->object->weight,
+                    $this->object->weight_units
                 )) {
                     $nomalized                      =   $this->normalizeWeight($Data);
-                    $this->Object->weight           =   $nomalized->weight;
-                    $this->Object->weight_units     =   $nomalized->weight_units;
+                    $this->object->weight           =   $nomalized->weight;
+                    $this->object->weight_units     =   $nomalized->weight_units;
                     $this->needUpdate();
                 }
                 break;
             case 'length':
                 if ((string)$Data !== (string) $this->convertLength(
-                    $this->Object->length,
-                    $this->Object->length_units
+                    $this->object->length,
+                    $this->object->length_units
                 )) {
                     $nomalized                      =   $this->normalizeLength($Data);
-                    $this->Object->length           =   $nomalized->length;
-                    $this->Object->length_units     =   $nomalized->length_units;
+                    $this->object->length           =   $nomalized->length;
+                    $this->object->length_units     =   $nomalized->length_units;
                     $this->needUpdate();
                 }
                 break;
             case 'surface':
                 if ((string)$Data !== (string) $this->convertSurface(
-                    $this->Object->surface,
-                    $this->Object->surface_units
+                    $this->object->surface,
+                    $this->object->surface_units
                 )) {
                     $nomalized                      =   $this->normalizeSurface($Data);
-                    $this->Object->surface          =   $nomalized->surface;
-                    $this->Object->surface_units    =   $nomalized->surface_units;
+                    $this->object->surface          =   $nomalized->surface;
+                    $this->object->surface_units    =   $nomalized->surface_units;
                     $this->needUpdate();
                 }
                 break;
             case 'volume':
                 if ((string)$Data !== (string) $this->convertVolume(
-                    $this->Object->volume,
-                    $this->Object->volume_units
+                    $this->object->volume,
+                    $this->object->volume_units
                 )) {
                     $nomalized                      =   $this->normalizeVolume($Data);
-                    $this->Object->volume           =   $nomalized->volume;
-                    $this->Object->volume_units     =   $nomalized->volume_units;
+                    $this->object->volume           =   $nomalized->volume;
+                    $this->object->volume_units     =   $nomalized->volume_units;
                     $this->needUpdate();
                 }
                 break;
@@ -273,7 +273,7 @@ trait MainTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -302,7 +302,7 @@ trait MainTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -319,7 +319,7 @@ trait MainTrait
         $this->getMainPriceFields(0, "price");
         //====================================================================//
         // Compare Prices
-        if (self::prices()->Compare($this->Out["price"], $NewPrice)) {
+        if (self::prices()->Compare($this->out["price"], $NewPrice)) {
             return true;
         }
                         
@@ -352,12 +352,12 @@ trait MainTrait
         //====================================================================//
         // For compatibility with previous versions => V3.5.0 or Above
         if (Splash::local()->dolVersionCmp("3.5.0") >= 0) {
-            $Result = $this->Object->updatePrice($Price, $PriceBase, $user, $NewPrice["vat"], '', $PriceLevel);
+            $Result = $this->object->updatePrice($Price, $PriceBase, $user, $NewPrice["vat"], '', $PriceLevel);
         //====================================================================//
         // For compatibility with previous versions => Below V3.5.0
         } else {
-            $Result = $this->Object->updatePrice(
-                $this->Object->id,
+            $Result = $this->object->updatePrice(
+                $this->object->id,
                 $Price,
                 $PriceBase,
                 $user,

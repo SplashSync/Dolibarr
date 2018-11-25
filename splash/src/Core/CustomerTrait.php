@@ -131,14 +131,14 @@ trait CustomerTrait
             //====================================================================//
             // ThirdParty Id
             case 'socid':
-                $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->$FieldName);
+                $this->out[$FieldName] = self::objects()->Encode("ThirdParty", $this->object->$FieldName);
                 break;
             
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
         
         if ($FieldName != "socid") {
             return;
@@ -146,9 +146,9 @@ trait CustomerTrait
         
         //====================================================================//
         // Contact ThirdParty Id
-        $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->$FieldName);
+        $this->out[$FieldName] = self::objects()->Encode("ThirdParty", $this->object->$FieldName);
 
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -173,7 +173,7 @@ trait CustomerTrait
                     $this->setSimple($FieldName, self::objects()->Id($Data));
                     break;
                 }
-                $this->setSimple($FieldName, $this->getGuestCustomer($this->In));
+                $this->setSimple($FieldName, $this->getGuestCustomer($this->in));
                 break;
 
             //====================================================================//
@@ -182,14 +182,14 @@ trait CustomerTrait
                 if (!$this->isAllowedGuest() || !$this->isAllowedEmailDetection()) {
                     break;
                 }
-                $this->setSimple("socid", $this->getGuestCustomer($this->In));
+                $this->setSimple("socid", $this->getGuestCustomer($this->in));
                 break;
             
             default:
                 return;
         }
         
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**

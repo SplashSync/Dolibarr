@@ -38,7 +38,7 @@ trait ItemsTrait
         
         //====================================================================//
         // Pre-Setup of Item
-        $Item->fk_commande = $this->Object->id;
+        $Item->fk_commande = $this->object->id;
         
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
@@ -57,15 +57,15 @@ trait ItemsTrait
         global $user;
         //====================================================================//
         // Force Order Status To Draft
-        $this->Object->statut         = 0;
-        $this->Object->brouillon      = 1;
+        $this->object->statut         = 0;
+        $this->object->brouillon      = 1;
         //====================================================================//
         // Prepare Args
         $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
         $Arg2 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : null;
         //====================================================================//
         // Perform Line Delete
-        if ($this->Object->deleteline($Arg1, $Arg2) <= 0) {
+        if ($this->object->deleteline($Arg1, $Arg2) <= 0) {
             return $this->catchDolibarrErrors();
         }
         return true;

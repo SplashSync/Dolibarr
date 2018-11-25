@@ -110,7 +110,7 @@ trait MetaTrait
                 break;
 
             case 'prospect':
-                $this->Object->prospect     =   $this->Object->client;
+                $this->object->prospect     =   $this->object->client;
                 $this->getSimpleBit('prospect', 1);
                 break;
 
@@ -118,7 +118,7 @@ trait MetaTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -153,6 +153,6 @@ trait MetaTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }

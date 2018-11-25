@@ -124,9 +124,7 @@ class Order extends AbstractObject
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
-        //====================================================================//
-        // Load Dolibarr Default Language
-        Splash::local()->loadDefaultLanguage();
+
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");

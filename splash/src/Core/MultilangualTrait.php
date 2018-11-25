@@ -85,20 +85,20 @@ trait MultilangualTrait
         
         //====================================================================//
         // Create This Translation if empty
-        if (!isset($this->Object->multilangs[$IsoCode])) {
-            $this->Object->multilangs[$IsoCode] = array();
+        if (!isset($this->object->multilangs[$IsoCode])) {
+            $this->object->multilangs[$IsoCode] = array();
         }
         //====================================================================//
         // Update Contents
         //====================================================================//
-        if ($this->Object->multilangs[$IsoCode][$FieldName] !== $Content) {
-            $this->Object->multilangs[$IsoCode][$FieldName] = $Content;
+        if ($this->object->multilangs[$IsoCode][$FieldName] !== $Content) {
+            $this->object->multilangs[$IsoCode][$FieldName] = $Content;
             $this->needUpdate();
         }
         //====================================================================//
         // Duplicate Contents to Default language if needed
-        if (($IsoCode == $langs->getDefaultLang()) && property_exists(get_class($this->Object), $FieldName)) {
-            $this->Object->$FieldName = $Content;
+        if (($IsoCode == $langs->getDefaultLang()) && property_exists(get_class($this->object), $FieldName)) {
+            $this->object->$FieldName = $Content;
             $this->needUpdate();
         }
     }
@@ -117,8 +117,8 @@ trait MultilangualTrait
         
         //====================================================================//
         // For Safety => Push First Value to Default Lang if Empty + Warning
-        if (property_exists(get_class($this->Object), $FieldName) && empty($this->Object->$FieldName)) {
-            $this->Object->$FieldName    =   array_shift($Data);
+        if (property_exists(get_class($this->object), $FieldName) && empty($this->object->$FieldName)) {
+            $this->object->$FieldName    =   array_shift($Data);
             Splash::log()->war(
                 "Value for default Dolibarr language is missing in received Multilangual Contents. "
                     . "Please check configuration of all your sites to use the same default Language. "
@@ -149,9 +149,9 @@ trait MultilangualTrait
         
         //====================================================================//
         // If Multilang Contents doesn't exists
-        if (empty($this->Object->multilangs)) {
-            $this->Out[$FieldName] = array(
-                        $langs->getDefaultLang() => trim($this->Object->$FieldName)
+        if (empty($this->object->multilangs)) {
+            $this->out[$FieldName] = array(
+                        $langs->getDefaultLang() => trim($this->object->$FieldName)
                     );
             return $this;
         }
@@ -160,11 +160,11 @@ trait MultilangualTrait
         
         //====================================================================//
         // Read Multilang contents
-        foreach ($this->Object->multilangs as $IsoCode => $Content) {
+        foreach ($this->object->multilangs as $IsoCode => $Content) {
             //====================================================================//
             // Give Priority to Default language
-            if (($IsoCode == $langs->getDefaultLang()) && property_exists(get_class($this->Object), $FieldName)) {
-                $Data[$IsoCode] = $this->Object->$FieldName;
+            if (($IsoCode == $langs->getDefaultLang()) && property_exists(get_class($this->object), $FieldName)) {
+                $Data[$IsoCode] = $this->object->$FieldName;
             //====================================================================//
             // Extract from Multilang Array
             } elseif (isset($Content[$FieldName])) {
@@ -172,7 +172,7 @@ trait MultilangualTrait
             }
         }
             
-        $this->Out[$FieldName] = $Data;
+        $this->out[$FieldName] = $Data;
         return $this;
     }
 }

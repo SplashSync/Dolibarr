@@ -82,7 +82,7 @@ trait CoreTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -103,7 +103,7 @@ trait CoreTrait
             // Direct Writtings
             case 'ref':
                 // Update Path of Object Documents In Database
-                $this->updateFilesPath("produit", $this->Object->ref, $Data);
+                $this->updateFilesPath("produit", $this->object->ref, $Data);
                 $this->setSimple($FieldName, $Data);
                 break;
             
@@ -111,12 +111,12 @@ trait CoreTrait
                 $this->setMultilang($FieldName, $Data);
                 //====================================================================//
                 // Duplicate Lable to Deprecated libelle variable
-                $this->Object->libelle = $this->Object->label;
+                $this->object->libelle = $this->object->label;
                 break;
                 
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }

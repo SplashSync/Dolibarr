@@ -39,7 +39,7 @@ trait ErrorParserTrait
         //====================================================================//
         // Use Current Parser Object
         if (is_null($Subject)) {
-            $Subject    = $this->Object;
+            $Subject    = $this->object;
         }
         
         return $this->catchSimpleErrors($Subject) & $this->catchArrayErrors($Subject);

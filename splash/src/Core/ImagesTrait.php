@@ -115,12 +115,12 @@ trait ImagesTrait
         
         //====================================================================//
         // Safety Check
-        if (!isset($this->Out)) {
-            $this->Out = array();
+        if (!isset($this->out)) {
+            $this->out = array();
         }
         //====================================================================//
         // Check if List field & Init List Array
-        $FieldId = self::lists()->InitOutput($this->Out, "images", $FieldName);
+        $FieldId = self::lists()->InitOutput($this->out, "images", $FieldName);
         if (!$FieldId) {
             return;
         }
@@ -132,21 +132,21 @@ trait ImagesTrait
         }
         //====================================================================//
         // Load Object Files Path
-        $Entity     =   $this->Object->entity ? $this->Object->entity : $conf->entity;
-        $Element    =   $this->Object->element;
+        $Entity     =   $this->object->entity ? $this->object->entity : $conf->entity;
+        $Element    =   $this->object->element;
         $this->DolFilesDir = $conf->$Element->multidir_output[$Entity];
 //      In Next Releases we Will Use this function but now it's not generic
-//        $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->Object, $this->Object->element);
-        $this->DolFilesDir.= '/'. dol_sanitizeFileName($this->Object->ref);
+//        $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->object, $this->object->element);
+        $this->DolFilesDir.= '/'. dol_sanitizeFileName($this->object->ref);
         $this->RelFilesDir = $this->ElementPath[$Element];
-        $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->Object->ref);
+        $this->RelFilesDir.= "/" . dol_sanitizeFileName($this->object->ref);
         
         //====================================================================//
         // Fetch Object Attached Images
         $this->getImagesArrayFromDir($FieldName);
 
-        if (isset($this->In[$Key])) {
-            unset($this->In[$Key]);
+        if (isset($this->in[$Key])) {
+            unset($this->in[$Key]);
         }
     }
         
@@ -195,15 +195,15 @@ trait ImagesTrait
             
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->Out, "images", $FieldName, $File["position"], $Image);
-            self::lists()->Insert($this->Out, "images", "cover", $File["position"], $File["cover"]);
-            self::lists()->Insert($this->Out, "images", "visible", $File["position"], true);
-            self::lists()->Insert($this->Out, "images", "position", $File["position"], $File["position"]);
+            self::lists()->Insert($this->out, "images", $FieldName, $File["position"], $Image);
+            self::lists()->Insert($this->out, "images", "cover", $File["position"], $File["cover"]);
+            self::lists()->Insert($this->out, "images", "visible", $File["position"], true);
+            self::lists()->Insert($this->out, "images", "position", $File["position"], $File["position"]);
         }
            
         //====================================================================//
         // Sort Image Array to Update Images Positions
-        ksort($this->Out["images"]);
+        ksort($this->out["images"]);
     }
 
     /**
@@ -260,8 +260,8 @@ trait ImagesTrait
         //====================================================================//
         // Fetch Object Attached Images
         $Filters    =   [
-                "entity"    =>  $this->Object->entity,
-                "filepath"  =>  ( $this->ElementPath[$this->Object->element] . "/" . $this->Object->ref)
+                "entity"    =>  $this->object->entity,
+                "filepath"  =>  ( $this->ElementPath[$this->object->element] . "/" . $this->object->ref)
             ];
         $EcmFiles->fetchAll(null, null, 0, 0, $Filters);
         $this->catchDolibarrErrors();
@@ -289,7 +289,7 @@ trait ImagesTrait
 
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->Out, "images", $FieldName, $key, $Image);
+            self::lists()->Insert($this->out, "images", $FieldName, $key, $Image);
         }
     }
     
@@ -347,7 +347,7 @@ trait ImagesTrait
         $this->deleteRemainingImages();
 
 
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 
     /**
@@ -431,7 +431,7 @@ trait ImagesTrait
     {
         global $db, $user;
         
-        foreach ($this->Out["images"] as $Key => $Image) {
+        foreach ($this->out["images"] as $Key => $Image) {
             $EcmImage       =   new EcmFiles($db);
             $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $Image["image"]["filename"]);
             //====================================================================//
@@ -443,7 +443,7 @@ trait ImagesTrait
             //====================================================================//
             // Delete Object From Disk
             Splash::file()->DeleteFile($this->DolFilesDir . "/" . $Image["image"]["filename"], $Image["image"]["md5"]);
-            unset($this->Out["images"][$Key]);
+            unset($this->out["images"][$Key]);
         }
     }
     
@@ -457,11 +457,11 @@ trait ImagesTrait
      */
     private function identifyImage(&$EcmImage, $ImageData)
     {
-        foreach ($this->Out["images"] as $Key => $CurrentImage) {
+        foreach ($this->out["images"] as $Key => $CurrentImage) {
             if (( $CurrentImage["image"]["md5"] === $ImageData["md5"] )
                     && ($CurrentImage["image"]["filename"] === $ImageData["filename"])) {
                 $EcmImage->fetch(null, null, $this->RelFilesDir . "/" . $CurrentImage["image"]["filename"]);
-                unset($this->Out["images"][$Key]);
+                unset($this->out["images"][$Key]);
                 break;
             }
         }
@@ -489,7 +489,7 @@ trait ImagesTrait
             $EcmImage->filename     =   $ImageData["filename"];
             $EcmImage->fullpath_orig=   $EcmImage->filepath;
             $EcmImage->fk_user_c    =   $user->rowid;
-            $EcmImage->entity       =   $this->Object->entity ? $this->Object->entity : $conf->entity;
+            $EcmImage->entity       =   $this->object->entity ? $this->object->entity : $conf->entity;
             $EcmImage->gen_or_uploaded=   "uploaded";
             $this->imgUpdated   =   true;
         }
@@ -544,7 +544,7 @@ trait ImagesTrait
         
         //====================================================================//
         // Update Object Images Thumbs
-        $this->Object->addThumbs($this->DolFilesDir . "/" . $EcmImage->filename);
+        $this->object->addThumbs($this->DolFilesDir . "/" . $EcmImage->filename);
         
         return true;
     }

@@ -148,7 +148,7 @@ trait PaymentsTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $FieldId = self::lists()->InitOutput($this->Out, "payments", $FieldName);
+        $FieldId = self::lists()->InitOutput($this->out, "payments", $FieldName);
         if (!$FieldId) {
             return;
         }
@@ -183,9 +183,9 @@ trait PaymentsTrait
             }
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->Out, "payments", $FieldName, $key, $Value);
+            self::lists()->Insert($this->out, "payments", $FieldName, $key, $Value);
         }
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -230,7 +230,7 @@ trait PaymentsTrait
             $Payment->delete();
         }
         
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -378,7 +378,7 @@ trait PaymentsTrait
         $Payment = new \Paiement($db);
         //====================================================================//
         // Setup Payment Invoice Id
-        $Payment->facid       =   $this->Object->id;
+        $Payment->facid       =   $this->object->id;
         //====================================================================//
         // Setup Payment Date
         $Payment->datepaye    =   $LineData["date"];

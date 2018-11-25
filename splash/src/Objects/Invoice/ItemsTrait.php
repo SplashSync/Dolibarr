@@ -39,7 +39,7 @@ trait ItemsTrait
         
         //====================================================================//
         // Pre-Setup of Item
-        $Item->fk_facture = $this->Object->id;
+        $Item->fk_facture = $this->object->id;
         
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
@@ -65,11 +65,11 @@ trait ItemsTrait
         if (defined("SPLASH_DEBUG") && SPLASH_DEBUG) {
             //====================================================================//
             // Force Invoice Status To Draft
-            $this->Object->brouillon      = 1;
+            $this->object->brouillon      = 1;
         }
         //====================================================================//
         // Perform Line Delete
-        if ($this->Object->deleteline($FactureLigne->id) <= 0) {
+        if ($this->object->deleteline($FactureLigne->id) <= 0) {
             return $this->catchDolibarrErrors();
         }
         return true;

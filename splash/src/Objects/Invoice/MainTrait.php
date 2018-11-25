@@ -122,15 +122,15 @@ trait MainTrait
             //====================================================================//
             // Order Delivery Date
             case 'date_lim_reglement':
-                $date   =   $this->Object->date_lim_reglement;
-                $this->Out[$FieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
+                $date   =   $this->object->date_lim_reglement;
+                $this->out[$FieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
                 break;
 
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -159,7 +159,7 @@ trait MainTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -180,23 +180,23 @@ trait MainTrait
             //====================================================================//
 
             case 'isDraft':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 0 )    ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 0 )    ?   true:false;
                 break;
             case 'isCanceled':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 3 )   ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 3 )   ?   true:false;
                 break;
             case 'isValidated':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 1 )    ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 1 )    ?   true:false;
                 break;
             case 'isPaid':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 2 )    ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 2 )    ?   true:false;
                 break;
 
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -217,16 +217,16 @@ trait MainTrait
             //====================================================================//
             // Order Official Date
             case 'date_livraison':
-                if (dol_print_date($this->Object->$FieldName, 'standard') === $Data) {
+                if (dol_print_date($this->object->$FieldName, 'standard') === $Data) {
                     break;
                 }
-                $this->Object->set_date_livraison($user, $Data);
+                $this->object->set_date_livraison($user, $Data);
                 break;
                 
             //====================================================================//
             // Invoice Payment Due Date
             case 'date_lim_reglement':
-                if (dol_print_date($this->Object->$FieldName, 'standard') === $Data) {
+                if (dol_print_date($this->object->$FieldName, 'standard') === $Data) {
                     break;
                 }
                 $this->setSimple($FieldName, $Data);
@@ -242,7 +242,7 @@ trait MainTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -259,27 +259,27 @@ trait MainTrait
         
         //====================================================================//
         // If Status Is Not Validated => Cannot Update This Flag
-        if (( $Data == $this->Object->paye ) || ( $this->Object->statut < 1 )) {
+        if (( $Data == $this->object->paye ) || ( $this->object->statut < 1 )) {
             return true;
         }
         
         if ($Data) {
             //====================================================================//
             // Set Paid using Dolibarr Function
-            if (($this->Object->statut == 1) && ( $this->Object->set_paid($user) != 1 )) {
+            if (($this->object->statut == 1) && ( $this->object->set_paid($user) != 1 )) {
                 return $this->catchDolibarrErrors();
             }
         } else {
             //====================================================================//
             // Set UnPaid using Dolibarr Function
-            if (($this->Object->statut == 2) && ( $this->Object->set_unpaid($user) != 1 )) {
+            if (($this->object->statut == 2) && ( $this->object->set_unpaid($user) != 1 )) {
                 return $this->catchDolibarrErrors();
             }
         }
        
         //====================================================================//
         // Setup Current Object not to Overite changes with Update
-        $this->Object->paye     = ( $Data ? 1 : 0 );
+        $this->object->paye     = ( $Data ? 1 : 0 );
         
         return true;
     }

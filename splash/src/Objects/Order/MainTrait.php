@@ -133,8 +133,8 @@ trait MainTrait
             //====================================================================//
             // Order Delivery Date
             case 'date_livraison':
-                $date_livraison   =  $this->Object->date_livraison;
-                $this->Out[$FieldName] = !empty($date_livraison)?dol_print_date($date_livraison, '%Y-%m-%d'):null;
+                $date_livraison   =  $this->object->date_livraison;
+                $this->out[$FieldName] = !empty($date_livraison)?dol_print_date($date_livraison, '%Y-%m-%d'):null;
                 break;
             
             //====================================================================//
@@ -148,7 +148,7 @@ trait MainTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -177,7 +177,7 @@ trait MainTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -198,23 +198,23 @@ trait MainTrait
             //====================================================================//
 
             case 'isdraft':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 0 )    ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 0 )    ?   true:false;
                 break;
             case 'iscanceled':
-                $this->Out[$FieldName]  = ( $this->Object->statut == -1 )   ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == -1 )   ?   true:false;
                 break;
             case 'isvalidated':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 1 )    ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 1 )    ?   true:false;
                 break;
             case 'isclosed':
-                $this->Out[$FieldName]  = ( $this->Object->statut == 3 )    ?   true:false;
+                $this->out[$FieldName]  = ( $this->object->statut == 3 )    ?   true:false;
                 break;
 
             default:
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -235,10 +235,10 @@ trait MainTrait
             //====================================================================//
             // Order Official Date
             case 'date_livraison':
-                if (dol_print_date($this->Object->$FieldName, 'standard') === $Data) {
+                if (dol_print_date($this->object->$FieldName, 'standard') === $Data) {
                     break;
                 }
-                $this->Object->set_date_livraison($user, $Data);
+                $this->object->set_date_livraison($user, $Data);
                 $this->needUpdate();
                 break;
                
@@ -246,7 +246,7 @@ trait MainTrait
             // ORDER INVOICED FLAG
             //====================================================================//
             case 'facturee':
-                if ($this->Object->facturee == $Data) {
+                if ($this->object->facturee == $Data) {
                     break;
                 }
                 $this->updateBilled = $Data;
@@ -258,7 +258,7 @@ trait MainTrait
         }
         
         
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -278,15 +278,15 @@ trait MainTrait
             return;
         }
         // Not Possible
-        if ($this->Object->statut <= \Commande::STATUS_DRAFT) {
+        if ($this->object->statut <= \Commande::STATUS_DRAFT) {
             return;
         }
         
         // Update
         if ($this->updateBilled) {
-            $this->Object->classifyBilled($user);
+            $this->object->classifyBilled($user);
         } else {
-            $this->Object->classifyUnBilled();
+            $this->object->classifyUnBilled();
         }
         unset($this->updateBilled);
         $this->catchDolibarrErrors();

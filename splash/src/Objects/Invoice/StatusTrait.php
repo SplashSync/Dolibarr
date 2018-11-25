@@ -61,19 +61,19 @@ trait StatusTrait
             return;
         }
         
-        if ($this->Object->statut == 0) {
-            $this->Out[$FieldName]  = "PaymentDraft";
-        } elseif ($this->Object->statut == 1) {
-            $this->Out[$FieldName]  = "PaymentDue";
-        } elseif ($this->Object->statut == 2) {
-            $this->Out[$FieldName]  = "PaymentComplete";
-        } elseif ($this->Object->statut == 3) {
-            $this->Out[$FieldName]  = "PaymentCanceled";
+        if ($this->object->statut == 0) {
+            $this->out[$FieldName]  = "PaymentDraft";
+        } elseif ($this->object->statut == 1) {
+            $this->out[$FieldName]  = "PaymentDue";
+        } elseif ($this->object->statut == 2) {
+            $this->out[$FieldName]  = "PaymentComplete";
+        } elseif ($this->object->statut == 3) {
+            $this->out[$FieldName]  = "PaymentCanceled";
         } else {
-            $this->Out[$FieldName]  = "Unknown";
+            $this->out[$FieldName]  = "Unknown";
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -95,11 +95,11 @@ trait StatusTrait
         if ($FieldName != 'status') {
             return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
 
         //====================================================================//
         // Safety Check
-        if (empty($this->Object->id)) {
+        if (empty($this->object->id)) {
             return false;
         }
         //====================================================================//
@@ -115,7 +115,7 @@ trait StatusTrait
                 );
             }
         }
-        $InitialStatut  =   $this->Object->statut;
+        $InitialStatut  =   $this->object->statut;
         switch ($Data) {
             //====================================================================//
             // Status Draft
@@ -124,16 +124,16 @@ trait StatusTrait
             case "PaymentDraft":
                 //====================================================================//
                 // Whatever => Set Draft
-                if (( $this->Object->statut != 0 )
-                        && ( $this->Object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
+                if (( $this->object->statut != 0 )
+                        && ( $this->object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
                     return Splash::log()->err(
                         "ErrLocalTpl",
                         __CLASS__,
                         "Set Draft",
-                        $langs->trans($this->Object->error)
+                        $langs->trans($this->object->error)
                     );
                 }
-                $this->Object->statut = \Facture::STATUS_DRAFT;
+                $this->object->statut = \Facture::STATUS_DRAFT;
                 break;
             //====================================================================//
             // Status Validated
@@ -143,24 +143,24 @@ trait StatusTrait
             case "PaymentPastDue":
                 //====================================================================//
                 // If Already Paid => Set Draft
-                if (( $this->Object->statut == 2 )
-                        && ( $this->Object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
+                if (( $this->object->statut == 2 )
+                        && ( $this->object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
                     return $this->catchDolibarrErrors();
                 }
                 //====================================================================//
                 // If Already Canceled => Set Draft
-                if (( $this->Object->statut == 3 )
-                        && ( $this->Object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
+                if (( $this->object->statut == 3 )
+                        && ( $this->object->set_draft($user, $conf->global->SPLASH_STOCK) != 1 )) {
                     return $this->catchDolibarrErrors();
                 }
                 //====================================================================//
                 // If Not Valdidated => Set Validated
-                if (( $this->Object->statut != 1 )
-                        && ( $this->Object->validate($user, "", $conf->global->SPLASH_STOCK) != 1 )) {
+                if (( $this->object->statut != 1 )
+                        && ( $this->object->validate($user, "", $conf->global->SPLASH_STOCK) != 1 )) {
                     return $this->catchDolibarrErrors();
                 }
-                $this->Object->paye = 0;
-                $this->Object->statut = \Facture::STATUS_VALIDATED;
+                $this->object->paye = 0;
+                $this->object->statut = \Facture::STATUS_VALIDATED;
                 break;
             //====================================================================//
             // Status Paid
@@ -168,17 +168,17 @@ trait StatusTrait
             case "PaymentComplete":
                 //====================================================================//
                 // If Draft => Set Validated
-                if (( $this->Object->statut == 0 )
-                        && ( $this->Object->validate($user, "", $conf->global->SPLASH_STOCK) != 1 )) {
+                if (( $this->object->statut == 0 )
+                        && ( $this->object->validate($user, "", $conf->global->SPLASH_STOCK) != 1 )) {
                     return $this->catchDolibarrErrors();
                 }
                 //====================================================================//
                 // If Validated => Set Paid
-                if (( $this->Object->statut == 1 ) && ( $this->Object->set_paid($user) != 1 )) {
+                if (( $this->object->statut == 1 ) && ( $this->object->set_paid($user) != 1 )) {
                     return $this->catchDolibarrErrors();
                 }
-                $this->Object->paye = 1;
-                $this->Object->statut = \Facture::STATUS_CLOSED;
+                $this->object->paye = 1;
+                $this->object->statut = \Facture::STATUS_CLOSED;
                 break;
             //====================================================================//
             // Status Canceled
@@ -186,14 +186,14 @@ trait StatusTrait
             case "PaymentCanceled":
                 //====================================================================//
                 // Whatever => Set Canceled
-                if (( $this->Object->statut != 3 ) && ( $this->Object->set_canceled($user) != 1 )) {
+                if (( $this->object->statut != 3 ) && ( $this->object->set_canceled($user) != 1 )) {
                     return $this->catchDolibarrErrors();
                 }
-                $this->Object->paye = 0;
-                $this->Object->statut = \Facture::STATUS_ABANDONED;
+                $this->object->paye = 0;
+                $this->object->statut = \Facture::STATUS_ABANDONED;
                 break;
         }
-        if ($InitialStatut != $this->Object->statut) {
+        if ($InitialStatut != $this->object->statut) {
             $this->needUpdate();
         }
     }

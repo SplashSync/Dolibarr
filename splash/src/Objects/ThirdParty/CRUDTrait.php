@@ -78,7 +78,7 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Customer Name is given
-        if (empty($this->In["name"])) {
+        if (empty($this->in["name"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "name");
         }
         //====================================================================//
@@ -89,25 +89,25 @@ trait CRUDTrait
         }
         //====================================================================//
         // Init Object
-        $this->Object = new \Societe($db);
+        $this->object = new \Societe($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("name", $this->In["name"]);
+        $this->setSimple("name", $this->in["name"]);
         //====================================================================//
         // Dolibarr infos
-        $this->Object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
-        $this->Object->prospect           = 0;        // 0=no prospect, 1=prospect
-        $this->Object->fournisseur        = 0;        // 0=no supplier, 1=supplier
-        $this->Object->code_client        = -1;       // If not erased, will be created by system
-        $this->Object->code_fournisseur   = -1;       // If not erased, will be created by system
+        $this->object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
+        $this->object->prospect           = 0;        // 0=no prospect, 1=prospect
+        $this->object->fournisseur        = 0;        // 0=no supplier, 1=supplier
+        $this->object->code_client        = -1;       // If not erased, will be created by system
+        $this->object->code_fournisseur   = -1;       // If not erased, will be created by system
         //====================================================================//
         // Create Object In Database
-        if ($this->Object->create($user) <= 0) {
+        if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdParty. ");
         }
         
-        return $this->Object;
+        return $this->object;
     }
     
     /**
@@ -127,7 +127,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$Needed && !$this->isToUpdate()) {
-            return (int) $this->Object->id;
+            return (int) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -137,21 +137,21 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object
-        if ($this->Object->update($this->Object->id, $user, 1, 1) <= 0) {
+        if ($this->object->update($this->object->id, $user, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update ThirdParty (" . $this->Object->id . ")"
+                " Unable to Update ThirdParty (" . $this->object->id . ")"
             );
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->Object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->Object->id;
+        return (int) $this->object->id;
     }
     
     /**

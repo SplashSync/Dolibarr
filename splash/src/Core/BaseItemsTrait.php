@@ -125,26 +125,26 @@ trait BaseItemsTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $FieldId = self::lists()->InitOutput($this->Out, "lines", $FieldName);
+        $FieldId = self::lists()->InitOutput($this->out, "lines", $FieldName);
         if (!$FieldId) {
             return;
         }
         //====================================================================//
         // Verify List is Not Empty
-        if (!is_array($this->Object->lines)) {
+        if (!is_array($this->object->lines)) {
             return true;
         }
         //====================================================================//
         // Fill List with Data
-        foreach ($this->Object->lines as $key => $OrderLine) {
+        foreach ($this->object->lines as $key => $OrderLine) {
             //====================================================================//
             // Read Data from Line Item
             $Value  =   $this->getItemField($OrderLine, $FieldName);
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->Out, "lines", $FieldName, $key, $Value);
+            self::lists()->Insert($this->out, "lines", $FieldName, $key, $Value);
         }
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -220,24 +220,24 @@ trait BaseItemsTrait
             $this->ItemUpdate = false;
             //====================================================================//
             // Read Next Item Line
-            $this->CurrentItem  =   array_shift($this->Object->lines);
+            $this->CurrentItem  =   array_shift($this->object->lines);
             //====================================================================//
             // Update Item Line
             $this->setItem($ItemData);
         }
         //====================================================================//
         // Delete Remaining Lines
-        foreach ($this->Object->lines as $LineItem) {
+        foreach ($this->object->lines as $LineItem) {
             $this->deleteItem($LineItem);
         }
         //====================================================================//
         // Update Order/Invoice Total Prices
-        $this->Object->update_price();
+        $this->object->update_price();
         //====================================================================//
         // Reload Order/Invoice Lines
-        $this->Object->fetch_lines();
+        $this->object->fetch_lines();
         
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -526,7 +526,7 @@ trait BaseItemsTrait
         //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne a partir de
         // qty, pu, remise_percent et txtva
-        $localtaxes_type    =   getLocalTaxesFromRate($VatRateOrId, 0, $this->Object->socid, $mysoc, $UseId);
+        $localtaxes_type    =   getLocalTaxesFromRate($VatRateOrId, 0, $this->object->socid, $mysoc, $UseId);
         
         include_once DOL_DOCUMENT_ROOT.'/core/lib/price.lib.php';
         

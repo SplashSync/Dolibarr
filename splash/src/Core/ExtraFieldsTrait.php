@@ -115,32 +115,32 @@ trait ExtraFieldsTrait
             case SPL_T_PHONE:
             case SPL_T_URL:
             case SPL_T_EMAIL:
-                $this->Out[$FieldName]  = $FieldData;
+                $this->out[$FieldName]  = $FieldData;
                 break;
             
             case SPL_T_DATE:
             case SPL_T_DATETIME:
                 if (!is_numeric($FieldData)) {
-                    $this->Out[$FieldName]  = $FieldData;
+                    $this->out[$FieldName]  = $FieldData;
                 } else {
-                    $this->Out[$FieldName]  = dol_print_date($FieldData, 'dayrfc');
+                    $this->out[$FieldName]  = dol_print_date($FieldData, 'dayrfc');
                 }
                 break;
             
             case SPL_T_INT:
-                $this->Out[$FieldName]  = (int) $FieldData;
+                $this->out[$FieldName]  = (int) $FieldData;
                 break;
                 
             case SPL_T_DOUBLE:
-                $this->Out[$FieldName]  = (double) $FieldData;
+                $this->out[$FieldName]  = (double) $FieldData;
                 break;
                 
             case SPL_T_BOOL:
-                $this->Out[$FieldName]  = (bool) $FieldData;
+                $this->out[$FieldName]  = (bool) $FieldData;
                 break;
          
             case SPL_T_PRICE:
-                $this->Out[$FieldName]  = PricesTrait::prices()->Encode(
+                $this->out[$FieldName]  = PricesTrait::prices()->Encode(
                     (double) $FieldData,
                     (double) 0,
                     null,
@@ -152,7 +152,7 @@ trait ExtraFieldsTrait
                 return;
         }
 
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
         
     //====================================================================//
@@ -193,7 +193,7 @@ trait ExtraFieldsTrait
             case SPL_T_DOUBLE:
             case SPL_T_BOOL:
                 if ($CurrentData != $Data) {
-                    $this->Object->array_options[$FieldName] = $Data;
+                    $this->object->array_options[$FieldName] = $Data;
                     $this->needUpdate();
                 }
                 break;
@@ -201,7 +201,7 @@ trait ExtraFieldsTrait
             case SPL_T_DATETIME:
                 if ($CurrentData != $Data) {
                     date_default_timezone_set('UTC');
-                    $this->Object->array_options[$FieldName] = $Data;
+                    $this->object->array_options[$FieldName] = $Data;
                     $this->needUpdate();
                 }
                 break;
@@ -209,7 +209,7 @@ trait ExtraFieldsTrait
             case SPL_T_PRICE:
                 $PriceHT  = PricesTrait::prices()->TaxExcluded($Data);
                 if ($CurrentData != $PriceHT) {
-                    $this->Object->array_options[$FieldName] = $PriceHT;
+                    $this->object->array_options[$FieldName] = $PriceHT;
                     $this->needUpdate();
                 }
                 break;
@@ -218,7 +218,7 @@ trait ExtraFieldsTrait
                 return;
         }
         
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
        
     /**
@@ -278,8 +278,8 @@ trait ExtraFieldsTrait
     {
         //====================================================================//
         // Extract Field Data
-        if (isset($this->Object->array_options) && array_key_exists($FieldName, $this->Object->array_options)) {
-            return $this->Object->array_options[$FieldName];
+        if (isset($this->object->array_options) && array_key_exists($FieldName, $this->object->array_options)) {
+            return $this->object->array_options[$FieldName];
         }
         return null;
     }

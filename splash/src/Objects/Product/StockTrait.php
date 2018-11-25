@@ -98,7 +98,7 @@ trait StockTrait
             //====================================================================//
             // Stock Alerte Flag
             case 'stock_alert_flag':
-                $this->Out[$FieldName] = ( $this->Object->stock_reel < $this->Object->seuil_stock_alerte );
+                $this->out[$FieldName] = ( $this->object->stock_reel < $this->object->seuil_stock_alerte );
                 break;
             
             //====================================================================//
@@ -114,7 +114,7 @@ trait StockTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -148,7 +148,7 @@ trait StockTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
     
     /**
@@ -164,12 +164,12 @@ trait StockTrait
 
         //====================================================================//
         // Compare Current Product Stock with new Value
-        if ($this->Object->stock_reel == $NewStock) {
+        if ($this->object->stock_reel == $NewStock) {
             return true;
         }
         //====================================================================//
         // Update Product Stock
-        $delta  =   $this->Object->stock_reel - $NewStock;
+        $delta  =   $this->object->stock_reel - $NewStock;
         //====================================================================//
         // Verify Default Product Stock is defined
         if (empty($conf->global->SPLASH_STOCK)) {
@@ -177,13 +177,13 @@ trait StockTrait
         }
         //====================================================================//
         // Update Product Stock
-        $Result = $this->Object->correct_stock(
+        $Result = $this->object->correct_stock(
             $user,                                      // Current User Object
             $conf->global->SPLASH_STOCK,                // Impacted Stock Id
             abs($delta),                                // Quantity to Move
             ($delta > 0)?1:0,                           // Direnction 0 = add, 1 = remove
             $langs->trans("Updated by Splash Module"),  // Operation Comment
-            $this->Object->price                        // Product Price for PMP
+            $this->object->price                        // Product Price for PMP
         );
         //====================================================================//
         // Check potential Errors

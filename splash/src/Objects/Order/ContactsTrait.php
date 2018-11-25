@@ -63,11 +63,11 @@ trait ContactsTrait
         switch ($FieldName) {
             case 'SHIPPING':
             case 'BILLING':
-                $ContactsArray   =  $this->Object->liste_contact(-1, 'external', 1, $FieldName);
+                $ContactsArray   =  $this->object->liste_contact(-1, 'external', 1, $FieldName);
                 if (!empty($ContactsArray)) {
-                    $this->Out[$FieldName] = self::objects()->Encode("Address", array_shift($ContactsArray));
+                    $this->out[$FieldName] = self::objects()->Encode("Address", array_shift($ContactsArray));
                 } else {
-                    $this->Out[$FieldName] = null;
+                    $this->out[$FieldName] = null;
                 }
                 break;
             
@@ -75,7 +75,7 @@ trait ContactsTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -93,7 +93,7 @@ trait ContactsTrait
             case 'BILLING':
                 //====================================================================//
                 // Load Current Contact
-                $ContactsArray   =  $this->Object->liste_contact(-1, 'external', 0, $FieldName);
+                $ContactsArray   =  $this->object->liste_contact(-1, 'external', 0, $FieldName);
                 $Current    =   empty($ContactsArray) ? null : array_shift($ContactsArray);
 
                 //====================================================================//
@@ -105,16 +105,16 @@ trait ContactsTrait
                 //====================================================================//
                 // Delete if Changed
                 if ($Current && ($Current["id"] != $Expected)) {
-                    $this->Object->delete_contact($Current["rowid"]);
+                    $this->object->delete_contact($Current["rowid"]);
                 }
                 //====================================================================//
                 // Add New Contact
-                $this->Object->add_contact($Expected, $FieldName, 'external');
+                $this->object->add_contact($Expected, $FieldName, 'external');
                 break;
             
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }

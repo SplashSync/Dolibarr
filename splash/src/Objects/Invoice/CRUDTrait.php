@@ -92,7 +92,7 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Order Date is given
-        if (empty($this->In["date"])) {
+        if (empty($this->in["date"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
         }
         //====================================================================//
@@ -103,20 +103,20 @@ trait CRUDTrait
         }
         //====================================================================//
         // Init Object
-        $this->Object = new Facture($db);
+        $this->object = new Facture($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $DateTime   =   new DateTime($this->In["date"]);
+        $DateTime   =   new DateTime($this->in["date"]);
         $this->setSimple('date', $DateTime->getTimestamp());
         $this->setSimple('date_commande', $DateTime->getTimestamp());
-        $this->doCustomerDetection($this->In);
+        $this->doCustomerDetection($this->in);
         $this->setSimple("statut", Facture::STATUS_DRAFT);
-        $this->Object->statut = Facture::STATUS_DRAFT;
-        $this->Object->paye = 0;
+        $this->object->statut = Facture::STATUS_DRAFT;
+        $this->object->paye = 0;
         
         //====================================================================//
         // Create Object In Database
-        if ($this->Object->create($user) <= 0) {
+        if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",
@@ -126,7 +126,7 @@ trait CRUDTrait
             );
         }
         
-        return $this->Object;
+        return $this->object;
     }
     
     /**
@@ -143,7 +143,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$Needed) {
-            return (int) $this->Object->id;
+            return (int) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -153,21 +153,21 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object
-        if ($this->Object->update($user)  <= 0) {
+        if ($this->object->update($user)  <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Customer Invoice (" . $this->Object->id . ")"
+                " Unable to Update Customer Invoice (" . $this->object->id . ")"
             ) ;
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->Object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->Object->id;
+        return (int) $this->object->id;
     }
     
     /**

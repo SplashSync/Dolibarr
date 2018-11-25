@@ -42,8 +42,8 @@ trait DirectAccessTrait
         
         //====================================================================//
         // Parameters Overide
-        $_Table  =   is_null($Table) ?  $this->Object->table_element : $Table;
-        $_RowId  =   is_null($RowId) ?  $this->Object->id : $RowId;
+        $_Table  =   is_null($Table) ?  $this->object->table_element : $Table;
+        $_RowId  =   is_null($RowId) ?  $this->object->id : $RowId;
         //====================================================================//
         // Safety Check
         if (empty($_Table) || empty($_RowId)) {

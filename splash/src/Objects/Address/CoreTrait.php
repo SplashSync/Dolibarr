@@ -84,7 +84,7 @@ trait CoreTrait
             //====================================================================//
             // Contact ThirdParty Id
             case 'socid':
-                $this->Out[$FieldName] = self::objects()->Encode("ThirdParty", $this->Object->socid);
+                $this->out[$FieldName] = self::objects()->Encode("ThirdParty", $this->object->socid);
                 break;
             
             //====================================================================//
@@ -99,7 +99,7 @@ trait CoreTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
 
     /**
@@ -131,7 +131,7 @@ trait CoreTrait
                 break;
                 
             case 'ref_ext':
-                if ($this->Object->$FieldName != $Data) {
+                if ($this->object->$FieldName != $Data) {
                     $this->setDatabaseField("ref_ext", $Data);
                 }
                 break;
@@ -139,6 +139,6 @@ trait CoreTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }

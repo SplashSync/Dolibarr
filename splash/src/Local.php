@@ -33,17 +33,15 @@ use Splash\Core\SplashCore      as Splash;
 use User;
 use ArrayObject;
     
-use Splash\Local\Core\ExtraFieldsTrait;
 use Splash\Local\Core\MultiCompanyTrait;
+use Splash\Models\LocalClassInterface;
 
 /**
- *  \class      SplashLocal
- *  \brief      Local Core Management Class
+ * @abstract    Local Core Management Class
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class Local
+class Local implements LocalClassInterface
 {
-//    use ExtraFieldsTrait;
     use MultiCompanyTrait;
     
 //====================================================================//
@@ -137,7 +135,7 @@ class Local
 
 
         //====================================================================//
-        // When Library is called in both clinet & server mode
+        // When Library is called in both client & server mode
         //====================================================================//
 
         if (!defined("DOL_DOCUMENT_ROOT")) {
@@ -404,6 +402,28 @@ class Local
         }
     }
     
+    /**
+     *  @abstract       Return Local Server Test Parameters as Array
+     *
+     *      THIS FUNCTION IS OPTIONNAL - USE IT ONLY IF REQUIRED
+     *
+     *      This function called on each initialisation of module's tests sequences.
+     *      It's aim is to overide general Tests settings to be adjusted to local system.
+     *
+     *      Result must be an array including parameters as strings or array.
+     *
+     *  @see Splash\Tests\Tools\ObjectsCase::settings for objects tests settings
+     *
+     *  @return         array       $parameters
+     */
+    public function testParameters()
+    {
+        //====================================================================//
+        // Init Parameters Array
+        return array();
+        // CHANGE SOMETHING
+    }    
+    
 //====================================================================//
 // *******************************************************************//
 // Place Here Any SPECIFIC or COMMON Local Functions
@@ -411,33 +431,11 @@ class Local
 //====================================================================//
     
     /**
-     *      @abstract       Return lost of all active langues code
-     *
-     *      @return     array       $list           List Of Available Languages
-     *                              $list["name"]   Language Name
-     *                              $list["code"]   Language code (en_US, en_AU, fr_FR, ...)
-     */
-    public function langsList()
-    {
-        global $langs;
-        //====================================================================//
-        // Read Native Multilangs Descriptions
-        $Orginal = $langs->get_available_languages();
-        //====================================================================//
-        // Encode Language Code & Names
-        $OsWs_Langs = array();
-        foreach ($Orginal as $key => $lang) {
-            $OsWs_Langs[] =   array( "name" => $lang , "code" => $key);
-        }
-        return $OsWs_Langs;
-    }
-    
-    /**
      *      @abstract       Initiate Local Request User if not already defined
      *      @param          array       $cfg       Loacal Parameters Array
      *      @return         int                     0 if KO, >0 if OK
      */
-    public function loadLocalUser()
+    private function loadLocalUser()
     {
         global $conf,$db,$user;
         
@@ -483,7 +481,7 @@ class Local
      *      @param          array       $cfg       Loacal Parameters Array
      *      @return         int                     0 if KO, >0 if OK
      */
-    public function loadDefaultLanguage()
+    private function loadDefaultLanguage()
     {
         global $langs;
         //====================================================================//

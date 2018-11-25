@@ -193,7 +193,7 @@ trait MainTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -224,7 +224,7 @@ trait MainTrait
                 break;
             
             case 'state_code':
-                $StateId    =   $this->getStateByCode($Data, $this->Object->country_id);
+                $StateId    =   $this->getStateByCode($Data, $this->object->country_id);
                 $this->setSimple("state_id", $StateId);
                 break;
             
@@ -240,6 +240,6 @@ trait MainTrait
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }

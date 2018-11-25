@@ -68,12 +68,12 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Product Ref is given
-        if (empty($this->In["ref"])) {
+        if (empty($this->in["ref"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, $langs->trans("ProductRef"));
         }
         //====================================================================//
         // Check Product Label is given
-        if (empty($this->In["label"])) {
+        if (empty($this->in["label"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, $langs->trans("ProductLabel"));
         }
         //====================================================================//
@@ -85,17 +85,17 @@ trait CRUDTrait
         
         //====================================================================//
         // Init Object
-        $this->Object = new \Product($db);
+        $this->object = new \Product($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("ref", $this->In["ref"]);
-        $this->setMultilang("label", $this->In["label"]);
+        $this->setSimple("ref", $this->in["ref"]);
+        $this->setMultilang("label", $this->in["label"]);
         //====================================================================//
         // Required For Dolibarr Below 3.6
-        $this->Object->type        = 0;
+        $this->object->type        = 0;
         //====================================================================//
         // Required For Dolibarr BarCode Module
-        $this->Object->barcode     = -1;
+        $this->object->barcode     = -1;
         //====================================================================//
         // LOAD USER FROM DATABASE
         Splash::local()->LoadLocalUser();
@@ -104,12 +104,12 @@ trait CRUDTrait
         }
         //====================================================================//
         // Create Object In Database
-        if ($this->Object->create($user) <= 0) {
+        if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
         }
         
-        return $this->Object;
+        return $this->object;
     }
     
     /**
@@ -127,7 +127,7 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$Needed) {
             Splash::log()->deb("Product Update not Needed");
-            return (int) $this->Object->id;
+            return (int) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -137,21 +137,21 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Product Object
-        if ($this->Object->update($this->Object->id, $user) <= 0) {
+        if ($this->object->update($this->object->id, $user) <= 0) {
             $this->catchDolibarrErrors();
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Product (" . $this->Object->id . ")"
+                " Unable to Update Product (" . $this->object->id . ")"
             ) ;
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->Object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->Object->id;
+        return (int) $this->object->id;
     }
     
     /**

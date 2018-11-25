@@ -93,9 +93,7 @@ class Address extends AbstractObject
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
-        //====================================================================//
-        // Load Dolibarr Default Language
-        Splash::local()->loadDefaultLanguage();
+
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");

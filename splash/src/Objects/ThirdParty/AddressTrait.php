@@ -127,7 +127,7 @@ trait AddressTrait
                 return;
         }
         
-        unset($this->In[$Key]);
+        unset($this->in[$Key]);
     }
     
     /**
@@ -156,16 +156,16 @@ trait AddressTrait
             case 'state_code':
                 //====================================================================//
                 // If Country Also Changed => Update First
-                if (isset($this->In["country_code"])) {
-                    $this->setSimple("country_id", $this->getCountryByCode($this->In["country_code"]));
+                if (isset($this->in["country_code"])) {
+                    $this->setSimple("country_id", $this->getCountryByCode($this->in["country_code"]));
                 }
-                $StateId    =   $this->getStateByCode($Data, $this->Object->country_id);
+                $StateId    =   $this->getStateByCode($Data, $this->object->country_id);
                 $this->setSimple("state_id", $StateId);
                 break;
             
             default:
                 return;
         }
-        unset($this->In[$FieldName]);
+        unset($this->in[$FieldName]);
     }
 }
