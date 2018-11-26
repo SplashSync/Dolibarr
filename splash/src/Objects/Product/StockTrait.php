@@ -107,7 +107,7 @@ trait StockTrait
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
-                $this->getSimple($FieldName, "Object", 0);
+                $this->getSimple($FieldName, "object", 0);
                 break;
             
             default:
