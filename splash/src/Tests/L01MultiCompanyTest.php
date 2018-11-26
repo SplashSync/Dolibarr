@@ -259,7 +259,7 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         // Clean Objects Commited Array
-        Splash::$Commited = array();
+        Splash::$commited = array();
         
         return $this->fakeObjectData($Fields);
     }
