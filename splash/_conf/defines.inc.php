@@ -1,34 +1,21 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: main.lib.php 243 2013-06-02 16:05:41Z u58905340 $
- *  \version    $Revision: 243 $
- *  \date       $LastChangedDate$
- *  \ingroup    Splash Server Module For Dolibarr
- *  \brief      Main constant definitions
- *  \remarks
-*/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 //====================================================================//
 // Splash Module & Dependecies Autoloader
 dol_include_once("/splash/vendor/autoload.php");
-//require_once( dirname(dirname(__FILE__)) . ");
 
 //====================================================================//
 //  CONSTANTS DEFINITION
@@ -41,7 +28,7 @@ define("SPL_SHOW_DEV", 0);
 
 //====================================================================//
 // Module Version
-define("SPL_MOD_VERSION", '1.4.3');
+define("SPL_MOD_VERSION", '1.5.0-dev');
 define("SPL_MOD_ID", 9200);
 define("SPL_MOD_NAME", 'splash');
 define("SPL_MOD_CATEGORIE", 'technic');
@@ -49,15 +36,10 @@ define("SPL_MOD_PICTO", 'splash@splash');
 define("SPL_FULL_NAME", 'Splash Server Module for Dolibarr');
 
 //====================================================================//
-// Parameters
-
-
-//====================================================================//
 // Databases Names
 define('SPL_NODES', 'spl_nodes');
 define('SPL_LINKS', 'spl_links');
 define('SPL_LOG', 'spl_log');
-
 
 //====================================================================//
 // Standard Strings
@@ -78,7 +60,6 @@ define('SPL_UPDATE_URL', "http://www.dolistore.com");
 define('SPL_OK', 1);
 define('SPL_KO', 0);
 define('SPL_NOK', 0);
-
 
 //====================================================================//
 // Folders Definition for this Module
