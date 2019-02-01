@@ -37,7 +37,7 @@ class Product extends AbstractObject
     use PricesTrait;
     use ListsTrait;
     use ImagesTrait;
-
+ 
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\MultilangualTrait;
@@ -51,7 +51,7 @@ class Product extends AbstractObject
     use \Splash\Local\Objects\Product\ObjectsListTrait;
     use \Splash\Local\Objects\Product\CRUDTrait;
     use \Splash\Local\Objects\Product\CoreTrait;
-    use \Splash\Local\Objects\Product\DescriptionsTrait;
+    use \Splash\Local\Objects\Product\MultilangTrait;
     use \Splash\Local\Objects\Product\MainTrait;
     use \Splash\Local\Objects\Product\StockTrait;
     use \Splash\Local\Objects\Product\MetaTrait;

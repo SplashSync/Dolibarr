@@ -18,7 +18,7 @@
 namespace   Splash\Local\Objects\Product;
 
 /**
- * @abstract    Dolibarr Products MataData Fields
+ * Dolibarr Products MataData Fields
  */
 trait MetaTrait
 {

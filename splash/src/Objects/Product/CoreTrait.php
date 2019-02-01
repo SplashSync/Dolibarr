@@ -28,30 +28,54 @@ trait CoreTrait
     */
     protected function buildCoreFields()
     {
-
         global $conf, $langs;
+        $groupName  =   $langs->trans("Description");
 
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("ref")
-                ->Name($langs->trans("ProductRef"))
-                ->isListed()
-                ->MicroData("http://schema.org/Product", "model")
-                ->isLogged()
-                ->isRequired();
+            ->Identifier("ref")
+            ->Name($langs->trans("ProductRef"))
+            ->isListed()
+            ->MicroData("http://schema.org/Product", "model")
+            ->isLogged()
+            ->isRequired();
+        
+        //====================================================================//
+        // Name (Default Language)
+        $this->fieldsFactory()
+            ->Create(SPL_T_VARCHAR)
+            ->Identifier("label")
+            ->Name($langs->trans("ProductLabel"))
+            ->isListed()
+            ->isLogged()
+            ->Group($groupName)
+            ->addOption('language', $langs->getDefaultLang())                
+            ->MicroData("http://schema.org/Product", "name")
+            ->isRequired();
+        
+        //====================================================================//
+        // Description (Default Language)
+        $this->fieldsFactory()
+            ->Create(SPL_T_VARCHAR)
+            ->Identifier("description")
+            ->Name($langs->trans("Description"))
+            ->isListed()
+            ->isLogged()
+            ->Group($groupName)
+            ->addOption('language', $langs->getDefaultLang())                
+            ->MicroData("http://schema.org/Product", "description");
 
         //====================================================================//
-        // Name
-        $this->fieldsFactory()
-                ->Create($conf->global->MAIN_MULTILANGS ? SPL_T_MVARCHAR : SPL_T_VARCHAR)
-                ->Identifier("label")
-                ->Name($langs->trans("ProductLabel") . ($conf->global->MAIN_MULTILANGS ? ' (M)' : null))
-                ->isListed()
-                ->isLogged()
-                ->Group($langs->trans("Description"))
-                ->MicroData("http://schema.org/Product", "name")
-                ->isRequired();
+        // Note
+        $this->fieldsFactory()->create(SPL_T_TEXT)
+            ->Identifier("note")
+            ->Name($langs->trans("Note"))
+            ->Group($groupName)
+            ->addOption('language', $langs->getDefaultLang())                
+            ->MicroData("http://schema.org/Product", "privatenote");
+
+        
     }
 
 
@@ -75,7 +99,10 @@ trait CoreTrait
                 break;
             
             case 'label':
-                $this->getMultilang($FieldName);
+            case 'description':
+            case 'note':
+                $this->getSimple($FieldName);
+                
                 break;
             
             default:
@@ -95,7 +122,8 @@ trait CoreTrait
      */
     protected function setCoreFields($FieldName, $Data)
     {
-
+        global $langs;
+        
         //====================================================================//
         // WRITE Field
         switch ($FieldName) {
@@ -108,10 +136,10 @@ trait CoreTrait
                 break;
             
             case 'label':
-                $this->setMultilang($FieldName, $Data);
-                //====================================================================//
-                // Duplicate Lable to Deprecated libelle variable
-                $this->object->libelle = $this->object->label;
+            case 'description':
+            case 'note':
+                $this->setSimple($FieldName, $Data);
+                $this->setMultilangContent($FieldName, $langs->getDefaultLang(), $Data);
                 break;
                 
             default:
