@@ -150,13 +150,14 @@ class Local implements LocalClassInterface
             //====================================================================//
             // Splash Modules Constant Definition
             dol_include_once("/splash/_conf/defines.inc.php");
-            //====================================================================//
-            // Load Default Language
-            $this->loadDefaultLanguage();
             
             //====================================================================//
             // Load Default User
             $this->loadLocalUser();
+            
+            //====================================================================//
+            // Load Default Language
+            $this->loadDefaultLanguage();
             
             //====================================================================//
             // Manage MultiCompany
@@ -207,7 +208,6 @@ class Local implements LocalClassInterface
         return true;
     }
     
-
     private static function selfTestCore()
     {
         global $conf;
@@ -489,8 +489,8 @@ class Local implements LocalClassInterface
         //====================================================================//
         // Load Default Language
         //====================================================================//
-        if (!empty(Splash::configuration()->DefaultLanguage)) {
-            $langs->setDefaultLang(Splash::configuration()->DefaultLanguage);
+        if (!empty(self::getParameter("SPLASH_LANG"))) {
+            $langs->setDefaultLang(self::getParameter("SPLASH_LANG"));
         }
     }
     
