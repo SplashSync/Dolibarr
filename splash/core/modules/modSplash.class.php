@@ -142,6 +142,7 @@ class modSplash extends DolibarrModules
                 //====================================================================//
                 // Splash Locals Parameters
                 array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),
+                array('SPLASH_LANGS',   'chaine',   serialize(array()), 'Others Languages to use for Splash Server Transactions', 0),
                 array('SPLASH_USER',    'chaine',   '',  'Local User to use for Splash Server Transactions', 0),
                 array('SPLASH_STOCK',   'chaine',   '',  'Local Warhouse to use for Splash Server Transactions', 0),
                 array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),
