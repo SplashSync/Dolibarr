@@ -50,6 +50,7 @@ SPL_WsMethod        =   Protocole de WebService à Utiliser
 SPL_Local_Config    =   Paramètres Locaux
 SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/fr/configuration/#setup-default-parameters
 SPL_DfLang          =   Langue par défaut utilisée par le module
+SPL_OtherLangs      =   Autres Langues utilisées par le module
 SPL_DfUser          =   Utilisateur utilisée par le module lors des opération réalisée à distance
 SPL_DfStock         =   Entrepot par défaut utilisée par le module (si non spécifié)
 SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifié)
