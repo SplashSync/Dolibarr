@@ -43,6 +43,16 @@ echo '  <tr class="pair">';
 echo '      <td>' . $langs->trans("SPL_DfLang") . '</td>';
 echo '      <td width="30%">' . $langcombo . '</td>';
 echo '  </tr>';
+
+//====================================================================//
+// Build Other Languages MultiSelect
+if ($conf->global->MAIN_MULTILANGS) {
+    echo '  <tr class="pair">';
+    echo '      <td>' . $langs->trans("SPL_OtherLangs") . '</td>';
+    echo '      <td width="30%">' . $form->multiselectarray("OtherLangs", $langs->get_available_languages(), unserialize($conf->global->SPLASH_LANGS)) . '</td>';
+    echo '  </tr>';
+}
+
 //====================================================================//
 // Default User Parameter
 echo '  <tr class="impair">';

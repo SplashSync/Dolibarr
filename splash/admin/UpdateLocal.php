@@ -36,6 +36,15 @@ if ($action == 'UpdateLocal') {
     }
 
     //====================================================================//
+    // Update Other Langs
+    $OtherLangs = GETPOST('OtherLangs', 'alpha');
+    if ($OtherLangs) {
+        if (dolibarr_set_const($db, "SPLASH_LANGS", serialize($OtherLangs), 'chaine', 0, '', $conf->entity) <= 0) {
+            $errors++;
+        }
+    }
+    
+    //====================================================================//
     // Update Default User
     $DfUser = GETPOST('user', 'alpha');
     if ($DfUser) {
