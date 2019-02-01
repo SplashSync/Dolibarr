@@ -609,8 +609,22 @@ trait ImagesTrait
      */
     private function isExistingEcmFile($FullPath)
     {
-        global $db;
+        global $db, $user;
         $EcmFile    =   new EcmFiles($db);
-        return (bool) $EcmFile->fetch(null, null, $FullPath);
+        $EcmFile->fetch(null, null, $FullPath);
+        //====================================================================//
+        // File Not Found on Database
+        if (empty($EcmFile->id)) {
+            return false;
+        }
+        //====================================================================//
+        // File Not Found on Disk
+        if (!file_exists($this->DolFilesDir . "/" . $EcmFile->filename)) {
+            Splash::log()->war("Deleted Not Found Emc File: " . $this->DolFilesDir . "/" . $EcmFile->filename);          
+            $EcmFile->delete($user);
+            return false;
+        }
+        return true;        
+//        return (bool) $EcmFile->fetch(null, null, $FullPath);
     }
 }
