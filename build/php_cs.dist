@@ -3,7 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('tests/Fixtures')
     ->exclude('vendor')
-    ->in(dirname(__DIR__) . "/splash"))
+    ->in(dirname(__DIR__) . "/splash")
 ;
 
 echo dirname(__DIR__) . "/splash";

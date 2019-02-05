@@ -130,7 +130,7 @@ class BankAccounts extends AbstractWidget
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
-        if(false !== $blocks) {
+        if (false !== $blocks) {
             $this->setBlocks($blocks);
         }
 

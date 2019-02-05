@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\Address;
 
+use Contact;
+
 /**
  * Address Dolibarr Trigger trait
  */
@@ -37,6 +39,9 @@ trait TriggersTrait
         if (!$this->isAddressCommitRequired($action)) {
             return false;
         }
+        if (!($object instanceof Contact)) {
+            return false;
+        }  
         
         //====================================================================//
         // Commit Last Changes done On DataBase
@@ -44,18 +49,18 @@ trait TriggersTrait
         
         //====================================================================//
         // Store Global Action Parameters
-        $this->Type      = "Address";
-        $this->Id        = $object->id;
+        $this->objectType   = "Address";
+        $this->objectId     = (string) $object->id;
         
         if ('CONTACT_CREATE'        == $action) {
-            $this->Action   = SPL_A_CREATE;
-            $this->Comment  = "Contact Created on Dolibarr";
+            $this->action   = SPL_A_CREATE;
+            $this->comment  = "Contact Created on Dolibarr";
         } elseif ('CONTACT_MODIFY'  == $action) {
-            $this->Action   = SPL_A_UPDATE;
-            $this->Comment  = "Contact Updated on Dolibarr";
+            $this->action   = SPL_A_UPDATE;
+            $this->comment  = "Contact Updated on Dolibarr";
         } elseif ('CONTACT_DELETE'  == $action) {
-            $this->Action   = SPL_A_DELETE;
-            $this->Comment  = "Contact Deleted on Dolibarr";
+            $this->action   = SPL_A_DELETE;
+            $this->comment  = "Contact Deleted on Dolibarr";
         }
         
         return true;

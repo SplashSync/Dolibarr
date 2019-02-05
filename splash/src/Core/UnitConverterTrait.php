@@ -237,42 +237,43 @@ trait UnitConverterTrait
      * @return float Volume Value in m3
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public static function convertVolume($volume, $unit)
     {
         // mm²
         if ("-9"      == $unit) {
             return $volume * 1e-9;
-            // cm²
         }
+        // cm²
         if ("-6"  == $unit) {
             return $volume * 1e-6;
-            // dm²
         }
+        // dm²
         if ("-3"  == $unit) {
             return $volume * 1e-3;
-            // m²
         }
+        // m²
         if ("0"  == $unit) {
             return $volume;
-            // foot²
         }
+        // foot²
         if ("88"  == $unit) {
             return $volume * 0.0283168;
-            // inch²
         }
+        // inch²
         if ("89"  == $unit) {
             return $volume * 1.6387e-5;
-            // ounce
         }
+        // ounce
         if ("97"  == $unit) {
             return $volume * 2.9574e-5;
-            // litre
         }
+        // litre
         if ("98"  == $unit) {
             return $volume * 1e-3;
-            // gallon
         }
+        // gallon
         if ("99"  == $unit) {
             return $volume * 0.00378541;
         }

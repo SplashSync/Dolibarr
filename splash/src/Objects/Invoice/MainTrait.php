@@ -206,8 +206,6 @@ trait MainTrait
      */
     protected function setMainFields($fieldName, $fieldData)
     {
-        global $user;
-        
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {

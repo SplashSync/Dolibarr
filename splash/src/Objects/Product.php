@@ -94,7 +94,7 @@ class Product extends AbstractObject
     
     /**
      * @var BaseProduct
-     */    
+     */
     protected $object;
     
     /**

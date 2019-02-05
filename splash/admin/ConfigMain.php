@@ -48,11 +48,11 @@ echo '      <td>' . $form->textwithpicto(
 ) . '</td>';
 if ($conf->global->SPLASH_WS_EXPERT) {
     echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateMode&WsExpert=0">';
-        echo img_picto($langs->trans("Enabled"), 'switch_on');
+    echo img_picto($langs->trans("Enabled"), 'switch_on');
     echo '</a></td>';
 } else {
     echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateMode&WsExpert=1">';
-        echo img_picto($langs->trans("Disabled"), 'switch_off');
+    echo img_picto($langs->trans("Disabled"), 'switch_off');
     echo '</a></td>';
 }
 echo '  </tr>';
@@ -79,10 +79,10 @@ if ($conf->global->SPLASH_WS_EXPERT) {
     echo '      <td>';
     
     print '<select name="WsMethod" class="flat">';
-    print '     <option value="NuSOAP" ' . ( ("NuSOAP" == $conf->global->SPLASH_WS_METHOD) ? 'selected' : '' ) . '>' ;
+    print '     <option value="NuSOAP" ' . (("NuSOAP" == $conf->global->SPLASH_WS_METHOD) ? 'selected' : '') . '>' ;
     print '         NuSOAP Librarie' ;
     print '     </option>' ;
-    print '     <option value="SOAP" '   . ( ("SOAP" == $conf->global->SPLASH_WS_METHOD) ? 'selected' : '' ) . '>' ;
+    print '     <option value="SOAP" '   . (("SOAP" == $conf->global->SPLASH_WS_METHOD) ? 'selected' : '') . '>' ;
     print '         Generic PHP SOAP' ;
     print '     </option>' ;
     print '</select>';

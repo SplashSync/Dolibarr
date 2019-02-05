@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\ThirdParty;
 
+use Societe;
+
 /**
  * TrirdParty Dolibarr Trigger trait
  */
@@ -23,7 +25,7 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for ThirdParty
      *
-     * @param string $action Code de l'evenement
+     * @param string  $action Code de l'evenement
      * @param object $object Objet concerne
      *
      * @return bool Commit is required
@@ -37,6 +39,9 @@ trait TriggersTrait
         if (!$this->isThirdPartyCommitRequired($action)) {
             return false;
         }
+        if (!($object instanceof Societe)) {
+            return false;
+        }        
         
         //====================================================================//
         // Commit Last Changes done On DataBase
@@ -44,17 +49,17 @@ trait TriggersTrait
         
         //====================================================================//
         // Store Global Action Parameters
-        $this->Type      = "ThirdParty";
-        $this->Id        = $object->id;
+        $this->objectType   = "ThirdParty";
+        $this->objectId     = (string) $object->id;
         if ('COMPANY_CREATE' == $action) {
-            $this->Action    = SPL_A_CREATE;
-            $this->Comment   = "Company Created on Dolibarr";
+            $this->action    = SPL_A_CREATE;
+            $this->comment   = "Company Created on Dolibarr";
         } elseif ('COMPANY_MODIFY' == $action) {
-            $this->Action    = SPL_A_UPDATE;
-            $this->Comment   = "Company Updated on Dolibarr";
+            $this->action    = SPL_A_UPDATE;
+            $this->comment   = "Company Updated on Dolibarr";
         } elseif ('COMPANY_DELETE' == $action) {
-            $this->Action    = SPL_A_DELETE;
-            $this->Comment   = "Company Deleted on Dolibarr";
+            $this->action    = SPL_A_DELETE;
+            $this->comment   = "Company Deleted on Dolibarr";
         }
         
         return true;

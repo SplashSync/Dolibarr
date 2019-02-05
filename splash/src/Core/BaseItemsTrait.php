@@ -184,7 +184,7 @@ trait BaseItemsTrait
     /**
      * Read requested Field
      *
-     * @param object $line      Line Data Object
+     * @param FactureLigne|OrderLine $line      Line Data Object
      * @param string $fieldName Field Identifier / Name
      *
      * @return null|array|int|string
@@ -249,7 +249,10 @@ trait BaseItemsTrait
             $this->itemUpdate = false;
             //====================================================================//
             // Read Next Item Line
-            $this->currentItem  =   array_shift($this->object->lines);
+            $line = array_shift($this->object->lines);
+            if($line) {
+                $this->currentItem  =   $line;
+            }
             //====================================================================//
             // Update Item Line
             $this->setItem($itemData);
@@ -282,7 +285,7 @@ trait BaseItemsTrait
         
         //====================================================================//
         // New Line ? => Create One
-        if (!$this->currentItem) {
+        if (!isset($this->currentItem)) {
             //====================================================================//
             // Create New Line Item
             $this->currentItem =  $this->createItem();
@@ -409,7 +412,7 @@ trait BaseItemsTrait
         //====================================================================//
         // Clean VAT Code
         $taxName = preg_replace('/\s/', '', $itemData["vat_src_code"]);
-        $cleanedTaxName = is_string($taxName) ? substr( $taxName, 0, 10) : null;
+        $cleanedTaxName = is_string($taxName) ? substr($taxName, 0, 10) : "0";
         //====================================================================//
         // Update VAT Code if Needed
         if ($this->currentItem->vat_src_code !== $cleanedTaxName) {
@@ -448,7 +451,7 @@ trait BaseItemsTrait
      *
      * @param null|string $vatSrcCode
      *
-     * @return null|stdClass
+     * @return null|object
      */
     private function getVatIdBySrcCode($vatSrcCode = null)
     {
@@ -496,7 +499,7 @@ trait BaseItemsTrait
         if (empty($productId)) {
             $productId  =   0;
         }
-        $this->currentItem->setValueFrom("fk_product", $productId, null, null, null, null, "none");
+        $this->currentItem->setValueFrom("fk_product", $productId, '', null, '', '', "none");
         $this->catchDolibarrErrors($this->currentItem);
     }
     
@@ -531,12 +534,18 @@ trait BaseItemsTrait
         //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne a partir de
         // qty, pu, remise_percent et txtva
-        $localtaxType    =   getLocalTaxesFromRate($vatRateOrId, 0, $this->object->fetch_thirdparty(), $mysoc, (int) $useId);
+        $localtaxType    =   getLocalTaxesFromRate(
+            $vatRateOrId,
+            0,
+            $this->object->fetch_thirdparty(),
+            $mysoc,
+            (int) $useId
+        );
         
         include_once DOL_DOCUMENT_ROOT.'/core/lib/price.lib.php';
         
         $tabPrice   =   calcul_price_total(
-            $this->currentItem->qty,
+            (int) $this->currentItem->qty,
             $this->currentItem->subprice,
             $this->currentItem->remise_percent,
             $this->currentItem->tva_tx,

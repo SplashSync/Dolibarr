@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\Product;
 
+use Product;
+use MouvementStock;
 use Splash\Client\Splash;
 
 /**
@@ -82,10 +84,10 @@ trait TriggersTrait
     {
         //====================================================================//
         // Identify Product Id
-        if (is_a($object, "Product")) {
-            $this->Id   = $object->id;
-        } elseif (is_a($object, "MouvementStock")) {
-            $this->Id   = $object->product_id;
+        if ($object instanceof  Product) {
+            $this->objectId = (string) $object->id;
+        } elseif ($object instanceof MouvementStock) {
+            $this->objectId = $object->product_id;
         }
     }
     
@@ -93,7 +95,6 @@ trait TriggersTrait
      * Prepare Object Commit for Product
      *
      * @param string $action Code de l'evenement
-     * @param object $Object Objet concerne
      *
      * @return void
      *
@@ -107,27 +108,26 @@ trait TriggersTrait
         
         //====================================================================//
         // Store Global Action Parameters
-        $this->Type     = "Product";
+        $this->objectType   = "Product";
         if ('PRODUCT_CREATE'        == $action) {
-            $this->Action       = SPL_A_CREATE;
-            $this->Comment      = "Product Created on Dolibarr";
+            $this->action       = SPL_A_CREATE;
+            $this->comment      = "Product Created on Dolibarr";
         } elseif ('PRODUCT_MODIFY'  == $action) {
-            $this->Action       = SPL_A_UPDATE;
-            $this->Comment      = "Product Updated on Dolibarr";
+            $this->action       = SPL_A_UPDATE;
+            $this->comment      = "Product Updated on Dolibarr";
         } elseif ('PRODUCT_SET_MULTILANGS'  == $action) {
-            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
-            $this->Comment      = "Product Description Updated on Dolibarr";
+            $this->action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->comment      = "Product Description Updated on Dolibarr";
         } elseif ('STOCK_MOVEMENT'  == $action) {
-            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
-            $this->Comment      = "Product Stock Updated on Dolibarr";
+            $this->action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->comment      = "Product Stock Updated on Dolibarr";
         } elseif ('PRODUCT_PRICE_MODIFY'  == $action) {
-            $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
-            $this->Comment  = "Product Price Updated on Dolibarr";
+            $this->action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
+            $this->comment  = "Product Price Updated on Dolibarr";
         } elseif ('PRODUCT_DELETE'  == $action) {
-            $this->Action       = SPL_A_DELETE;
-            $this->Comment      = "Product Deleted on Dolibarr";
+            $this->action       = SPL_A_DELETE;
+            $this->comment      = "Product Deleted on Dolibarr";
         }
         
-        return true;
     }
 }

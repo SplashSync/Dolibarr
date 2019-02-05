@@ -29,14 +29,17 @@ class L03PaymentBanksTest extends ObjectsCase
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
     
-    protected $in, $out, $object;
+    protected $in;
+    protected $out;
+    protected $object;
     
     /**
      * @return     FieldsFactory
      */
     protected static function fieldsFactory()
     {
-        return new FieldsFactory();;
+        return new FieldsFactory();
+        ;
     }
     
     /**

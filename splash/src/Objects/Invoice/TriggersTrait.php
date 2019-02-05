@@ -15,7 +15,11 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use FactureLigne;
+use Facture;
+use Paiement;
 use Splash\Client\Splash;
+use Splash\Local\Objects\Invoice;
 
 /**
  * Invoices Dolibarr Trigger trait
@@ -99,23 +103,31 @@ trait TriggersTrait
     private function setInvoiceObjectId($object)
     {
         //====================================================================//
-        // Identify Invoice Id
-        if (is_a($object, "FactureLigne")) {
-            if ($object->fk_facture) {
-                $this->Id        = $object->fk_facture;
-            } else {
-                $this->Id        = $object->oldline->fk_facture;
-            }
-        } elseif (is_a($object, "Paiement")) {
+        // Identify Invoice Id from Invoice Line 
+        if ($object instanceof FactureLigne) {
+            $this->objectId = !empty($object->fk_facture) 
+                ? (string) $object->fk_facture
+                : (string) $object->oldline->fk_facture;
+            return;
+        } 
+        
+        //====================================================================//
+        // Identify Invoice Id from Payment Line 
+        if ($object instanceof Paiement) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts
-            $amounts = Splash::object("Invoice")->getPaiementAmounts($object->id);
+            $amounts = Invoice::getPaiementAmounts($object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array
-            $this->Id        = array_keys($amounts);
-        } else {
-            $this->Id        = $object->id;
+            $this->objectId        = array_keys($amounts);
+            return;
         }
+        
+        //====================================================================//
+        // Invoice Given 
+        if ($object instanceof Facture) {
+            $this->objectId = (string) $object->id;
+        }        
     }
     
     /**
@@ -129,11 +141,11 @@ trait TriggersTrait
      */
     private function setInvoiceParameters($action)
     {
-        $this->Type      = "Invoice";
+        $this->objectType      = "Invoice";
         switch ($action) {
             case 'BILL_CREATE':
-                $this->Action       = SPL_A_CREATE;
-                $this->Comment      = "Invoice Created on Dolibarr";
+                $this->action       = SPL_A_CREATE;
+                $this->comment      = "Invoice Created on Dolibarr";
 
                 break;
             case 'BILL_MODIFY':
@@ -149,13 +161,13 @@ trait TriggersTrait
             case 'LINEBILL_INSERT':
             case 'LINEBILL_UPDATE':
             case 'LINEBILL_DELETE':
-                $this->Action       = (Splash::object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
-                $this->Comment      = "Invoice Updated on Dolibarr";
+                $this->action       = (Splash::object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->comment      = "Invoice Updated on Dolibarr";
 
                 break;
             case 'BILL_DELETE':
-                $this->Action       = SPL_A_DELETE;
-                $this->Comment      = "Invoice Deleted on Dolibarr";
+                $this->action       = SPL_A_DELETE;
+                $this->comment      = "Invoice Deleted on Dolibarr";
 
                 break;
         }

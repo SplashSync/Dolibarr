@@ -122,7 +122,7 @@ class CustomerInvoicesStats extends AbstractWidget
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
-        if(false !== $blocks) {
+        if (false !== $blocks) {
             $this->setBlocks($blocks);
         }
 
@@ -166,7 +166,6 @@ class CustomerInvoicesStats extends AbstractWidget
      */
     private function getData()
     {
-
         global $db;
         
         include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
@@ -201,7 +200,6 @@ class CustomerInvoicesStats extends AbstractWidget
     */
     private function buildMorrisBarBlock()
     {
-
         global $langs;
         
         $langs->load("compta");

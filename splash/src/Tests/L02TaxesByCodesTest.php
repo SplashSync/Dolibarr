@@ -55,6 +55,9 @@ class L02TaxesByCodesTest extends ObjectsCase
      * @param string $taxCode
      * @param string $vatRate1
      * @param string $vatRate2
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function testCreateWithTaxCode($objectType, $taxCode, $vatRate1, $vatRate2)
     {
@@ -111,7 +114,7 @@ class L02TaxesByCodesTest extends ObjectsCase
         //====================================================================//
         //   Verify Tax Values
         foreach ($object->lines as $line) {
-            $this->assertEquals($taxCode,  isset($line->vat_src_code) ? $line->vat_src_code : 0);
+            $this->assertEquals($taxCode, isset($line->vat_src_code) ? $line->vat_src_code : 0);
             $this->assertEquals($vatRate1, $line->tva_tx);
             $this->assertEquals($vatRate2, $line->localtax1_tx);
         }

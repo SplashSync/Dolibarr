@@ -39,7 +39,7 @@ trait PaymentsTrait
      *
      * @return array List Of Paiment Object Amounts
      */
-    public function getPaiementAmounts($paiementId)
+    public static function getPaiementAmounts($paiementId)
     {
         global $db;
         //====================================================================//

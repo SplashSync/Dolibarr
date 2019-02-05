@@ -109,7 +109,7 @@ class Order extends AbstractObject
 
     /**
      * @var Commande
-     */    
+     */
     protected $object;
     
     /**

@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\Order;
 
+use Commande;
+use OrderLine;
 use Splash\Client\Splash;
 
 /**
@@ -25,7 +27,7 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Order
      *
-     * @param string $action Code de l'evenement
+     * @param string             $action Code de l'evenement
      * @param object $object Objet concerne
      *
      * @return bool Commit is required
@@ -94,15 +96,17 @@ trait TriggersTrait
     private function setOrderObjectId($object)
     {
         //====================================================================//
+        // Identify Order Id from Order Line
+        if ($object instanceof OrderLine) {
+            $this->objectId = !empty($object->fk_commande) 
+                ? (string) $object->fk_commande
+                : (string) $object->oldline->fk_commande;
+            return;
+        }
+        //====================================================================//
         // Identify Order Id
-        if (is_a($object, "OrderLine")) {
-            if ($object->fk_commande) {
-                $this->Id        = $object->fk_commande;
-            } else {
-                $this->Id        = $object->oldline->fk_commande;
-            }
-        } else {
-            $this->Id        = $object->id;
+        if ($object instanceof Commande) {
+            $this->objectId = (string) $object->id;
         }
     }
     
@@ -119,12 +123,12 @@ trait TriggersTrait
     {
         //====================================================================//
         // Store Global Action Parameters
-        $this->Type      = "Order";
+        $this->objectType      = "Order";
         
         switch ($action) {
             case 'ORDER_CREATE':
-                $this->Action       = SPL_A_CREATE;
-                $this->Comment      = "Order Created on Dolibarr";
+                $this->action       = SPL_A_CREATE;
+                $this->comment      = "Order Created on Dolibarr";
 
                 break;
             case 'ORDER_VALIDATE':
@@ -139,17 +143,17 @@ trait TriggersTrait
             case 'LINEORDER_DELETE':
             case 'COMMANDE_ADD_CONTACT':
             case 'COMMANDE_DELETE_CONTACT':
-                $this->Action       = (Splash::object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
-                $this->Comment      = "Order Updated on Dolibarr";
+                $this->action       = (Splash::object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->comment      = "Order Updated on Dolibarr";
 
                 break;
             case 'ORDER_DELETE':
-                $this->Action       = SPL_A_DELETE;
-                $this->Comment      = "Order Deleted on Dolibarr";
+                $this->action       = SPL_A_DELETE;
+                $this->comment      = "Order Deleted on Dolibarr";
 
                 break;
         }
         
-        return true;
+        return;
     }
 }

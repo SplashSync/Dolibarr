@@ -24,7 +24,6 @@ use Splash\Local\Local;
  */
 trait MultiCompanyTrait
 {
-    
     private static $DEFAULT_ENTITY    =   1;
     
 
@@ -35,12 +34,12 @@ trait MultiCompanyTrait
     
     protected function isMultiCompanyDefaultEntity()
     {
-        return $this->isMultiCompany() && ( $this->getMultiCompanyEntityId() == static::$DEFAULT_ENTITY );
+        return $this->isMultiCompany() && ($this->getMultiCompanyEntityId() == static::$DEFAULT_ENTITY);
     }
     
     protected function isMultiCompanyChildEntity()
     {
-        return $this->isMultiCompany() && ( $this->getMultiCompanyEntityId() != static::$DEFAULT_ENTITY );
+        return $this->isMultiCompany() && ($this->getMultiCompanyEntityId() != static::$DEFAULT_ENTITY);
     }
     
     
@@ -62,7 +61,7 @@ trait MultiCompanyTrait
         //====================================================================//
         // Detect Required to Switch Entity
         if (empty(Splash::input("Entity", INPUT_GET))
-                || ( Splash::input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY)) {
+                || (Splash::input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY)) {
             return;
         }
         //====================================================================//
@@ -76,14 +75,13 @@ trait MultiCompanyTrait
     
     /**
      * Get Web Path for Multicompany Server
-     * 
+     *
      * @return null|string
      */
     protected function getMultiCompanyServerPath()
     {
-        
         $serverRoot     =   (string) realpath((string) Splash::input("DOCUMENT_ROOT"));
-        $prefix         =   $this->isMultiCompanyChildEntity() ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
+        $prefix         =   $this->isMultiCompanyChildEntity() ? ("?Entity=" . $this->getMultiCompanyEntityId()) : "";
         $fullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $prefix;
         $relativePath   =   explode($serverRoot, $fullPath);
         
@@ -103,7 +101,6 @@ trait MultiCompanyTrait
      */
     public function isMultiCompanyAllowed($subject = null)
     {
-        
         global $langs;
         
         //====================================================================//

@@ -81,9 +81,9 @@ class Local implements LocalClassInterface
     
     /**
      * {@inheritdoc}
-     * 
+     *
      * @global User $user
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
@@ -380,7 +380,7 @@ class Local implements LocalClassInterface
         global $conf;
 
         return isset($conf->global->{$key})  ? $conf->global->{$key} : $default;
-    }    
+    }
         
     //====================================================================//
     // *******************************************************************//

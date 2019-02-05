@@ -164,7 +164,7 @@ trait MainTrait
                 //====================================================================//
                 // If multiprices are enabled
                 if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-                    $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL) 
+                    $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
                             ? $conf->global->SPLASH_MULTIPRICE_LEVEL
                             : null;
                     $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
@@ -206,7 +206,7 @@ trait MainTrait
                 return;
         }
             
-        if($key != null) {
+        if ($key != null) {
             unset($this->in[$key]);
         }
     }

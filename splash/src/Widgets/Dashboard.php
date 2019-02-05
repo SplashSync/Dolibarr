@@ -29,6 +29,8 @@ use Splash\Local\Local;
 
 /**
  * Dolibarr Dashboard Widget
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Dashboard extends AbstractWidget
 {
@@ -105,7 +107,7 @@ class Dashboard extends AbstractWidget
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
-        if(false !== $blocks) {
+        if (false !== $blocks) {
             $this->setBlocks($blocks);
         }
 

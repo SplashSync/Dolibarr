@@ -19,6 +19,7 @@ include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
         
 use Splash\Client\Splash;
 use Splash\Components\Logger;
+use User;
 
 /**
  * Classe des fonctions triggers des actions personalisees du workflow
@@ -41,7 +42,7 @@ class InterfaceSplash
     private $version;
     private $description;
     
-    /** @var null|string */
+    /** @var null|string|array */
     private $objectId;
     /** @var null|string */
     private $action;
@@ -49,7 +50,7 @@ class InterfaceSplash
     private $objectType;
     /** @var string */
     private $login      =   "Unknown User";
-    /** @var string */
+    /** @var null|string */
     private $comment    =   "Dolibarr Commit";
     
     /**
@@ -131,7 +132,7 @@ class InterfaceSplash
     {
         //====================================================================//
         // When Library is called in server mode, no Message Storage
-        if (SPLASH_SERVER_MODE) {
+        if (!empty(SPLASH_SERVER_MODE)) {
             return;
         }
 
@@ -155,12 +156,12 @@ class InterfaceSplash
      * Fonction appelee lors du declenchement d'un evenement Dolibarr.
      * D'autres fonctions run_trigger peuvent etre presentes dans includes/triggers
      *
-     * @param type $action Code de l'evenement
-     * @param type $object Objet concerne
-     * @param type $user   Objet user
+     * @param string $action Code de l'evenement
+     * @param object $object Objet concerne
+     * @param User $user   Objet user
      *
      * @return void
-     * 
+     *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function run_trigger($action, $object, $user)
@@ -169,8 +170,8 @@ class InterfaceSplash
             
         //====================================================================//
         // Init Action Parameters
-        $this->objectType         = null;
-        $this->objectId           = null;
+        $this->objectType   = null;
+        $this->objectId     = null;
         $this->action       = null;
         $this->login        = ($user->login)?$user->login:"Unknown";
         $this->comment      = null;
@@ -228,10 +229,16 @@ class InterfaceSplash
     /**
      * Publish Object Change to Splash Sync Server
      *
-     * @return bool
+     * @return void
      */
     protected function doSplashCommit()
     {
+        //====================================================================//
+        // Safety Check
+        if ((null === $this->objectId) || (null === $this->objectType)) {
+            return;
+        }
+        
         //====================================================================//
         // Prevent Repeated Commit if Needed
         if ((SPL_A_UPDATE == $this->action) && Splash::object($this->objectType)->isLocked()) {
@@ -244,12 +251,12 @@ class InterfaceSplash
             //====================================================================//
             // Commit Change to OsWs Module
             Splash::commit(
-                $this->objectType,                    // Object Type
-                $this->objectId,                      // Object Identifier (RowId ro Array of RowId)
-                $this->action,                  // Splash Action Type
-                $this->login,                   // Current User Login
-                $this->comment
-            );                // Action Comment
+                $this->objectType,          // Object Type
+                $this->objectId,            // Object Identifier (RowId ro Array of RowId)
+                $this->action,              // Splash Action Type
+                $this->login,               // Current User Login
+                (string) $this->comment     // Action Comment
+            );                
             Splash::log()->deb("Change Commited (Action=" . $this->comment . ") Object => ". $this->objectType);
         } else {
             Splash::log()->war("Commit Id Missing (Action=" . $this->comment . ") Object => ". $this->objectType);

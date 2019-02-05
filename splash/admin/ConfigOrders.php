@@ -49,11 +49,11 @@ if (Local::dolVersionCmp("5.0.0") >= 0) {
     ) . '</td>';
     if ($conf->global->SPLASH_DETECT_TAX_NAME) {
         echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrderTaxMode&DetectTax=0">';
-            echo img_picto($langs->trans("Enabled"), 'switch_on');
+        echo img_picto($langs->trans("Enabled"), 'switch_on');
         echo '</a></td>';
     } else {
         echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrderTaxMode&DetectTax=1">';
-            echo img_picto($langs->trans("Disabled"), 'switch_off');
+        echo img_picto($langs->trans("Disabled"), 'switch_off');
         echo '</a></td>';
     }
     echo '  </tr>';
@@ -68,11 +68,11 @@ echo '      <td>' . $form->textwithpicto(
 ) . '</td>';
 if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
     echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrderAllowGuest&AllowGuest=0">';
-        echo img_picto($langs->trans("Enabled"), 'switch_on');
+    echo img_picto($langs->trans("Enabled"), 'switch_on');
     echo '</a></td>';
 } else {
     echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrderAllowGuest&AllowGuest=1">';
-        echo img_picto($langs->trans("Disabled"), 'switch_off');
+    echo img_picto($langs->trans("Disabled"), 'switch_off');
     echo '</a></td>';
 }
 echo '  </tr>';
@@ -100,11 +100,11 @@ if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
     echo '      <td>' . $langs->trans("SPL_Orders_Email") . '</td>';
     if ($conf->global->SPLASH_GUEST_ORDERS_EMAIL) {
         echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrderEmail&DetectEmail=0">';
-            echo img_picto($langs->trans("Enabled"), 'switch_on');
+        echo img_picto($langs->trans("Enabled"), 'switch_on');
         echo '</a></td>';
     } else {
         echo '<td><a href="' . filter_input(INPUT_SERVER, "PHP_SELF") . '?action=UpdateOrderEmail&DetectEmail=1">';
-            echo img_picto($langs->trans("Disabled"), 'switch_off');
+        echo img_picto($langs->trans("Disabled"), 'switch_off');
         echo '</a></td>';
     }
     echo '  </tr>';

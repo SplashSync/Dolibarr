@@ -39,7 +39,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     
     /**
      * Test Oreder & Invoices Status
-     * 
+     *
      * @dataProvider statusProvider
      *
      * @param string      $objectType
@@ -61,7 +61,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Load Object
         $splashObject  =   Splash::object($objectType);
         $object = false;
-        if(($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
+        if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
             $object  =   $splashObject->load($objectId);
         }
         $this->assertTrue(false !== $object);
@@ -138,7 +138,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Load Object
         $splashObject  =   Splash::object($objectType);
         $object = false;
-        if(($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
+        if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
             $object  =   $splashObject->load($objectId);
         }
         $this->assertTrue(false !== $object);
@@ -205,7 +205,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Load Object
         $splashObject  =   Splash::object($objectType);
         $object = false;
-        if(($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
+        if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
             $object  =   $splashObject->load($objectId);
         }
 

@@ -194,7 +194,7 @@ class ProductDistribution extends AbstractWidget
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
-        if(false !== $blocks) {
+        if (false !== $blocks) {
             $this->setBlocks($blocks);
         }
 
@@ -408,7 +408,6 @@ class ProductDistribution extends AbstractWidget
     */
     private function buildMorrisBarBlock()
     {
-
         global $langs;
         
         //====================================================================//
