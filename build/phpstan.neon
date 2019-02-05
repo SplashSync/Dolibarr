@@ -1,8 +1,23 @@
+
+includes:
+    - '../splash/vendor/phpstan/phpstan-phpunit/extension.neon'
+    - '../splash/vendor/phpstan/phpstan-phpunit/rules.neon'
+
 parameters:
     bootstrap: "./build/phpstan.php"
+
     universalObjectCratesClasses:
+            - ArrayObject
             - FactureStats
             - CommandeStats
 
     ignoreErrors: 
         - '#Function completeFileArrayWithDatabaseInfo not found.#'
+
+        # UIndefined in Dolibarr Class Property       
+        - '#Access to an undefined property [a-zA-Z0-9]+::\$entity.#'
+        - '#Access to an undefined property Paiement::\$type_code.#'
+
+        # Wrong Comments in Dolibarr Class
+        - '#Parameter \#2 \$type_contact of method CommonObject\:\:add_contact\(\) expects int\, string given.#'
+        - '#Parameter \#2 \$mode of method Propal\:\:load_board\(\) expects int\, string given.#'

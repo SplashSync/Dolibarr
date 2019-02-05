@@ -1,0 +1,14 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->exclude('tests/Fixtures')
+    ->exclude('vendor')
+    ->in(dirname(__DIR__) . "/splash"))
+;
+
+echo dirname(__DIR__) . "/splash";
+exit;
+
+include_once "php_cs.rules.dist";
+
+return $config;
