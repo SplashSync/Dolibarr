@@ -16,6 +16,7 @@
 namespace   Splash\Local\Core;
 
 use EcmFiles;
+use EcmfilesLine;
 use Exception;
 use ArrayObject;
 use Splash\Core\SplashCore      as Splash;
@@ -170,6 +171,7 @@ trait ImagesTrait
         
         //====================================================================//
         // Create Images List
+        /** @var EcmfilesLine $ecmFileLine */
         foreach ($ecmFiles->lines as $key => $ecmFileLine) {
             //====================================================================//
             // Filter No Images Files

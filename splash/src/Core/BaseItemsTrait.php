@@ -187,7 +187,7 @@ trait BaseItemsTrait
      * @param FactureLigne|OrderLine $line      Line Data Object
      * @param string $fieldName Field Identifier / Name
      *
-     * @return null|bool|array|int|string
+     * @return null|float|bool|array|int|string
      */
     private function getItemField($line, $fieldName)
     {
@@ -203,7 +203,9 @@ trait BaseItemsTrait
             //====================================================================//
             // Order Line Product Id
             case 'fk_product@lines':
-                return ($line->fk_product)?self::objects()->Encode("Product", $line->fk_product):null;
+                return ($line->fk_product)
+                    ? self::objects()->Encode("Product", (string) $line->fk_product)
+                    : null;
             //====================================================================//
             // Order Line Quantity
             case 'qty@lines':
@@ -535,7 +537,7 @@ trait BaseItemsTrait
         // Calcul du total TTC et de la TVA pour la ligne a partir de
         // qty, pu, remise_percent et txtva
         $localtaxType    =   getLocalTaxesFromRate(
-            $vatRateOrId,
+            (string) $vatRateOrId,
             0,
             $this->object->fetch_thirdparty(),
             $mysoc,

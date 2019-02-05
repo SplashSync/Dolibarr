@@ -108,7 +108,7 @@ trait MainTrait
         //====================================================================//
         // Is Paid
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("facturee")
+            ->Identifier("billed")
             ->Group(html_entity_decode($langs->trans("Status")))
             ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))
             ->MicroData("http://schema.org/OrderStatus", "OrderPaid")
@@ -138,7 +138,7 @@ trait MainTrait
             //====================================================================//
             // ORDER INVOICED FLAG
             //====================================================================//
-            case 'facturee':
+            case 'billed':
                 $this->getSimple($fieldName);
 
                 break;
@@ -246,8 +246,8 @@ trait MainTrait
             //====================================================================//
             // ORDER INVOICED FLAG
             //====================================================================//
-            case 'facturee':
-                if ($this->object->facturee == $fieldData) {
+            case 'billed':
+                if ($this->object->billed == $fieldData) {
                     break;
                 }
                 $this->updateBilled = $fieldData;

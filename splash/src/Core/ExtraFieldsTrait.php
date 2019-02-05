@@ -98,7 +98,7 @@ trait ExtraFieldsTrait
                     array(),
                     1,
                     '',
-                    0,
+                    '0',
                     ($visible ? 0:1)
                 );
             //====================================================================//
@@ -117,7 +117,7 @@ trait ExtraFieldsTrait
                     '0',
                     1,
                     '',
-                    0,
+                    '0',
                     ($visible ? 0:1)
                 );
             }
@@ -141,7 +141,7 @@ trait ExtraFieldsTrait
         foreach ($this->getExtraTypes() as $fieldId => $fieldType) {
             //====================================================================//
             // Skip Incompatibles Types
-            if (empty($this->getSplashType($fieldType)) || $this->isHidden($fieldId)) {
+            if (empty($this->getSplashType($fieldType))) {
                 continue;
             }
             //====================================================================//
@@ -505,19 +505,5 @@ trait ExtraFieldsTrait
         }
 
         return false;
-    }
-    
-    /**
-     * Get ExtraField Hidden Flag
-     *
-     * @param string $fieldType Dolibarr Extrafield Type NAme
-     *
-     * @return bool
-     */
-    private function isHidden($fieldType)
-    {
-        $this->loadExtraFields();
-
-        return (bool) $this->extraFields->attribute_hidden[$fieldType];
     }
 }
