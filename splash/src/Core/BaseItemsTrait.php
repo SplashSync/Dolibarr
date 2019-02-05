@@ -250,7 +250,7 @@ trait BaseItemsTrait
             //====================================================================//
             // Read Next Item Line
             $line = array_shift($this->object->lines);
-            if($line) {
+            if ($line) {
                 $this->currentItem  =   $line;
             }
             //====================================================================//

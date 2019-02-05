@@ -103,16 +103,16 @@ trait TriggersTrait
     private function setInvoiceObjectId($object)
     {
         //====================================================================//
-        // Identify Invoice Id from Invoice Line 
+        // Identify Invoice Id from Invoice Line
         if ($object instanceof FactureLigne) {
-            $this->objectId = !empty($object->fk_facture) 
+            $this->objectId = !empty($object->fk_facture)
                 ? (string) $object->fk_facture
                 : (string) $object->oldline->fk_facture;
             return;
-        } 
+        }
         
         //====================================================================//
-        // Identify Invoice Id from Payment Line 
+        // Identify Invoice Id from Payment Line
         if ($object instanceof Paiement) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts
@@ -124,10 +124,10 @@ trait TriggersTrait
         }
         
         //====================================================================//
-        // Invoice Given 
+        // Invoice Given
         if ($object instanceof Facture) {
             $this->objectId = (string) $object->id;
-        }        
+        }
     }
     
     /**

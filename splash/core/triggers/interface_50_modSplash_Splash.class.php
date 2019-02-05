@@ -256,7 +256,7 @@ class InterfaceSplash
                 $this->action,              // Splash Action Type
                 $this->login,               // Current User Login
                 (string) $this->comment     // Action Comment
-            );                
+            );
             Splash::log()->deb("Change Commited (Action=" . $this->comment . ") Object => ". $this->objectType);
         } else {
             Splash::log()->war("Commit Id Missing (Action=" . $this->comment . ") Object => ". $this->objectType);

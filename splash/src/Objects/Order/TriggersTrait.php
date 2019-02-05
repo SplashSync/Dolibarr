@@ -98,7 +98,7 @@ trait TriggersTrait
         //====================================================================//
         // Identify Order Id from Order Line
         if ($object instanceof OrderLine) {
-            $this->objectId = !empty($object->fk_commande) 
+            $this->objectId = !empty($object->fk_commande)
                 ? (string) $object->fk_commande
                 : (string) $object->oldline->fk_commande;
             return;

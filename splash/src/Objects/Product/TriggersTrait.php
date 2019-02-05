@@ -128,6 +128,5 @@ trait TriggersTrait
             $this->action       = SPL_A_DELETE;
             $this->comment      = "Product Deleted on Dolibarr";
         }
-        
     }
 }

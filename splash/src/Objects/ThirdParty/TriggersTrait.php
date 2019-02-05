@@ -41,7 +41,7 @@ trait TriggersTrait
         }
         if (!($object instanceof Societe)) {
             return false;
-        }        
+        }
         
         //====================================================================//
         // Commit Last Changes done On DataBase
