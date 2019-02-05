@@ -13,58 +13,33 @@ cache:
 # DATA  = Demo data Versions tu USe for Testing
 matrix:
     include:
-        # Dolibarr V4.0 Branch       
-        - php: 5.6
-          env: DOL=4.0 DATA=4.0.0 STAN=0   
-#        - php: 7.0
-#          env: DOL=4.0 DATA=4.0.0 STAN=0
-        - php: 7.1
-          env: DOL=4.0 DATA=4.0.0 STAN=0
-
-        # Dolibarr V5.0 Branch       
-        - php: 5.6
-          env: DOL=5.0 DATA=5.0.0 STAN=0     
-#        - php: 7.0
-#          env: DOL=5.0 DATA=5.0.0 STAN=0  
-        - php: 7.1
-          env: DOL=5.0 DATA=5.0.0 STAN=0
-
-        # Dolibarr V6.0 Branch       
-        - php: 5.6
-          env: DOL=6.0 DATA=6.0.0 STAN=0    
-#        - php: 7.0
-#          env: DOL=6.0 DATA=6.0.0 STAN=1     
-        - php: 7.1
-          env: DOL=6.0 DATA=6.0.0 STAN=1     
-#        - php: 7.2
+        
+#        # Dolibarr V6.0 Branch       
+#        - php: 5.6
+#          env: DOL=6.0 DATA=6.0.0 STAN=0    
+#        - php: 7.1
 #          env: DOL=6.0 DATA=6.0.0 STAN=1     
 #
-        # Dolibarr V7.0 Branch       
-        - php: 5.6
-          env: DOL=7.0 DATA=7.0.0 STAN=0    
-        - php: 7.0
-          env: DOL=7.0 DATA=7.0.0 STAN=1       
-#        - php: 7.1
-#          env: DOL=7.0 DATA=7.0.0 STAN=1     
-        - php: 7.2
-          env: DOL=7.0 DATA=7.0.0 STAN=1     
-          
-        # Dolibarr V8.0 Branch       
-        - php: 5.6
-          env: DOL=8.0 DATA=7.0.0 STAN=0    
+#        # Dolibarr V7.0 Branch       
+#        - php: 5.6
+#          env: DOL=7.0 DATA=7.0.0 STAN=0    
 #        - php: 7.0
-#          env: DOL=8.0 DATA=7.0.0 STAN=1       
-        - php: 7.1
-          env: DOL=8.0 DATA=7.0.0 STAN=1     
-        - php: 7.2
-          env: DOL=8.0 DATA=7.0.0 STAN=1     
+#          env: DOL=7.0 DATA=7.0.0 STAN=1       
+#        - php: 7.2
+#          env: DOL=7.0 DATA=7.0.0 STAN=1     
+#          
+#        # Dolibarr V8.0 Branch       
+#        - php: 5.6
+#          env: DOL=8.0 DATA=7.0.0 STAN=0    
+#        - php: 7.1
+#          env: DOL=8.0 DATA=7.0.0 STAN=1     
+#        - php: 7.2
+#          env: DOL=8.0 DATA=7.0.0 STAN=1     
           
         # Dolibarr Develop Branch       
-        - php: 5.6
-          env: DOL=develop DATA=7.0.0 STAN=0        
-        - php: 7.0
-          env: DOL=develop DATA=7.0.0 STAN=1    
-#        - php: 7.1
+#        - php: 5.6
+#          env: DOL=develop DATA=7.0.0 STAN=0        
+#        - php: 7.0
 #          env: DOL=develop DATA=7.0.0 STAN=1    
         - php: 7.2
           env: DOL=develop DATA=7.0.0 STAN=1    
@@ -114,7 +89,8 @@ before_script:
     # Run Composer
     - cd "$DOL_BUILD_DIR/htdocs/custom/"
     # With PHP 7 => Load Phpstan   
-    - if [[ $STAN == "1" ]]; then composer require phpstan/phpstan-shim 0.9.2 --no-update; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.1" ]]; then composer remove phpstan/phpstan-shim --no-update --dev; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.1" ]]; then composer remove phpstan/phpstan-phpunit --no-update --dev; fi    
     - composer update 
     
 script: 
@@ -124,8 +100,10 @@ script:
     
     # Run Grump Main Test Sequence
     - php ./splash/vendor/bin/grumphp run --testsuite=travis
-    # With PHP 7 => Execute Phpstan 
-    - if [[ $STAN == "1" ]]; then php splash/vendor/bin/grumphp run --testsuite=phpstan; fi     
+    # With PHP > 7.0 => Execute CsFixer
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.0" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=csfixer; fi    
+    # With PHP > 7.0 => Execute Phpstan 
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.0" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=phpstan; fi      
     
     # Execute Bootstrap file    
     - php build/bootstrap.php

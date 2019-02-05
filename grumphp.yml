@@ -1,23 +1,67 @@
+
+################################################################################
+#
+# * This file is part of SplashSync Project.
+# *
+# * Copyright (C) Splash Sync <www.splashsync.com>
+# *
+# * This program is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# *
+# * For the full copyright and license information, please view the LICENSE
+# * file that was distributed with this source code.
+# *
+# * @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+
 parameters:
+    
+    
+    #############################################        
+    #   Local Config 
+    #############################################        
+    #   Path to Php Core Module
+    core_dir:       "./splash/vendor/splash/phpcore/Resources/grumphp"     
+    #   Testing Mode (core|module)
+    mode:           "module"
+    level:          7
+    
+    #############################################        
+    #   Base Configs 
     git_dir: .
     bin_dir:        "splash/vendor/bin"
     ascii:
-        failed:     "./splash/vendor/splash/phpcore/Resources/grumphp/grumphp-grumpy.txt"
-        succeeded:  "./splash/vendor/splash/phpcore/Resources/grumphp/grumphp-happy.txt"
+        failed:     "%core_dir%/grumphp-grumpy.txt"
+        succeeded:  "%core_dir%/grumphp-happy.txt"
+    process_timeout: 180
+    
+    #############################################        
+    #   Tasks Configs     
     tasks:
+        
+        #############################################        
+        #   Composer Verifs           
         composer:
             file:           "./composer.json"
+            
+        #############################################        
+        #   Syntax Errors Detection             
         phplint:
             exclude:        ['splash/vendor']
             triggered_by:   ['php']
-        phpcs:
-            standard:       "PSR2"
-            triggered_by:   [php]
-            ignore_patterns:
-                - phpstan.php
-                - defines.inc.php
-                - modSplash.class.php
-                - interface_50_modSplash_Splash.class.php
+            
+        jsonlint:
+            detect_key_conflicts: true
+            
+        xmllint: ~
+        
+        yamllint: ~
+
+        #############################################        
+        #   Blacklist Codes Detection
         git_blacklist:
             keywords:
                 - "var_dump"
@@ -26,20 +70,38 @@ parameters:
                 - "print_r"
                 - "die("
             triggered_by: [php, js, twig]
-        jsonlint:
-            ignore_patterns:        [ "docs" ]
-            detect_key_conflicts:   true
-        xmllint: ~
-        yamllint: ~
-        phpmd:
-            ruleset:        ["./build/phpmd.xml"]
+        
+        #############################################        
+        #   Security Checks 
         securitychecker: ~
+
+        #############################################        
+        #   Code Quality   
+        phpcsfixer:     ~ 
+        phpcsfixer2:    
+            allow_risky:    true
+            config:         "build/php_cs.dist"
+            
+        phpcs:
+            standard:       "PSR2"
+            triggered_by:   [php]
+            ignore_patterns:
+                - phpstan.php
+                - defines.inc.php
+                - modSplash.class.php
+                - interface_50_modSplash_Splash.class.php
+                
+            
+        phpmd:
+            ruleset:        ["%core_dir%/phpmd.xml"]
+            
         phpcpd:
             exclude:        
                 - "docs"
-                - "splash/vendor"               
+                - "splash/vendor" 
+                
         phpstan:
-            level: 1
+            level: "%level%"
             configuration:  "build/phpstan.neon"           
             ignore_patterns:
                 - LocalizationTrait.php
@@ -58,6 +120,11 @@ parameters:
                 - phpcpd
                 - xmllint
                 - yamllint
+              
+        csfixer:
+            tasks: 
+                - phpcsfixer
+                - phpcsfixer2
                 
         phpstan:
             tasks: 
