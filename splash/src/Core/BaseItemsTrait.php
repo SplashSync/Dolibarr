@@ -187,7 +187,7 @@ trait BaseItemsTrait
      * @param FactureLigne|OrderLine $line      Line Data Object
      * @param string $fieldName Field Identifier / Name
      *
-     * @return null|array|int|string
+     * @return null|bool|array|int|string
      */
     private function getItemField($line, $fieldName)
     {
@@ -451,7 +451,7 @@ trait BaseItemsTrait
      *
      * @param null|string $vatSrcCode
      *
-     * @return null|object
+     * @return null|FactureLigne|OrderLine
      */
     private function getVatIdBySrcCode($vatSrcCode = null)
     {

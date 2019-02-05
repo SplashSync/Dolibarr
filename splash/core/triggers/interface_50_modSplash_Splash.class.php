@@ -19,7 +19,6 @@ include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
         
 use Splash\Client\Splash;
 use Splash\Components\Logger;
-use User;
 
 /**
  * Classe des fonctions triggers des actions personalisees du workflow
