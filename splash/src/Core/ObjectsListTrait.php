@@ -1,42 +1,29 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Core;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Listing Helpers
+ * Dolibarr Listing Helpers
  */
 trait ObjectsListTrait
 {
     /**
-     *  @abstract     Return List Of Dolibarr Objects with required filters
-     *
-     *  @param        string  $filter                   Filters/Search String for Contact List.
-     *  @param        array   $params                   Search parameters for result List.
-     *                        $params["max"]            Maximum Number of results
-     *                        $params["offset"]         List Start Offset
-     *                        $params["sortfield"]      Field name for sort list (Available fields listed below)
-     *                        $params["sortorder"]      List Order Constraign (Default = ASC)
-     *
-     *  @return       array   $data                     List of all customers main data
-     *                        $data["meta"]["total"]     ==> Total Number of results
-     *                        $data["meta"]["current"]   ==> Total Number of results
+     * {@inheritdoc}
      */
     public function objectsList($filter = null, $params = null)
     {
@@ -58,13 +45,13 @@ trait ObjectsListTrait
         
         //====================================================================//
         // Setup limits
-        $sql   .= $this->getSqlPagination($params);
+        $sql   .= $this->getSqlPagination(is_null($params) ? array() : $params);
         
         //====================================================================//
         // Execute final request
         $resql = $this->getSqlResults($sql);
         if (empty($resql)) {
-            return false;
+            return array();
         }
         
         //====================================================================//
@@ -89,11 +76,11 @@ trait ObjectsListTrait
     }
  
     /**
-     *  @abstract     Get Results for Sql query
+     * Get Results for Sql query
      *
-     *  @param        sting   $sql                   Sql Raw Query
+     * @param string $sql Sql Raw Query
      *
-     *  @return       mixed
+     * @return mixed
      */
     private function getSqlResults($sql)
     {
@@ -102,17 +89,19 @@ trait ObjectsListTrait
         Splash::log()->deb("MsgLocalTpl", __CLASS__, __FUNCTION__, " SQL : " . $sql);
         if (empty($resql)) {
             Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->lasterror());
+
             return null;
         }
+
         return $resql;
     }
     
     /**
-     *  @abstract     Get Results Count for Sql query
+     * Get Results Count for Sql query
      *
-     *  @param        sting   $sql                   Sql Raw Query
+     * @param        string   $sql                   Sql Raw Query
      *
-     *  @return       string
+     * @return       int
      */
     private function getSqlResultsCount($sql)
     {
@@ -127,19 +116,19 @@ trait ObjectsListTrait
     }
     
     /**
-     *  @abstract     Return Raw Sql Pagination
+     * Return Raw Sql Pagination
      *
-     *  @param        array   $params                   Search parameters for result List.
+     * @param        array   $params                   Search parameters for result List.
      *                        $params["max"]            Maximum Number of results
      *                        $params["offset"]         List Start Offset
      *                        $params["sortfield"]      Field name for sort list (Available fields listed below)
      *                        $params["sortorder"]      List Order Constraign (Default = ASC)
      *
-     *  @return       string
+     * @return       string
      */
     private function getSqlPagination($params)
     {
-        $sql = null;
+        $sql = "";
         //====================================================================//
         // Setup limmits
         if (!empty($params["max"])) {
@@ -148,6 +137,7 @@ trait ObjectsListTrait
         if (!empty($params["offset"])) {
             $sql   .= " OFFSET " . $params["offset"];
         }
+
         return $sql;
     }
 }

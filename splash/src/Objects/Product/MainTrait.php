@@ -1,33 +1,31 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    Dolibarr Products Main Fields
+ * Dolibarr Products Main Fields
  */
 trait MainTrait
 {
-    
     /**
-    *   @abstract     Build Address Fields using FieldFactory
-    */
+     * Build Address Fields using FieldFactory
+     */
     protected function buildMainFields()
     {
         global $conf,$langs;
@@ -39,34 +37,34 @@ trait MainTrait
         //====================================================================//
         // Weight
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("weight")
-                ->Name($langs->trans("Weight"))
-                ->Description($langs->trans("Weight") . "(" . $langs->trans("WeightUnitkg") . ")")
-                ->MicroData("http://schema.org/Product", "weight");
+            ->Identifier("weight")
+            ->Name($langs->trans("Weight"))
+            ->Description($langs->trans("Weight") . "(" . $langs->trans("WeightUnitkg") . ")")
+            ->MicroData("http://schema.org/Product", "weight");
         
         //====================================================================//
         // Lenght
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("length")
-                ->Name($langs->trans("Length"))
-                ->Description($langs->trans("Length") . "(" . $langs->trans("LengthUnitm") . ")")
-                ->MicroData("http://schema.org/Product", "depth");
+            ->Identifier("length")
+            ->Name($langs->trans("Length"))
+            ->Description($langs->trans("Length") . "(" . $langs->trans("LengthUnitm") . ")")
+            ->MicroData("http://schema.org/Product", "depth");
         
         //====================================================================//
         // Surface
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("surface")
-                ->Name($langs->trans("Surface"))
-                ->Description($langs->trans("Surface") . "(" . $langs->trans("SurfaceUnitm2") . ")")
-                ->MicroData("http://schema.org/Product", "surface");
+            ->Identifier("surface")
+            ->Name($langs->trans("Surface"))
+            ->Description($langs->trans("Surface") . "(" . $langs->trans("SurfaceUnitm2") . ")")
+            ->MicroData("http://schema.org/Product", "surface");
         
         //====================================================================//
         // Volume
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("volume")
-                ->Name($langs->trans("Volume"))
-                ->Description($langs->trans("Volume") . "(" . $langs->trans("VolumeUnitm3") . ")")
-                ->MicroData("http://schema.org/Product", "volume");
+            ->Identifier("volume")
+            ->Name($langs->trans("Volume"))
+            ->Description($langs->trans("Volume") . "(" . $langs->trans("VolumeUnitm3") . ")")
+            ->MicroData("http://schema.org/Product", "volume");
         
         //====================================================================//
         // PRICES INFORMATIONS
@@ -75,89 +73,90 @@ trait MainTrait
         //====================================================================//
         // Product Selling Price
         $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("price")
-                ->Name($langs->trans("SellingPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
-                ->MicroData("http://schema.org/Product", "price")
-                ->isLogged()
-                ->isListed();
+            ->Identifier("price")
+            ->Name($langs->trans("SellingPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
+            ->MicroData("http://schema.org/Product", "price")
+            ->isLogged()
+            ->isListed();
         
-        if (Splash::local()->dolVersionCmp("4.0.0") >= 0) {
+        if (Local::dolVersionCmp("4.0.0") >= 0) {
             //====================================================================//
             // WholeSale Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                    ->Identifier("cost_price")
-                    ->Name($langs->trans("CostPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
-                    ->Description($langs->trans("CostPriceDescription"))
-                    ->isLogged()
-                    ->MicroData("http://schema.org/Product", "wholesalePrice");
+                ->Identifier("cost_price")
+                ->Name($langs->trans("CostPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
+                ->Description($langs->trans("CostPriceDescription"))
+                ->isLogged()
+                ->MicroData("http://schema.org/Product", "wholesalePrice");
         }
-        
-        return;
     }
 
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getMainSpecFields($Key, $FieldName)
+    protected function getMainSpecFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                $this->out[$FieldName] = (float) $this->convertWeight(
+                $this->out[$fieldName] = (float) $this->convertWeight(
                     $this->object->weight,
                     $this->object->weight_units
                 );
+
                 break;
             case 'length':
-                $this->out[$FieldName] = (float) $this->convertLength(
+                $this->out[$fieldName] = (float) $this->convertLength(
                     $this->object->length,
                     $this->object->length_units
                 );
+
                 break;
             case 'surface':
-                $this->out[$FieldName] = (float) $this->convertSurface(
+                $this->out[$fieldName] = (float) $this->convertSurface(
                     $this->object->surface,
                     $this->object->surface_units
                 );
+
                 break;
             case 'volume':
-                $this->out[$FieldName] = (float) $this->convertVolume(
+                $this->out[$fieldName] = (float) $this->convertVolume(
                     $this->object->volume,
                     $this->object->volume_units
                 );
+
                 break;
-            
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param null|string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getMainPriceFields($Key, $FieldName)
+    protected function getMainPriceFields($key, $fieldName)
     {
         global $conf;
         
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // PRICE INFORMATIONS
             //====================================================================//
@@ -165,161 +164,170 @@ trait MainTrait
                 //====================================================================//
                 // If multiprices are enabled
                 if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-                    $CfgPriceLevel = $conf->global->SPLASH_MULTIPRICE_LEVEL;
-                    $PriceLevel = !empty($CfgPriceLevel) ? $CfgPriceLevel : 1;
-                    $PriceType  = $this->object->multiprices_base_type[$PriceLevel];
-                    $PriceHT    = (double) $this->object->multiprices[$PriceLevel];
-                    $PriceTTC   = (double) $this->object->multiprices_ttc[$PriceLevel];
-                    $PriceVAT   = (double) $this->object->multiprices_tva_tx[$PriceLevel];
+                    $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL) 
+                            ? $conf->global->SPLASH_MULTIPRICE_LEVEL
+                            : null;
+                    $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
+                    $priceType  = $this->object->multiprices_base_type[$priceLevel];
+                    $priceHT    = (double) $this->object->multiprices[$priceLevel];
+                    $priceTTC   = (double) $this->object->multiprices_ttc[$priceLevel];
+                    $priceVAT   = (double) $this->object->multiprices_tva_tx[$priceLevel];
                 } else {
-                    $PriceType  = $this->object->price_base_type;
-                    $PriceHT    = (double) $this->object->price;
-                    $PriceTTC   = (double) $this->object->price_ttc;
-                    $PriceVAT   = (double) $this->object->tva_tx;
+                    $priceType  = $this->object->price_base_type;
+                    $priceHT    = (double) $this->object->price;
+                    $priceTTC   = (double) $this->object->price_ttc;
+                    $priceVAT   = (double) $this->object->tva_tx;
                 }
 
-                if ($PriceType === 'TTC') {
-                    $this->out[$FieldName] = self::prices()->Encode(
+                if ('TTC' === $priceType) {
+                    $this->out[$fieldName] = self::prices()->Encode(
                         null,
-                        $PriceVAT,
-                        $PriceTTC,
+                        $priceVAT,
+                        $priceTTC,
                         $conf->global->MAIN_MONNAIE
                     );
                 } else {
-                    $this->out[$FieldName] = self::prices()->Encode(
-                        $PriceHT,
-                        $PriceVAT,
+                    $this->out[$fieldName] = self::prices()->Encode(
+                        $priceHT,
+                        $priceVAT,
                         null,
                         $conf->global->MAIN_MONNAIE
                     );
                 }
+
                 break;
-
             case 'cost_price':
-                    $PriceHT    = (double) $this->object->cost_price;
-                    $this->out[$FieldName] = self::prices()
-                            ->Encode($PriceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
-                break;
+                    $priceHT    = (double) $this->object->cost_price;
+                    $this->out[$fieldName] = self::prices()
+                        ->Encode($priceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
 
+                break;
             default:
                 return;
         }
-        
-        unset($this->in[$Key]);
+            
+        if($key != null) {
+            unset($this->in[$key]);
+        }
     }
     
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setMainSpecFields($FieldName, $Data)
+    protected function setMainSpecFields($fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'weight':
-                if ((string)$Data !== (string) $this->convertWeight(
-                        
+                if ((string)$fieldData !== (string) $this->convertWeight(
                     $this->object->weight,
                     $this->object->weight_units
                 )) {
-                    $nomalized                      =   $this->normalizeWeight($Data);
+                    $nomalized                      =   $this->normalizeWeight($fieldData);
                     $this->object->weight           =   $nomalized->weight;
                     $this->object->weight_units     =   $nomalized->weight_units;
                     $this->needUpdate();
                 }
+
                 break;
             case 'length':
-                if ((string)$Data !== (string) $this->convertLength(
+                if ((string)$fieldData !== (string) $this->convertLength(
                     $this->object->length,
                     $this->object->length_units
                 )) {
-                    $nomalized                      =   $this->normalizeLength($Data);
+                    $nomalized                      =   $this->normalizeLength($fieldData);
                     $this->object->length           =   $nomalized->length;
                     $this->object->length_units     =   $nomalized->length_units;
                     $this->needUpdate();
                 }
+
                 break;
             case 'surface':
-                if ((string)$Data !== (string) $this->convertSurface(
+                if ((string)$fieldData !== (string) $this->convertSurface(
                     $this->object->surface,
                     $this->object->surface_units
                 )) {
-                    $nomalized                      =   $this->normalizeSurface($Data);
+                    $nomalized                      =   $this->normalizeSurface($fieldData);
                     $this->object->surface          =   $nomalized->surface;
                     $this->object->surface_units    =   $nomalized->surface_units;
                     $this->needUpdate();
                 }
+
                 break;
             case 'volume':
-                if ((string)$Data !== (string) $this->convertVolume(
+                if ((string)$fieldData !== (string) $this->convertVolume(
                     $this->object->volume,
                     $this->object->volume_units
                 )) {
-                    $nomalized                      =   $this->normalizeVolume($Data);
+                    $nomalized                      =   $this->normalizeVolume($fieldData);
                     $this->object->volume           =   $nomalized->volume;
                     $this->object->volume_units     =   $nomalized->volume_units;
                     $this->needUpdate();
                 }
+
                 break;
-                
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
     
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setMainPriceFields($FieldName, $Data)
+    protected function setMainPriceFields($fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // PRICES INFORMATIONS
             //====================================================================//
             case 'price':
-                $this->setProductPrice($Data);
+                $this->setProductPrice($fieldData);
+
                 break;
             case 'cost_price':
-                $this->setSimpleFloat($FieldName, $Data["ht"]);
+                $this->setSimpleFloat($fieldName, $fieldData["ht"]);
+
                 break;
-                
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
     
     /**
-     *  @abstract     Write New Price
+     * Write New Price
      *
-     *  @return         bool
+     * @param array $newPrice
+     *
+     * @return bool
      */
-    private function setProductPrice($NewPrice)
+    private function setProductPrice($newPrice)
     {
         global $user, $conf;
         
         //====================================================================//
         // Read Current Product Price (Via Out Buffer)
-        $this->getMainPriceFields(0, "price");
+        $this->getMainPriceFields(null, "price");
         //====================================================================//
         // Compare Prices
-        if (self::prices()->Compare($this->out["price"], $NewPrice)) {
+        if (self::prices()->Compare($this->out["price"], $newPrice)) {
             return true;
         }
                         
@@ -329,50 +337,39 @@ trait MainTrait
 
         //====================================================================//
         // Update Based on TTC Price
-        if ($NewPrice["base"]) {
-            $Price      = $NewPrice["ttc"];
-            $PriceBase  = "TTC";
+        if ($newPrice["base"]) {
+            $price      = $newPrice["ttc"];
+            $priceBase  = "TTC";
         //====================================================================//
         // Update Based on HT Price
         } else {
-            $Price      = $NewPrice["ht"];
-            $PriceBase  = "HT";
+            $price      = $newPrice["ht"];
+            $priceBase  = "HT";
         }
 
         //====================================================================//
         // If multiprices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $PriceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
+            $priceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
         } else {
-            $PriceLevel = 0;
+            $priceLevel = 0;
         }
                     
         //====================================================================//
         // Commit Price Update on Product Object
         //====================================================================//
         // For compatibility with previous versions => V3.5.0 or Above
-        if (Splash::local()->dolVersionCmp("3.5.0") >= 0) {
-            $Result = $this->object->updatePrice($Price, $PriceBase, $user, $NewPrice["vat"], '', $PriceLevel);
-        //====================================================================//
-        // For compatibility with previous versions => Below V3.5.0
-        } else {
-            $Result = $this->object->updatePrice(
-                $this->object->id,
-                $Price,
-                $PriceBase,
-                $user,
-                $NewPrice["vat"],
-                '',
-                $PriceLevel
-            );
-        }
+        $result = $this->object->updatePrice($price, $priceBase, $user, $newPrice["vat"], 0.0, $priceLevel);
+        
         //====================================================================//
         // Check potential Errors
-        if ($Result < 0) {
+        if ($result < 0) {
             $this->catchDolibarrErrors();
+
             return false;
         }
         $this->needUpdate();
+
         return true;
     }
 }

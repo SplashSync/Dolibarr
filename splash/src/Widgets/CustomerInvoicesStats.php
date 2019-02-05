@@ -38,6 +38,7 @@ namespace   Splash\Local\Widgets;
 
 use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 class CustomerInvoicesStats extends AbstractWidget
 {
@@ -75,30 +76,23 @@ class CustomerInvoicesStats extends AbstractWidget
         'UseCache'      =>  true,
         'CacheLifeTime' =>  60,
     );
-    
-    //====================================================================//
-    // General Class Variables
-    //====================================================================//
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
     }
     
     /**
-     *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
-     *                        $params["start"]      Maximum Number of results
-     *                        $params["end"]        List Start Offset
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
-
+     * {@inheritdoc}
      */
     public function get($params = null)
     {
@@ -107,7 +101,7 @@ class CustomerInvoicesStats extends AbstractWidget
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
@@ -127,22 +121,48 @@ class CustomerInvoicesStats extends AbstractWidget
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->render());
+        $blocks = $this->blocksFactory()->render();
+        if(false !== $blocks) {
+            $this->setBlocks($blocks);
+        }
 
         //====================================================================//
         // Publish Widget
         return $this->render();
     }
-        
+    
+    //====================================================================//
+    // Overide Splash Functions
+    //====================================================================//
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");
+        return html_entity_decode($langs->trans(static::$NAME));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDesc()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");
+        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+    }
 
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
-
-
     
     /**
-     * @abstract    Read Widget Datas
+     * Read Widget Datas
      */
     private function getData()
     {
@@ -165,14 +185,14 @@ class CustomerInvoicesStats extends AbstractWidget
         $sql.= " GROUP BY step";
         $sql.= $db->order('step', 'ASC');
 
-        $Result = $db->query($sql);
+        $result = $db->query($sql);
 
-        $RawData = array();
-        foreach (mysqli_fetch_all($Result, MYSQLI_ASSOC) as $Value) {
-            $RawData[$Value["step"]] = $Value["total"];
+        $rawData = array();
+        foreach (mysqli_fetch_all($result, MYSQLI_ASSOC) as $value) {
+            $rawData[$value["step"]] = $value["total"];
         }
         
-        return $this->parseDatedData($RawData);
+        return $this->parseDatedData($rawData);
     }
    
     
@@ -189,51 +209,25 @@ class CustomerInvoicesStats extends AbstractWidget
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $Data   = $this->getData();
+        $data   = $this->getData();
 
         //====================================================================//
         // Chart Options
-        $ChartOptions = array(
+        $chartOptions = array(
             "title"     => $langs->trans("SalesTurnover"),
             "labels"            => array($langs->trans("AmountTTCShort")),
         );
         //====================================================================//
         // Block Options
-        $Options = array(
+        $options = array(
             "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->blocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
+        $this->blocksFactory()->addMorrisGraphBlock($data, "Bar", $chartOptions, $options);
     }
     
     //====================================================================//
     // Class Tooling Functions
     //====================================================================//
-
-    //====================================================================//
-    // Overide Splash Functions
-    //====================================================================//
-
-    /**
-     *      @abstract   Return name of this Widget Class
-     */
-    public function getName()
-    {
-        global $langs;
-        $langs->load("main");
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$NAME));
-    }
-
-    /**
-     *      @abstract   Return Description of this Widget Class
-     */
-    public function getDesc()
-    {
-        global $langs;
-        $langs->load("main");
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
-    }
 }

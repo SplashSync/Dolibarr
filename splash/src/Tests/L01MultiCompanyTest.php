@@ -1,34 +1,52 @@
 <?php
+
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Local\Tests;
 
-use Splash\Tests\Tools\ObjectsCase;
 use Splash\Client\Splash;
+use Splash\Tests\Tools\ObjectsCase;
+use Splash\Local\Local;
 
 /**
- * @abstract    Local Test Suite - Verify Acces to MultiCompany Objects
- *
- * @author SplashSync <contact@splashsync.com>
+ * Local Test Suite - Verify Acces to MultiCompany Objects
  */
 class L01MultiCompanyTest extends ObjectsCase
 {
+    use \Splash\Local\Core\MultiCompanyTrait;
     
     /**
      * @var array
      */
-    private $ObjectList     = array();
+    private $objectList     = array();
 
     /**
      * @var array
      */
-    private $ObjectCount    = array();
+    private $objectCount    = array();
         
     /**
-     * @abstract    Test Loading of Object that are not on Selected Entity
+     * Test Loading of Object that are not on Selected Entity
+     *
      * @dataProvider ObjectTypesProvider
+     *
+     * @param string $sequence
+     * @param string $objectType
      */
-    public function testLoadAcces($Sequence, $ObjectType)
+    public function testLoadAcces($sequence, $objectType)
     {
-        $this->loadLocalTestSequence($Sequence);
+        $this->loadLocalTestSequence($sequence);
         
         //====================================================================//
         //   Enable MultiCompany Mode
@@ -40,20 +58,20 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Get next Available Object ID from Module
-        $ObjectId = $this->getNextObjectId($ObjectType);
-        $this->assertNotEmpty($ObjectId);
+        $objectId = $this->getNextObjectId($objectType);
+        $this->assertNotEmpty($objectId);
 
         //====================================================================//
         //   Get Readable Object Fields List
-        $Fields = $this->reduceFieldList(Splash::object($ObjectType)->Fields(), true, false);
+        $fields = $this->reduceFieldList(Splash::object($objectType)->Fields(), true, false);
         
         //====================================================================//
         //   Execute Action Directly on Module
-        $Allowed = Splash::object($ObjectType)->Get($ObjectId, $Fields);
+        $allowed = Splash::object($objectType)->Get($objectId, $fields);
         
         //====================================================================//
         //   Verify Response
-        $this->assertNotEmpty($Allowed);
+        $this->assertNotEmpty($allowed);
 
         //====================================================================//
         //   Simulate Logged on another Entity
@@ -61,11 +79,11 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Execute Action Directly on Module
-        $Rejected = Splash::object($ObjectType)->Get($ObjectId, $Fields);
+        $rejected = Splash::object($objectType)->Get($objectId, $fields);
         
         //====================================================================//
         //   Verify Response
-        $this->assertFalse($Rejected);
+        $this->assertFalse($rejected);
         
         //====================================================================//
         //   Simulate Logged on Main Entity
@@ -73,12 +91,16 @@ class L01MultiCompanyTest extends ObjectsCase
     }
     
     /**
-     * @abstract    Test Delete of Object that are not on Selected Entity
+     * Test Delete of Object that are not on Selected Entity
+     *
      * @dataProvider ObjectTypesProvider
+     *
+     * @param string $sequence
+     * @param string $objectType
      */
-    public function testDeleteAccess($Sequence, $ObjectType)
+    public function testDeleteAccess($sequence, $objectType)
     {
-        $this->loadLocalTestSequence($Sequence);
+        $this->loadLocalTestSequence($sequence);
         
         //====================================================================//
         //   Enable MultiCompany Mode
@@ -90,18 +112,19 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Generate Dummy Object Data (Required Fields Only)
-        $DummyData = $this->prepareForTesting($ObjectType);
-        if ($DummyData == false) {
+        $dummyData = $this->prepareForTesting($objectType);
+        if (false == $dummyData) {
             return true;
         }
         
         //====================================================================//
         //   Create a New Object on Module
-        $ObjectId = Splash::object($ObjectType)->Set(null, $DummyData);
+        $objectId = Splash::object($objectType)->Set(null, $dummyData);
+        $this->assertInternalType('string', $objectId);
         
         //====================================================================//
         // Lock New Objects To Avoid Action Commit
-        Splash::object($ObjectType)->Lock($ObjectId);
+        Splash::object($objectType)->Lock($objectId);
         
         //====================================================================//
         //   Simulate Logged on another Entity
@@ -109,11 +132,11 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Delete Object on Module
-        $Rejected = Splash::object($ObjectType)->Delete($ObjectId);
+        $rejected = Splash::object($objectType)->Delete($objectId);
         
         //====================================================================//
         //   Verify Response
-        $this->assertFalse($Rejected);
+        $this->assertFalse($rejected);
 
         //====================================================================//
         //   Simulate Logged on Main Entity
@@ -121,146 +144,149 @@ class L01MultiCompanyTest extends ObjectsCase
         
         //====================================================================//
         //   Delete Object on Module
-        $Allowed = Splash::object($ObjectType)->Delete($ObjectId);
+        $allowed = Splash::object($objectType)->Delete($objectId);
         
         //====================================================================//
         //   Verify Response
-        $this->assertTrue($Allowed);
+        $this->assertTrue($allowed);
     }
 
     /**
-     * @abstract    Simulate MultiCompany Mode
+     * Simulate MultiCompany Mode
+     *
+     * @param bool $state
      */
-    public function changeMultiCompanyMode($State = false)
+    public function changeMultiCompanyMode($state = false)
     {
         global $db, $conf;
         
         //====================================================================//
         // Check Dolibarr Version Is Compatible
-        if (Splash::local()->dolVersionCmp("5.0.0") < 0) {
+        if (Local::dolVersionCmp("5.0.0") < 0) {
             $this->markTestSkipped('This Feature is Not Implemented on Current Dolibarr Release.');
         }
         
-        dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($State?1:0), 'chaine', 0, '', $conf->entity);
+        dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity);
     }
     
     /**
-     * @abstract    Simulate Change of MultiCompany Entity
+     * Simulate Change of MultiCompany Entity
+     *
+     * @param int $entityId
      */
-    public function changeEntityId($EntityId = 10)
+    public function changeEntityId($entityId = 10)
     {
         global $conf, $db, $user;
         
         //====================================================================//
         // Check MultiCompany Module
-        $this->assertTrue(Splash::local()->isMultiCompany());
+        $this->assertTrue(self::isMultiCompany());
         
         //====================================================================//
         // Switch Entity
-        $conf->entity   =   (int)   $EntityId;
+        $conf->entity   =   (int)   $entityId;
         $conf->setValues($db);
         $user->entity   =   $conf->entity;
 
         return $conf->entity;
     }
 
-    public function getNextObjectId($ObjectType)
+    public function getNextObjectId($objectType)
     {
         //====================================================================//
         //   If Object List Not Loaded
-        if (!isset($this->ObjectList[$ObjectType])) {
+        if (!isset($this->objectList[$objectType])) {
             //====================================================================//
             //   Get Object List from Module
-            $List = Splash::object($ObjectType)->ObjectsList();
+            $list = Splash::object($objectType)->ObjectsList();
 
             //====================================================================//
             //   Get Object Count
-            $this->ObjectCount[$ObjectType] = $List["meta"]["current"];
+            $this->objectCount[$objectType] = $list["meta"]["current"];
             
             //====================================================================//
             //   Remove Meta Datats form Objects List
-            unset($List["meta"]);
+            unset($list["meta"]);
             
             //====================================================================//
-            //   Convert ArrayObjects
-            if (is_a($List, "ArrayObject")) {
-                $this->ObjectList[$ObjectType] = $List->getArrayCopy();
-            } else {
-                $this->ObjectList[$ObjectType] = $List;
-            }
+            //   Convert Store List
+            $this->objectList[$objectType] = $list;
         }
         
         //====================================================================//
         //   Verify Objects List is Not Empty
-        if ($this->ObjectCount[$ObjectType] <= 0) {
+        if ($this->objectCount[$objectType] <= 0) {
             $this->markTestSkipped('No Objects in Database.');
+
             return false;
         }
         
         //====================================================================//
         //   Return First Object of List
-        $NextObject = array_shift($this->ObjectList[$ObjectType]);
-        return $NextObject["id"];
+        $nextObject = array_shift($this->objectList[$objectType]);
+
+        return $nextObject["id"];
     }
     
-    public function verifyTestIsAllowed($ObjectType)
+    public function verifyTestIsAllowed($objectType)
     {
-        $Definition = Splash::object($ObjectType)->Description();
+        $definition = Splash::object($objectType)->Description();
 
-        $this->assertNotEmpty($Definition);
+        $this->assertNotEmpty($definition);
         //====================================================================//
         //   Verify Create is Allowed
-        if (!$Definition["allow_push_created"]) {
+        if (!$definition["allow_push_created"]) {
             return false;
         }
         //====================================================================//
         //   Verify Delete is Allowed
-        if (!$Definition["allow_push_deleted"]) {
+        if (!$definition["allow_push_deleted"]) {
             return false;
         }
+
         return true;
     }
     
-    public function prepareForTesting($ObjectType)
+    public function prepareForTesting($objectType)
     {
         //====================================================================//
         //   Verify Test is Required
-        if (!$this->verifyTestIsAllowed($ObjectType)) {
+        if (!$this->verifyTestIsAllowed($objectType)) {
             return false;
         }
         
         //====================================================================//
         // Read Required Fields & Prepare Dummy Data
         //====================================================================//
-        $Write          = false;
-        $Fields         = Splash::object($ObjectType)->Fields();
-        foreach ($Fields as $Key => $Field) {
+        $write          = false;
+        $fields         = Splash::object($objectType)->Fields();
+        foreach ($fields as $key => $field) {
             //====================================================================//
             // Skip Non Required Fields
-            if (!$Field->required) {
-                unset($Fields[$Key]);
+            if (!$field->required) {
+                unset($fields[$key]);
             }
             //====================================================================//
             // Check if Write Fields
-            if ($Field->write) {
-                $Write = true;
+            if ($field->write) {
+                $write = true;
             }
         }
         
         //====================================================================//
         // If No Writable Fields
-        if (!$Write) {
+        if (!$write) {
             return false;
         }
         
         //====================================================================//
         // Lock New Objects To Avoid Action Commit
-        Splash::object($ObjectType)->Lock();
+        Splash::object($objectType)->Lock();
         
         //====================================================================//
         // Clean Objects Commited Array
         Splash::$commited = array();
         
-        return $this->fakeObjectData($Fields);
+        return $this->fakeObjectData($fields);
     }
 }

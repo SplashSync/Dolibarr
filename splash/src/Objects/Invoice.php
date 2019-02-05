@@ -1,57 +1,34 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
- *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
- *  \ingroup    OSWS - Open Synchronisation WebService
- *  \brief      Local Function Definition for Management of Customers Data
- *  \class      OsWs_Local_Customers
- *  \remarks	Designed for Splash Module - Dolibar ERP Version
-*/
-                    
-//====================================================================//
-// *******************************************************************//
-//                     SPLASH FOR PRESTASHOP                          //
-// *******************************************************************//
-//                CUSTOMERS INVOICE DATA MANAGEMENT                    //
-// *******************************************************************//
-//====================================================================//
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects;
 
+use Facture;
 use Splash\Core\SplashCore      as Splash;
-
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\IntelParserTrait;
-use Splash\Models\Objects\SimpleFieldsTrait;
+use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
-use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
- *  \class      Order
- *  \brief      Customers Invoices Management Class
+ * CUSTOMERS INVOICE DATA MANAGEMENT
  */
 class Invoice extends AbstractObject
 {
-  
     // Splash Php Core Traits
     use IntelParserTrait;
     use SimpleFieldsTrait;
@@ -67,6 +44,7 @@ class Invoice extends AbstractObject
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\CustomerTrait;
+    use \Splash\Local\Core\MultiCompanyTrait;
     
     // Dolibarr Invoices Traits
     use \Splash\Local\Objects\Invoice\ObjectsListTrait;
@@ -76,6 +54,17 @@ class Invoice extends AbstractObject
     use \Splash\Local\Objects\Invoice\ItemsTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
     use \Splash\Local\Objects\Invoice\StatusTrait;
+    
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public static $ExtraFieldsType    =  "facture";
+    
+    /**
+     * @var Facture
+     */
+    protected $object;
     
     //====================================================================//
     // Object Definition Parameters
@@ -102,18 +91,11 @@ class Invoice extends AbstractObject
     protected static $ICO     =  "fa fa-money";
     
     //====================================================================//
-    // ExtraFields Type
-    //====================================================================//
-    
-    public static $ExtraFieldsType    =  "facture";
-    
-    //====================================================================//
     // Class Constructor
     //====================================================================//
-        
+    
     /**
-     *      @abstract       Class Constructor (Used only if localy necessary)
-     *      @return         int                     0 if KO, >0 if OK
+     * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
@@ -134,6 +116,5 @@ class Invoice extends AbstractObject
         //====================================================================//
         //  Load Local Translation File
         Splash::translator()->Load("objects@local");
-        return true;
     }
 }

@@ -1,42 +1,41 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Invoice;
 
-use Facture;
+use User;
 use DateTime;
-
+use Facture;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    Dolibarr Customer Invoice CRUD Functions
+ * Dolibarr Customer Invoice CRUD Functions
  */
 trait CRUDTrait
 {
-    
     /**
-     * @abstract    Load Request Object
-     * @param       string  $Id               Object id
-     * @return      mixed
+     * Load Request Object
+     *
+     * @param string $objectId Object id
+     *
+     * @return Facture|false
      */
-    public function load($Id)
+    public function load($objectId)
     {
-        global $db, $user;
-        global $conf;
+        global $db, $user, $conf;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
@@ -47,41 +46,41 @@ trait CRUDTrait
         }
         //====================================================================//
         // Init Object
-        $Object = new Facture($db);
+        $object = new Facture($db);
         //====================================================================//
         // Fatch Object
-        if ($Object->fetch($Id) != 1) {
-            $this->catchDolibarrErrors($Object);
+        if (1 != $object->fetch((int) $objectId)) {
+            $this->catchDolibarrErrors($object);
             Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Current Entity is : " . $conf->entity);
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Customer Invoice (" . $Id . ")."
+                " Unable to load Customer Invoice (" . $objectId . ")."
             );
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+        if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Customer Invoice (" . $Id . ")."
+                " Unable to load Customer Invoice (" . $objectId . ")."
             );
         }
-        $Object->fetch_lines();
-        $this->loadPayments($Id);
+        $object->fetch_lines();
+        $this->loadPayments($objectId);
         $this->initCustomerDetection();
-        return $Object;
+
+        return $object;
     }
 
     /**
-     * @abstract    Create Request Object
+     * Create Request Object
      *
-     * @param       array   $List         Given Object Data
-     *
-     * @return      object     New Object
+     * @return Facture|false
      */
     public function create()
     {
@@ -96,7 +95,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
@@ -104,9 +103,9 @@ trait CRUDTrait
         $this->object = new Facture($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $DateTime   =   new DateTime($this->in["date"]);
-        $this->setSimple('date', $DateTime->getTimestamp());
-        $this->setSimple('date_commande', $DateTime->getTimestamp());
+        $dateTime   =   new DateTime($this->in["date"]);
+        $this->setSimple('date', $dateTime->getTimestamp());
+        $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
         $this->setSimple("statut", Facture::STATUS_DRAFT);
         $this->object->statut = Facture::STATUS_DRAFT;
@@ -116,6 +115,7 @@ trait CRUDTrait
         // Create Object In Database
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
@@ -128,30 +128,31 @@ trait CRUDTrait
     }
     
     /**
-     * @abstract    Update Request Object
+     * Update Request Object
      *
-     * @param       array   $Needed         Is This Update Needed
+     * @param bool $needed Is This Update Needed
      *
-     * @return      string      Object Id
+     * @return false|string Object Id
      */
-    public function update($Needed)
+    public function update($needed)
     {
         global $user;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
-        if (!$Needed) {
-            return (int) $this->object->id;
+        if (!$needed) {
+            return (string) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Update Object
         if ($this->object->update($user)  <= 0) {
             $this->catchDolibarrErrors();
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
@@ -164,17 +165,18 @@ trait CRUDTrait
         if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->object->id;
+
+        return (string) $this->object->id;
     }
     
     /**
-     * @abstract    Delete requested Object
+     * Delete requested Object
      *
-     * @param       int     $Id     Object Id.  If NULL, Object needs to be created.
+     * @param string $objectId Object Id.  If NULL, Object needs to be created.
      *
-     * @return      bool
+     * @return bool
      */
-    public function delete($Id = null)
+    public function delete($objectId = null)
     {
         global $db,$user,$conf;
         //====================================================================//
@@ -182,48 +184,45 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Object
-        $Object = new \Facture($db);
+        $object = new Facture($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Debug Mode => Force Allow Delete
-        if (defined("SPLASH_DEBUG") && SPLASH_DEBUG) {
+        if (defined("SPLASH_DEBUG") && !empty(SPLASH_DEBUG)) {
             $conf->global->INVOICE_CAN_ALWAYS_BE_REMOVED = 1;
-        }
-        //====================================================================//
-        // Debug Mode => Force Delete All Invooices Payments
-        if (defined("SPLASH_DEBUG") && SPLASH_DEBUG) {
-            $this->clearPayments($Id);
+            $this->clearPayments((int) $objectId);
         }
         //====================================================================//
         // Set Object Id, fetch not needed
-        $Object->id = $Id;
+        $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        unset($Object->entity);
-        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+        $object->entity = null;
+        if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Customer Invoice (" . $Id . ")."
+                " Unable to Delete Customer Invoice (" . $objectId . ")."
             );
         }
         //====================================================================//
         // Delete Object
-        $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : 0;
-        if ($Object->delete($Arg1) <= 0) {
-            $this->catchDolibarrErrors($Object);
+        if ($object->delete($user) <= 0) {
+            $this->catchDolibarrErrors($object);
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Customer Invoice (" . $Id . ")"
+                " Unable to Delete Customer Invoice (" . $objectId . ")"
             ) ;
         }
+
         return true;
     }
 }

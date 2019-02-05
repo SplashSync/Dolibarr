@@ -1,33 +1,30 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Products Stock Fields
+ * Dolibarr Products Stock Fields
  */
 trait StockTrait
 {
-
     /**
-    *   @abstract     Build Fields using FieldFactory
-    */
+     * Build Fields using FieldFactory
+     */
     protected function buildStockFields()
     {
         global $langs;
@@ -39,58 +36,55 @@ trait StockTrait
         //====================================================================//
         // Stock Reel
         $this->fieldsFactory()->create(SPL_T_INT)
-                ->Identifier("stock_reel")
-                ->Name($langs->trans("RealStock"))
-                ->MicroData("http://schema.org/Offer", "inventoryLevel")
-                ->isListed();
+            ->Identifier("stock_reel")
+            ->Name($langs->trans("RealStock"))
+            ->MicroData("http://schema.org/Offer", "inventoryLevel")
+            ->isListed();
 
         //====================================================================//
         // Stock Alerte Level
         $this->fieldsFactory()->create(SPL_T_INT)
-                ->Identifier("seuil_stock_alerte")
-                ->Name($langs->trans("StockLimit"))
-                ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
+            ->Identifier("seuil_stock_alerte")
+            ->Name($langs->trans("StockLimit"))
+            ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
                 
         //====================================================================//
         // Stock Alerte Flag
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("stock_alert_flag")
-                ->Name($langs->trans("StockTooLow"))
-                ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
-                ->isReadOnly();
+            ->Identifier("stock_alert_flag")
+            ->Name($langs->trans("StockTooLow"))
+            ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
+            ->isReadOnly();
         
         //====================================================================//
         // Stock Expected Level
         $this->fieldsFactory()->create(SPL_T_INT)
-                ->Identifier("desiredstock")
-                ->Name($langs->trans("DesiredStock"))
-                ->MicroData("http://schema.org/Offer", "inventoryTargetLevel");
+            ->Identifier("desiredstock")
+            ->Name($langs->trans("DesiredStock"))
+            ->MicroData("http://schema.org/Offer", "inventoryTargetLevel");
 
         //====================================================================//
         // Average Purchase price value
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("pmp")
-                ->Name($langs->trans("EstimatedStockValueShort"))
-                ->MicroData("http://schema.org/Offer", "averagePrice")
-                ->isReadOnly();
-        
-        return;
+            ->Identifier("pmp")
+            ->Name($langs->trans("EstimatedStockValueShort"))
+            ->MicroData("http://schema.org/Offer", "averagePrice")
+            ->isReadOnly();
     }
 
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getStockFields($Key, $FieldName)
+    protected function getStockFields($key, $fieldName)
     {
-
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // STOCK INFORMATIONS
             //====================================================================//
@@ -98,78 +92,77 @@ trait StockTrait
             //====================================================================//
             // Stock Alerte Flag
             case 'stock_alert_flag':
-                $this->out[$FieldName] = ( $this->object->stock_reel < $this->object->seuil_stock_alerte );
+                $this->out[$fieldName] = ($this->object->stock_reel < $this->object->seuil_stock_alerte);
+
                 break;
-            
             //====================================================================//
             // Stock Direct Reading
             case 'stock_reel':
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
-                $this->getSimple($FieldName, "object", 0);
+                $this->getSimple($fieldName, "object", 0);
+
                 break;
-            
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setStockFields($FieldName, $Data)
+    protected function setStockFields($fieldName, $fieldData)
     {
-
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Direct Writtings
             case 'stock_reel':
-                $this->setProductStock($Data);
+                $this->setProductStock($fieldData);
+
                 break;
-                
             //====================================================================//
             // Direct Writtings
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
-                $this->setSimple($FieldName, $Data);
+                $this->setSimple($fieldName, $fieldData);
+
                 break;
-                
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
     
     /**
-     * @abstract    Create Stock Transaction to Update Products Stocks Level
+     * Create Stock Transaction to Update Products Stocks Level
      *
-     * @param       int $NewStock New Product Stock
+     * @param int $newStock New Product Stock
      *
-     * @return      bool
+     * @return bool
      */
-    private function setProductStock($NewStock)
+    private function setProductStock($newStock)
     {
         global $conf, $langs, $user;
 
         //====================================================================//
         // Compare Current Product Stock with new Value
-        if ($this->object->stock_reel == $NewStock) {
+        if ($this->object->stock_reel == $newStock) {
             return true;
         }
         //====================================================================//
         // Update Product Stock
-        $delta  =   $this->object->stock_reel - $NewStock;
+        $delta  =   $this->object->stock_reel - $newStock;
         //====================================================================//
         // Verify Default Product Stock is defined
         if (empty($conf->global->SPLASH_STOCK)) {
@@ -177,7 +170,7 @@ trait StockTrait
         }
         //====================================================================//
         // Update Product Stock
-        $Result = $this->object->correct_stock(
+        $result = $this->object->correct_stock(
             $user,                                      // Current User Object
             $conf->global->SPLASH_STOCK,                // Impacted Stock Id
             abs($delta),                                // Quantity to Move
@@ -187,10 +180,12 @@ trait StockTrait
         );
         //====================================================================//
         // Check potential Errors
-        if ($Result < 0) {
+        if ($result < 0) {
             $this->catchDolibarrErrors();
+
             return false;
         }
+
         return true;
     }
 }

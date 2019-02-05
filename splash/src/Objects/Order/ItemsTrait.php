@@ -1,58 +1,57 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Order;
 
+use OrderLine;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    Dolibarr Customer Orders Items Fields
+ * Dolibarr Customer Orders Items Fields
  */
 trait ItemsTrait
 {
-
     /**
-     *  @abstract     Create a New Line Item
+     * Create a New Line Item
      *
-     *  @return         OrderLine
+     * @return OrderLine
      */
     protected function createItem()
     {
         global $db;
         
-        $Item   = new  \OrderLine($db);
+        $item   = new  OrderLine($db);
         
         //====================================================================//
         // Pre-Setup of Item
-        $Item->fk_commande = $this->object->id;
+        $item->fk_commande = $this->object->id;
         
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
-        return $this->insertItem($Item);
+        return $this->insertItem($item);
     }
     
     /**
-     *  @abstract     Delete a Line Item
+     * Delete a Line Item
      *
-     *  @param        OrderLine     $OrderLine  Order OrderLine Item
+     * @param OrderLine $orderLine Order OrderLine Item
      *
-     *  @return         bool
+     * @return bool
      */
-    protected function deleteItem($OrderLine)
+    protected function deleteItem($orderLine)
     {
         global $user;
         //====================================================================//
@@ -60,14 +59,11 @@ trait ItemsTrait
         $this->object->statut         = 0;
         $this->object->brouillon      = 1;
         //====================================================================//
-        // Prepare Args
-        $Arg1 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $user : $OrderLine->id;
-        $Arg2 = ( Splash::local()->dolVersionCmp("5.0.0") > 0 ) ? $OrderLine->id : null;
-        //====================================================================//
         // Perform Line Delete
-        if ($this->object->deleteline($Arg1, $Arg2) <= 0) {
+        if ($this->object->deleteline($user, $orderLine->id) <= 0) {
             return $this->catchDolibarrErrors();
         }
+
         return true;
     }
 }

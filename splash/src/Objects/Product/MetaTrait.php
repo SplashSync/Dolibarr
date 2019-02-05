@@ -1,19 +1,17 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects\Product;
 
@@ -22,10 +20,8 @@ namespace   Splash\Local\Objects\Product;
  */
 trait MetaTrait
 {
-
-    
     /**
-     * @abstract     Build Meta Fields using FieldFactory
+     * Build Meta Fields using FieldFactory
      */
     protected function buildMetaFields()
     {
@@ -34,71 +30,71 @@ trait MetaTrait
         //====================================================================//
         // On Sell
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("status_buy")
-                ->Name($langs->trans("Status").' ('.$langs->trans("Buy").')')
-                ->MicroData("http://schema.org/Product", "ordered")
-                ->Group("Meta")
-                ->isListed();
+            ->Identifier("status_buy")
+            ->Name($langs->trans("Status").' ('.$langs->trans("Buy").')')
+            ->MicroData("http://schema.org/Product", "ordered")
+            ->Group("Meta")
+            ->isListed();
         
         //====================================================================//
         // On Buy
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("status")
-                ->Name($langs->trans("Status").' ('.$langs->trans("Sell").')')
-                ->MicroData("http://schema.org/Product", "offered")
-                ->Group("Meta")
-                ->isListed();
+            ->Identifier("status")
+            ->Name($langs->trans("Status").' ('.$langs->trans("Sell").')')
+            ->MicroData("http://schema.org/Product", "offered")
+            ->Group("Meta")
+            ->isListed();
     }
 
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    private function getMetaFields($Key, $FieldName)
+    private function getMetaFields($key, $fieldName)
     {
-
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // OTHERS INFORMATIONS
             //====================================================================//
             case 'status':
             case 'status_buy':
-                $this->getSimpleBool($FieldName);
+                $this->getSimpleBool($fieldName);
+
                 break;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
     
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    private function setMetaFields($FieldName, $Data)
+    private function setMetaFields($fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Direct Writtings
             case 'status':
             case 'status_buy':
-                $this->setSimple($FieldName, (bool) $Data);
+                $this->setSimple($fieldName, (bool) $fieldData);
+
                 break;
-                
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
 }

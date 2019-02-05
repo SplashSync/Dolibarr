@@ -1,36 +1,38 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Product;
 
+use User;
+use Product;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    Dolibarr Product CRUD Functions
+ * Dolibarr Product CRUD Functions
  */
 trait CRUDTrait
 {
-    
     /**
-     * @abstract    Load Request Object
-     * @param       string  $Id               Object id
-     * @return      mixed
+     * Load Request Object
+     *
+     * @param string $objectId Object id
+     *
+     * @return false|Product
      */
-    public function load($Id)
+    public function load($objectId)
     {
         global $db;
         //====================================================================//
@@ -38,27 +40,37 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Init Object
-        $Object = new \Product($db);
+        $object = new Product($db);
         //====================================================================//
         // Fatch Object
-        if ($Object->fetch($Id) != 1) {
-            $this->catchDolibarrErrors($Object);
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Unable to load Product (" . $Id . ").");
+        if (1 != $object->fetch((int) $objectId)) {
+            $this->catchDolibarrErrors($object);
+
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Unable to load Product (" . $objectId . ")."
+            );
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Unable to load Product (" . $Id . ").");
+        if (!self::isMultiCompanyAllowed($object)) {
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Unable to load Product (" . $objectId . ")."
+            );
         }
-        return $Object;
+
+        return $object;
     }
 
     /**
-     * @abstract    Create Request Object
+     * Create Request Object
      *
-     * @param       array   $List         Given Object Data
-     *
-     * @return      object     New Object
+     * @return false|Product
      */
     public function create()
     {
@@ -78,17 +90,17 @@ trait CRUDTrait
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         
         //====================================================================//
         // Init Object
-        $this->object = new \Product($db);
+        $this->object = new Product($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("ref", $this->in["ref"]);
-        $this->setMultilang("label", $this->in["label"]);
+        $this->setSimple("label", $this->in["label"]);
         //====================================================================//
         // Required For Dolibarr Below 3.6
         $this->object->type        = 0;
@@ -102,8 +114,10 @@ trait CRUDTrait
         }
         //====================================================================//
         // Create Object In Database
+        /** @var User $user */
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
+
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
         }
         
@@ -111,31 +125,33 @@ trait CRUDTrait
     }
     
     /**
-     * @abstract    Update Request Object
+     * Update Request Object
      *
-     * @param       array   $Needed         Is This Update Needed
+     * @param bool $needed Is This Update Needed
      *
-     * @return      string      Object Id
+     * @return false|string Object Id
      */
-    public function update($Needed)
+    public function update($needed)
     {
         global $user;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
-        if (!$Needed) {
+        if (!$needed) {
             Splash::log()->deb("Product Update not Needed");
-            return (int) $this->object->id;
+
+            return (string) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Update Product Object
         if ($this->object->update($this->object->id, $user) <= 0) {
             $this->catchDolibarrErrors();
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
@@ -148,17 +164,18 @@ trait CRUDTrait
         if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->object->id;
+
+        return (string) $this->object->id;
     }
     
     /**
-     * @abstract    Delete requested Object
+     * Delete requested Object
      *
-     * @param       int     $Id     Object Id.  If NULL, Object needs to be created.
+     * @param string $objectId Object Id.  If NULL, Object needs to be created.
      *
-     * @return      bool
+     * @return bool
      */
-    public function delete($Id = null)
+    public function delete($objectId = null)
     {
         global $db,$user;
         //====================================================================//
@@ -166,32 +183,32 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Object
-        $Object = new \Product($db);
+        $object = new Product($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Set Object Id, fetch not needed
-        $Object->id = $Id;
+        $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        unset($Object->entity);
-        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+        $object->entity = null;
+        if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Product (" . $Id . ")."
+                " Unable to Delete Product (" . $objectId . ")."
             );
         }
         //====================================================================//
         // Delete Object
-        $Arg1 = ( Splash::local()->dolVersionCmp("6.0.0") > 0 ) ? $user : 0;
-        if ($Object->delete($Arg1) <= 0) {
-            return $this->catchDolibarrErrors($Object);
+        if ($object->delete($user) <= 0) {
+            return $this->catchDolibarrErrors($object);
         }
+
         return true;
     }
 }

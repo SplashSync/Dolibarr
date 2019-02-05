@@ -1,19 +1,17 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Core;
 
@@ -21,51 +19,49 @@ use Exception;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Push Dolibarr Errors Array to Splash Log
+ * Push Dolibarr Errors Array to Splash Log
  */
 trait ErrorParserTrait
 {
-    
     /**
-     * @abstract    Catch Dolibarr Common Objects Errors and Push to Splash Logger
+     * Catch Dolibarr Common Objects Errors and Push to Splash Logger
      *
-     * @param   object  $Subject    Focus on a specific object
+     * @param object $subject Focus on a specific object
      *
-     * @return  bool                False if Error was Found
+     * @return bool False if Error was Found
      */
-    protected function catchDolibarrErrors($Subject = null)
+    protected function catchDolibarrErrors($subject = null)
     {
-        
         //====================================================================//
         // Use Current Parser Object
-        if (is_null($Subject)) {
-            $Subject    = $this->object;
+        if (is_null($subject)) {
+            $subject    = $this->object;
         }
         
-        return $this->catchSimpleErrors($Subject) & $this->catchArrayErrors($Subject);
+        return $this->catchSimpleErrors($subject) && $this->catchArrayErrors($subject);
     }
     
     /**
-     * @abstract    Catch Dolibarr Common Objects Simple Errors
+     * Catch Dolibarr Common Objects Simple Errors
      *
-     * @param   object  $Subject    Focus on a specific object
+     * @param object $subject Focus on a specific object
      *
-     * @return  bool                False if Error was Found
+     * @return bool False if Error was Found
      */
-    private function catchSimpleErrors($Subject = null)
+    private function catchSimpleErrors($subject = null)
     {
-        
         global $langs;
         
         //====================================================================//
         // Simple Error
-        if (isset($Subject->error) && !empty($Subject->error) && is_scalar($Subject->error)) {
-            $Trace = (new Exception())->getTrace()[1];
+        if (isset($subject->error) && !empty($subject->error) && is_scalar($subject->error)) {
+            $trace = (new Exception())->getTrace()[1];
+
             return  Splash::log()->err(
                 "ErrLocalTpl",
-                $Trace["class"],
-                $Trace["function"],
-                html_entity_decode($langs->trans($Subject->error))
+                $trace["class"],
+                $trace["function"],
+                html_entity_decode($langs->trans($subject->error))
             );
         }
         
@@ -73,36 +69,35 @@ trait ErrorParserTrait
     }
     
     /**
-     * @abstract    Catch Dolibarr Common Objects Array Errors
+     * Catch Dolibarr Common Objects Array Errors
      *
-     * @param   object  $Subject    Focus on a specific object
+     * @param object $subject Focus on a specific object
      *
-     * @return  bool                False if Error was Found
+     * @return bool False if Error was Found
      */
-    protected function catchArrayErrors($Subject = null)
+    private function catchArrayErrors($subject = null)
     {
-        
         global $langs;
         
-        $NoError    =   true;
+        $noError    =   true;
         
         //====================================================================//
         // Array of Errors
-        if (!isset($Subject->errors) || empty($Subject->errors)) {
+        if (!isset($subject->errors) || empty($subject->errors)) {
             return true;
         }
-        $Trace = (new Exception())->getTrace()[1];
-        foreach ($Subject->errors as $Error) {
-            if (is_scalar($Error) && !empty($Error)) {
-                $NoError    =    Splash::log()->err(
+        $trace = (new Exception())->getTrace()[1];
+        foreach ($subject->errors as $error) {
+            if (is_scalar($error) && !empty($error)) {
+                $noError    =    Splash::log()->err(
                     "ErrLocalTpl",
-                    $Trace["class"],
-                    $Trace["function"],
-                    html_entity_decode($langs->trans($Error))
+                    $trace["class"],
+                    $trace["function"],
+                    html_entity_decode($langs->trans($error))
                 );
             }
         }
         
-        return $NoError;
+        return $noError;
     }
 }

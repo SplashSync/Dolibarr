@@ -25,7 +25,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 
 /**
- * @abstract Dolibarr Contacts Address for SplashSync
+ * Dolibarr Contacts Address for SplashSync
  */
 class Address extends AbstractObject
 {
@@ -41,7 +41,8 @@ class Address extends AbstractObject
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
-        
+    use \Splash\Local\Core\MultiCompanyTrait;
+    
     // Dolibarr Address Traits
     use \Splash\Local\Objects\Address\ObjectsListTrait;
     use \Splash\Local\Objects\Address\CRUDTrait;
@@ -83,8 +84,7 @@ class Address extends AbstractObject
     //====================================================================//
         
     /**
-     *      @abstract       Class Constructor (Used only if localy necessary)
-     *      @return         int                     0 if KO, >0 if OK
+     * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
@@ -100,7 +100,5 @@ class Address extends AbstractObject
         $langs->load("admin");
         $langs->load("companies");
         $langs->load("other");
-        
-        return true;
     }
 }

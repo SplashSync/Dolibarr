@@ -1,36 +1,37 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\ThirdParty;
 
+use Societe;
+use User;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Contacts Address CRUD Functions
+ * Dolibarr Contacts Address CRUD Functions
  */
 trait CRUDTrait
 {
-    
     /**
-     * @abstract    Load Request Object
-     * @param       string  $Id               Object id
-     * @return      mixed
+     * Load Request Object
+     *
+     * @param string $objectId Object id
+     *
+     * @return false|Societe
      */
-    public function load($Id)
+    public function load($objectId)
     {
         global $db;
         //====================================================================//
@@ -38,37 +39,37 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Init Object
-        $Object = new \Societe($db);
+        $object = new Societe($db);
         //====================================================================//
         // Fetch Object
-        if ($Object->fetch($Id) != 1) {
-            $this->catchDolibarrErrors($Object);
+        if (1 != $object->fetch((int) $objectId)) {
+            $this->catchDolibarrErrors($object);
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load ThirdParty (" . $Id . ")."
+                " Unable to load ThirdParty (" . $objectId . ")."
             );
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+        if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load ThirdParty (" . $Id . ")."
+                " Unable to load ThirdParty (" . $objectId . ")."
             );
         }
-        return $Object;
+
+        return $object;
     }
 
     /**
-     * @abstract    Create Request Object
+     * Create Request Object
      *
-     * @param       array   $List         Given Object Data
-     *
-     * @return      object     New Object
+     * @return false|Societe
      */
     public function create()
     {
@@ -83,12 +84,12 @@ trait CRUDTrait
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
+        if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Init Object
-        $this->object = new \Societe($db);
+        $this->object = new Societe($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("name", $this->in["name"]);
@@ -97,12 +98,13 @@ trait CRUDTrait
         $this->object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
         $this->object->prospect           = 0;        // 0=no prospect, 1=prospect
         $this->object->fournisseur        = 0;        // 0=no supplier, 1=supplier
-        $this->object->code_client        = -1;       // If not erased, will be created by system
-        $this->object->code_fournisseur   = -1;       // If not erased, will be created by system
+        $this->object->code_client        = "auto";   // If not erased, will be created by system
+        $this->object->code_fournisseur   = "auto";   // If not erased, will be created by system
         //====================================================================//
         // Create Object In Database
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
+
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdParty. ");
         }
         
@@ -110,13 +112,13 @@ trait CRUDTrait
     }
     
     /**
-     * @abstract    Update Request Object
+     * Update Request Object
      *
-     * @param       bool   $Needed         Is This Update Needed
+     * @param bool $needed Is This Update Needed
      *
-     * @return      string      Object Id
+     * @return false|string Object Id
      */
-    public function update($Needed)
+    public function update($needed)
     {
         global $user;
         //====================================================================//
@@ -125,8 +127,8 @@ trait CRUDTrait
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
-        if (!$Needed && !$this->isToUpdate()) {
-            return (int) $this->object->id;
+        if (!$needed && !$this->isToUpdate()) {
+            return (string) $this->object->id;
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -137,6 +139,7 @@ trait CRUDTrait
         // Update Object
         if ($this->object->update($this->object->id, $user, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
+
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
@@ -149,25 +152,29 @@ trait CRUDTrait
         if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
-        return (int) $this->object->id;
+
+        return (string) $this->object->id;
     }
     
     /**
-     * @abstract    Delete requested Object
+     * Delete requested Object
      *
-     * @param       int     $Id     Object Id.  If NULL, Object needs to be created.
+     * @param int $objectId Object Id.  If NULL, Object needs to be created.
      *
-     * @return      bool
+     * @return bool
      */
-    public function delete($Id = null)
+    public function delete($objectId = null)
     {
         global $db,$user;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
+        if (null === $objectId) {
+            return false;
+        }
         //====================================================================//
         // Load Object
-        $Object = new \Societe($db);
+        $object = new Societe($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (empty($user->login)) {
@@ -175,24 +182,25 @@ trait CRUDTrait
         }
         //====================================================================//
         // Set Object Id, fetch not needed
-        $Object->id = $Id;
+        $object->id = $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        unset($Object->entity);
-        if (!Splash::local()->isMultiCompanyAllowed($Object)) {
+        $object->entity = null;
+        if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete ThirdParty (" . $Id . ")."
+                " Unable to Delete ThirdParty (" . $objectId . ")."
             );
         }
         //====================================================================//
         // Delete Object
-//        $Arg1 = ( Splash::local()->dolVersionCmp("6.0.0") > 0 ) ? $user : 0;
-        if ($Object->delete($Id) <= 0) {
-            return $this->catchDolibarrErrors($Object);
+//        $Arg1 = ( Local::dolVersionCmp("6.0.0") > 0 ) ? $user : 0;
+        if ($object->delete($objectId) <= 0) {
+            return $this->catchDolibarrErrors($object);
         }
+
         return true;
     }
 }

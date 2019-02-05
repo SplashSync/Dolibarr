@@ -40,7 +40,7 @@ trait MultilangualTrait
         //====================================================================//
         // If No Langauges Selected
         $extraLangs = unserialize($conf->global->SPLASH_LANGS);
-        if (!is_iterable($extraLangs)) {
+        if (!is_array($extraLangs)) {
             return array();
         }
         
@@ -80,39 +80,13 @@ trait MultilangualTrait
         }
     }
     
-//    /**
-//     * Ensure Dolibarr Default Language was filled
-//     *
-//     * @param          array       $FieldName  Id of a Multilangual Contents
-//     * @param          array       $Data       New Multilangual Contents
-//     *
-//     * @return         self
-//     */
-//    public function setMultilangFallBack($FieldName = null, $Data = null)
-//    {
-//        global $langs;
-//        
-//        //====================================================================//
-//        // For Safety => Push First Value to Default Lang if Empty + Warning
-//        if (property_exists(get_class($this->object), $FieldName) && empty($this->object->{$FieldName})) {
-//            $this->object->{$FieldName}    =   array_shift($Data);
-//            Splash::log()->war(
-//                "Value for default Dolibarr language is missing in received Multilangual Contents. "
-//                    . "Please check configuration of all your sites to use the same default Language. "
-//                . "Current Default Language is : " . $langs->getDefaultLang()
-//            );
-//        }
-//        
-//        return $this;
-//    }
-    
     /**
      * Read Multilangual Fields of an Object
      *
      * @param string $fieldName Id of a Multilangual Contents
      * @param string $isoCode   Language Code
      *
-     * @return string
+     * @return null|string
      */
     public function getMultilang($fieldName, $isoCode)
     {
@@ -121,7 +95,7 @@ trait MultilangualTrait
         //====================================================================//
         // Single Language Descriptions
         if (!$conf->global->MAIN_MULTILANGS) {
-            return;
+            return null;
         }
         
         //====================================================================//

@@ -13,6 +13,7 @@
  */
 
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Local;
 
 //====================================================================//
 // Create Setup Form
@@ -40,7 +41,7 @@ echo '  </tr>';
 
 //====================================================================//
 // Tax Name Detection Mode
-if (Splash::local()->dolVersionCmp("5.0.0") >= 0) {
+if (Local::dolVersionCmp("5.0.0") >= 0) {
     echo '  <tr class="pair">';
     echo '      <td>' . $form->textwithpicto(
         $langs->trans("SPL_DetectTaxName"),

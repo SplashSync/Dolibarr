@@ -1,46 +1,42 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Order;
 
 use Splash\Client\Splash;
 
 /**
- * @abstract    Order Dolibarr Trigger trait
+ * Order Dolibarr Trigger trait
  */
 trait TriggersTrait
 {
-    
     /**
-     *      @abstract      Prepare Object Commit for Order
+     * Prepare Object Commit for Order
      *
-     *      @param  string      $Action      Code de l'evenement
-     *      @param  object      $Object      Objet concerne
+     * @param string $action Code de l'evenement
+     * @param object $object Objet concerne
      *
-     *      @return bool        Commit is required
+     * @return bool Commit is required
      */
-    protected function doOrderCommit($Action, $Object)
+    protected function doOrderCommit($action, $object)
     {
         global $db;
 
         //====================================================================//
         // Check if Commit is Requierd
-        if (!$this->isOrderCommitRequired($Action)) {
+        if (!$this->isOrderCommitRequired($action)) {
             return false;
         }
         
@@ -50,24 +46,24 @@ trait TriggersTrait
         
         //====================================================================//
         // Store Global Action Parameters
-        $this->setOrderObjectId($Object);
-        $this->setOrderParameters($Action);
+        $this->setOrderObjectId($object);
+        $this->setOrderParameters($action);
         
         return true;
     }
 
     /**
-     * @abstract      Check if Commit is Requiered
+     * Check if Commit is Requiered
      *
-     * @param  string      $Action      Code de l'evenement
+     * @param string $action Code de l'evenement
      *
      * @return bool
      */
-    private function isOrderCommitRequired($Action)
+    private function isOrderCommitRequired($action)
     {
         //====================================================================//
         // Filter Triggered Actions
-        return in_array($Action, array(
+        return in_array($action, array(
             // Order Actions
             'ORDER_CREATE',
             'ORDER_VALIDATE',
@@ -85,52 +81,52 @@ trait TriggersTrait
             // Order Contacts Actions
             'COMMANDE_ADD_CONTACT',
             'COMMANDE_DELETE_CONTACT',
-        ));
+        ), true);
     }
     
     /**
-     *      @abstract      Identify Order Id from Given Object
+     * Identify Order Id from Given Object
      *
-     *      @param  object      $Object      Objet concerne
+     * @param object $object Objet concerne
      *
-     *      @return void
+     * @return void
      */
-    private function setOrderObjectId($Object)
+    private function setOrderObjectId($object)
     {
         //====================================================================//
         // Identify Order Id
-        if (is_a($Object, "OrderLine")) {
-            if ($Object->fk_commande) {
-                $this->Id        = $Object->fk_commande;
+        if (is_a($object, "OrderLine")) {
+            if ($object->fk_commande) {
+                $this->Id        = $object->fk_commande;
             } else {
-                $this->Id        = $Object->oldline->fk_commande;
+                $this->Id        = $object->oldline->fk_commande;
             }
         } else {
-            $this->Id        = $Object->id;
+            $this->Id        = $object->id;
         }
     }
     
     /**
-     *      @abstract      Prepare Object Commit for Product
+     * Prepare Object Commit for Product
      *
-     *      @param  string      $Action      Code de l'evenement
+     * @param string $action Code de l'evenement
      *
-     *      @return void
+     * @return void
      *
-     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function setOrderParameters($Action)
+    private function setOrderParameters($action)
     {
         //====================================================================//
         // Store Global Action Parameters
         $this->Type      = "Order";
         
-        switch ($Action) {
+        switch ($action) {
             case 'ORDER_CREATE':
                 $this->Action       = SPL_A_CREATE;
                 $this->Comment      = "Order Created on Dolibarr";
+
                 break;
-            
             case 'ORDER_VALIDATE':
             case 'ORDER_MODIFY':
             case 'ORDER_UPDATE':
@@ -145,11 +141,12 @@ trait TriggersTrait
             case 'COMMANDE_DELETE_CONTACT':
                 $this->Action       = (Splash::object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
                 $this->Comment      = "Order Updated on Dolibarr";
-                break;
 
+                break;
             case 'ORDER_DELETE':
                 $this->Action       = SPL_A_DELETE;
                 $this->Comment      = "Order Deleted on Dolibarr";
+
                 break;
         }
         

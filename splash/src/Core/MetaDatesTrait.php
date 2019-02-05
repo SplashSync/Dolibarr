@@ -1,33 +1,30 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Core;
 
 /**
- * @abstract    Dolibarr Contacts Address Meta Fields
+ * Dolibarr Contacts Address Meta Fields
  */
 trait MetaDatesTrait
 {
-
     private $infoloaded;
     
     /**
-    *   @abstract     Build Meta Fields using FieldFactory
-    */
+     * Build Meta Fields using FieldFactory
+     */
     private function buildMetaDatesFields()
     {
         global $langs;
@@ -35,36 +32,35 @@ trait MetaDatesTrait
         //====================================================================//
         // TMS - Last Change Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-                ->Identifier("date_modification")
-                ->Name($langs->trans("DateLastModification"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/DataFeedItem", "dateModified")
-                ->isReadOnly();
+            ->Identifier("date_modification")
+            ->Name($langs->trans("DateLastModification"))
+            ->Group("Meta")
+            ->MicroData("http://schema.org/DataFeedItem", "dateModified")
+            ->isReadOnly();
         
         //====================================================================//
         // datec - Creation Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-                ->Identifier("date_creation")
-                ->Name($langs->trans("DateCreation"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/DataFeedItem", "dateCreated")
-                ->isReadOnly();
+            ->Identifier("date_creation")
+            ->Name($langs->trans("DateCreation"))
+            ->Group("Meta")
+            ->MicroData("http://schema.org/DataFeedItem", "dateCreated")
+            ->isReadOnly();
     }
 
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    private function getMetaDatesFields($Key, $FieldName)
+    private function getMetaDatesFields($key, $fieldName)
     {
-
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Last Modifictaion Date
             case 'date_creation':
@@ -73,13 +69,13 @@ trait MetaDatesTrait
                     $this->object->info($this->object->id);
                     $this->infoloaded = true;
                 }
-                $this->out[$FieldName] = dol_print_date($this->object->$FieldName, 'dayrfc');
-                break;
+                $this->out[$fieldName] = dol_print_date($this->object->{$fieldName}, 'dayrfc');
 
+                break;
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 }

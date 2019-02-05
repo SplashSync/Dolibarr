@@ -1,30 +1,27 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects\Address;
 
 /**
- * @abstract    Dolibarr Contacts Address Fields (Required)
+ * Dolibarr Contacts Address Fields (Required)
  */
 trait CoreTrait
 {
-
     /**
-     *  @abstract     Build Core Fields using FieldFactory
+     * Build Core Fields using FieldFactory
      */
     protected function buildCoreFields()
     {
@@ -33,112 +30,111 @@ trait CoreTrait
         //====================================================================//
         // Firstname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("firstname")
-                ->Name($langs->trans("Firstname"))
-                ->MicroData("http://schema.org/Person", "familyName")
-                ->isListed()
-                ->isLogged()
-                ->isRequired();
+            ->Identifier("firstname")
+            ->Name($langs->trans("Firstname"))
+            ->MicroData("http://schema.org/Person", "familyName")
+            ->isListed()
+            ->isLogged()
+            ->isRequired();
         
         //====================================================================//
         // Lastname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("lastname")
-                ->Name($langs->trans("Lastname"))
-                ->MicroData("http://schema.org/Person", "givenName")
-                ->isLogged()
-                ->isListed();
+            ->Identifier("lastname")
+            ->Name($langs->trans("Lastname"))
+            ->MicroData("http://schema.org/Person", "givenName")
+            ->isLogged()
+            ->isListed();
                 
         //====================================================================//
         // Customer
-        $this->fieldsFactory()->create(self::objects()->Encode("ThirdParty", SPL_T_ID))
-                ->Identifier("socid")
-                ->Name($langs->trans("Company"))
-                ->MicroData("http://schema.org/Organization", "ID");
+        $this->fieldsFactory()->create((string) self::objects()->Encode("ThirdParty", SPL_T_ID))
+            ->Identifier("socid")
+            ->Name($langs->trans("Company"))
+            ->MicroData("http://schema.org/Organization", "ID");
         
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("ref_ext")
-                ->Name($langs->trans("CustomerCode"))
-                ->Description($langs->trans("CustomerCodeDesc"))
-                ->isListed()
-                ->isLogged()
-                ->MicroData("http://schema.org/PostalAddress", "name");
+            ->Identifier("ref_ext")
+            ->Name($langs->trans("CustomerCode"))
+            ->Description($langs->trans("CustomerCodeDesc"))
+            ->isListed()
+            ->isLogged()
+            ->MicroData("http://schema.org/PostalAddress", "name");
     }
     
-    
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getCoreFields($Key, $FieldName)
+    protected function getCoreFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Contact ThirdParty Id
             case 'socid':
-                $this->out[$FieldName] = self::objects()->Encode("ThirdParty", $this->object->socid);
+                $this->out[$fieldName] = self::objects()->Encode("ThirdParty", $this->object->socid);
+
                 break;
-            
             //====================================================================//
             // Direct Readings
             case 'name':
             case 'firstname':
             case 'lastname':
             case 'ref_ext':
-                $this->getSimple($FieldName);
+                $this->getSimple($fieldName);
+
                 break;
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setCoreFields($FieldName, $Data)
+    protected function setCoreFields($fieldName, $fieldData)
     {
-
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Contact Company Id
             case 'socid':
-                $this->setSimple($FieldName, self::objects()->Id($Data));
-                break;
+                $this->setSimple($fieldName, self::objects()->Id($fieldData));
 
+                break;
             //====================================================================//
             // Direct Writtings
             case 'name':
             case 'firstname':
             case 'lastname':
-                $this->setSimple($FieldName, $Data);
+                $this->setSimple($fieldName, $fieldData);
+
                 break;
-                
             case 'ref_ext':
-                if ($this->object->$FieldName != $Data) {
-                    $this->setDatabaseField("ref_ext", $Data);
+                if ($this->object->{$fieldName} != $fieldData) {
+                    $this->setDatabaseField("ref_ext", $fieldData);
                 }
+
                 break;
-               
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
 }

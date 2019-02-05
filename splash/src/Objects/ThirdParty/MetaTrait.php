@@ -1,33 +1,31 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\ThirdParty;
 
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    Dolibarr ThirdParty Meta Fields
+ * Dolibarr ThirdParty Meta Fields
  */
 trait MetaTrait
 {
-
     /**
-    *   @abstract     Build Meta Fields using FieldFactory
-    */
+     * Build Meta Fields using FieldFactory
+     */
     private function buildMetaFields()
     {
         global $langs;
@@ -38,63 +36,60 @@ trait MetaTrait
         //====================================================================//
         // Active
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("status")
-                ->Name($langs->trans("Active"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/Organization", "active")
-                ->isListed();
+            ->Identifier("status")
+            ->Name($langs->trans("Active"))
+            ->Group("Meta")
+            ->MicroData("http://schema.org/Organization", "active")
+            ->isListed();
         
-        if (Splash::local()->dolVersionCmp("3.6.0") >= 0) {
+        if (Local::dolVersionCmp("3.6.0") >= 0) {
             //====================================================================//
             // isProspect
             $this->fieldsFactory()->create(SPL_T_BOOL)
-                    ->Identifier("prospect")
-                    ->Name($langs->trans("Prospect"))
-                    ->Group("Meta")
-                    ->MicroData("http://schema.org/Organization", "prospect");
+                ->Identifier("prospect")
+                ->Name($langs->trans("Prospect"))
+                ->Group("Meta")
+                ->MicroData("http://schema.org/Organization", "prospect");
         }
 
         //====================================================================//
         // isCustomer
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("client")
-                ->Name($langs->trans("Customer"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/Organization", "customer");
+            ->Identifier("client")
+            ->Name($langs->trans("Customer"))
+            ->Group("Meta")
+            ->MicroData("http://schema.org/Organization", "customer");
 
         //====================================================================//
         // isSupplier
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("fournisseur")
-                ->Name($langs->trans("Supplier"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/Organization", "supplier");
+            ->Identifier("fournisseur")
+            ->Name($langs->trans("Supplier"))
+            ->Group("Meta")
+            ->MicroData("http://schema.org/Organization", "supplier");
 
-        
         //====================================================================//
         // isVAT
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("tva_assuj")
-                ->Name($langs->trans("VATIsUsed"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/Organization", "UseVAT");
+            ->Identifier("tva_assuj")
+            ->Name($langs->trans("VATIsUsed"))
+            ->Group("Meta")
+            ->MicroData("http://schema.org/Organization", "UseVAT");
     }
     
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    private function getMetaFields($Key, $FieldName)
+    private function getMetaFields($key, $fieldName)
     {
-
-        
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // STRUCTURAL INFORMATIONS
             //====================================================================//
@@ -102,57 +97,57 @@ trait MetaTrait
             case 'status':
             case 'tva_assuj':
             case 'fournisseur':
-                $this->getSimpleBool($FieldName);
-                break;
+                $this->getSimpleBool($fieldName);
 
+                break;
             case 'client':
                 $this->getSimpleBit('client', 0);
-                break;
 
+                break;
             case 'prospect':
                 $this->object->prospect     =   $this->object->client;
                 $this->getSimpleBit('prospect', 1);
-                break;
 
+                break;
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
     
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    private function setMetaFields($FieldName, $Data)
+    private function setMetaFields($fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Direct Writtings
             case 'status':
             case 'tva_assuj':
             case 'fournisseur':
-                $this->setSimple($FieldName, $Data);
-                break;
-                
-            case 'client':
-                $this->setSimpleBit('client', 0, $Data);
-                break;
+                $this->setSimple($fieldName, $fieldData);
 
-            case 'prospect':
-                $this->setSimpleBit('client', 1, $Data);
                 break;
-                
+            case 'client':
+                $this->setSimpleBit('client', 0, $fieldData);
+
+                break;
+            case 'prospect':
+                $this->setSimpleBit('client', 1, $fieldData);
+
+                break;
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
 }

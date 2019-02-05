@@ -65,8 +65,6 @@ trait MultilangTrait
                 ->addOption('language', $langCode)
                 ->MicroData("http://schema.org/Product/" . $langCode, "description");
         }
-
-        
     }
 
     /**

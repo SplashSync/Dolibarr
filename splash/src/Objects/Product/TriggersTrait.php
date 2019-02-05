@@ -1,46 +1,42 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Product;
 
 use Splash\Client\Splash;
 
 /**
- * @abstract    Product Dolibarr Trigger trait
+ * Product Dolibarr Trigger trait
  */
 trait TriggersTrait
 {
-    
     /**
-     *      @abstract      Prepare Object Commit for Product
+     * Prepare Object Commit for Product
      *
-     *      @param  string      $Action      Code de l'evenement
-     *      @param  object      $Object      Objet concerne
+     * @param string $action Code de l'evenement
+     * @param object $object Objet concerne
      *
-     *      @return bool        Commit is required
+     * @return bool Commit is required
      */
-    protected function doProductCommit($Action, $Object)
+    protected function doProductCommit($action, $object)
     {
         global $db;
         
         //====================================================================//
         // Filter Triggered Actions
-        if (!$this->isProductCommitRequired($Action)) {
+        if (!$this->isProductCommitRequired($action)) {
             return false;
         }
         
@@ -50,60 +46,60 @@ trait TriggersTrait
         
         //====================================================================//
         // Store Global Action Parameters
-        $this->setProductObjectId($Object);
-        $this->setProductParameters($Action);
+        $this->setProductObjectId($object);
+        $this->setProductParameters($action);
         
         return true;
     }
 
     /**
-     * @abstract      Check if Commit is Requiered
+     * Check if Commit is Requiered
      *
-     * @param  string      $Action      Code de l'evenement
+     * @param string $action Code de l'evenement
      *
      * @return bool
      */
-    private function isProductCommitRequired($Action)
+    private function isProductCommitRequired($action)
     {
-        return in_array($Action, array(
+        return in_array($action, array(
             'PRODUCT_CREATE',
             'PRODUCT_MODIFY',
             'PRODUCT_DELETE',
             'PRODUCT_SET_MULTILANGS',
             'PRODUCT_PRICE_MODIFY',
             'STOCK_MOVEMENT',
-        ));
+        ), true);
     }
     
     /**
-     *      @abstract      Identify Order Id from Given Object
+     * Identify Order Id from Given Object
      *
-     *      @param  object      $Object      Objet concerne
+     * @param object $object Objet concerne
      *
-     *      @return void
+     * @return void
      */
-    private function setProductObjectId($Object)
+    private function setProductObjectId($object)
     {
         //====================================================================//
         // Identify Product Id
-        if (is_a($Object, "Product")) {
-            $this->Id   = $Object->id;
-        } elseif (is_a($Object, "MouvementStock")) {
-            $this->Id   = $Object->product_id;
+        if (is_a($object, "Product")) {
+            $this->Id   = $object->id;
+        } elseif (is_a($object, "MouvementStock")) {
+            $this->Id   = $object->product_id;
         }
     }
     
     /**
-     * @abstract      Prepare Object Commit for Product
+     * Prepare Object Commit for Product
      *
-     * @param  string      $Action      Code de l'evenement
-     * @param  object      $Object      Objet concerne
+     * @param string $action Code de l'evenement
+     * @param object $Object Objet concerne
      *
      * @return void
      *
-     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function setProductParameters($Action)
+    private function setProductParameters($action)
     {
         //====================================================================//
         // Check if object if in Remote Create Mode
@@ -112,22 +108,22 @@ trait TriggersTrait
         //====================================================================//
         // Store Global Action Parameters
         $this->Type     = "Product";
-        if ($Action        == 'PRODUCT_CREATE') {
+        if ('PRODUCT_CREATE'        == $action) {
             $this->Action       = SPL_A_CREATE;
             $this->Comment      = "Product Created on Dolibarr";
-        } elseif ($Action  == 'PRODUCT_MODIFY') {
+        } elseif ('PRODUCT_MODIFY'  == $action) {
             $this->Action       = SPL_A_UPDATE;
             $this->Comment      = "Product Updated on Dolibarr";
-        } elseif ($Action  == 'PRODUCT_SET_MULTILANGS') {
+        } elseif ('PRODUCT_SET_MULTILANGS'  == $action) {
             $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
             $this->Comment      = "Product Description Updated on Dolibarr";
-        } elseif ($Action  == 'STOCK_MOVEMENT') {
+        } elseif ('STOCK_MOVEMENT'  == $action) {
             $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
             $this->Comment      = "Product Stock Updated on Dolibarr";
-        } elseif ($Action  == 'PRODUCT_PRICE_MODIFY') {
+        } elseif ('PRODUCT_PRICE_MODIFY'  == $action) {
             $this->Action       = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
             $this->Comment  = "Product Price Updated on Dolibarr";
-        } elseif ($Action  == 'PRODUCT_DELETE') {
+        } elseif ('PRODUCT_DELETE'  == $action) {
             $this->Action       = SPL_A_DELETE;
             $this->Comment      = "Product Deleted on Dolibarr";
         }

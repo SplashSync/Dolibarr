@@ -26,19 +26,15 @@
  *  \remarks	Designed for Splash Module - Dolibar ERP Version
 */
                     
-//====================================================================//
-// *******************************************************************//
-//                     SPLASH FOR DOLIBARR                            //
-// *******************************************************************//
-//                  BANK ACCOUNTS LEVELS WIDGET                       //
-// *******************************************************************//
-//====================================================================//
-
 namespace   Splash\Local\Widgets;
 
 use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
+/**
+ * Dolibarr Products Distributions Widget
+ */
 class ProductDistribution extends AbstractWidget
 {
     //====================================================================//
@@ -82,42 +78,45 @@ class ProductDistribution extends AbstractWidget
     private $title;
     private $labels;
 
-    private $Mode       = "Invoices";
-    private $ChartType  =   "Line";
+    private $mode       = "Invoices";
+    private $chartType  =   "Line";
     
     //====================================================================//
     // Class Main Functions
     //====================================================================//
 
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
     }
     
     /**
-     *      @abstract   Return Widget Customs Parameters
+     * {@inheritdoc}
      */
     public function getParameters()
     {
         global $langs;
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
         
         $langs->load("main");
         $langs->load("bills");
         $langs->load("orders");
         $langs->load("compta");
         
-        $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
-        $TitleInvoices  = $langs->trans(
+        $paramTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+        $titleInvoices  = $langs->trans(
             "BoxProductDistributionFor",
-            $ParamTitle,
+            $paramTitle,
             $langs->transnoentitiesnoconv("Invoices")
         );
-        $TitleOrders    = $langs->trans(
+        $titleOrders    = $langs->trans(
             "BoxProductDistributionFor",
-            $ParamTitle,
+            $paramTitle,
             $langs->transnoentitiesnoconv("Orders")
         );
                 
@@ -127,15 +126,14 @@ class ProductDistribution extends AbstractWidget
                 ->Identifier("mode")
                 ->Name($langs->trans("Model"))
                 ->isRequired()
-                ->AddChoice("Invoices", html_entity_decode($TitleInvoices))
+                ->AddChoice("Invoices", html_entity_decode($titleInvoices))
                 ->AddChoice(
                     "InvoicesCount",
-                    html_entity_decode($TitleInvoices . " (" . $langs->trans("NbOfLines") . ")")
+                    html_entity_decode($titleInvoices . " (" . $langs->trans("NbOfLines") . ")")
                 )
-                ->AddChoice("Orders", html_entity_decode($TitleOrders))
-                ->AddChoice("OrdersCount", html_entity_decode($TitleOrders . " (" . $langs->trans("NbOfLines") . ")"))
+                ->AddChoice("Orders", html_entity_decode($titleOrders))
+                ->AddChoice("OrdersCount", html_entity_decode($titleOrders . " (" . $langs->trans("NbOfLines") . ")"))
                 ;
-      
         
         //====================================================================//
         // Select Chart Rendering Mode
@@ -153,13 +151,7 @@ class ProductDistribution extends AbstractWidget
     }
     
     /**
-     *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
-     *                        $params["start"]      Maximum Number of results
-     *                        $params["end"]        List Start Offset
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
-
+     * {@inheritdoc}
      */
     public function get($params = null)
     {
@@ -168,7 +160,7 @@ class ProductDistribution extends AbstractWidget
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
@@ -183,17 +175,17 @@ class ProductDistribution extends AbstractWidget
         
         if (isset($params["mode"])
                 && in_array($params["mode"], ["Invoices", "InvoicesCount", "Orders", "OrdersCount"])) {
-            $this->Mode = $params["mode"];
+            $this->mode = $params["mode"];
         }
         
         if (isset($params["chart_type"]) && in_array($params["chart_type"], ["Bar", "Pie"])) {
-            $this->ChartType = $params["chart_type"];
+            $this->chartType = $params["chart_type"];
         }
         
         $this->importDates($params);
         $this->setupMode();
         
-        if ($this->ChartType == "Bar") {
+        if ($this->chartType == "Bar") {
             $this->buildMorrisBarBlock();
         } else {
             $this->buildMorrisDonutBlock();
@@ -201,13 +193,41 @@ class ProductDistribution extends AbstractWidget
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->render());
+        $blocks = $this->blocksFactory()->render();
+        if(false !== $blocks) {
+            $this->setBlocks($blocks);
+        }
 
         //====================================================================//
         // Publish Widget
         return $this->render();
     }
         
+    //====================================================================//
+    // Overide Splash Functions
+    //====================================================================//
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");
+        return html_entity_decode($langs->trans(static::$NAME));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDesc()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");
+        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+    }
 
     //====================================================================//
     // Blocks Generation Functions
@@ -220,9 +240,9 @@ class ProductDistribution extends AbstractWidget
         $langs->load("bills");
         $langs->load("compta");
         $langs->load("orders");
-        $ParamTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
+        $paramTitle     = $langs->transnoentitiesnoconv("Products").'/'.$langs->transnoentitiesnoconv("Services");
                 
-        switch ($this->Mode) {
+        switch ($this->mode) {
             case "Invoices":
                 //====================================================================//
                 // Load Stat Class
@@ -239,7 +259,7 @@ class ProductDistribution extends AbstractWidget
                 // Setup Titles
                 $this->title    = $langs->trans(
                     "BoxProductDistributionFor",
-                    $ParamTitle,
+                    $paramTitle,
                     $langs->transnoentitiesnoconv("Invoices")
                 );
                 $this->labels   = array($langs->trans("AmountHTShort"));
@@ -261,7 +281,7 @@ class ProductDistribution extends AbstractWidget
                 // Setup Titles
                 $this->title    = $langs->trans(
                     "BoxProductDistributionFor",
-                    $ParamTitle,
+                    $paramTitle,
                     $langs->transnoentitiesnoconv("Invoices")
                 ) . " (" . $langs->trans("NbOfLines") . ")";
                 $this->labels   = array($langs->trans("NbOfLines"));
@@ -283,7 +303,7 @@ class ProductDistribution extends AbstractWidget
                 // Setup Titles
                 $this->title    = $langs->trans(
                     "BoxProductDistributionFor",
-                    $ParamTitle,
+                    $paramTitle,
                     $langs->transnoentitiesnoconv("Orders")
                 );
                 $this->labels   = array($langs->trans("AmountHTShort"));
@@ -305,7 +325,7 @@ class ProductDistribution extends AbstractWidget
                 // Setup Titles
                 $this->title    = $langs->trans(
                     "BoxProductDistributionFor",
-                    $ParamTitle,
+                    $paramTitle,
                     $langs->transnoentitiesnoconv("Orders")
                 ) . " (" . $langs->trans("NbOfLines") . ")";
                 $this->labels   = array($langs->trans("NbOfLines"));
@@ -314,11 +334,10 @@ class ProductDistribution extends AbstractWidget
     }
     
     /**
-     * @abstract    Read Widget Datas
+     * Read Widget Datas
      */
-    private function getData($Limit = null)
+    private function getData($limit = null)
     {
-
         global $db;
                 
         //====================================================================//
@@ -329,36 +348,35 @@ class ProductDistribution extends AbstractWidget
         $sql.= " AND ".$this->stats->where;
         $sql.= " GROUP BY label";
         $sql.= $db->order('value', 'DESC');
-        if ($Limit) {
-            $sql.= $db->plimit($Limit);
+        if ($limit) {
+            $sql.= $db->plimit($limit);
         }
         
-        $Result     = $db->query($sql);
-        $num        = $db->num_rows($Result);           // Read number of results
+        $result     = $db->query($sql);
+        $num        = $db->num_rows($result);           // Read number of results
         $index      = 0;
-        $RawData    = array();
+        $rawData    = array();
         while ($index < $num) {
-            $RawData[$index] = $db->fetch_array($Result);
+            $rawData[$index] = $db->fetch_array($result);
             $index++;
         }
         
-        return $RawData;
+        return $rawData;
     }
    
     /**
-    *   @abstract     Block Building - Morris Donut Graph
+    * Block Building - Morris Donut Graph
     */
     private function buildMorrisDonutBlock()
     {
-
         global $langs;
         
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $Data   = $this->getData();
+        $data   = $this->getData();
 
-        if (empty($Data)) {
+        if (empty($data)) {
             $langs->load("admin");
             $this->blocksFactory()->addNotificationsBlock(array(
                 "warning"   => $langs->trans("PreviewNotAvailable")
@@ -371,22 +389,22 @@ class ProductDistribution extends AbstractWidget
 
         //====================================================================//
         // Chart Options
-        $ChartOptions = array(
+        $chartOptions = array(
             "title"     => $this->title,
             "labels"    => $this->labels,
         );
         //====================================================================//
         // Block Options
-        $Options = array(
+        $options = array(
             "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->blocksFactory()->addMorrisDonutBlock($Data, $ChartOptions, $Options);
+        $this->blocksFactory()->addMorrisDonutBlock($data, $chartOptions, $options);
     }
     
     /**
-    *   @abstract     Block Building - Morris Bar Graph
+    * Block Building - Morris Bar Graph
     */
     private function buildMorrisBarBlock()
     {
@@ -396,10 +414,10 @@ class ProductDistribution extends AbstractWidget
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $Data   = $this->getData(5);
+        $data   = $this->getData(5);
 
         
-        if (empty($Data)) {
+        if (empty($data)) {
             $langs->load("admin");
             $this->blocksFactory()->addNotificationsBlock(array(
                 "warning"   => $langs->trans("PreviewNotAvailable")
@@ -411,47 +429,17 @@ class ProductDistribution extends AbstractWidget
         
         //====================================================================//
         // Chart Options
-        $ChartOptions = array(
+        $chartOptions = array(
             "title"     => $this->title,
             "labels"    => $this->labels,
         );
         //====================================================================//
         // Block Options
-        $Options = array(
+        $options = array(
             "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->blocksFactory()->addMorrisGraphBlock($Data, "Bar", $ChartOptions, $Options);
-    }
-    
-    //====================================================================//
-    // Class Tooling Functions
-    //====================================================================//
-
-    //====================================================================//
-    // Overide Splash Functions
-    //====================================================================//
-
-    /**
-     *      @abstract   Return name of this Widget Class
-     */
-    public function getName()
-    {
-        global $langs;
-        $langs->load("main");
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$NAME));
-    }
-
-    /**
-     *      @abstract   Return Description of this Widget Class
-     */
-    public function getDesc()
-    {
-        global $langs;
-        $langs->load("main");
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        $this->blocksFactory()->addMorrisGraphBlock($data, "Bar", $chartOptions, $options);
     }
 }

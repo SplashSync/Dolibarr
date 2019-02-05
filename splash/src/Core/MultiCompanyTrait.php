@@ -15,11 +15,12 @@
 namespace Splash\Local\Core;
 
 use Exception;
+use CommonObject;
 use Splash\Core\SplashCore  as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    MultiCompany Module Manager
- * @author      B. Paquier <contact@splashsync.com>
+ * MultiCompany Module Manager
  */
 trait MultiCompanyTrait
 {
@@ -29,7 +30,7 @@ trait MultiCompanyTrait
 
     public function isMultiCompany()
     {
-        return (bool) Splash::local()->getParameter("MAIN_MODULE_MULTICOMPANY");
+        return (bool) Local::getParameter("MAIN_MODULE_MULTICOMPANY");
     }
     
     protected function isMultiCompanyDefaultEntity()
@@ -73,29 +74,34 @@ trait MultiCompanyTrait
         return $conf->entity;
     }
     
+    /**
+     * Get Web Path for Multicompany Server
+     * 
+     * @return null|string
+     */
     protected function getMultiCompanyServerPath()
     {
         
-        $ServerRoot     =   realpath(Splash::input("DOCUMENT_ROOT"));
-        $Prefix         =   $this->isMultiCompanyChildEntity() ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
-        $FullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $Prefix;
-        $RelativePath   =   explode($ServerRoot, $FullPath);
+        $serverRoot     =   (string) realpath((string) Splash::input("DOCUMENT_ROOT"));
+        $prefix         =   $this->isMultiCompanyChildEntity() ? ( "?Entity=" . $this->getMultiCompanyEntityId() ) : "";
+        $fullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $prefix;
+        $relativePath   =   explode($serverRoot, $fullPath);
         
-        if (isset($RelativePath[1])) {
-            return  $RelativePath[1];
+        if (is_array($relativePath) && isset($relativePath[1])) {
+            return  $relativePath[1];
         }
         
         return   null;
     }
     
     /**
-     * @abstract    Ensure Dolibarr Object Access is Allowed from this Entity
+     * Ensure Dolibarr Object Access is Allowed from this Entity
      *
-     * @param   object  $Subject    Focus on a specific object
+     * @param   CommonObject  $subject    Focus on a specific object
      *
      * @return  bool                False if Error was Found
      */
-    public function isMultiCompanyAllowed($Subject = null)
+    public function isMultiCompanyAllowed($subject = null)
     {
         
         global $langs;
@@ -107,25 +113,25 @@ trait MultiCompanyTrait
         }
         //====================================================================//
         // Check Object
-        if (is_null($Subject)) {
+        if (is_null($subject)) {
             return false;
         }
         //====================================================================//
         // Load Object Entity
-        if (isset($Subject->entity)) {
-            $EntityId   =   $Subject->entity;
+        if (isset($subject->entity)) {
+            $entityId   =   $subject->entity;
         } else {
-            $EntityId   =   $Subject->getValueFrom($Subject->table_element, $Subject->id, "entity");
+            $entityId   =   $subject->getValueFrom($subject->table_element, $subject->id, "entity");
         }
         //====================================================================//
         // Check Object Entity
-        if ($EntityId != $this->getMultiCompanyEntityId()) {
-            $Trace = (new Exception())->getTrace()[1];
+        if ($entityId != $this->getMultiCompanyEntityId()) {
+            $trace = (new Exception())->getTrace()[1];
             $langs->load("errors");
             return  Splash::log()->err(
                 "ErrLocalTpl",
-                $Trace["class"],
-                $Trace["function"],
+                $trace["class"],
+                $trace["function"],
                 html_entity_decode($langs->trans('ErrorForbidden'))
             );
         }

@@ -1,21 +1,33 @@
 <?php
-namespace Splash\Local\Tests;
 
-use Splash\Tests\Tools\ObjectsCase;
-use Splash\Client\Splash;
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
+namespace Splash\Local\Tests;
 
 use Commande;
 use Facture;
+use Splash\Client\Splash;
+use Splash\Tests\Tools\ObjectsCase;
+use Splash\Local\Objects\Order;
+use Splash\Local\Objects\Invoice;
 
 /**
- * @abstract    Local Test Suite - Verify Writing of Orders & Invoices Status
- *
- * @author SplashSync <contact@splashsync.com>
+ * Local Test Suite - Verify Writing of Orders & Invoices Status
  */
 class L05OrderInvoicesStatusTest extends ObjectsCase
 {
-
-    private static $Ids     = array();
+    private static $objectsIds     = array();
     
     public function testCreateObjects()
     {
@@ -25,60 +37,43 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         $this->createObject("Invoice", "PaymentDraft");
     }
     
-    private function createObject($ObjectType, $Status)
-    {
-        //====================================================================//
-        //   Create Fake Order Data
-        $Fields         =   $this->fakeFieldsList($ObjectType, [], true);
-        $FakeData       =   $this->fakeObjectData($Fields);
-        $FakeData["status"] =   $Status;
-        
-        //====================================================================//
-        //   Execute Action Directly on Module
-        Splash::object($ObjectType)->lock();
-        $Id = Splash::object($ObjectType)->set(null, $FakeData);
-        $this->assertNotEmpty($Id);
-
-        //====================================================================//
-        //   Add Object Id to Created List
-        $this->addTestedObject($ObjectType, $Id);
-        self::$Ids[$ObjectType] = $Id;
-        
-        //====================================================================//
-        //   Load Object
-        $Object  =   Splash::object($ObjectType)->Load($Id);
-        $this->assertNotEmpty($Object);
-        $this->assertEquals(Commande::STATUS_DRAFT, $Object->statut);
-        
-        return $Object;
-    }
-    
     /**
+     * Test Oreder & Invoices Status
+     * 
      * @dataProvider statusProvider
+     *
+     * @param string      $objectType
+     * @param string      $splashStatus
+     * @param string      $dolibarrStatus
+     * @param null|string $expectedRef
      */
-    public function testStatusChanges($ObjectType, $SplashStatus, $DolibarrStatus, $ExpectedRef = null)
+    public function testStatusChanges($objectType, $splashStatus, $dolibarrStatus, $expectedRef = null)
     {
         //====================================================================//
         //   Update Status Directly on Module
-        Splash::object($ObjectType)->lock();
-        $Id = Splash::object($ObjectType)->set(self::$Ids[$ObjectType], ["status" => $SplashStatus]);
-        $this->assertNotEmpty($Id);
-        $this->assertEquals(self::$Ids[$ObjectType], $Id);
+        Splash::object($objectType)->lock();
+        $objectId = Splash::object($objectType)->set(self::$objectsIds[$objectType], array("status" => $splashStatus));
+        $this->assertTrue(false !== $objectId);
+        $this->assertEquals(self::$objectsIds[$objectType], $objectId);
+        $this->assertSame(self::$objectsIds[$objectType], $objectId);
 
         //====================================================================//
         //   Load Object
-        $Object  =   Splash::object($ObjectType)->Load($Id);
-        $this->assertNotEmpty($Object);
-        $this->assertEquals($DolibarrStatus, $Object->statut);
+        $splashObject  =   Splash::object($objectType);
+        $object = false;
+        if(($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
+            $object  =   $splashObject->load($objectId);
+        }
+        $this->assertTrue(false !== $object);
+        $this->assertNotEmpty($object);
+        $this->assertEquals($dolibarrStatus, $object->statut);
 
         //====================================================================//
         //   Verify Reference
-        $this->assertContains($ExpectedRef, $Object->ref, "Splash Status: " . $SplashStatus);
-        if ($ExpectedRef != "PROV") {
-            $this->assertContains(dol_print_date($Object->date, '%y%m'), $Object->ref);
+        $this->assertContains($expectedRef, $object->ref, "Splash Status: " . $splashStatus);
+        if ("PROV" != $expectedRef) {
+            $this->assertContains(dol_print_date($object->date, '%y%m'), $object->ref);
         }
-        
-        return;
     }
     
     public function statusProvider()
@@ -100,7 +95,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Order",      "OrderCanceled",    Commande::STATUS_CANCELED,  "CO"),
             array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "CO"),
             array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
-//            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED),
+            //            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED),
             array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
             
             //====================================================================//
@@ -114,40 +109,49 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     
     /**
      * @dataProvider statusOnCreateProvider
+     *
+     * @param string      $objectType
+     * @param string      $splashStatus
+     * @param string      $dolibarrStatus
+     * @param null|string $expectedRef
      */
-    public function testStatusOnCreate($ObjectType, $SplashStatus, $DolibarrStatus, $ExpectedRef = null)
+    public function testStatusOnCreate($objectType, $splashStatus, $dolibarrStatus, $expectedRef = null)
     {
         //====================================================================//
         //   Create Fake Order Data
-        $Fields             =   $this->fakeFieldsList($ObjectType, [], true);
-        $FakeData           =   $this->fakeObjectData($Fields);
-        $FakeData["status"] =   $SplashStatus;
+        $fields             =   $this->fakeFieldsList($objectType, array(), true);
+        $fakeData           =   $this->fakeObjectData($fields);
+        $fakeData["status"] =   $splashStatus;
         
         //====================================================================//
         //   Execute Action Directly on Module
-        Splash::object($ObjectType)->lock();
-        $Id = Splash::object($ObjectType)->set(null, $FakeData);
-        $this->assertNotEmpty($Id);
+        Splash::object($objectType)->lock();
+        $objectId = Splash::object($objectType)->set(null, $fakeData);
+        $this->assertTrue(false !== $objectId);
+        $this->assertNotEmpty($objectId);
         
         //====================================================================//
         //   Add Object Id to Created List
-        $this->addTestedObject($ObjectType, $Id);
+        $this->addTestedObject($objectType, $objectId);
         
         //====================================================================//
         //   Load Object
-        $Object  =   Splash::object($ObjectType)->Load($Id);
-        $this->assertNotEmpty($Object);
-        $this->assertEquals($DolibarrStatus, $Object->statut);
+        $splashObject  =   Splash::object($objectType);
+        $object = false;
+        if(($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
+            $object  =   $splashObject->load($objectId);
+        }
+        $this->assertTrue(false !== $object);
+        $this->assertNotEmpty($object);
+        $this->assertEquals($dolibarrStatus, $object->statut);
 
         //====================================================================//
         //   Verify Reference
-        $this->assertContains($ExpectedRef, $Object->ref, "Splash Status: " . $SplashStatus);
-        if ($ExpectedRef != "PROV") {
-            $this->assertContains(dol_print_date($Object->date, '%y%m'), $Object->ref);
-            $this->assertContains(dol_print_date($FakeData["date"], '%y%m'), $Object->ref);
+        $this->assertContains($expectedRef, $object->ref, "Splash Status: " . $splashStatus);
+        if ("PROV" != $expectedRef) {
+            $this->assertContains(dol_print_date($object->date, '%y%m'), $object->ref);
+            $this->assertContains(dol_print_date($fakeData["date"], '%y%m'), $object->ref);
         }
-        
-        return;
     }
     
     public function statusOnCreateProvider()
@@ -167,7 +171,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             //   Tests For Order Objects
             array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "PROV"),
             array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
-//            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED,  "CO"),
+            //            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED,  "CO"),
             array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
             
             //====================================================================//
@@ -176,5 +180,39 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Invoice",    "PaymentDue",       Facture::STATUS_VALIDATED,  "FA"),
             array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
         );
+    }
+    
+    private function createObject($objectType, $status)
+    {
+        //====================================================================//
+        //   Create Fake Order Data
+        $fields         =   $this->fakeFieldsList($objectType, array(), true);
+        $fakeData       =   $this->fakeObjectData($fields);
+        $fakeData["status"] =   $status;
+        
+        //====================================================================//
+        //   Execute Action Directly on Module
+        Splash::object($objectType)->lock();
+        $objectId = Splash::object($objectType)->set(null, $fakeData);
+        $this->assertNotEmpty($objectId);
+        $this->assertInternalType('string', $objectId);
+        //====================================================================//
+        //   Add Object Id to Created List
+        $this->addTestedObject($objectType, $objectId);
+        self::$objectsIds[$objectType] = $objectId;
+        
+        //====================================================================//
+        //   Load Object
+        $splashObject  =   Splash::object($objectType);
+        $object = false;
+        if(($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
+            $object  =   $splashObject->load($objectId);
+        }
+
+        $this->assertTrue(false !== $object);
+        $this->assertNotEmpty($object);
+        $this->assertEquals(Commande::STATUS_DRAFT, $object->statut);
+        
+        return $object;
     }
 }

@@ -1,37 +1,37 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Core;
 
+use ArrayObject;
 use Splash\Core\SplashCore as Splash;
 
 /**
- * @abstract    Dolibarr Customer Fields (Required)
+ * Dolibarr Customer Fields (Required)
  */
 trait CustomerTrait
 {
     /**
-     * @abstract    Detected SocId
-     * @var         int
+     * Detected SocId
+     *
+     * @var null|int
      */
-    private $SocId  =   null;
+    private $socId;
     
     /**
-     *  @abstract     Build Fields using FieldFactory
+     * Build Fields using FieldFactory
      */
     protected function buildCustomerFields()
     {
@@ -39,9 +39,9 @@ trait CustomerTrait
         
         //====================================================================//
         // Customer Object Link
-        $this->fieldsFactory()->create(self::objects()->Encode("ThirdParty", SPL_T_ID))
-                ->Identifier("socid")
-                ->Name($langs->trans("Company"));
+        $this->fieldsFactory()->create((string) self::objects()->Encode("ThirdParty", SPL_T_ID))
+            ->Identifier("socid")
+            ->Name($langs->trans("Company"));
         
         //====================================================================//
         // Metadata are Specific to Object Type (Order/Invoice)
@@ -55,6 +55,7 @@ trait CustomerTrait
         // Not Allowed Guest Orders/Invoices Mode
         if (!$this->isAllowedGuest()) {
             $this->fieldsFactory()->isRequired();
+
             return;
         }
         
@@ -64,34 +65,34 @@ trait CustomerTrait
             //====================================================================//
             // Customer Email
             $this->fieldsFactory()->create(SPL_T_EMAIL)
-                    ->Identifier("email")
-                    ->Name($langs->trans("Email"))
-                    ->MicroData("http://schema.org/ContactPoint", "email")
-                    ->isWriteOnly()
-                    ->isNotTested();
+                ->Identifier("email")
+                ->Name($langs->trans("Email"))
+                ->MicroData("http://schema.org/ContactPoint", "email")
+                ->isWriteOnly()
+                ->isNotTested();
         }
     }
 
     /**
-     *  @abstract     Init Customer SocId Detection
+     * Init Customer SocId Detection
      *
-     *  @return         none
+     * @return void
      */
     protected function initCustomerDetection()
     {
         //====================================================================//
         // Order/Invoice Create Mode => Init SocId detection
-        $this->SocId = null;
+        $this->socId = null;
     }
     
     /**
-     *  @abstract     Init Customer SocId with Guste Mode Management
+     * Init Customer SocId with Guste Mode Management
      *
-     *  @param        Array     $Data       Received Data
+     * @param Array|ArrayObject $receivedData Received Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function doCustomerDetection($Data)
+    protected function doCustomerDetection($receivedData)
     {
         //====================================================================//
         // Order/Invoice Create Mode => Init SocId detection
@@ -99,83 +100,77 @@ trait CustomerTrait
         
         //====================================================================//
         // Standard Mode => A SocId is Given
-        if (isset($Data["socid"]) && !empty(self::objects()->Id($Data["socid"]))) {
-            $this->setSimple("socid", self::objects()->Id($Data["socid"]));
+        if (isset($receivedData["socid"]) && !empty(self::objects()->id($receivedData["socid"]))) {
+            $this->setSimple("socid", self::objects()->id($receivedData["socid"]));
+
             return;
         }
         
         //====================================================================//
         // Guest Mode is Disabled => Error
         if (!$this->isAllowedGuest()) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "socid");
-        }
-        
-        //====================================================================//
-        // Guest Mode => Detect SocId in Guest Mode
-        $this->setSimple("socid", $this->getGuestCustomer($Data));
-    }
-    
-    /**
-     *  @abstract     Read requested Field
-     *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
-     *
-     *  @return         none
-     */
-    protected function getCustomerFields($Key, $FieldName)
-    {
-        //====================================================================//
-        // READ Fields
-        switch ($FieldName) {
-            //====================================================================//
-            // ThirdParty Id
-            case 'socid':
-                $this->out[$FieldName] = self::objects()->Encode("ThirdParty", $this->object->$FieldName);
-                break;
+            Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "socid");
             
-            default:
-                return;
-        }
-        
-        unset($this->in[$Key]);
-        
-        if ($FieldName != "socid") {
             return;
         }
         
         //====================================================================//
-        // Contact ThirdParty Id
-        $this->out[$FieldName] = self::objects()->Encode("ThirdParty", $this->object->$FieldName);
+        // Guest Mode => Detect SocId in Guest Mode
+        $this->setSimple("socid", $this->getGuestCustomer($receivedData));
+    }
+    
+    /**
+     * Read requested Field
+     *
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
+     */
+    protected function getCustomerFields($key, $fieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($fieldName) {
+            //====================================================================//
+            // ThirdParty Id
+            case 'socid':
+                $this->out[$fieldName] = self::objects()->Encode("ThirdParty", $this->object->{$fieldName});
 
-        unset($this->in[$Key]);
+                break;
+            default:
+                return;
+        }
+        
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setCustomerFields($FieldName, $Data)
+    protected function setCustomerFields($fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Customer Id
             case 'socid':
                 //====================================================================//
                 // Standard Mode => A SocId is Requiered
                 if (!$this->isAllowedGuest()) {
-                    $this->setSimple($FieldName, self::objects()->Id($Data));
+                    $this->setSimple($fieldName, self::objects()->Id($fieldData));
+
                     break;
                 }
-                $this->setSimple($FieldName, $this->getGuestCustomer($this->in));
-                break;
+                $this->setSimple($fieldName, $this->getGuestCustomer($this->in));
 
+                break;
             //====================================================================//
             // Customer Email
             case 'email':
@@ -183,19 +178,60 @@ trait CustomerTrait
                     break;
                 }
                 $this->setSimple("socid", $this->getGuestCustomer($this->in));
+
                 break;
-            
             default:
                 return;
         }
         
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
     
     /**
-     *  @abstract     Check if Guest Orders Are Allowed
+     * Detect Guest Customer To Use for This Order/Invoice
      *
-     *  @return         bool
+     * @param Array|ArrayObject $receivedData Received Data
+     *
+     * @return int
+     */
+    protected function getGuestCustomer($receivedData)
+    {
+        global $conf;
+        
+        //====================================================================//
+        // Customer detection Already Done
+        if (!is_null($this->socId)) {
+            return $this->socId;
+        }
+        
+        //====================================================================//
+        // Standard Mode => A SocId is Given
+        if (isset($receivedData["socid"]) && !empty(self::objects()->Id($receivedData["socid"]))) {
+            Splash::log()->deb("Customer Id Given : Id " .  self::objects()->Id($receivedData["socid"]));
+            $this->socId = (int) self::objects()->Id($receivedData["socid"]);
+
+            return $this->socId;
+        }
+        //====================================================================//
+        // Detect ThirdParty Using Given Email
+        if ($this->isAllowedEmailDetection() && isset($receivedData["email"]) && !empty($receivedData["email"])) {
+            $this->socId  =   $this->getCustomerByEmail($receivedData["email"]);
+            Splash::log()->deb("Customer Email Identified : Id " .  $this->socId);
+        }
+        //====================================================================//
+        // Select ThirdParty Using Default Parameters
+        if (empty($this->socId)) {
+            $this->socId  =   $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER;
+            Splash::log()->deb("Default Customer Used : Id " .  $this->socId);
+        }
+
+        return $this->socId;
+    }
+    
+    /**
+     * Check if Guest Orders Are Allowed
+     *
+     * @return bool
      */
     private function isAllowedGuest()
     {
@@ -211,6 +247,7 @@ trait CustomerTrait
                 __FUNCTION__,
                 "To use Guest Orders/Invoices mode, you must select a default Customer."
             );
+
             return false;
         }
         
@@ -218,9 +255,9 @@ trait CustomerTrait
     }
     
     /**
-     *  @abstract     Check if Email Detyection is Active
+     * Check if Email Detyection is Active
      *
-     *  @return         bool
+     * @return bool
      */
     private function isAllowedEmailDetection()
     {
@@ -228,57 +265,18 @@ trait CustomerTrait
         if (!$this->isAllowedGuest() || !isset($conf->global->SPLASH_GUEST_ORDERS_EMAIL)) {
             return false;
         }
+
         return (bool) $conf->global->SPLASH_GUEST_ORDERS_EMAIL;
     }
     
     /**
-     *  @abstract     Detect Guest Customer To Use for This Order/Invoice
+     * Detect Guest Customer To Use for This Order/Invoice
      *
-     *  @param        Array     $Data       Received Data
+     * @param string $email Customer Email
      *
-     *  @return       int
+     * @return int Customer Id
      */
-    protected function getGuestCustomer($Data)
-    {
-        global $conf;
-        
-        //====================================================================//
-        // Customer detection Already Done
-        if (!is_null($this->SocId)) {
-            return $this->SocId;
-        }
-        
-        //====================================================================//
-        // Standard Mode => A SocId is Given
-        if (isset($Data["socid"]) && !empty(self::objects()->Id($Data["socid"]))) {
-            Splash::log()->deb("Customer Id Given : Id " .  self::objects()->Id($Data["socid"]));
-            $this->SocId = self::objects()->Id($Data["socid"]);
-            return $this->SocId;
-        }
-        //====================================================================//
-        // Detect ThirdParty Using Given Email
-        if ($this->isAllowedEmailDetection() && isset($Data["email"]) && !empty($Data["email"])) {
-            $this->SocId  =   $this->getCustomerByEmail($Data["email"]);
-            Splash::log()->deb("Customer Email Identified : Id " .  $this->SocId);
-        }
-        //====================================================================//
-        // Select ThirdParty Using Default Parameters
-        if (empty($this->SocId)) {
-            $this->SocId  =   $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER;
-            Splash::log()->deb("Default Customer Used : Id " .  $this->SocId);
-        }
-
-        return $this->SocId;
-    }
-    
-    /**
-     *  @abstract     Detect Guest Customer To Use for This Order/Invoice
-     *
-     *  @param        string     $Email       Customer Email
-     *
-     *  @return       int   Customer Id
-     */
-    private function getCustomerByEmail($Email)
+    private function getCustomerByEmail($email)
     {
         global $db;
         
@@ -287,19 +285,19 @@ trait CustomerTrait
         $sql = 'SELECT s.rowid';
         $sql .= ' FROM '.MAIN_DB_PREFIX.'societe as s';
         $sql .= ' WHERE s.entity IN ('.getEntity('societe').')';
-        $sql .= " AND s.email = '".$db->escape($Email)."'";
+        $sql .= " AND s.email = '".$db->escape($email)."'";
         
         //====================================================================//
         // Execute Query
         $resql=$db->query($sql);
-        if (!$resql || ($db->num_rows($resql) != 1)) {
+        if (!$resql || (1 != $db->num_rows($resql))) {
             return 0;
         }
-        $Customer = $db->fetch_object($resql);
-        Splash::log()->deb("Customer Detected by Email : " . $Email . " => Id " .  $Customer->rowid);
+        $customer = $db->fetch_object($resql);
+        Splash::log()->deb("Customer Detected by Email : " . $email . " => Id " .  $customer->rowid);
         
         //====================================================================//
         // Return Customer Id
-        return $Customer->rowid;
+        return $customer->rowid;
     }
 }

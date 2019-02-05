@@ -25,8 +25,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 
 /**
- *  \class      ThirdParty
- *  \brief      ThirdParty - Customers / Supplier Management Class
+ * ThirdParty - Customers / Supplier Management Class
  */
 class ThirdParty extends AbstractObject
 {
@@ -41,6 +40,7 @@ class ThirdParty extends AbstractObject
     use \Splash\Local\Core\MetaDatesTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
+    use \Splash\Local\Core\MultiCompanyTrait;
     
     // Dolibarr ThirdParty Traits
     use \Splash\Local\Objects\ThirdParty\ObjectsListTrait;
@@ -85,8 +85,7 @@ class ThirdParty extends AbstractObject
     //====================================================================//
         
     /**
-     *      @abstract       Class Constructor (Used only if localy necessary)
-     *      @return         int                     0 if KO, >0 if OK
+     * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
@@ -98,7 +97,5 @@ class ThirdParty extends AbstractObject
         $langs->load("admin");
         $langs->load("companies");
         $langs->load("other");
-
-        return true;
     }
 }

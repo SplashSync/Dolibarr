@@ -1,46 +1,42 @@
 <?php
 
-/**
- * This file is part of SplashSync Project.
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Invoice;
 
 use Splash\Client\Splash;
 
 /**
- * @abstract    Invoices Dolibarr Trigger trait
+ * Invoices Dolibarr Trigger trait
  */
 trait TriggersTrait
 {
-    
     /**
-     *      @abstract      Prepare Object Commit for Order
+     * Prepare Object Commit for Order
      *
-     *      @param  string      $Action      Code de l'evenement
-     *      @param  object      $Object      Objet concerne
+     * @param string $action Code de l'evenement
+     * @param object $object Objet concerne
      *
-     *      @return bool        Commit is required
+     * @return bool Commit is required
      */
-    protected function doInvoiceCommit($Action, $Object)
+    protected function doInvoiceCommit($action, $object)
     {
         global $db;
         
         //====================================================================//
         // Check if Commit is Requierd
-        if (!$this->isInvoiceCommitRequired($Action)) {
+        if (!$this->isInvoiceCommitRequired($action)) {
             return false;
         }
 
@@ -50,8 +46,8 @@ trait TriggersTrait
 
         //====================================================================//
         // Store Global Action Parameters
-        $this->setInvoiceObjectId($Object);
-        $this->setInvoiceParameters($Action);
+        $this->setInvoiceObjectId($object);
+        $this->setInvoiceParameters($action);
         
         if (empty($this->Id)) {
             return false;
@@ -61,15 +57,15 @@ trait TriggersTrait
     }
 
     /**
-     * @abstract      Check if Commit is Requiered
+     * Check if Commit is Requiered
      *
-     * @param  string      $Action      Code de l'evenement
+     * @param string $action Code de l'evenement
      *
      * @return bool
      */
-    private function isInvoiceCommitRequired($Action)
+    private function isInvoiceCommitRequired($action)
     {
-        return in_array($Action, array(
+        return in_array($action, array(
             // Invoice Actions
             'BILL_CREATE',
             'BILL_CLONE',
@@ -84,63 +80,62 @@ trait TriggersTrait
             'LINEBILL_INSERT',
             'LINEBILL_UPDATE',
             'LINEBILL_DELETE',
-// Not Managed up to now. User Select Default Bank for payments created by the module
-//            &&  ($Action !== 'PAYMENT_ADD_TO_BANK')
+            // Not Managed up to now. User Select Default Bank for payments created by the module
+            //            &&  ($Action !== 'PAYMENT_ADD_TO_BANK')
             // Invoice Payments Actions
             'PAYMENT_CUSTOMER_CREATE',
             'PAYMENT_CUSTOMER_DELETE',
             'PAYMENT_DELETE',
-        ));
+        ), true);
     }
 
-    
     /**
-     *      @abstract      Identify Order Id from Given Object
+     * Identify Order Id from Given Object
      *
-     *      @param  object      $Object      Objet concerne
+     * @param object $object Objet concerne
      *
-     *      @return void
+     * @return void
      */
-    private function setInvoiceObjectId($Object)
+    private function setInvoiceObjectId($object)
     {
         //====================================================================//
         // Identify Invoice Id
-        if (is_a($Object, "FactureLigne")) {
-            if ($Object->fk_facture) {
-                $this->Id        = $Object->fk_facture;
+        if (is_a($object, "FactureLigne")) {
+            if ($object->fk_facture) {
+                $this->Id        = $object->fk_facture;
             } else {
-                $this->Id        = $Object->oldline->fk_facture;
+                $this->Id        = $object->oldline->fk_facture;
             }
-        } elseif (is_a($Object, "Paiement")) {
+        } elseif (is_a($object, "Paiement")) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts
-            $Amounts = Splash::object("Invoice")->getPaiementAmounts($Object->id);
+            $amounts = Splash::object("Invoice")->getPaiementAmounts($object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array
-            $this->Id        = array_keys($Amounts);
+            $this->Id        = array_keys($amounts);
         } else {
-            $this->Id        = $Object->id;
+            $this->Id        = $object->id;
         }
     }
     
     /**
-     *      @abstract      Prepare Object Commit for Product
+     * Prepare Object Commit for Product
      *
-     *      @param  string      $Action      Code de l'evenement
+     * @param string $action Code de l'evenement
      *
-     *      @return void
+     * @return void
      *
-     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function setInvoiceParameters($Action)
+    private function setInvoiceParameters($action)
     {
         $this->Type      = "Invoice";
-        switch ($Action) {
+        switch ($action) {
             case 'BILL_CREATE':
                 $this->Action       = SPL_A_CREATE;
                 $this->Comment      = "Invoice Created on Dolibarr";
+
                 break;
-            
             case 'BILL_MODIFY':
             case 'BILL_CLONE':
             case 'BILL_VALIDATE':
@@ -156,11 +151,12 @@ trait TriggersTrait
             case 'LINEBILL_DELETE':
                 $this->Action       = (Splash::object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
                 $this->Comment      = "Invoice Updated on Dolibarr";
-                break;
 
+                break;
             case 'BILL_DELETE':
                 $this->Action       = SPL_A_DELETE;
                 $this->Comment      = "Invoice Deleted on Dolibarr";
+
                 break;
         }
     }

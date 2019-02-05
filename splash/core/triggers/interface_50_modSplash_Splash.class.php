@@ -1,19 +1,17 @@
 <?php
+
 /*
- * Copyright (C) 2011 Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is Copyright (C) Protected.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *
- *  \Id 	$Id: interface_modOsconnect_Triggers.class.php 187 2012-09-02 11:38:17Z u58905340 $
- *  \version    $Revision: 187 $
- *  \ingroup    OsConnect Module For Dolibarr
- *  \brief      Fonctions Triggers pour le module Osconnect
- *  \remarks
-*/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 //====================================================================//
 // Splash Module Definitions
@@ -23,25 +21,12 @@ use Splash\Client\Splash;
 use Splash\Components\Logger;
 
 /**
- *  @abstract      Classe des fonctions triggers des actions personalisees du workflow
+ * Classe des fonctions triggers des actions personalisees du workflow
  *
- *  @SuppressWarnings(PHPMD.CamelCaseClassName)
+ * @SuppressWarnings(PHPMD.CamelCaseClassName)
  */
 class InterfaceSplash
 {
-    private $db;
-    private $name;
-    private $family;
-    private $version;
-    private $description;
-    
-    private $Id         =   null;
-    private $Action     =   null;
-    private $Type       =   null; 
-    private $Login      =   "Unknown User";
-    private $Comment    =   "Dolibarr Commit";
-    
-    
     //====================================================================//
     // Import Commit Triggers Action from Objects Namespaces
     //====================================================================//
@@ -50,17 +35,32 @@ class InterfaceSplash
     use \Splash\Local\Objects\Product\TriggersTrait;
     use \Splash\Local\Objects\Order\TriggersTrait;
     use \Splash\Local\Objects\Invoice\TriggersTrait;
+    private $db;
+    private $name;
+    private $family;
+    private $version;
+    private $description;
+    
+    /** @var null|string */
+    private $objectId;
+    /** @var null|string */
+    private $action;
+    /** @var null|string */
+    private $objectType;
+    /** @var string */
+    private $login      =   "Unknown User";
+    /** @var string */
+    private $comment    =   "Dolibarr Commit";
     
     /**
-     *   \brief      Constructeur.
-     *   \param      DB      Handler d'acces base
+     * Class Constructor.
+     *
+     * @param mixed $db Dolibarr Database Object
      */
     public function __construct($db)
     {
         global $langs;
         
-
-
         //====================================================================//
         // Class Init
         $this->db = $db ;
@@ -71,12 +71,13 @@ class InterfaceSplash
         
         //====================================================================//
         // Load traductions files requiredby by page
-        $langs->load("errors");        
+        $langs->load("errors");
     }
         
     /**
-     *   \brief      Renvoi nom du lot de triggers
-     *   \return     string      Nom du lot de triggers
+     * Renvoi nom du lot de triggers
+     *
+     * @return string Nom du lot de triggers
      */
     public function getName()
     {
@@ -84,8 +85,9 @@ class InterfaceSplash
     }
     
     /**
-     *   \brief      Renvoi descriptif du lot de triggers
-     *   \return     string      Descriptif du lot de triggers
+     * Renvoi descriptif du lot de triggers
+     *
+     * @return string Descriptif du lot de triggers
      */
     public function getDesc()
     {
@@ -93,33 +95,37 @@ class InterfaceSplash
     }
 
     /**
-     *   \brief      Renvoi version du lot de triggers
-     *   \return     string      Version du lot de triggers
+     * Renvoi version du lot de triggers
+     *
+     * @return string Version du lot de triggers
      */
     public function getVersion()
     {
         global $langs;
         $langs->load("admin");
 
-        if ($this->version == 'development') {
+        if ('development' == $this->version) {
             return $langs->trans("Development");
-        } elseif ($this->version == 'experimental') {
-            return $langs->trans("Experimental");
-        } elseif ($this->version == 'dolibarr') {
-            return DOL_VERSION;
-        } elseif ($this->version) {
-            return $this->version;
-        } else {
-            return $langs->trans("Unknown");
         }
+        if ('experimental' == $this->version) {
+            return $langs->trans("Experimental");
+        }
+        if ('dolibarr' == $this->version) {
+            return DOL_VERSION;
+        }
+        if ($this->version) {
+            return $this->version;
+        }
+
+        return $langs->trans("Unknown");
     }
 
     /**
-     *  @abstract    Read all log messages posted by OsWs and post it on dolibarr
+     * Read all log messages posted by OsWs and post it on dolibarr
      *
-     *  @param       Logger $log    Input Log Class
-     * 
-     *  @return      void
+     * @param Logger $log Input Log Class
+     *
+     * @return void
      */
     public function postMessages(Logger $log)
     {
@@ -144,143 +150,18 @@ class InterfaceSplash
         
         $log->CleanLog();
     }
-
     
-//    /**
-//     *      @abstract      Prepare Object Commit for ProductCategorie
-//     *
-//     *      @param  string      $Action      Code de l'evenement
-//     *      @param  object      $Object      Objet concerne
-//     *
-//     *      @return bool        Commit is required
-//     */
-//    function doProductCategorieCommit($Action, $Object)
-//    {
-//        if (    ($Action !== 'PRODUCT_CREATE')
-//            &&  ($Action !== 'PRODUCT_MODIFY')
-//            &&  ($Action !== 'PRODUCT_DELETE')
-//            &&  ($Action !== 'PRODUCT_PRICE_MODIFY')
-//            &&  ($Action !== 'PRODUCT_DELETE') )
-//        {
-//            return False;
-//        }
-//
-//        //====================================================================//
-//        // Commit Last Changes done On DataBase
-//        $db->Commit();
-//
-//        //====================================================================//
-//        // Store Global Action Parameters
-//        $this->Type      = "Product";
-//        $this->Id        = isset($Object->id)?$object->id:$object->product_id;
-//
-//        if ( $Action        == 'PRODUCT_CREATE')  {
-//            $this->Action   = SPL_A_CREATE;
-//            $this->Comment  = "Product Created on Dolibarr";
-//        } else if ($Action  == 'PRODUCT_MODIFY') {
-//            $this->Action   = SPL_A_UPDATE;
-//            $this->Comment  = "Product Updated on Dolibarr";
-//        } else if ($Action  == 'STOCK_MOVEMENT') {
-//            $this->Action   = SPL_A_UPDATE;
-//            $this->Comment  = "Product Stock Updated on Dolibarr";
-//        } else if ($Action  == 'PRODUCT_PRICE_MODIFY') {
-//            $this->Action   = SPL_A_UPDATE;
-//            $_Comment       = "Product Price Updated on Dolibarr";
-//        } else if ($Action  == 'PRODUCT_DELETE') {
-//            $this->Action   = SPL_A_DELETE;
-//            $this->Comment  = "Product Deleted on Dolibarr";
-//        }
-//
-////        } elseif ( ($action == 'CATEGORY_CREATE') || ($action == 'CATEGORY_MODIFY')
-////          || ($action == 'CATEGORY_DELETE') )
-////        {
-//            //====================================================================//
-//            // Commit Last Changes done On DataBase
-//            $db->Commit();
-//            //====================================================================//
-//            // Store Global Action Parameters
-//            if ($object->type == '0' || $object->type == 'product') {
-//                $_Type      = SPL_O_PRODCAT;
-//                $_Comment   = "Product";
-//            } else if ($type == '1' || $type == 'supplier') {
-////                $_Type      = SPL_O_PRODCAT;
-//                $_Comment   = "Supplier";
-//            } else if ($type == '2' || $type == 'customer') {
-////                $_Type      = SPL_O_PRODCAT;
-//                $_Comment   = "Customer";
-//            } else if ($type == '3' || $type == 'member') {
-////                $_Type      = SPL_O_PRODCAT;
-//                $_Comment   = "Member";
-//            } else if ($type == '4' || $type == 'contact') {
-////                $_Type      = SPL_O_PRODCAT;
-//                $_Comment   = "Contact";
-//            }
-//            $_Id        = $object->id;
-//
-//            if ( $action == 'CATEGORY_CREATE')  {
-//                $_Action    = OSWS_A_CREATE;
-//                $_Comment  .= " Category Created on Dolibarr";
-//            } else if ($action == 'CATEGORY_MODIFY') {
-//                $_Action    = OSWS_A_UPDATE;
-//                $_Comment  .= " Category Updated on Dolibarr";
-//            } else if ($action == 'CATEGORY_DELETE') {
-//                $_Action    = OSWS_A_DELETE;
-//                $_Comment  .= " Category Deleted on Dolibarr";
-//            }
-//
-//
-//
-//        return True;
-//    }
-    
-        
     /**
-     *      @abstract      Publish Object Change to Splash Sync Server
+     * Fonction appelee lors du declenchement d'un evenement Dolibarr.
+     * D'autres fonctions run_trigger peuvent etre presentes dans includes/triggers
      *
-     *      @return bool
-     */
-    protected function doSplashCommit()
-    {
-        //====================================================================//
-        // Prevent Repeated Commit if Needed
-        if (($this->Action == SPL_A_UPDATE) && Splash::object($this->Type)->isLocked()) {
-            return;
-        }
-
-        //====================================================================//
-        // Verify Id Before commit
-        if ($this->Id > 0) {
-            //====================================================================//
-            // Commit Change to OsWs Module
-            Splash::commit(
-                $this->Type,                    // Object Type
-                $this->Id,                      // Object Identifier (RowId ro Array of RowId)
-                $this->Action,                  // Splash Action Type
-                $this->Login,                   // Current User Login
-                $this->Comment
-            );                // Action Comment
-            Splash::log()->deb("Change Commited (Action=" . $this->Comment . ") Object => ". $this->Type);
-        } else {
-            Splash::log()->war("Commit Id Missing (Action=" . $this->Comment . ") Object => ". $this->Type);
-        }
-        
-        //====================================================================//
-        //  Post User Messages
-        $this->postMessages(Splash::log());
-        
-        return;
-    }
-    /**
-     *      \brief      Fonction appelee lors du declenchement d'un evenement Dolibarr.
-     *                  D'autres fonctions run_trigger peuvent etre presentes dans includes/triggers
-     *      \param      action      Code de l'evenement
-     *      \param      object      Objet concerne
-     *      \param      user        Objet user
-     *      \param      lang        Objet lang
-     *      \param      conf        Objet conf
-     *      \return     int         <0 if fatal error, 0 si nothing done, >0 if ok
+     * @param type $action Code de l'evenement
+     * @param type $object Objet concerne
+     * @param type $user   Objet user
      *
-     *  @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @return void
+     * 
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function run_trigger($action, $object, $user)
     {
@@ -288,26 +169,26 @@ class InterfaceSplash
             
         //====================================================================//
         // Init Action Parameters
-        $this->Type         = null;
-        $this->Id           = null;
-        $this->Action       = null;
-        $this->Login        = ($user->login)?$user->login:"Unknown";
-        $this->Comment      = null;
+        $this->objectType         = null;
+        $this->objectId           = null;
+        $this->action       = null;
+        $this->login        = ($user->login)?$user->login:"Unknown";
+        $this->comment      = null;
         
-        $DoCommit           = false;
+        $doCommit           = false;
         
         //====================================================================//
         // TRIGGER ACTION FOR : ThirdParty
         //====================================================================//
-        $DoCommit |= $this->doThirdPartyCommit($action, $object);
+        $doCommit |= $this->doThirdPartyCommit($action, $object);
         //====================================================================//
         // TRIGGER ACTION FOR : Address / Contact
         //====================================================================//
-        $DoCommit |= $this->doAddressCommit($action, $object);
+        $doCommit |= $this->doAddressCommit($action, $object);
         //====================================================================//
         // TRIGGER ACTION FOR : Products
         //====================================================================//
-        $DoCommit |= $this->doProductCommit($action, $object);
+        $doCommit |= $this->doProductCommit($action, $object);
         //====================================================================//
         // TRIGGER ACTION FOR : Categories
         //====================================================================//
@@ -315,22 +196,23 @@ class InterfaceSplash
         //====================================================================//
         // TRIGGER ACTION FOR : ORDER
         //====================================================================//
-        $DoCommit |= $this->doOrderCommit($action, $object);
+        $doCommit |= $this->doOrderCommit($action, $object);
         //====================================================================//
         // TRIGGER ACTION FOR : INVOICE
         //====================================================================//
-        $DoCommit |= $this->doInvoiceCommit($action, $object);
+        $doCommit |= $this->doInvoiceCommit($action, $object);
 
         //====================================================================//
         // Log Trigger Action
-        Splash::log()->deb("Trigger for action '$action' launched by '".$this->Login."' for Object id=".$this->Id);
+        Splash::log()->deb("Trigger for action '${action}' launched by '".$this->login."' for Object id=".$this->objectId);
         
         //====================================================================//
         // No Action To Perform
-        if (!$DoCommit) {
+        if (!$doCommit) {
             //====================================================================//
             // Add Dolibarr Log Message
             dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
+
             return;
         }
         
@@ -341,6 +223,40 @@ class InterfaceSplash
         //====================================================================//
         // Add Dolibarr Log Message
         dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
-        return;
+    }
+ 
+    /**
+     * Publish Object Change to Splash Sync Server
+     *
+     * @return bool
+     */
+    protected function doSplashCommit()
+    {
+        //====================================================================//
+        // Prevent Repeated Commit if Needed
+        if ((SPL_A_UPDATE == $this->action) && Splash::object($this->objectType)->isLocked()) {
+            return;
+        }
+
+        //====================================================================//
+        // Verify Id Before commit
+        if ($this->objectId > 0) {
+            //====================================================================//
+            // Commit Change to OsWs Module
+            Splash::commit(
+                $this->objectType,                    // Object Type
+                $this->objectId,                      // Object Identifier (RowId ro Array of RowId)
+                $this->action,                  // Splash Action Type
+                $this->login,                   // Current User Login
+                $this->comment
+            );                // Action Comment
+            Splash::log()->deb("Change Commited (Action=" . $this->comment . ") Object => ". $this->objectType);
+        } else {
+            Splash::log()->war("Commit Id Missing (Action=" . $this->comment . ") Object => ". $this->objectType);
+        }
+        
+        //====================================================================//
+        //  Post User Messages
+        $this->postMessages(Splash::log());
     }
 }

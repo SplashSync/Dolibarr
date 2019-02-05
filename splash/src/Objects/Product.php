@@ -19,6 +19,7 @@ namespace   Splash\Local\Objects;
 
 use Splash\Core\SplashCore      as Splash;
 
+use Product as BaseProduct;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
@@ -46,6 +47,7 @@ class Product extends AbstractObject
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ImagesTrait;
     use \Splash\Local\Core\ObjectsListTrait;
+    use \Splash\Local\Core\MultiCompanyTrait;
     
     // Dolibarr Products Traits
     use \Splash\Local\Objects\Product\ObjectsListTrait;
@@ -89,10 +91,14 @@ class Product extends AbstractObject
     //====================================================================//
     // Class Constructor
     //====================================================================//
-        
+    
     /**
-     *      @abstract       Class Constructor (Used only if localy necessary)
-     *      @return         int                     0 if KO, >0 if OK
+     * @var BaseProduct
+     */    
+    protected $object;
+    
+    /**
+     * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
@@ -108,7 +114,5 @@ class Product extends AbstractObject
         $langs->load("other");
         $langs->load("products");
         $langs->load("stocks");
-        
-        return true;
     }
 }

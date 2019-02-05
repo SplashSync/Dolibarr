@@ -1,19 +1,17 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Core;
 
@@ -24,40 +22,46 @@ use ArrayObject;
  */
 trait UnitConverterTrait
 {
-    
     /**
-     *  @abstract   Convert Weight form all units to kg.
+     * Convert Weight form all units to kg.
      *
-     *  @param      float    $weight     Weight Value
-     *  @param      int      $unit       Weight Unit
-     *  @return     float                Weight Value in kg
+     * @param float $weight Weight Value
+     * @param int   $unit   Weight Unit
+     *
+     * @return float Weight Value in kg
      */
     public static function convertWeight($weight, $unit)
     {
         // mg
-        if ($unit      == "-6") {
+        if ("-6"      == $unit) {
             return $weight * 1e-6;
-        // g
-        } elseif ($unit  == "-3") {
+            // g
+        }
+        if ("-3"  == $unit) {
             return $weight * 1e-3;
-        // kg
-        } elseif ($unit  == "0") {
+            // kg
+        }
+        if ("0"  == $unit) {
             return $weight;
-        // Tonne
-        } elseif ($unit  == "3") {
+            // Tonne
+        }
+        if ("3"  == $unit) {
             return $weight * 1e3;
-        // livre
-        } elseif ($unit  == "99") {
+            // livre
+        }
+        if ("99"  == $unit) {
             return $weight * 0.45359237;
         }
+
         return 0;
     }
 
     /**
-     *  @abstract   Return Normalized Weight form raw kg value.
+     * Return Normalized Weight form raw kg value.
      *
-     *  @param      float    $weight     Weight Raw Value
-     *  @return     arrayobject          $r->weight , $r->weight_units , $r->print, $r->raw
+     * @param float $weight Weight Raw Value
+     *
+     * @return arrayobject $r->weight , $r->weight_units , $r->print, $r->raw
      */
     public static function normalizeWeight($weight)
     {
@@ -80,45 +84,54 @@ trait UnitConverterTrait
         }
         $result->print = $result->weight." ".measuring_units_string($result->weight_units, "weight");
         $result->raw =   $weight;
+
         return $result;
     }
 
     /**
-     *  @abstract   Convert Lenght form all units to m.
+     * Convert Lenght form all units to m.
      *
-     *  @param      float    $length     Length Value
-     *  @param      int      $unit       Length Unit
-     *  @return     float                Length Value in m
+     * @param float $length Length Value
+     * @param int   $unit   Length Unit
+     *
+     * @return float Length Value in m
      */
     public static function convertLength($length, $unit)
     {
         // mm
-        if ($unit      == "-3") {
+        if ("-3"      == $unit) {
             return $length / 1e3;
-        // cm
-        } elseif ($unit  == "-2") {
+            // cm
+        }
+        if ("-2"  == $unit) {
             return $length / 1e2;
-        // dm
-        } elseif ($unit  == "-1") {
+            // dm
+        }
+        if ("-1"  == $unit) {
             return $length / 10;
-        // m
-        } elseif ($unit  == "0") {
+            // m
+        }
+        if ("0"  == $unit) {
             return $length;
-        // foot
-        } elseif ($unit  == "98") {
+            // foot
+        }
+        if ("98"  == $unit) {
             return $length * 0.3048;
-        // inch
-        } elseif ($unit  == "99") {
+            // inch
+        }
+        if ("99"  == $unit) {
             return $length * 0.0254;
         }
+
         return 0;
     }
     
     /**
-     *  @abstract   Return Normalized Length form raw m value.
+     * Return Normalized Length form raw m value.
      *
-     *  @param      float    $length     Length Raw Value
-     *  @return     arrayobject          $r->length , $r->length_units , $r->print, $r->raw
+     * @param float $length Length Raw Value
+     *
+     * @return arrayobject $r->length , $r->length_units , $r->print, $r->raw
      */
     public static function normalizeLength($length)
     {
@@ -141,45 +154,54 @@ trait UnitConverterTrait
         }
         $result->print = $result->length." ".measuring_units_string($result->length_units, "size");
         $result->raw =   $length;
+
         return $result;
     }
     
     /**
-     *  @abstract   Convert Surface form all units to m².
+     * Convert Surface form all units to m².
      *
-     *  @param      float    $surface    Surface Value
-     *  @param      int      $unit       Surface Unit
-     *  @return     float                Surface Value in m²
+     * @param float $surface Surface Value
+     * @param int   $unit    Surface Unit
+     *
+     * @return float Surface Value in m²
      */
     public static function convertSurface($surface, $unit)
     {
         // mm²
-        if ($unit      == "-6") {
+        if ("-6"      == $unit) {
             return $surface / 1e6;
-        // cm²
-        } elseif ($unit  == "-4") {
+            // cm²
+        }
+        if ("-4"  == $unit) {
             return $surface / 1e4;
-        // dm²
-        } elseif ($unit  == "-2") {
+            // dm²
+        }
+        if ("-2"  == $unit) {
             return $surface / 1e2;
-        // m²
-        } elseif ($unit  == "0") {
+            // m²
+        }
+        if ("0"  == $unit) {
             return $surface;
-        // foot²
-        } elseif ($unit  == "98") {
+            // foot²
+        }
+        if ("98"  == $unit) {
             return $surface * 0.092903;
-        // inch²
-        } elseif ($unit  == "99") {
+            // inch²
+        }
+        if ("99"  == $unit) {
             return $surface * 0.00064516;
         }
+
         return 0;
     }
     
     /**
-     *  @abstract   Return Normalized Surface form raw m2 value.
+     * Return Normalized Surface form raw m2 value.
      *
-     *  @param      float    $surface    Surface Raw Value
-     *  @return     arrayobject          $r->surface , $r->surface_units , $r->print, $r->raw
+     * @param float $surface Surface Raw Value
+     *
+     * @return arrayobject $r->surface , $r->surface_units , $r->print, $r->raw
      */
     public static function normalizeSurface($surface)
     {
@@ -202,58 +224,69 @@ trait UnitConverterTrait
         }
         $result->print = $result->surface." ".measuring_units_string($result->surface_units, "surface");
         $result->raw =   $surface;
+
         return $result;
     }
     
     /**
-     *  @abstract   Convert Volume form all units to m3.
+     * Convert Volume form all units to m3.
      *
-     *  @param      float    $volume        Volume Value
-     *  @param      int      $unit          Volume Unit
+     * @param float $volume Volume Value
+     * @param int   $unit   Volume Unit
      *
-     *  @return     float   Volume Value in m3
+     * @return float Volume Value in m3
      *
-     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function convertVolume($volume, $unit)
     {
         // mm²
-        if ($unit      == "-9") {
+        if ("-9"      == $unit) {
             return $volume * 1e-9;
-        // cm²
-        } elseif ($unit  == "-6") {
+            // cm²
+        }
+        if ("-6"  == $unit) {
             return $volume * 1e-6;
-        // dm²
-        } elseif ($unit  == "-3") {
+            // dm²
+        }
+        if ("-3"  == $unit) {
             return $volume * 1e-3;
-        // m²
-        } elseif ($unit  == "0") {
+            // m²
+        }
+        if ("0"  == $unit) {
             return $volume;
-        // foot²
-        } elseif ($unit  == "88") {
+            // foot²
+        }
+        if ("88"  == $unit) {
             return $volume * 0.0283168;
-        // inch²
-        } elseif ($unit  == "89") {
+            // inch²
+        }
+        if ("89"  == $unit) {
             return $volume * 1.6387e-5;
-        // ounce
-        } elseif ($unit  == "97") {
+            // ounce
+        }
+        if ("97"  == $unit) {
             return $volume * 2.9574e-5;
-        // litre
-        } elseif ($unit  == "98") {
+            // litre
+        }
+        if ("98"  == $unit) {
             return $volume * 1e-3;
-        // gallon
-        } elseif ($unit  == "99") {
+            // gallon
+        }
+        if ("99"  == $unit) {
             return $volume * 0.00378541;
         }
+
         return 0;
     }
     
-/**
-    *  Return Normalized Volume form raw m3 value.
-    *
-    *  @param      float    $length     Volume Raw Value
-    *  @return     arrayobject          $r->volume , $r->volume_units , $r->print, $r->raw
-*/
+    /**
+     * Return Normalized Volume form raw m3 value.
+     *
+     * @param float $volume Volume Raw Value
+     *
+     * @return arrayobject $r->volume , $r->volume_units , $r->print, $r->raw
+     */
     public static function normalizeVolume($volume)
     {
         // Include Needed Dolibarr Functions Libraries
@@ -275,6 +308,7 @@ trait UnitConverterTrait
         }
         $result->print = $result->volume." ".measuring_units_string($result->volume_units, "volume");
         $result->raw =   $volume;
+
         return $result;
     }
 }

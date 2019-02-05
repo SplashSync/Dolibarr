@@ -1,46 +1,40 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
- *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
- *  \ingroup    Splash - Open Synchronisation WebService
- *  \brief      Local Function Definition for Management of Customers Data
- *  \class      SplashDemo
- *  \remarks	Designed for Splash Module - Dolibar ERP Version
-*/
-                    
-//====================================================================//
-// *******************************************************************//
-//                     SPLASH FOR DOLIBARR                            //
-// *******************************************************************//
-//                  BANK ACCOUNTS LEVELS WIDGET                       //
-// *******************************************************************//
-//====================================================================//
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
-                
+use Splash\Models\AbstractWidget;
+use Splash\Local\Local;
+
+/**
+ * BANK ACCOUNTS LEVELS WIDGET
+ */
 class StatGraphs extends AbstractWidget
 {
+    //====================================================================//
+    // Define Standard Options for this Widget
+    // Override this array to change default options for your widget
+    public static $OPTIONS       = array(
+        "Width"         =>  self::SIZE_M,
+        "Header"        =>  true,
+        "Footer"        =>  true,
+        'UseCache'      =>  true,
+        'CacheLifeTime' =>  60,
+    );
+    
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
@@ -61,17 +55,6 @@ class StatGraphs extends AbstractWidget
     protected static $ICO            =  "fa fa-line-chart";
     
     //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_M,
-        "Header"        =>  true,
-        "Footer"        =>  true,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
-    );
-    
-    //====================================================================//
     // General Class Variables
     //====================================================================//
     
@@ -81,8 +64,8 @@ class StatGraphs extends AbstractWidget
     private $title;
     private $labels;
     
-    private $Mode = "CustomerInvoices";
-    private $ChartType =   "Line";
+    private $mode = "CustomerInvoices";
+    private $chartType =   "Line";
     
     //====================================================================//
     // General Class Variables
@@ -92,44 +75,46 @@ class StatGraphs extends AbstractWidget
     // Class Main Functions
     //====================================================================//
     
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
     }
     
-
     /**
-     *      @abstract   Return Widget Customs Parameters
+     * {@inheritdoc}
      */
     public function getParameters()
     {
         global $langs;
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
         $langs->load("compta");
         $langs->load("bills");
         
         //====================================================================//
         // Select Data Type Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
-                ->Identifier("mode")
-                ->Name($langs->trans("Model"))
-                ->isRequired()
-                ->AddChoice("CustomerInvoices", $langs->trans("ReportTurnover"))
-                ->AddChoice("CustomerOrders", $langs->trans("OrderStats"))
-                ->AddChoice("SupplierInvoices", $langs->trans("BillsSuppliers"))
+            ->Identifier("mode")
+            ->Name($langs->trans("Model"))
+            ->isRequired()
+            ->AddChoice("CustomerInvoices", $langs->trans("ReportTurnover"))
+            ->AddChoice("CustomerOrders", $langs->trans("OrderStats"))
+            ->AddChoice("SupplierInvoices", $langs->trans("BillsSuppliers"))
                 ;
       
         //====================================================================//
         // Select Chart Rendering Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
-                ->Identifier("chart_type")
-                ->Name($langs->trans("Type"))
-                ->isRequired()
-                ->AddChoice("Line", "Line Chart")
-                ->AddChoice("Bar", "Bar Chart")
-                ->AddChoice("Area", "Area Chart")
+            ->Identifier("chart_type")
+            ->Name($langs->trans("Type"))
+            ->isRequired()
+            ->AddChoice("Line", "Line Chart")
+            ->AddChoice("Bar", "Bar Chart")
+            ->AddChoice("Area", "Area Chart")
                 ;
         
         //====================================================================//
@@ -138,13 +123,7 @@ class StatGraphs extends AbstractWidget
     }
     
     /**
-     *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
-     *                        $params["start"]      Maximum Number of results
-     *                        $params["end"]        List Start Offset
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
-
+     * {@inheritdoc}
      */
     public function get($params = null)
     {
@@ -153,7 +132,7 @@ class StatGraphs extends AbstractWidget
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
@@ -167,12 +146,12 @@ class StatGraphs extends AbstractWidget
         //====================================================================//
         
         if (isset($params["mode"])
-                && in_array($params["mode"], ["CustomerInvoices", "CustomerOrders", "SupplierInvoices"])) {
-            $this->Mode = $params["mode"];
+                && in_array($params["mode"], array("CustomerInvoices", "CustomerOrders", "SupplierInvoices"), true)) {
+            $this->mode = $params["mode"];
         }
         
-        if (isset($params["chart_type"]) && in_array($params["chart_type"], ["Bar", "Line", "Area"])) {
-            $this->ChartType = $params["chart_type"];
+        if (isset($params["chart_type"]) && in_array($params["chart_type"], array("Bar", "Line", "Area"), true)) {
+            $this->chartType = $params["chart_type"];
         }
         
         $this->importDates($params);
@@ -182,24 +161,51 @@ class StatGraphs extends AbstractWidget
 
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->render());
+        $blocks = $this->blocksFactory()->render();
+        if(false !== $blocks) {
+            $this->setBlocks($blocks);
+        }
 
         //====================================================================//
         // Publish Widget
         return $this->render();
     }
-        
+    
+    //====================================================================//
+    // Overide Splash Functions
+    //====================================================================//
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        global $langs;
+        $langs->load("main");
+
+        return html_entity_decode($langs->trans(static::$NAME));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDesc()
+    {
+        global $langs;
+        $langs->load("main");
+
+        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+    }
+        
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
 
     private function setupMode()
     {
-        
         global $db, $langs;
         
-        switch ($this->Mode) {
+        switch ($this->mode) {
             case "CustomerInvoices":
                 $langs->load("compta");
                 //====================================================================//
@@ -212,8 +218,8 @@ class StatGraphs extends AbstractWidget
                 $this->where    = "f.datef ";
                 $this->title    = $langs->trans("SalesTurnover");
                 $this->labels   = array($langs->trans("AmountTTCShort"));
+
                 break;
-            
             case "SupplierInvoices":
                 $langs->load("compta");
                 $langs->load("bills");
@@ -227,8 +233,8 @@ class StatGraphs extends AbstractWidget
                 $this->where    = "f.datef ";
                 $this->title    = $langs->trans("BillsSuppliers");
                 $this->labels   = array($langs->trans("AmountHTShort"));
+
                 break;
-            
             case "CustomerOrders":
                 $langs->load("compta");
                 //====================================================================//
@@ -242,6 +248,7 @@ class StatGraphs extends AbstractWidget
                 $this->where    = "c.date_commande ";
                 $this->title    = $langs->trans("OrderStats");
                 $this->labels   = array($langs->trans("AmountHTShort"));
+
                 break;
         }
     }
@@ -251,7 +258,6 @@ class StatGraphs extends AbstractWidget
      */
     private function getData()
     {
-
         global $db;
                 
         //====================================================================//
@@ -265,27 +271,25 @@ class StatGraphs extends AbstractWidget
         $sql.= " GROUP BY step";
         $sql.= $db->order('step', 'ASC');
 
-        $Result     = $db->query($sql);
-        $num        = $db->num_rows($Result);           // Read number of results
+        $result     = $db->query($sql);
+        $num        = $db->num_rows($result);           // Read number of results
         $index          = 0;
-        $RawData    = array();
+        $rawData    = array();
         
         while ($index < $num) {
-            $Value = $db->fetch_array($Result);
-            $RawData[$Value["step"]] = $Value["total"];
+            $value = $db->fetch_array($result);
+            $rawData[$value["step"]] = $value["total"];
             $index++;
         }
         
-        return $this->parseDatedData($RawData);
+        return $this->parseDatedData($rawData);
     }
    
-    
     /**
-    *   @abstract     Block Building - Morris Bar Graph
-    */
+     *   @abstract     Block Building - Morris Bar Graph
+     */
     private function buildMorrisBarBlock()
     {
-
         global $langs;
         
         $langs->load("compta");
@@ -294,49 +298,21 @@ class StatGraphs extends AbstractWidget
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $Data   = $this->getData();
+        $data   = $this->getData();
 
         //====================================================================//
         // Chart Options
-        $ChartOptions = array(
+        $chartOptions = array(
             "title"     => $this->title,
             "labels"    => $this->labels,
         );
         //====================================================================//
         // Block Options
-        $Options = array(
+        $options = array(
             "AllowHtml"         => true,
         );
         //====================================================================//
         // Add Table Block
-        $this->blocksFactory()->addMorrisGraphBlock($Data, $this->ChartType, $ChartOptions, $Options);
-    }
-    
-    //====================================================================//
-    // Class Tooling Functions
-    //====================================================================//
-
-    //====================================================================//
-    // Overide Splash Functions
-    //====================================================================//
-
-    /**
-     *      @abstract   Return name of this Widget Class
-     */
-    public function getName()
-    {
-        global $langs;
-        $langs->load("main");
-        return html_entity_decode($langs->trans(static::$NAME));
-    }
-
-    /**
-     *      @abstract   Return Description of this Widget Class
-     */
-    public function getDesc()
-    {
-        global $langs;
-        $langs->load("main");
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        $this->blocksFactory()->addMorrisGraphBlock($data, $this->chartType, $chartOptions, $options);
     }
 }

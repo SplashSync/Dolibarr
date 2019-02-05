@@ -1,120 +1,116 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Order;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Customer Orders Address Fields
+ * Dolibarr Customer Orders Address Fields
  */
 trait ContactsTrait
 {
-
     /**
-    *   @abstract     Build Address Fields using FieldFactory
-    */
-    private function buildContactsFields()
+     * Build Address Fields using FieldFactory
+     */
+    protected function buildContactsFields()
     {
-        
         global $langs;
         
         //====================================================================//
         // Billing Address
-        $this->fieldsFactory()->create(self::objects()->Encode("Address", SPL_T_ID))
-                ->Identifier("BILLING")
-                ->Name($langs->trans("TypeContact_commande_external_BILLING"))
-                ->MicroData("http://schema.org/Order", "billingAddress");
+        $this->fieldsFactory()->create((string) self::objects()->Encode("Address", SPL_T_ID))
+            ->Identifier("BILLING")
+            ->Name($langs->trans("TypeContact_commande_external_BILLING"))
+            ->MicroData("http://schema.org/Order", "billingAddress");
         
         //====================================================================//
         // Shipping Address
-        $this->fieldsFactory()->create(self::objects()->Encode("Address", SPL_T_ID))
-                ->Identifier("SHIPPING")
-                ->Name($langs->trans("TypeContact_commande_external_SHIPPING"))
-                ->MicroData("http://schema.org/Order", "orderDelivery");
+        $this->fieldsFactory()->create((string) self::objects()->Encode("Address", SPL_T_ID))
+            ->Identifier("SHIPPING")
+            ->Name($langs->trans("TypeContact_commande_external_SHIPPING"))
+            ->MicroData("http://schema.org/Order", "orderDelivery");
     }
-
+    
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getContactsFields($Key, $FieldName)
+    protected function getContactsFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             case 'SHIPPING':
             case 'BILLING':
-                $ContactsArray   =  $this->object->liste_contact(-1, 'external', 1, $FieldName);
-                if (!empty($ContactsArray)) {
-                    $this->out[$FieldName] = self::objects()->Encode("Address", array_shift($ContactsArray));
+                $contactsArray   =  $this->object->liste_contact(-1, 'external', 1, $fieldName);
+                if (!empty($contactsArray)) {
+                    $this->out[$fieldName] = self::objects()->Encode("Address", array_shift($contactsArray));
                 } else {
-                    $this->out[$FieldName] = null;
+                    $this->out[$fieldName] = null;
                 }
+
                 break;
-            
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setContactsFields($FieldName, $Data)
+    protected function setContactsFields($fieldName, $fieldData)
     {
-        switch ($FieldName) {
+        switch ($fieldName) {
             case 'SHIPPING':
             case 'BILLING':
                 //====================================================================//
                 // Load Current Contact
-                $ContactsArray   =  $this->object->liste_contact(-1, 'external', 0, $FieldName);
-                $Current    =   empty($ContactsArray) ? null : array_shift($ContactsArray);
+                $contactsArray   =  $this->object->liste_contact(-1, 'external', 0, $fieldName);
+                $current    =   empty($contactsArray) ? null : array_shift($contactsArray);
 
                 //====================================================================//
                 // Compare to Expected
-                $Expected = self::objects()->Id($Data);
-                if ($Current && ($Current["id"] == $Expected)) {
+                $expected = self::objects()->Id($fieldData);
+                if ($current && ($current["id"] == $expected)) {
                     break;
                 }
                 //====================================================================//
                 // Delete if Changed
-                if ($Current && ($Current["id"] != $Expected)) {
-                    $this->object->delete_contact($Current["rowid"]);
+                if ($current && ($current["id"] != $expected)) {
+                    $this->object->delete_contact($current["rowid"]);
                 }
                 //====================================================================//
                 // Add New Contact
-                $this->object->add_contact($Expected, $FieldName, 'external');
+                $this->object->add_contact((int) $expected, $fieldName, 'external');
+
                 break;
-            
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
 }

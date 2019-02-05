@@ -25,19 +25,12 @@
  *  \class      OsWs_Local_Customers
  *  \remarks	Designed for Splash Module - Dolibar ERP Version
 */
-                    
-//====================================================================//
-// *******************************************************************//
-//                     SPLASH FOR PRESTASHOP                          //
-// *******************************************************************//
-//                CUSTOMERS ORDERS DATA MANAGEMENT                    //
-// *******************************************************************//
-//====================================================================//
 
 namespace   Splash\Local\Objects;
 
 use Splash\Core\SplashCore      as Splash;
 
+use Commande;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
@@ -47,8 +40,7 @@ use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ImagesTrait;
 
 /**
- *  \class      Order
- *  \brief      Customers Orders Management Class
+ * CUSTOMERS ORDERS DATA MANAGEMENT
  */
 class Order extends AbstractObject
 {
@@ -70,6 +62,7 @@ class Order extends AbstractObject
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\ImagesTrait;
     use \Splash\Local\Core\CustomerTrait;
+    use \Splash\Local\Core\MultiCompanyTrait;
     
     // Dolibarr Orders Traits
     use \Splash\Local\Objects\Order\ObjectsListTrait;
@@ -113,10 +106,14 @@ class Order extends AbstractObject
     //====================================================================//
     // Class Constructor
     //====================================================================//
-        
+
     /**
-     *      @abstract       Class Constructor (Used only if localy necessary)
-     *      @return         int                     0 if KO, >0 if OK
+     * @var Commande
+     */    
+    protected $object;
+    
+    /**
+     * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
@@ -133,7 +130,5 @@ class Order extends AbstractObject
         $langs->load("orders");
         $langs->load("other");
         $langs->load("stocks");
-        
-        return true;
     }
 }

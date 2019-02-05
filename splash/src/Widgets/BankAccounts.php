@@ -1,46 +1,39 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
- *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
- *  \ingroup    Splash - Open Synchronisation WebService
- *  \brief      Local Function Definition for Management of Customers Data
- *  \class      SplashDemo
- *  \remarks	Designed for Splash Module - Dolibar ERP Version
-*/
-                    
-//====================================================================//
-// *******************************************************************//
-//                     SPLASH FOR DOLIBARR                            //
-// *******************************************************************//
-//                  BANK ACCOUNTS LEVELS WIDGET                       //
-// *******************************************************************//
-//====================================================================//
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Models\AbstractWidget;
+use Splash\Local\Local;
 
+/**
+ * BANK ACCOUNTS LEVELS WIDGET
+ */
 class BankAccounts extends AbstractWidget
 {
+    //====================================================================//
+    // Define Standard Options for this Widget
+    // Override this array to change default options for your widget
+    public static $OPTIONS       = array(
+        "Width"         =>  self::SIZE_M,
+        "Header"        =>  true,
+        "Footer"        =>  false,
+        'UseCache'      =>  true,
+        'CacheLifeTime' =>  60,
+    );
     
     //====================================================================//
     // Object Definition Parameters
@@ -62,35 +55,27 @@ class BankAccounts extends AbstractWidget
     protected static $ICO            =  "fa fa-money";
     
     //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_M,
-        "Header"        =>  true,
-        "Footer"        =>  false,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
-    );
-    
-    //====================================================================//
     // General Class Variables
     //====================================================================//
 
-    private $MaxItems   =   10;
+    private $maxItems   =   10;
     
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
     }
     
     /**
-     *      @abstract   Return Widget Customs Parameters
+     * Return Widget Customs Parameters
      */
     public function getParameters()
     {
@@ -100,8 +85,8 @@ class BankAccounts extends AbstractWidget
         //====================================================================//
         // Use Compact Mode
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("compact")
-                ->Name($langs->trans("Compact Mode"));
+            ->Identifier("compact")
+            ->Name($langs->trans("Compact Mode"));
       
         //====================================================================//
         // Publish Fields
@@ -109,13 +94,7 @@ class BankAccounts extends AbstractWidget
     }
     
     /**
-     *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
-     *                        $params["start"]      Maximum Number of results
-     *                        $params["end"]        List Start Offset
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
-
+     * {@inheritdoc}
      */
     public function get($params = null)
     {
@@ -124,7 +103,7 @@ class BankAccounts extends AbstractWidget
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
@@ -141,7 +120,7 @@ class BankAccounts extends AbstractWidget
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
-        $this->MaxItems = !empty($params["max"]) ? $params["max"] : 10;
+        $this->maxItems = !empty($params["max"]) ? $params["max"] : 10;
         if ($params["compact"]) {
             $this->buildSparkBlock();
         } else {
@@ -150,41 +129,67 @@ class BankAccounts extends AbstractWidget
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->render());
+        $blocks = $this->blocksFactory()->render();
+        if(false !== $blocks) {
+            $this->setBlocks($blocks);
+        }
 
         //====================================================================//
         // Publish Widget
         return $this->render();
     }
         
+    //====================================================================//
+    // Overide Splash Functions
+    //====================================================================//
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        global $langs;
+        $langs->load("boxes");
+
+        return html_entity_decode($langs->trans(static::$NAME));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDesc()
+    {
+        global $langs;
+        $langs->load("boxes");
+
+        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+    }
 
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
 
     /**
-    *   @abstract     Block Building - Box is Disabled
-    */
+     * Block Building - Box is Disabled
+     */
     private function buildDisabledBlock()
     {
-
         global $langs, $user;
         
         if (!$user->rights->banque->lire) {
             $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("ReadPermissionNotAllowed"));
+            $contents   = array("warning"   => $langs->trans("ReadPermissionNotAllowed"));
             //====================================================================//
             // Warning Block
-            $this->blocksFactory()->addNotificationsBlock($Contents);
+            $this->blocksFactory()->addNotificationsBlock($contents);
         }
     }
   
     /**
-     * @abstract    Read Widget Datas
+     * Read Widget Datas
      */
     private function getData()
     {
-
         global $langs, $user, $db, $conf;
         
         if (!$user->rights->banque->lire) {
@@ -199,121 +204,124 @@ class BankAccounts extends AbstractWidget
         $sql.= " WHERE entity = ".$conf->entity;
         $sql.= " AND clos = 0";
         $sql.= " ORDER BY label";
-        $sql.= $db->plimit($this->MaxItems, 0);
+        $sql.= $db->plimit($this->maxItems, 0);
         dol_syslog(get_class($this)."::loadBox", LOG_DEBUG);
-        $Result = $db->query($sql);
+        $result = $db->query($sql);
         
         //====================================================================//
         // Empty Contents
         //====================================================================//
-        if ($db->num_rows($Result) < 1) {
+        if ($db->num_rows($result) < 1) {
             $langs->load("admin");
-            $Contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
+            $contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
             //====================================================================//
             // Warning Block
-            $this->blocksFactory()->addNotificationsBlock($Contents);
+            $this->blocksFactory()->addNotificationsBlock($contents);
+
             return array();
         }
         
         $index      = 0;
-        $RawData    = array();
-        while ($index < $db->num_rows($Result)) {
-            $RawData[$index] = $db->fetch_array($Result);
+        $rawData    = array();
+        while ($index < $db->num_rows($result)) {
+            $rawData[$index] = $db->fetch_array($result);
             $index++;
         }
         
-        
-        return $RawData;
+        return $rawData;
     }
         
     /**
-    *   @abstract     Block Building - Text Intro
-    */
+     * Block Building - Text Intro
+     */
     private function buildTableBlock()
     {
-
         global $langs, $db;
         
-        $Data   = $this->getData();
+        $data   = $this->getData();
         
         //====================================================================//
         // Build Table Contents
         //====================================================================//
-        $Contents       = array();
+        $contents       = array();
         include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
-        $account_static = new \Account($db);
-        $Prefix     = '<i class="fa fa-university" aria-hidden="true">&nbsp;</i>';
+        $accountStatic = new \Account($db);
+        $prefix     = '<i class="fa fa-university" aria-hidden="true">&nbsp;</i>';
      
-        foreach ($Data as $Line) {
-            $account_static->id         = $Line["rowid"];
-            $account_static->label      = $Line["label"];
-            $account_static->number     = $Line["number"];
-            $solde=$account_static->solde(0);
+        foreach ($data as $line) {
+            $accountStatic->id         = $line["rowid"];
+            $accountStatic->label      = $line["label"];
+            $accountStatic->number     = $line["number"];
+            $solde=$accountStatic->solde(0);
                     
             if ($solde < 0) {
-                $Value = '<span class="text-danger">';
-                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
-                $Value.= '</span>';
-                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';
-            } elseif ($solde < $Line["min_desired"]) {
-                $Value = '<span class="text-warning">';
-                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
-                $Value.= '</span>';
-                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';
+                $value = '<span class="text-danger">';
+                $value.= price($solde, 0, $langs, 0, -1, -1, $line["currency_code"]);
+                $value.= '</span>';
+                $value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';
+            } elseif ($solde < $line["min_desired"]) {
+                $value = '<span class="text-warning">';
+                $value.= price($solde, 0, $langs, 0, -1, -1, $line["currency_code"]);
+                $value.= '</span>';
+                $value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';
             } else {
-                $Value = '<span class="text-success">';
-                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
-                $Value.= '</span>';
+                $value = '<span class="text-success">';
+                $value.= price($solde, 0, $langs, 0, -1, -1, $line["currency_code"]);
+                $value.= '</span>';
             }
             
-            $Contents[] = array(
-                $Prefix . $Line["ref"], $Line["label"], $Line["bank"],
-                $Value,
+            $contents[] = array(
+                $prefix . $line["ref"], $line["label"], $line["bank"],
+                $value,
             );
         }
         
         //====================================================================//
         // Build Table Options
         //====================================================================//
-        $Options = array(
+        $options = array(
             "AllowHtml"         => true,
             "HeadingRows"       => 0,
         );
+        
         //====================================================================//
         // Add Table Block
-        $this->blocksFactory()->addTableBlock($Contents, $Options);
+        $this->blocksFactory()->addTableBlock($contents, $options);
     }
 
     /**
-    *   @abstract     Block Building - Text Intro
-    */
+     * Block Building - Text Intro
+     */
     private function buildSparkBlock()
     {
-
         global $langs, $db;
         
-        $Data   = $this->getData();
+        $data   = $this->getData();
 
         //====================================================================//
         // Build SparkInfo Options
         //====================================================================//
-        switch (count($Data)) {
+        switch (count($data)) {
             case 1:
-                $Width = self::SIZE_XL;
+                $width = self::SIZE_XL;
+
                 break;
             case 2:
-                $Width = self::SIZE_M;
+                $width = self::SIZE_M;
+
                 break;
             case 3:
-                $Width = self::SIZE_SM;
+                $width = self::SIZE_SM;
+
                 break;
             default:
-                $Width = self::SIZE_XS;
+                $width = self::SIZE_XS;
+
                 break;
         }
-        $Options = array(
+        $options = array(
             "AllowHtml"         =>  true,
-            "Width"             =>  $Width
+            "Width"             =>  $width
         );
         
         //====================================================================//
@@ -321,70 +329,41 @@ class BankAccounts extends AbstractWidget
         //====================================================================//
         
         include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
-        $account_static = new \Account($db);
+        $accountStatic = new \Account($db);
         
-        foreach ($Data as $Line) {
-            $account_static->id         = $Line["rowid"];
-            $account_static->label      = $Line["label"];
-            $account_static->number     = $Line["number"];
-            $solde  =   $account_static->solde(0);
-            
+        foreach ($data as $line) {
+            $accountStatic->id         = $line["rowid"];
+            $accountStatic->label      = $line["label"];
+            $accountStatic->number     = $line["number"];
+            $solde  =   $accountStatic->solde(0);
             
             if ($solde < 0) {
-                $Class = "text-danger";
-                $Value = '<span class="text-danger">';
-                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
-                $Value.= '</span>';
-                $Value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';
-            } elseif ($solde < $Line["min_desired"]) {
-                $Class = "text-warning";
-                $Value = '<span class="text-warning">';
-                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
-                $Value.= '</span>';
-                $Value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';
+                $class = "text-danger";
+                $value = '<span class="text-danger">';
+                $value.= price($solde, 0, $langs, 0, -1, -1, $line["currency_code"]);
+                $value.= '</span>';
+                $value.= '&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>';
+            } elseif ($solde < $line["min_desired"]) {
+                $class = "text-warning";
+                $value = '<span class="text-warning">';
+                $value.= price($solde, 0, $langs, 0, -1, -1, $line["currency_code"]);
+                $value.= '</span>';
+                $value.= '&nbsp;<i class="fa fa-exclamation text-warning" aria-hidden="true"></i>';
             } else {
-                $Class = "text-success";
-                $Value = '<span class="text-success">';
-                $Value.= price($solde, 0, $langs, 0, -1, -1, $Line["currency_code"]);
-                $Value.= '</span>';
+                $class = "text-success";
+                $value = '<span class="text-success">';
+                $value.= price($solde, 0, $langs, 0, -1, -1, $line["currency_code"]);
+                $value.= '</span>';
             }
             
-            $Contents = array(
-                "title"     =>      $Line["ref"],
-                "fa_icon"   =>      "university " . $Class,
-                "value"     =>      $Value,
+            $contents = array(
+                "title"     =>      $line["ref"],
+                "fa_icon"   =>      "university " . $class,
+                "value"     =>      $value,
             );
             //====================================================================//
             // Add SparkInfo Block
-            $this->blocksFactory()->addSparkInfoBlock($Contents, $Options);
+            $this->blocksFactory()->addSparkInfoBlock($contents, $options);
         }
-    }
-    
-    //====================================================================//
-    // Class Tooling Functions
-    //====================================================================//
-
-    //====================================================================//
-    // Overide Splash Functions
-    //====================================================================//
-
-    /**
-     *      @abstract   Return name of this Widget Class
-     */
-    public function getName()
-    {
-        global $langs;
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$NAME));
-    }
-
-    /**
-     *      @abstract   Return Description of this Widget Class
-     */
-    public function getDesc()
-    {
-        global $langs;
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
 }

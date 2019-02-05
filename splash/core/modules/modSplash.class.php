@@ -110,7 +110,7 @@ class modSplash extends DolibarrModules
             // List of modules id to disable if this one is disabled
             $this->requiredby = array();
             $this->phpmin = array(5,6);                                 // Min version of PHP required by module
-            $this->need_dolibarr_version = array(4,0);                  // Min version of Dolibarr required by module
+            $this->need_dolibarr_version = array(6,0);                  // Min version of Dolibarr required by module
             $this->langfiles = array(SPL_MOD_NAME."@".SPL_MOD_NAME);
 
 
@@ -161,38 +161,38 @@ class modSplash extends DolibarrModules
     {
             //====================================================================//
             // Permissions
-            $Rights = array();      // Permission array used by this module
+            $rights = array();      // Permission array used by this module
             $index=0;
 
-            $Rights[$index][0] = 9201; // id de la permission
-            $Rights[$index][1] = 'Lire les Données'; // libelle de la permission
-            $Rights[$index][2] = 'r'; // type de la permission (deprecie a ce jour)
-            $Rights[$index][3] = 1; // La permission est-elle une permission par defaut
-            $Rights[$index][4] = 'lire';
+            $rights[$index][0] = 9201; // id de la permission
+            $rights[$index][1] = 'Lire les Données'; // libelle de la permission
+            $rights[$index][2] = 'r'; // type de la permission (deprecie a ce jour)
+            $rights[$index][3] = 1; // La permission est-elle une permission par defaut
+            $rights[$index][4] = 'lire';
             $index++;
 
-            $Rights[$index][0] = 9202; // id de la permission
-            $Rights[$index][1] = 'Creer/modifier des données'; // libelle de la permission
-            $Rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
-            $Rights[$index][3] = 0; // La permission est-elle une permission par defaut
-            $Rights[$index][4] = 'creer';
+            $rights[$index][0] = 9202; // id de la permission
+            $rights[$index][1] = 'Creer/modifier des données'; // libelle de la permission
+            $rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
+            $rights[$index][3] = 0; // La permission est-elle une permission par defaut
+            $rights[$index][4] = 'creer';
             $index++;
 
-            $Rights[$index][0] = 9203; // id de la permission
-            $Rights[$index][1] = 'Modifier les paramètres du Module'; // libelle de la permission
-            $Rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
-            $Rights[$index][3] = 0; // La permission est-elle une permission par defaut
-            $Rights[$index][4] = 'creer';
+            $rights[$index][0] = 9203; // id de la permission
+            $rights[$index][1] = 'Modifier les paramètres du Module'; // libelle de la permission
+            $rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
+            $rights[$index][3] = 0; // La permission est-elle une permission par defaut
+            $rights[$index][4] = 'creer';
             $index++;
 
-            $Rights[$index][0] = 9204; // id de la permission
-            $Rights[$index][1] = 'Supprimer des données'; // libelle de la permission
-            $Rights[$index][2] = 'd'; // type de la permission (deprecie a ce jour)
-            $Rights[$index][3] = 0; // La permission est-elle une permission par defaut
-            $Rights[$index][4] = 'supprimer';
+            $rights[$index][0] = 9204; // id de la permission
+            $rights[$index][1] = 'Supprimer des données'; // libelle de la permission
+            $rights[$index][2] = 'd'; // type de la permission (deprecie a ce jour)
+            $rights[$index][3] = 0; // La permission est-elle une permission par defaut
+            $rights[$index][4] = 'supprimer';
             $index++;
             
-            return $Rights;
+            return $rights;
     }
         
     /**

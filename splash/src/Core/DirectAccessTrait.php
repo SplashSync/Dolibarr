@@ -1,60 +1,56 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Core;
 
-use Exception;
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Direct Access to Dolibarr Database tables data
+ * Direct Access to Dolibarr Database tables data
  */
 trait DirectAccessTrait
 {
-    
     /**
-     *  @abstract       Update Single Dolibarr Entity Field Data
+     * Update Single Dolibarr Entity Field Data
      *
-     *  @param      string  $Name       Field Name
-     *  @param      mixed   $Value      Field Data
-     *  @param      string  $Table      Entity Table Name Without Prefix
-     *  @param      int     $RowId      Entity RowId
+     * @param string $name  Field Name
+     * @param mixed  $value Field Data
+     * @param string $table Entity Table Name Without Prefix
+     * @param int    $rowId Entity RowId
      *
-     *  @return     bool
+     * @return bool
      */
-    public function setDatabaseField($Name, $Value, $Table = null, $RowId = null)
+    public function setDatabaseField($name, $value, $table = null, $rowId = null)
     {
         global $db;
         
         //====================================================================//
         // Parameters Overide
-        $_Table  =   is_null($Table) ?  $this->object->table_element : $Table;
-        $_RowId  =   is_null($RowId) ?  $this->object->id : $RowId;
+        $realTable  =   is_null($table) ?  $this->object->table_element : $table;
+        $realRowId  =   is_null($rowId) ?  $this->object->id : $rowId;
         //====================================================================//
         // Safety Check
-        if (empty($_Table) || empty($_RowId)) {
+        if (empty($realTable) || empty($realRowId)) {
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Wrong Input Parameters.");
         }
         //====================================================================//
         // Prepare SQL Request
         //====================================================================//
-        $sql  = "UPDATE ". MAIN_DB_PREFIX . $_Table;
-        $sql .= " SET " . $Name . "='".$db->escape($Value)."'";
-        $sql .= " WHERE rowid=".$db->escape($_RowId);
+        $sql  = "UPDATE ". MAIN_DB_PREFIX . $realTable;
+        $sql .= " SET " . $name . "='".$db->escape($value)."'";
+        $sql .= " WHERE rowid=".$db->escape($realRowId);
         //====================================================================//
         // Execute SQL Query
         //====================================================================//

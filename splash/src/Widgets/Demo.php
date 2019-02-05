@@ -1,30 +1,17 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
- *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
- *  \ingroup    Splash - Open Synchronisation WebService
- *  \brief      Local Function Definition for Management of Customers Data
- *  \class      SplashDemo
- *  \remarks	Designed for Splash Module - Dolibar ERP Version
-*/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
                     
 //====================================================================//
 // *******************************************************************//
@@ -36,15 +23,21 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Models\AbstractWidget;
+use Splash\Local\Local;
 
 /**
- *  \class      Address
- *  \brief      Address - Thirdparty Contacts Management Class
+ *  TEST & DEMONSTRATION WIDGET
  */
 class Demo extends AbstractWidget
 {
+    //====================================================================//
+    // Define Standard Options for this Widget
+    // Override this array to change default options for your widget
+    public static $OPTIONS       = array(
+        "Width"     =>      self::SIZE_XL
+    );
     
     //====================================================================//
     // Object Definition Parameters
@@ -69,72 +62,37 @@ class Demo extends AbstractWidget
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
     protected static $ICO            =  "fa fa-magic";
-    
-    //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
-    public static $OPTIONS       = array(
-        "Width"     =>      self::SIZE_XL
-    );
-    
-    //====================================================================//
-    // General Class Variables
-    //====================================================================//
-
-    //====================================================================//
-    // Class Constructor
-    //====================================================================//
         
-//    /**
-//     *      @abstract       Class Constructor (Used only if localy necessary)
-//     *      @return         int                     0 if KO, >0 if OK
-//     */
-//    function __construct()
-//    {
-//        //====================================================================//
-//        // Place Here Any SPECIFIC Initialisation Code
-//        //====================================================================//
-//
-//        return True;
-//    }
-    
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
     /**
-     *      @abstract   Return Widget Customs Parameters
+     * {@inheritdoc}
      */
     public function getParameters()
     {
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("text_input")
-                ->Name("Text Input")
-                ->Description("Widget Specific Custom text Input");
+            ->Identifier("text_input")
+            ->Name("Text Input")
+            ->Description("Widget Specific Custom text Input");
         
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_INT)
-                ->Identifier("integer_input")
-                ->Name("Numeric Input")
-                ->Description("Widget Specific Custom Numeric Input");
+            ->Identifier("integer_input")
+            ->Name("Numeric Input")
+            ->Description("Widget Specific Custom Numeric Input");
         
         //====================================================================//
         // Publish Fields
         return $this->fieldsFactory()->publish();
-//        return array();
     }
     
     /**
-     *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
-     *                        $params["start"]      Maximum Number of results
-     *                        $params["end"]        List Start Offset
-     *                        $params["groupby"]    Field name for sort list (Available fields listed below)
-
+     * {@inheritdoc}
      */
     public function get($params = null)
     {
@@ -143,7 +101,7 @@ class Demo extends AbstractWidget
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
@@ -169,75 +127,71 @@ class Demo extends AbstractWidget
 
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->render());
+        $blocks = $this->blocksFactory()->render();
+        if(false !== $blocks) {
+            $this->setBlocks($blocks);
+        }
 
         //====================================================================//
         // Publish Widget
         return $this->render();
     }
         
-
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
 
     /**
-    *   @abstract     Block Building - Text Intro
-    */
+     * Block Building - Text Intro
+     */
     private function buildIntroBlock()
     {
         //====================================================================//
         // Into Text Block
         $this->blocksFactory()
-                ->addTextBlock("This is a Demo Text Block!!" . "You can repeat me as much as you want!");
+            ->addTextBlock("This is a Demo Text Block!!" . "You can repeat me as much as you want!");
     }
   
     /**
-    *   @abstract     Block Building - Inputs Parameters
-    */
-    private function buildParametersBlock($Inputs = array())
+     * Block Building - Inputs Parameters
+     *
+     * @param mixed $inputs
+     */
+    private function buildParametersBlock($inputs = array())
     {
-
         //====================================================================//
         // verify Inputs
-        if (!is_array($Inputs) && !is_a($Inputs, "ArrayObject")) {
+        if (!is_array($inputs) && !is_a($inputs, "ArrayObject")) {
             $this->blocksFactory()->addNotificationsBlock(
-                array("warning" => "Inputs is not an Array! Is " . get_class($Inputs))
+                array("warning" => "Inputs is not an Array! Is " . get_class($inputs))
             );
         }
         
         //====================================================================//
         // Parameters Table Block
-        $TableContents = array();
-        $TableContents[]    =   array("Received " . count($Inputs) .  " inputs parameters","Value");
-        foreach ($Inputs as $key => $value) {
-            $TableContents[]    =   array($key, $value);
+        $tableContents = array();
+        $tableContents[]    =   array("Received " . count($inputs) .  " inputs parameters","Value");
+        foreach ($inputs as $key => $value) {
+            $tableContents[]    =   array($key, $value);
         }
         
-        $this->blocksFactory()->addTableBlock($TableContents, array("Width" => self::SIZE_M));
+        $this->blocksFactory()->addTableBlock($tableContents, array("Width" => self::SIZE_M));
     }
     
     /**
-    *   @abstract     Block Building - Notifications Parameters
-    */
+     * Block Building - Notifications Parameters
+     */
     private function buildNotificationsBlock()
     {
-
         //====================================================================//
         // Notifications Block
-        
-        $Notifications = array(
+        $notifications = array(
             "error" =>  "This is a Sample Error Notification",
             "warning" =>  "This is a Sample Warning Notification",
             "success" =>  "This is a Sample Success Notification",
             "info" =>  "This is a Sample Infomation Notification",
         );
         
-        
-        $this->blocksFactory()->addNotificationsBlock($Notifications, array("Width" => self::SIZE_M));
+        $this->blocksFactory()->addNotificationsBlock($notifications, array("Width" => self::SIZE_M));
     }
-    
-    //====================================================================//
-    // Class Tooling Functions
-    //====================================================================//
 }

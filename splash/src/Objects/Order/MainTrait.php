@@ -1,34 +1,34 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace Splash\Local\Objects\Order;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * @abstract    Dolibarr Customer Orders Fields
+ * Dolibarr Customer Orders Fields
  */
 trait MainTrait
 {
-
-    private $updateBilled = null;
+    /**
+     * @var null|bool
+     */
+    private $updateBilled;
     
     /**
-     *  @abstract     Build Address Fields using FieldFactory
+     * Build Address Fields using FieldFactory
      */
     protected function buildMainFields()
     {
@@ -37,9 +37,9 @@ trait MainTrait
         //====================================================================//
         // Delivry Estimated Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-                ->Identifier("date_livraison")
-                ->Name($langs->trans("DeliveryDate"))
-                ->MicroData("http://schema.org/ParcelDelivery", "expectedArrivalUntil");
+            ->Identifier("date_livraison")
+            ->Name($langs->trans("DeliveryDate"))
+            ->MicroData("http://schema.org/ParcelDelivery", "expectedArrivalUntil");
         
         //====================================================================//
         // PRICES INFORMATIONS
@@ -48,18 +48,18 @@ trait MainTrait
         //====================================================================//
         // Order Total Price HT
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("total_ht")
-                ->Name($langs->trans("TotalHT") . " (" . $conf->global->MAIN_MONNAIE . ")")
-                ->MicroData("http://schema.org/Invoice", "totalPaymentDue")
-                ->isReadOnly();
+            ->Identifier("total_ht")
+            ->Name($langs->trans("TotalHT") . " (" . $conf->global->MAIN_MONNAIE . ")")
+            ->MicroData("http://schema.org/Invoice", "totalPaymentDue")
+            ->isReadOnly();
         
         //====================================================================//
         // Order Total Price TTC
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-                ->Identifier("total_ttc")
-                ->Name($langs->trans("TotalTTC") . " (" . $conf->global->MAIN_MONNAIE . ")")
-                ->MicroData("http://schema.org/Invoice", "totalPaymentDueTaxIncluded")
-                ->isReadOnly();
+            ->Identifier("total_ttc")
+            ->Name($langs->trans("TotalTTC") . " (" . $conf->global->MAIN_MONNAIE . ")")
+            ->MicroData("http://schema.org/Invoice", "totalPaymentDueTaxIncluded")
+            ->isReadOnly();
         
         //====================================================================//
         // ORDER STATUS FLAGS
@@ -68,206 +68,203 @@ trait MainTrait
         //====================================================================//
         // Is Draft
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("isdraft")
-                ->Group(html_entity_decode($langs->trans("Status")))
-                ->Name($langs->trans("Order") . " : " . $langs->trans("Draft"))
-                ->MicroData("http://schema.org/OrderStatus", "OrderDraft")
-                ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
-                ->isReadOnly();
+            ->Identifier("isdraft")
+            ->Group(html_entity_decode($langs->trans("Status")))
+            ->Name($langs->trans("Order") . " : " . $langs->trans("Draft"))
+            ->MicroData("http://schema.org/OrderStatus", "OrderDraft")
+            ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
+            ->isReadOnly();
 
         //====================================================================//
         // Is Canceled
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("iscanceled")
-                ->Group(html_entity_decode($langs->trans("Status")))
-                ->Name($langs->trans("Order") . " : " . $langs->trans("Canceled"))
-                ->MicroData("http://schema.org/OrderStatus", "OrderCancelled")
-                ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
-                ->isReadOnly();
+            ->Identifier("iscanceled")
+            ->Group(html_entity_decode($langs->trans("Status")))
+            ->Name($langs->trans("Order") . " : " . $langs->trans("Canceled"))
+            ->MicroData("http://schema.org/OrderStatus", "OrderCancelled")
+            ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
+            ->isReadOnly();
         
         //====================================================================//
         // Is Validated
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("isvalidated")
-                ->Group(html_entity_decode($langs->trans("Status")))
-                ->Name($langs->trans("Order") . " : " . $langs->trans("Validated"))
-                ->MicroData("http://schema.org/OrderStatus", "OrderProcessing")
-                ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
-                ->isReadOnly();
+            ->Identifier("isvalidated")
+            ->Group(html_entity_decode($langs->trans("Status")))
+            ->Name($langs->trans("Order") . " : " . $langs->trans("Validated"))
+            ->MicroData("http://schema.org/OrderStatus", "OrderProcessing")
+            ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
+            ->isReadOnly();
         
         //====================================================================//
         // Is Closed
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("isclosed")
-                ->Name($langs->trans("Order") . " : " . $langs->trans("Closed"))
-                ->Group(html_entity_decode($langs->trans("Status")))
-                ->MicroData("http://schema.org/OrderStatus", "OrderDelivered")
-                ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
-                ->isReadOnly();
+            ->Identifier("isclosed")
+            ->Name($langs->trans("Order") . " : " . $langs->trans("Closed"))
+            ->Group(html_entity_decode($langs->trans("Status")))
+            ->MicroData("http://schema.org/OrderStatus", "OrderDelivered")
+            ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
+            ->isReadOnly();
 
         //====================================================================//
         // Is Paid
         $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("facturee")
-                ->Group(html_entity_decode($langs->trans("Status")))
-                ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))
-                ->MicroData("http://schema.org/OrderStatus", "OrderPaid")
-                ->isNotTested();
-        
-        return;
+            ->Identifier("facturee")
+            ->Group(html_entity_decode($langs->trans("Status")))
+            ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))
+            ->MicroData("http://schema.org/OrderStatus", "OrderPaid")
+            ->isNotTested();
     }
     
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getMainFields($Key, $FieldName)
+    protected function getMainFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Order Delivery Date
             case 'date_livraison':
-                $date_livraison   =  $this->object->date_livraison;
-                $this->out[$FieldName] = !empty($date_livraison)?dol_print_date($date_livraison, '%Y-%m-%d'):null;
+                $dateLivraison   =  $this->object->date_livraison;
+                $this->out[$fieldName] = !empty($dateLivraison)?dol_print_date($dateLivraison, '%Y-%m-%d'):null;
+
                 break;
-            
             //====================================================================//
             // ORDER INVOICED FLAG
             //====================================================================//
             case 'facturee':
-                $this->getSimple($FieldName);
-                break;
+                $this->getSimple($fieldName);
 
+                break;
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
     
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getTotalsFields($Key, $FieldName)
+    protected function getTotalsFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // PRICE INFORMATIONS
             //====================================================================//
             case 'total_ht':
             case 'total_ttc':
             case 'total_vat':
-                $this->getSimple($FieldName);
-                break;
+                $this->getSimple($fieldName);
 
+                break;
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getStatesFields($Key, $FieldName)
+    protected function getStatesFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // ORDER STATUS
             //====================================================================//
 
             case 'isdraft':
-                $this->out[$FieldName]  = ( $this->object->statut == 0 )    ?   true:false;
+                $this->out[$fieldName]  = (0 == $this->object->statut)    ?   true:false;
+
                 break;
             case 'iscanceled':
-                $this->out[$FieldName]  = ( $this->object->statut == -1 )   ?   true:false;
+                $this->out[$fieldName]  = (-1 == $this->object->statut)   ?   true:false;
+
                 break;
             case 'isvalidated':
-                $this->out[$FieldName]  = ( $this->object->statut == 1 )    ?   true:false;
+                $this->out[$fieldName]  = (1 == $this->object->statut)    ?   true:false;
+
                 break;
             case 'isclosed':
-                $this->out[$FieldName]  = ( $this->object->statut == 3 )    ?   true:false;
-                break;
+                $this->out[$fieldName]  = (3 == $this->object->statut)    ?   true:false;
 
+                break;
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
     
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setMainFields($FieldName, $Data)
+    protected function setMainFields($fieldName, $fieldData)
     {
         global $user;
         
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Order Official Date
             case 'date_livraison':
-                if (dol_print_date($this->object->$FieldName, 'standard') === $Data) {
+                if (dol_print_date($this->object->{$fieldName}, 'standard') === $fieldData) {
                     break;
                 }
-                $this->object->set_date_livraison($user, $Data);
+                $this->object->set_date_livraison($user, $fieldData);
                 $this->needUpdate();
+
                 break;
-               
             //====================================================================//
             // ORDER INVOICED FLAG
             //====================================================================//
             case 'facturee':
-                if ($this->object->facturee == $Data) {
+                if ($this->object->facturee == $fieldData) {
                     break;
                 }
-                $this->updateBilled = $Data;
+                $this->updateBilled = $fieldData;
                 $this->updateBilledFlag();
+
                 break;
-                
             default:
                 return;
         }
         
-        
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
     
     /**
-     *  @abstract     Update Order Billed Flag if Required & Possibe
+     * Update Order Billed Flag if Required & Possibe
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
-     *
-     *  @return         none
+     * @return void
      */
     protected function updateBilledFlag()
     {
@@ -288,7 +285,7 @@ trait MainTrait
         } else {
             $this->object->classifyUnBilled();
         }
-        unset($this->updateBilled);
+        $this->updateBilled = null;
         $this->catchDolibarrErrors();
     }
 }

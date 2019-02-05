@@ -1,34 +1,32 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects\Product;
 
 /**
- * @abstract    Dolibarr Products Core Fields (Required)
+ * Dolibarr Products Core Fields (Required)
  */
 trait CoreTrait
 {
-
     /**
-    *   @abstract     Build Core Fields using FieldFactory
-    */
+     * Build Core Fields using FieldFactory
+     */
     protected function buildCoreFields()
     {
-        global $conf, $langs;
+        global $langs;
+        
         $groupName  =   $langs->trans("Description");
 
         //====================================================================//
@@ -50,7 +48,7 @@ trait CoreTrait
             ->isListed()
             ->isLogged()
             ->Group($groupName)
-            ->addOption('language', $langs->getDefaultLang())                
+            ->addOption('language', $langs->getDefaultLang())
             ->MicroData("http://schema.org/Product", "name")
             ->isRequired();
         
@@ -63,7 +61,7 @@ trait CoreTrait
             ->isListed()
             ->isLogged()
             ->Group($groupName)
-            ->addOption('language', $langs->getDefaultLang())                
+            ->addOption('language', $langs->getDefaultLang())
             ->MicroData("http://schema.org/Product", "description");
 
         //====================================================================//
@@ -72,79 +70,75 @@ trait CoreTrait
             ->Identifier("note")
             ->Name($langs->trans("Note"))
             ->Group($groupName)
-            ->addOption('language', $langs->getDefaultLang())                
+            ->addOption('language', $langs->getDefaultLang())
             ->MicroData("http://schema.org/Product", "privatenote");
-
-        
     }
 
-
     /**
-     *  @abstract     Read requested Field
+     * Read requested Field
      *
-     *  @param        string    $Key                    Input List Key
-     *  @param        string    $FieldName              Field Identifier / Name
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
      *
-     *  @return         none
+     * @return void
      */
-    protected function getCoreFields($Key, $FieldName)
+    protected function getCoreFields($key, $fieldName)
     {
         //====================================================================//
         // READ Fields
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Direct Readings
             case 'ref':
-                $this->getSimple($FieldName);
+                $this->getSimple($fieldName);
+
                 break;
-            
             case 'label':
             case 'description':
             case 'note':
-                $this->getSimple($FieldName);
+                $this->getSimple($fieldName);
                 
                 break;
-            
             default:
                 return;
         }
         
-        unset($this->in[$Key]);
+        unset($this->in[$key]);
     }
 
     /**
-     *  @abstract     Write Given Fields
+     * Write Given Fields
      *
-     *  @param        string    $FieldName              Field Identifier / Name
-     *  @param        mixed     $Data                   Field Data
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
-     *  @return         none
+     * @return void
      */
-    protected function setCoreFields($FieldName, $Data)
+    protected function setCoreFields($fieldName, $fieldData)
     {
         global $langs;
         
         //====================================================================//
         // WRITE Field
-        switch ($FieldName) {
+        switch ($fieldName) {
             //====================================================================//
             // Direct Writtings
             case 'ref':
                 // Update Path of Object Documents In Database
-                $this->updateFilesPath("produit", $this->object->ref, $Data);
-                $this->setSimple($FieldName, $Data);
+                $this->updateFilesPath("produit", $this->object->ref, $fieldData);
+                $this->setSimple($fieldName, $fieldData);
+
                 break;
-            
             case 'label':
             case 'description':
             case 'note':
-                $this->setSimple($FieldName, $Data);
-                $this->setMultilangContent($FieldName, $langs->getDefaultLang(), $Data);
+                $this->setSimple($fieldName, $fieldData);
+                $this->setMultilangContent($fieldName, $langs->getDefaultLang(), $fieldData);
+
                 break;
-                
             default:
                 return;
         }
-        unset($this->in[$FieldName]);
+        unset($this->in[$fieldName]);
     }
 }

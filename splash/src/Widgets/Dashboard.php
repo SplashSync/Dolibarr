@@ -1,30 +1,17 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
- *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
- *  \ingroup    Splash - Open Synchronisation WebService
- *  \brief      Local Function Definition for Management of Customers Data
- *  \class      SplashDemo
- *  \remarks	Designed for Splash Module - Dolibar ERP Version
-*/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
                     
 //====================================================================//
 // *******************************************************************//
@@ -36,11 +23,25 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Models\AbstractWidget;
+use Splash\Local\Local;
 
+/**
+ * Dolibarr Dashboard Widget
+ */
 class Dashboard extends AbstractWidget
 {
+    //====================================================================//
+    // Define Standard Options for this Widget
+    // Override this array to change default options for your widget
+    public static $OPTIONS       = array(
+        "Width"         =>  self::SIZE_SM,
+        "Header"        =>  true,
+        "Footer"        =>  true,
+        'UseCache'      =>  true,
+        'CacheLifeTime' =>  60,
+    );
     
     //====================================================================//
     // Object Definition Parameters
@@ -60,37 +61,23 @@ class Dashboard extends AbstractWidget
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
     protected static $ICO            =  "fa fa-briefcase";
-    
-    //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_SM,
-        "Header"        =>  true,
-        "Footer"        =>  true,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
-    );
-    
-    //====================================================================//
-    // General Class Variables
-    //====================================================================//
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
     
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
     }
     
     /**
-     *  @abstract     Return requested Customer Data
-     *
-     *  @param        array   $params               Search parameters for result List.
+     * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -101,7 +88,7 @@ class Dashboard extends AbstractWidget
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Load Default Language
-        Splash::local()->loadDefaultLanguage();
+        Local::loadDefaultLanguage();
 
         //====================================================================//
         // Setup Widget Core Informations
@@ -117,24 +104,65 @@ class Dashboard extends AbstractWidget
         
         //====================================================================//
         // Set Blocks to Widget
-        $this->setBlocks($this->blocksFactory()->render());
+        $blocks = $this->blocksFactory()->render();
+        if(false !== $blocks) {
+            $this->setBlocks($blocks);
+        }
 
         //====================================================================//
         // Publish Widget
         return $this->render();
     }
         
+    //====================================================================//
+    // Overide Splash Functions
+    //====================================================================//
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");
+
+        return html_entity_decode($langs->trans(static::$NAME));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDesc()
+    {
+        global $langs;
+        $langs->load("main");
+        $langs->load("boxes");
+
+        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public static function getIsDisabled()
+    {
+        if (Local::dolVersionCmp("3.9.0") >= 0) {
+            return static::$DISABLED;
+        }
+
+        return false;
+    }
+    
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
 
     /**
-     * @abstract    Read Widget Datas
+     * Read Widget Datas
      */
     private function getData()
     {
-
         //Array that contains all WorkboardResponse classes to process them
         $dashboardlines=array();
 
@@ -160,7 +188,6 @@ class Dashboard extends AbstractWidget
      */
     private function getLateActions(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of actions to do (late)
@@ -173,11 +200,10 @@ class Dashboard extends AbstractWidget
     }
 
     /**
-     * @abstract    Read Customers Orders Dashboard
+     * Read Customers Orders Dashboard
      */
     private function getCustomerOrders(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of customer orders a deal
@@ -185,16 +211,15 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
             $board=new \Commande($db);
 
-                $dashboardlines[] = $board->load_board($user);
+            $dashboardlines[] = $board->load_board($user);
         }
     }
     
     /**
-     * @abstract    Read Suppliers Orders Dashboard
+     * Read Suppliers Orders Dashboard
      */
     private function getSupplierOrders(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of suppliers orders a deal
@@ -202,34 +227,32 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
             $board=new \CommandeFournisseur($db);
 
-                $dashboardlines[] = $board->load_board($user);
+            $dashboardlines[] = $board->load_board($user);
         }
     }
     /**
-     * @abstract    Read Suppliers Orders Dashboard
+     * Read Suppliers Orders Dashboard
      */
     private function getOpenPropals(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of commercial proposals opened (expired)
         if (! empty($conf->propal->enabled) && $user->rights->propale->lire) {
             include_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
             $board=new \Propal($db);
-                $dashboardlines[] = $board->load_board($user, "opened");
+            $dashboardlines[] = $board->load_board($user, "opened");
 
-                // Number of commercial proposals CLOSED signed (billed)
-                $dashboardlines[] = $board->load_board($user, "signed");
+            // Number of commercial proposals CLOSED signed (billed)
+            $dashboardlines[] = $board->load_board($user, "signed");
         }
     }
     
     /**
-     * @abstract    Read Suppliers Orders Dashboard
+     * Read Suppliers Orders Dashboard
      */
     private function getDelayedServices(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of services enabled (delayed)
@@ -238,17 +261,16 @@ class Dashboard extends AbstractWidget
             $board=new \Contrat($db);
             $dashboardlines[] = $board->load_board($user, "inactives");
 
-                // Number of active services (expired)
+            // Number of active services (expired)
             $dashboardlines[] = $board->load_board($user, "expired");
         }
     }
     
     /**
-     * @abstract    Read Customers Invoices Dashboard
+     * Read Customers Invoices Dashboard
      */
     private function getCustomersInvoices(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of invoices customers (has paid)
@@ -260,11 +282,10 @@ class Dashboard extends AbstractWidget
     }
   
     /**
-     * @abstract    Read Supplier Invoices Dashboard
+     * Read Supplier Invoices Dashboard
      */
     private function getSupplierInvoices(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of supplier invoices (has paid)
@@ -276,11 +297,10 @@ class Dashboard extends AbstractWidget
     }
     
     /**
-     * @abstract    Read Transactions Dashboard
+     * Read Transactions Dashboard
      */
     private function getTransactionsDashboard(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of transactions to conciliate
@@ -295,11 +315,10 @@ class Dashboard extends AbstractWidget
     }
     
     /**
-     * @abstract    Read Bank Wire Dashboard
+     * Read Bank Wire Dashboard
      */
     private function getBankWire(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of cheque to send
@@ -311,11 +330,10 @@ class Dashboard extends AbstractWidget
     }
     
     /**
-     * @abstract    Read Bank Wire Dashboard
+     * Read Bank Wire Dashboard
      */
     private function getMembers(&$dashboardlines)
     {
-
         global $user, $db, $conf;
 
         // Number of foundation members
@@ -327,11 +345,10 @@ class Dashboard extends AbstractWidget
     }
     
     /**
-     * @abstract    Read Expenses Dashboard
+     * Read Expenses Dashboard
      */
     private function getExpenesDashboard(&$dashboardlines)
     {
-
         global $user, $db, $conf;
         
         // Number of expense reports to pay
@@ -344,94 +361,52 @@ class Dashboard extends AbstractWidget
     }
     
     /**
-    *   @abstract     Block Building - Text Intro
-    */
+     * Block Building - Text Intro
+     */
     private function buildTableBlock()
     {
-
         global $langs;
         
         $langs->load("orders");
         
-        $Data   = $this->getData();
+        $data   = $this->getData();
         
         //====================================================================//
         // Build Table Contents
         //====================================================================//
-        $Contents       = array();
+        $contents       = array();
         
-        $Contents[] = array(
+        $contents[] = array(
             $langs->trans("DolibarrWorkBoard"),
             $langs->trans("Number"),
             $langs->trans("Late"),
-            );
+        );
         
-        foreach ($Data as $WorkboardResponse) {
-            if ($WorkboardResponse->nbtodolate > 0) {
-                $Late = $WorkboardResponse->nbtodolate;
-                $Late.= '&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i>';
-                $Late.= "&nbsp;( >". ceil($WorkboardResponse->warning_delay) . ' ' . $langs->trans("days") . ")";
+        foreach ($data as $workboardResponse) {
+            if ($workboardResponse->nbtodolate > 0) {
+                $late = $workboardResponse->nbtodolate;
+                $late.= '&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i>';
+                $late.= "&nbsp;( >". ceil($workboardResponse->warning_delay) . ' ' . $langs->trans("days") . ")";
             } else {
-                $Late = '<i class="fa fa-check-circle-o text-success" aria-hidden="true"></i>';
+                $late = '<i class="fa fa-check-circle-o text-success" aria-hidden="true"></i>';
             }
             
-            $Contents[] = array(
-                $WorkboardResponse->label,
-                $WorkboardResponse->nbtodo,
-                $Late,
+            $contents[] = array(
+                $workboardResponse->label,
+                $workboardResponse->nbtodo,
+                $late,
             );
         }
         
         //====================================================================//
         // Build Table Options
         //====================================================================//
-        $Options = array(
+        $options = array(
             "AllowHtml"         => true,
             "HeadingRows"       => 1,
         );
         //====================================================================//
         // Add Table Block
-        $this->blocksFactory()->addTableBlock($Contents, $Options);
-    }
-    
-    //====================================================================//
-    // Class Tooling Functions
-    //====================================================================//
-
-    //====================================================================//
-    // Overide Splash Functions
-    //====================================================================//
-
-    /**
-     *      @abstract   Return name of this Widget Class
-     */
-    public function getName()
-    {
-        global $langs;
-        $langs->load("main");
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$NAME));
-    }
-
-    /**
-     *      @abstract   Return Description of this Widget Class
-     */
-    public function getDesc()
-    {
-        global $langs;
-        $langs->load("main");
-        $langs->load("boxes");
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
-    }
-    
-    /**
-     *      @abstract   Return Widget Status
-     */
-    public static function getIsDisabled()
-    {
-        if (Splash::local()->dolVersionCmp("3.9.0") >= 0) {
-            return static::$DISABLED;
-        }
-        return false;
+        $this->blocksFactory()->addTableBlock($contents, $options);
     }
 }
