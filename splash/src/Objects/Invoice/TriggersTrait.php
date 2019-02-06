@@ -53,7 +53,7 @@ trait TriggersTrait
         $this->setInvoiceObjectId($object);
         $this->setInvoiceParameters($action);
         
-        if (empty($this->Id)) {
+        if (empty($this->objectId)) {
             return false;
         }
         

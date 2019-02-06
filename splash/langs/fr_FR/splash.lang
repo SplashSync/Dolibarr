@@ -22,8 +22,8 @@ SPL_Welcome         =   Module Splash Activé
 # Admin Page Index
 ################################################################################
 SPL_Name            =   Splash Sync Module
-SPL_Short_Desc      =   Splash Sync, Connecteur pour Dolibarr. (Version > 4.0.0).
-SPL_Full_Desc       =   Splash Sync, Connecteur pour Dolibarr. Le système de Synchronisation Open-Source pour Dolibarr (Version > 4.0.0). Plus d'informations sur <a href="https://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Short_Desc      =   Splash Sync, Connecteur pour Dolibarr.
+SPL_Full_Desc       =   Splash Sync, Connecteur pour Dolibarr. Le système de Synchronisation Open-Source pour Dolibarr. Plus d'informations sur <a href="https://www.splashsync.com" target="_blank">www.splashsync.com</a>
 SPL_Help_Msg        =   I Need Help 
 
 ################################################################################
