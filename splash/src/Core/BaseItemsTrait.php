@@ -35,7 +35,7 @@ trait BaseItemsTrait
     private $itemUpdate   = false;
     
     /**
-     * @var FactureLigne|OrderLine
+     * @var null|FactureLigne|OrderLine
      */
     private $currentItem;
     
@@ -251,10 +251,7 @@ trait BaseItemsTrait
             $this->itemUpdate = false;
             //====================================================================//
             // Read Next Item Line
-            $line = array_shift($this->object->lines);
-            if ($line) {
-                $this->currentItem  =   $line;
-            }
+            $this->currentItem = array_shift($this->object->lines);
             //====================================================================//
             // Update Item Line
             $this->setItem($itemData);
@@ -353,7 +350,7 @@ trait BaseItemsTrait
      */
     private function setItemSimpleData($itemData, $fieldName)
     {
-        if (!array_key_exists($fieldName, $itemData)) {
+        if (!array_key_exists($fieldName, $itemData) || is_null($this->currentItem)) {
             return;
         }
         if ($this->currentItem->{$fieldName} !== $itemData[$fieldName]) {
@@ -371,7 +368,7 @@ trait BaseItemsTrait
      */
     private function setItemPrice($itemData)
     {
-        if (!array_key_exists("price", $itemData)) {
+        if (!array_key_exists("price", $itemData) || is_null($this->currentItem)) {
             return;
         }
         //====================================================================//
@@ -408,7 +405,7 @@ trait BaseItemsTrait
     {
         global $conf;
         
-        if (!isset($itemData["vat_src_code"])) {
+        if (!isset($itemData["vat_src_code"]) || is_null($this->currentItem)) {
             return;
         }
         //====================================================================//
@@ -489,7 +486,7 @@ trait BaseItemsTrait
      */
     private function setItemProductLink($itemData)
     {
-        if (!array_key_exists("fk_product", $itemData)) {
+        if (!array_key_exists("fk_product", $itemData) || is_null($this->currentItem)) {
             return;
         }
         //====================================================================//
@@ -514,7 +511,7 @@ trait BaseItemsTrait
     {
         global $conf, $mysoc;
         
-        if (!$this->itemUpdate) {
+        if (!$this->itemUpdate || is_null($this->currentItem)) {
             return;
         }
 
