@@ -41,7 +41,7 @@ matrix:
 #          env: DOL=8.0 DATA=7.0.0 STAN=0    
 #        - php: 7.1
 #          env: DOL=8.0 DATA=7.0.0 STAN=1     
-        - php: 7.2
+        - php: 7.1
           env: DOL=9.0 DATA=9.0.0 STAN=1     
           
         # Dolibarr Develop Branch       
