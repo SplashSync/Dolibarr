@@ -50,13 +50,15 @@ class Product extends AbstractObject
     use \Splash\Local\Core\MultiCompanyTrait;
     
     // Dolibarr Products Traits
-    use \Splash\Local\Objects\Product\ObjectsListTrait;
-    use \Splash\Local\Objects\Product\CRUDTrait;
-    use \Splash\Local\Objects\Product\CoreTrait;
-    use \Splash\Local\Objects\Product\MultilangTrait;
-    use \Splash\Local\Objects\Product\MainTrait;
-    use \Splash\Local\Objects\Product\StockTrait;
-    use \Splash\Local\Objects\Product\MetaTrait;
+    use Product\ObjectsListTrait;
+    use Product\CRUDTrait;
+    use Product\CoreTrait;
+    use Product\MultilangTrait;
+    use Product\MainTrait;
+    use Product\StockTrait;
+    use Product\MetaTrait;
+    use Product\Variants\CoreTrait;
+    use Product\Variants\AttributesTrait;
         
     //====================================================================//
     // Object Definition Parameters

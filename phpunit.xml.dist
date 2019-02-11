@@ -43,5 +43,7 @@
         <const  name="SPLASH_DEBUG"     value="true" />
         <server name="SPLASH_TRAVIS"    value="false" />
         <server name="SERVER_NAME"      value="http://localhost/Dolibarr/Dol-7.0/custom"/>
+        <!-- Only Test Specified Types -->
+        <!--<const  name="SPLASH_TYPES"     value="Product" />-->
     </php>
 </phpunit>
