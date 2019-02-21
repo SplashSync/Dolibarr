@@ -15,12 +15,12 @@
 
 namespace Splash\Local\Services;
 
-use ProductCombination;
-use ProductCombination2ValuePair;
+use Product;
 use ProductAttribute;
 use ProductAttributeValue;
+use ProductCombination;
+use ProductCombination2ValuePair;
 use Splash\Core\SplashCore as Splash;
-
 use Splash\Local\Services\AttributesManager;
 
 /**
@@ -30,42 +30,42 @@ class VariantsManager
 {
     /**
      * Products Combinations Static Instance
-     * 
+     *
      * @var ProductCombination
      */
     private static $combinations;
 
     /**
      * Products Combinations Values Pairs Static Instance
-     * 
+     *
      * @var ProductCombination
      */
     private static $valuePair;
 
     /**
      * Array Of Products Conbinations Arrays
-     * 
-     * @var ProductCombination[]
+     *
+     * @var array
      */
     private static $combinationsCache = array();
 
     /**
      * Array Of Products Attributes to Value Arrays
-     * 
+     *
      * @var array
      */
     private static $attr2ValuesCache = array();
 
     /**
      * Service Constructor
-     * 
+     *
      * @return void
      */
-    public static function init() 
+    public static function init()
     {
         global $db;
         
-        if(isset(static::$combinations)) {
+        if (isset(static::$combinations)) {
             return;
         }
         
@@ -81,7 +81,7 @@ class VariantsManager
     /**
      * Fetch Product Combinations Array
      *
-	 * @param int $fkParent Rowid of parent product
+     * @param int $fkParent Rowid of parent product
      *
      * @return ProductCombination[]
      */
@@ -92,7 +92,7 @@ class VariantsManager
         self::init();
         //====================================================================//
         // Load from cache
-        if(isset(static::$combinationsCache[$fkParent])) {
+        if (isset(static::$combinationsCache[$fkParent])) {
             return static::$combinationsCache[$fkParent];
         }
         
@@ -101,107 +101,25 @@ class VariantsManager
         $variants = static::$combinations->fetchAllByFkProductParent($fkParent);
         static::$combinationsCache[$fkParent] = is_array($variants) ? $variants : array();
         
-        
-		foreach (static::$combinationsCache[$fkParent] as $prc) {
-Splash::log()->www("Variants", static::$valuePair->fetchByFkCombination($prc->id));
-		}        
-        
-        
         return static::$combinationsCache[$fkParent];
-    }     
+    }
     
     /**
      * Check if Product has Combinations
      *
-	 * @param int $fkParent Rowid of parent product
+     * @param int $fkParent Rowid of parent product
      *
      * @return bool
      */
     public static function hasProductVariants($fkParent)
     {
         return !empty(self::getProductVariants($fkParent));
-    }    
-    
-    /**
-     * Fetch Product Combinations Attribute
-     *
-	 * @param int $attributeId Product Attribute Id
-     *
-     * @return null|ProductAttribute
-     */
-    public static function getAttribute($attributeId)
-    {
-        global $db;
-        //====================================================================//
-        // Ensure Service Init
-        self::init();
-        
-        //====================================================================//
-        // Load from cache
-        if(isset(static::$attributesCache[$attributeId])) {
-            return static::$attributesCache[$attributeId];
-        }
-        
-        //====================================================================//
-        // Load from Db
-        $attribute = new ProductAttribute($db);
-        $attribute->fetch($attributeId);
-        if($attribute->fetch($attributeId) < 0) {
-            return null;
-        }
-        static::$attributesCache[$attributeId] = $attribute;
-        
-        //====================================================================//
-        // Load Attribute Values from Db
-        $attributeValue = new ProductAttributeValue($db);
-        static::$attributesValuesCache[$attributeId] = $attributeValue->fetchAllByProductAttribute($attribute->id);
-        
-        return $attribute;
-    }    
-
-    /**
-     * Fetch Product Combinations Attribute Value
-     *
-	 * @param int $attributeId  Product Attribute Id
-	 * @param int $valueId      Product Attribute Value Id
-     *
-     * @return null|ProductAttributeValue
-     */
-    public static function getAttributeValue($attributeId, $valueId)
-    {
-        global $db;
-        //====================================================================//
-        // Ensure Service Init
-        self::init();
-        
-        //====================================================================//
-        // Load Attribute
-        if(null === self::getAttribute($attributeId)) {
-            return null;
-        }
-        
-        //====================================================================//
-        // Load from Db
-        $attribute = new ProductAttribute($db);
-        $attribute->fetch($attributeId);
-        if($attribute->fetch($attributeId) < 0) {
-            return null;
-        }
-        static::$attributesCache[$attributeId] = $attribute;
-        
-        //====================================================================//
-        // Load Attribute Values from Db
-        $attributeValue = new ProductAttributeValue($db);
-        static::$attributesValuesCache[$attributeId] = $attributeValue->fetchAllByProductAttribute($attribute->id);
-        
-        return $attribute;
-    }    
-    
+    }
     
     /**
      * Fetch Product Combination Object
      *
-	 * @param int $productId Rowid of Product
+     * @param int $productId Rowid of Product
      *
      * @return null|ProductCombination
      */
@@ -214,25 +132,59 @@ Splash::log()->www("Variants", static::$valuePair->fetchByFkCombination($prc->id
         self::init();
         //====================================================================//
         // Load Product Combination Class
-        $combination = new ProductCombination($db);        
-        if($combination->fetchByFkProductChild($productId) < 0) {
+        $combination = new ProductCombination($db);
+        if ($combination->fetchByFkProductChild($productId) < 0) {
             return null;
         }
         
         //====================================================================//
         // Load Combination Attributes from Db if First Loading
-        if(!isset(static::$attr2ValuesCache[$productId])) {
+        if (!isset(static::$attr2ValuesCache[$productId])) {
             $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
             static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
-        }        
+        }
         
         return $combination;
-    }    
+    }
+    
+    /**
+     * Add Variant Product
+     *
+     * @param Product $parentProduct Parent Product
+     * @param Product $childProduct  Child Product
+     *
+     * @return null|ProductCombination
+     */
+    public static function addProductCombination(Product $parentProduct, Product $childProduct)
+    {
+        global $db, $user;
+        
+        //====================================================================//
+        // Ensure Service Init
+        self::init();
+        //====================================================================//
+        // Create New Product Combination Class
+        $combination = new ProductCombination($db);
+        $combination->fk_product_parent = $parentProduct->id;
+        $combination->fk_product_child = $childProduct->id;
+        $combination->variation_price = 0;
+        $combination->variation_price_percentage = 0;
+        $combination->variation_weight = 0;
+        if ($combination->create($user) < 0) {
+            return null;
+        }
+        
+        //====================================================================//
+        // Setup Combination Attributes
+        static::$attr2ValuesCache[$childProduct->id] = array();
+        
+        return $combination;
+    }
 
     /**
      * Get Fetch Product Combination Attributes Array
      *
-	 * @param int $productId Rowid of Product
+     * @param int $productId Rowid of Product
      *
      * @return array
      */
@@ -244,20 +196,19 @@ Splash::log()->www("Variants", static::$valuePair->fetchByFkCombination($prc->id
         //====================================================================//
         // Load Product Combination Class
         $combination = self::getProductCombination($productId);
-        if(null === $combination) {
+        if (null === $combination) {
             return array();
         }
         //====================================================================//
         // Safety Check
-        if(!isset(static::$attr2ValuesCache[$productId])) {
+        if (!isset(static::$attr2ValuesCache[$productId])) {
             return array();
-        }  
+        }
         
         //====================================================================//
         // Parse Combination Attributes to Details Array
         $result = array();
-        foreach (static::$attr2ValuesCache[$productId] as $valuePair) 
-        {
+        foreach (static::$attr2ValuesCache[$productId] as $valuePair) {
             //====================================================================//
             // Load Attribute Class
             $attribute = AttributesManager::getAttributeById($valuePair->fk_prod_attr);
@@ -278,6 +229,99 @@ Splash::log()->www("Variants", static::$valuePair->fetchByFkCombination($prc->id
         }
         
         return $result;
-    }  
+    }
     
+    /**
+     * Update Product Combination Attributes from Ids Array
+     *
+     * @param int   $productId  Rowid of Product
+     * @param array $attributes Array of Attributes->id => Value->id
+     *
+     * @return bool
+     */
+    public static function setProductAttributes($productId, $attributes)
+    {
+        //====================================================================//
+        // Ensure Service Init
+        self::init();
+        //====================================================================//
+        // Load Product Combination Class
+        $combination = self::getProductCombination($productId);
+        //====================================================================//
+        // Safety Check
+        if ((null === $combination) || !isset(static::$attr2ValuesCache[$productId])) {
+            return false;
+        }       
+        //====================================================================//
+        // Update Combination Attributes
+        foreach ($attributes as $attributeId => $valueId) {
+            //====================================================================//
+            // Update Combination Attribute
+            self::setProductAttribute(
+                    $combination,
+                    array_shift(static::$attr2ValuesCache[$productId]),
+                    $attributeId,
+                    $valueId
+            );
+        }        
+        //====================================================================//
+        // Reload Load Product Combination Class
+        $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
+        static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
+       
+        return true;
+    }
+    
+    /**
+     * Update Product Combination Attributes 2 Value Pair from Ids Array
+     *
+     * @param ProductCombination                $combination Product Combination
+     * @param null|ProductCombination2ValuePair $attr2Value  Combination Attribute 2 Value Pair if Existing
+     * @param int                               $attributeId Product Attribute Id
+     * @param int                               $valueId     Product Attribute Id
+     *
+     * @return bool
+     */
+    private static function setProductAttribute($combination, $attr2Value, $attributeId, $valueId)
+    {
+        global $db, $user;
+        
+        //====================================================================//
+        // Combination Attribute Do Not Exists
+        if (empty($attr2Value)) {
+            $attr2Value = new ProductCombination2ValuePair($db);
+            $attr2Value->fk_prod_combination = $combination->id;
+            $attr2Value->fk_prod_attr = $attributeId;
+            $attr2Value->fk_prod_attr_val = $valueId;
+            if ($attr2Value->create($user) < 0) {
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Unable to Create Product Combination ValuePair.");
+            }
+
+            return true;
+        }
+        
+        //====================================================================//
+        // Combination Attribute Already Exists
+        if (($attr2Value->fk_prod_attr != $attributeId)
+            || ($attr2Value->fk_prod_attr_val != $valueId)) {            
+            //====================================================================//
+            // Delete Attribute Value from Db
+            $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val";
+            $sql.= " WHERE fk_prod_combination = ". (int) $attr2Value->fk_prod_combination;
+            $sql.= " AND fk_prod_attr = ". (int) $attr2Value->fk_prod_attr;
+            $db->query($sql);            
+            //====================================================================//
+            // Update Attribute Value Parameters
+            $attr2Value->fk_prod_combination = $combination->id;
+            $attr2Value->fk_prod_attr = $attributeId;
+            $attr2Value->fk_prod_attr_val = $valueId;
+            //====================================================================//
+            // Re-Create Attribute Value Parameters
+            if ($attr2Value->create($user) < 0) {
+                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Unable to Update Product Combination ValuePair.");
+            }
+        }
+                        
+        return true;
+    }
 }
