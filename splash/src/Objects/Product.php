@@ -26,6 +26,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ImagesTrait;
+use Splash\Models\Objects\ObjectsTrait;
 
 /**
  * @abstract Dolibarr Product for SplashSync
@@ -38,6 +39,7 @@ class Product extends AbstractObject
     use PricesTrait;
     use ListsTrait;
     use ImagesTrait;
+    use ObjectsTrait;
  
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
@@ -55,6 +57,7 @@ class Product extends AbstractObject
     use Product\CoreTrait;
     use Product\MultilangTrait;
     use Product\MainTrait;
+    use Product\PricesTrait;
     use Product\StockTrait;
     use Product\MetaTrait;
     use Product\Variants\CoreTrait;
@@ -100,6 +103,11 @@ class Product extends AbstractObject
     protected $object;
     
     /**
+     * @var BaseProduct
+     */
+    protected $baseProduct;
+    
+    /**
      * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
@@ -109,7 +117,7 @@ class Product extends AbstractObject
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-        
+                
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");
