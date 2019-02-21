@@ -15,10 +15,10 @@
 
 namespace Splash\Local\Objects\Order;
 
-use User;
 use Commande;
 use DateTime;
 use Splash\Core\SplashCore      as Splash;
+use User;
 
 /**
  * Dolibarr Customer Orders CRUD Functions
@@ -131,7 +131,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$needed) {
-            return (string) $this->object->id;
+            return $this->getObjectIdentifier();
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -156,7 +156,7 @@ trait CRUDTrait
             $this->catchDolibarrErrors();
         }
 
-        return (string) $this->object->id;
+        return $this->getObjectIdentifier();
     }
     
     /**
@@ -202,5 +202,17 @@ trait CRUDTrait
         }
 
         return true;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        if (!isset($this->object->id)) {
+            return false;
+        }
+
+        return (string) $this->object->id;
     }
 }

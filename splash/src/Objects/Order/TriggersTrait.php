@@ -37,7 +37,7 @@ trait TriggersTrait
         global $db;
 
         //====================================================================//
-        // Check if Commit is Requierd
+        // Check if Commit is Required
         if (!$this->isOrderCommitRequired($action)) {
             return false;
         }

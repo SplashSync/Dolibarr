@@ -104,6 +104,11 @@ trait ContactsTrait
                     $this->object->delete_contact($current["rowid"]);
                 }
                 //====================================================================//
+                // If Contact was Deleted
+                if (false == $expected) {
+                    break;
+                }  
+                //====================================================================//
                 // Add New Contact
                 $this->object->add_contact((int) $expected, $fieldName, 'external');
 
