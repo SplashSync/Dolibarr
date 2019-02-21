@@ -15,10 +15,11 @@
 
 namespace Splash\Local\Objects\Product;
 
-use User;
 use Product;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\VariantsManager;
+use User;
 
 /**
  * Dolibarr Product CRUD Functions
@@ -42,7 +43,7 @@ trait CRUDTrait
         // Init Object
         $object = new Product($db);
         //====================================================================//
-        // Fatch Object
+        // Fetch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
@@ -63,7 +64,15 @@ trait CRUDTrait
                 " Unable to load Product (" . $objectId . ")."
             );
         }
-
+        
+        //====================================================================//
+        // Load Product Combinations
+        $this->combination = VariantsManager::getProductCombination((int) $objectId);
+        if($this->combination) {
+            $this->baseProduct = new Product($db);
+            $this->baseProduct->fetch($this->combination->fk_product_parent);
+        }
+        
         return $object;
     }
 
@@ -74,7 +83,7 @@ trait CRUDTrait
      */
     public function create()
     {
-        global $db, $user, $langs;
+        global $user, $langs;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
@@ -93,35 +102,16 @@ trait CRUDTrait
         if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
-        
-        //====================================================================//
-        // Init Object
-        $this->object = new Product($db);
-        //====================================================================//
-        // Pre-Setup of Dolibarr infos
-        $this->setSimple("ref", $this->in["ref"]);
-        $this->setSimple("label", $this->in["label"]);
-        //====================================================================//
-        // Required For Dolibarr Below 3.6
-        $this->object->type        = 0;
-        //====================================================================//
-        // Required For Dolibarr BarCode Module
-        $this->object->barcode     = -1;
-        //====================================================================//
-        // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
-        }
-        //====================================================================//
-        // Create Object In Database
-        /** @var User $user */
-        if ($this->object->create($user) <= 0) {
-            $this->catchDolibarrErrors();
 
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
+        //====================================================================//
+        // Create Variant Product
+        if (isset($this->in["attributes"]) && !empty($this->in["attributes"])) {
+            return $this->createVariantProduct();
         }
         
-        return $this->object;
+        //====================================================================//
+        // Create Simple Product
+        return $this->createSimpleProduct($this->in["ref"], $this->in["label"], true);
     }
     
     /**
@@ -140,7 +130,7 @@ trait CRUDTrait
         if (!$needed) {
             Splash::log()->deb("Product Update not Needed");
 
-            return (string) $this->object->id;
+            return $this->getObjectIdentifier();
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -159,13 +149,44 @@ trait CRUDTrait
                 " Unable to Update Product (" . $this->object->id . ")"
             ) ;
         }
+        
+        //====================================================================//
+        // Update Base Product
+        if ($this->isToUpdate("baseProduct")) {
+            if ($this->baseProduct->update($this->baseProduct->id, $user) <= 0) {
+                $this->catchDolibarrErrors($this->baseProduct);
+
+                return Splash::log()->err(
+                    "ErrLocalTpl",
+                    __CLASS__,
+                    __FUNCTION__,
+                    " Unable to Update Base Product (" . $this->baseProduct->id . ")"
+                ) ;
+            }
+        } 
+        
+        //====================================================================//
+        // Update Product Combination
+        if ($this->isToUpdate("combination")) {
+            if ($this->combination->update($user) <= 0) {
+                $this->catchDolibarrErrors($this->combination);
+
+                return Splash::log()->err(
+                    "ErrLocalTpl",
+                    __CLASS__,
+                    __FUNCTION__,
+                    " Unable to Update Product Combination (" . $this->combination->id . ")"
+                ) ;
+            }
+        } 
+        
         //====================================================================//
         // Update Object Extra Fields
         if ($this->object->insertExtraFields()  <= 0) {
             $this->catchDolibarrErrors();
         }
 
-        return (string) $this->object->id;
+        return $this->getObjectIdentifier();
     }
     
     /**
@@ -204,11 +225,79 @@ trait CRUDTrait
             );
         }
         //====================================================================//
+        // Load Product Combination
+        $combination = VariantsManager::getProductCombination($objectId);
+        //====================================================================//
         // Delete Object
         if ($object->delete($user) <= 0) {
             return $this->catchDolibarrErrors($object);
+        }        
+        //====================================================================//
+        // Parent Object if Last Product Variant
+        if (empty($combination)) {
+            return true;
+        }        
+        if ($combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent) == 0) {
+            //====================================================================//
+            // Also Delete Parent Product
+            $object->id = $combination->fk_product_parent;
+            if ($object->delete($user) <= 0) {
+                return $this->catchDolibarrErrors($object);
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        if (!isset($this->object->id)) {
+            return false;
         }
 
-        return true;
+        return (string) $this->object->id;
+    }
+    
+    /**
+     * Create Simple Product
+     *
+     * @param string $ref   Product Reference
+     * @param string $label Product Label
+     * @param bool $triggers Product Label
+     *
+     * @return false|Product
+     */
+    protected function createSimpleProduct($ref, $label, $triggers = true)
+    {
+        global $db, $user;
+        //====================================================================//
+        // Stack Trace
+        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        //====================================================================//
+        // Init Object
+        $this->object = new Product($db);
+        //====================================================================//
+        // Pre-Setup of Dolibarr infos
+        $this->setSimple("ref", $ref);
+        $this->setSimple("label", $label);
+        $this->setSimple("weight", 0);
+        //====================================================================//
+        // Required For Dolibarr Below 3.6
+        $this->object->type        = 0;
+        //====================================================================//
+        // Required For Dolibarr BarCode Module
+        $this->object->barcode     = -1;
+        //====================================================================//
+        // Create Object In Database
+        /** @var User $user */
+        if ($this->object->create($user, $triggers ? 0 : 1) <= 0) {
+            $this->catchDolibarrErrors();
+
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
+        }
+        
+        return $this->object;
     }
 }

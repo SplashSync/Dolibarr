@@ -17,6 +17,8 @@ namespace Splash\Local\Objects\Product\Variants;
 
 use Splash\Core\SplashCore      as Splash;
 
+use ProductAttribute;
+use ProductAttributeValue;
 use Splash\Local\Services\AttributesManager;
 use Splash\Local\Services\VariantsManager;
 
@@ -40,11 +42,10 @@ trait AttributesTrait
         global $langs;        
         
         //====================================================================//
-        // EEnsure Product Variation Module is Active
+        // Ensure Product Variation Module is Active
         if (!self::isVariantEnabled()) {
             return;
         }
-        
         
         $groupName  = $langs->trans("ProductCombinations");
 
@@ -56,6 +57,7 @@ trait AttributesTrait
             ->InList("attributes")
             ->Group($groupName)
             ->MicroData("http://schema.org/Product", "VariantAttributeCode")
+            ->addOption("isUpperCase", true)
             ->isNotTested();
 
         //====================================================================//
@@ -99,21 +101,12 @@ trait AttributesTrait
         if (!$fieldId) {
             return;
         }
-        
+        //====================================================================//
+        // Load Product Attributes List
         $attributes = VariantsManager::getProductAttributes($this->object->id);
-
-//        Splash::log()->www("Attr", $attributes);
-
-        
         //====================================================================//
         // READ Fields
-        foreach ($attributes as $index => $details) {
-//            //====================================================================//
-//            // Ensure Variant Option Exists
-//            if (!isset($this->variant->{$name})) {
-//                continue;
-//            }
-
+        foreach ($attributes as $details) {
             //====================================================================//
             // Get Variant Infos
             switch ($fieldId) {
@@ -133,7 +126,7 @@ trait AttributesTrait
                     return;
             }
             
-            self::lists()->insert($this->out, "attributes", $fieldId, $index, $value);
+            self::lists()->insert($this->out, "attributes", $fieldId, $details['attribute']->ref, $value);
         }
         unset($this->in[$key]);
         //====================================================================//
@@ -160,35 +153,31 @@ trait AttributesTrait
         if ("attributes" !== $fieldName) {
             return;
         }
-      
         //====================================================================//
         // Update Products Attributes Ids
-        $index = 0;
+        $attributes = array();
         foreach ($fieldData as $item) {
             //====================================================================//
             // Check Product Attributes is Valid & Not More than 3 Options!
-            if (!$this->isValidAttributeDefinition($item) && ($index < 3)) {
+            if (!$this->isValidAttributeDefinition($item)) {
                 continue;
             }
-
             //====================================================================//
-            // Update Attribute Name
-            if (!isset($this->object->options[$index])) {
-                $this->object->options[$index] = array(
-                    'name' => $item["code"],
-                    'position' => $index + 1,
-                );
+            // Load or Create Attribute by Name
+            $attribute = AttributesManager::touchAttributeGroup($item["code"], $item["name"]);
+            if (!$attribute) {
+                return;
+            }      
+            //====================================================================//
+            // Load or Create Attribute Value by Name
+            $attributeValue = AttributesManager::touchAttributeValue($attribute, $item["value"]);
+            if (!$attributeValue) {                
+                return;
             }
-            $this->object->options[$index]["name"] = $item["code"];
-            
-            //====================================================================//
-            // Update Attribute Value
-            $this->setSimple("option" . ($index + 1), $item["value"], "variant");
-
-            //====================================================================//
-            // Inc. Attribute Index
-            $index++;
+            $attributes[$attribute->id] = $attributeValue->id;
         }
+        
+        VariantsManager::setProductAttributes($this->object->id, $attributes);
         
         unset($this->in[$fieldName]);
     }
@@ -221,16 +210,16 @@ trait AttributesTrait
                 " Product Attribute Code is Not Valid."
             );
         }
-//        //====================================================================//
-//        // Check Attributes Names are Given
-//        if (!isset($attrData["name"]) || !is_scalar($attrData["name"]) || empty($attrData["name"])) {
-//            return Splash::log()->err(
-//                "ErrLocalTpl",
-//                __CLASS__,
-//                __FUNCTION__,
-//                " Product Attribute Public Name is Not Valid."
-//            );
-//        }
+        //====================================================================//
+        // Check Attributes Names are Given
+        if (!isset($attrData["name"]) || !is_scalar($attrData["name"]) || empty($attrData["name"])) {
+            return Splash::log()->err(
+                "ErrLocalTpl",
+                __CLASS__,
+                __FUNCTION__,
+                " Product Attribute Public Name is Not Valid."
+            );
+        }
         //====================================================================//
         // Check Attributes Values are Given
         if (!isset($attrData["value"]) || !is_scalar($attrData["value"]) || empty($attrData["value"])) {
@@ -244,4 +233,5 @@ trait AttributesTrait
 
         return true;
     }
+    
 }

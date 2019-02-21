@@ -18,12 +18,27 @@ namespace Splash\Local\Objects\Product;
 use Product;
 use MouvementStock;
 use Splash\Client\Splash;
+use Splash\Local\Services\VariantsManager;
 
 /**
  * Product Dolibarr Trigger trait
  */
 trait TriggersTrait
 {
+    /**
+     * Products Triggered Action Names
+     *  
+     * @var array
+     */
+    private static $productActions = array(
+            'PRODUCT_CREATE',
+            'PRODUCT_MODIFY',
+            'PRODUCT_DELETE',
+            'PRODUCT_SET_MULTILANGS',
+            'PRODUCT_PRICE_MODIFY',
+            'STOCK_MOVEMENT',
+    );
+    
     /**
      * Prepare Object Commit for Product
      *
@@ -38,7 +53,7 @@ trait TriggersTrait
         
         //====================================================================//
         // Filter Triggered Actions
-        if (!$this->isProductCommitRequired($action)) {
+        if (!$this->isProductCommitRequired($action, $object)) {
             return false;
         }
         
@@ -58,19 +73,25 @@ trait TriggersTrait
      * Check if Commit is Requiered
      *
      * @param string $action Code de l'evenement
-     *
+     * @param object $object Objet concerne
+     * 
      * @return bool
      */
-    private function isProductCommitRequired($action)
+    private function isProductCommitRequired($action, $object)
     {
-        return in_array($action, array(
-            'PRODUCT_CREATE',
-            'PRODUCT_MODIFY',
-            'PRODUCT_DELETE',
-            'PRODUCT_SET_MULTILANGS',
-            'PRODUCT_PRICE_MODIFY',
-            'STOCK_MOVEMENT',
-        ), true);
+        //====================================================================//
+        // Filter on Event Action
+        if(!in_array($action, static::$productActions, true)) {
+            return false;
+        }
+        
+        //====================================================================//
+        // Prevent Commits for Variant Products
+        if(($object instanceof Product) && VariantsManager::hasProductVariants($object->id)){
+            return false;
+        }
+   
+        return true;
     }
     
     /**
