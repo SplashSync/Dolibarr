@@ -15,15 +15,10 @@
 
 namespace Splash\Local\Tests;
 
-use Commande;
-use Facture;
-use Splash\Client\Splash;
-use Splash\Tests\Tools\ObjectsCase;
-use Splash\Local\Objects\Order;
-use Splash\Local\Objects\Invoice;
-use Splash\Local\Services\AttributesManager;
 use ProductAttribute;
 use ProductAttributeValue;
+use Splash\Local\Services\AttributesManager;
+use Splash\Tests\Tools\ObjectsCase;
 
 /**
  * Local Test Suite - Verify Read & Writing of Products Attributes
@@ -37,8 +32,8 @@ class L06AttributesManagerTest extends ObjectsCase
      *
      * @param string $attrCode
      * @param string $attrName
-     * @param array $attrValues
-     * 
+     * @param array  $attrValues
+     *
      * @return void
      */
     public function testStatusChanges($attrCode, $attrName, $attrValues)
@@ -46,7 +41,6 @@ class L06AttributesManagerTest extends ObjectsCase
         //====================================================================//
         //   Ensure Attribute Doesn't Already Exists
         $this->assertNull(AttributesManager::getAttributeByCode($attrCode));
-        
         
         //====================================================================//
         //   Create New Attribute
@@ -57,22 +51,21 @@ class L06AttributesManagerTest extends ObjectsCase
         $this->assertEquals($attrName, $attribute->label);
         
         //====================================================================//
-        //   Test Loading Attribute 
+        //   Test Loading Attribute
         $this->assertInstanceOf(ProductAttribute::class, AttributesManager::getAttributeById($attribute->id));
         $this->assertInstanceOf(ProductAttribute::class, AttributesManager::getAttributeByCode($attrCode));
 
         //====================================================================//
         //   Create New Attribute Values
         $values = array();
-        foreach ($attrValues as $valueCode => $valueName) 
-        {
+        foreach ($attrValues as $valueCode => $valueName) {
             //====================================================================//
             //   Create Attribute Value
             $value = AttributesManager::addAttributeValue($attribute, $valueCode, $valueName);
             $this->assertInstanceOf(ProductAttributeValue::class, $value);
             $this->assertNotEmpty($value->id);
             $this->assertEquals($valueCode, $value->ref);
-            $this->assertEquals($valueName, $value->label);
+            $this->assertEquals($valueName, $value->value);
             
             //====================================================================//
             //   Test Loading Attribute Value
@@ -84,15 +77,13 @@ class L06AttributesManagerTest extends ObjectsCase
             $values[$valueCode] = $value;
         }
         
-
         //====================================================================//
         //   Test Delete Attribute Rejected when Values Exists
         $this->assertFalse(AttributesManager::removeAttribute($attribute));
         
         //====================================================================//
         //   Delete All Attribute Values
-        foreach ($values as $valueCode => $value) 
-        {
+        foreach ($values as $valueCode => $value) {
             //====================================================================//
             //   Delete Attribute Value
             $this->assertTrue(AttributesManager::removeAttributeValue($value));
@@ -103,7 +94,6 @@ class L06AttributesManagerTest extends ObjectsCase
             $this->assertNull(AttributesManager::getAttributeValueByName($attribute, $valueCode));
         }
         
-        
         //====================================================================//
         //   Test Delete Attribute
         $this->assertTrue(AttributesManager::removeAttribute($attribute));
@@ -111,7 +101,7 @@ class L06AttributesManagerTest extends ObjectsCase
     
     /**
      * Generate a Combination of Dumy Attributes
-     * 
+     *
      * @return array
      */
     public function attributesProvider()
@@ -124,8 +114,6 @@ class L06AttributesManagerTest extends ObjectsCase
             array("CODE" . $randomIndex, "Attr" . $randomIndex,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
             array("CODE" . $randomIndex++, "Attr" . $randomIndex,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
             array("CODE" . $randomIndex++, "Attr" . $randomIndex,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
-            
         );
     }
-    
 }
