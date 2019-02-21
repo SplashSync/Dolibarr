@@ -33,16 +33,16 @@ matrix:
 #          env: DOL=8.0 DATA=7.0.0 STAN=0    
 #        - php: 7.1
 #          env: DOL=8.0 DATA=7.0.0 STAN=1     
-        - php: 7.2
-          env: DOL=8.0 DATA=7.0.0 STAN=1     
+#        - php: 7.2
+#          env: DOL=8.0 DATA=7.0.0 STAN=1     
 
         # Dolibarr V9.0 Branch       
 #        - php: 5.6
 #          env: DOL=8.0 DATA=7.0.0 STAN=0    
 #        - php: 7.1
 #          env: DOL=8.0 DATA=7.0.0 STAN=1     
-        - php: 7.1
-          env: DOL=9.0 DATA=9.0.0 STAN=1     
+#        - php: 7.1
+#          env: DOL=9.0 DATA=9.0.0 STAN=1     
           
         # Dolibarr Develop Branch       
 #        - php: 5.6
@@ -128,4 +128,10 @@ notifications:
     on_success: never # default: change
     on_failure: never # default: always
 
+after_success:
+    # Display Full List of Executed Tests    
+    - cat coverage/executed.txt
+    
 after_failure:
+
+    
