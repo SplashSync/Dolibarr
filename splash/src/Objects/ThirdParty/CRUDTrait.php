@@ -16,8 +16,8 @@
 namespace Splash\Local\Objects\ThirdParty;
 
 use Societe;
-use User;
 use Splash\Core\SplashCore      as Splash;
+use User;
 
 /**
  * Dolibarr Contacts Address CRUD Functions
@@ -128,7 +128,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$needed && !$this->isToUpdate()) {
-            return (string) $this->object->id;
+            return $this->getObjectIdentifier();
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -153,7 +153,7 @@ trait CRUDTrait
             $this->catchDolibarrErrors();
         }
 
-        return (string) $this->object->id;
+        return $this->getObjectIdentifier();
     }
     
     /**
@@ -202,5 +202,17 @@ trait CRUDTrait
         }
 
         return true;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        if (!isset($this->object->id)) {
+            return false;
+        }
+
+        return (string) $this->object->id;
     }
 }

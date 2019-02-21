@@ -133,10 +133,17 @@ trait MetaTrait
             // Direct Writtings
             case 'status':
             case 'tva_assuj':
-            case 'fournisseur':
                 $this->setSimple($fieldName, $fieldData);
 
                 break;
+            case 'fournisseur':
+                $this->setSimple($fieldName, $fieldData);
+                //====================================================================//
+                // Empty Code => Ask to for a New One
+                if(!empty($fieldData) && empty($this->object->code_fournisseur)) {
+                    $this->setSimple("code_fournisseur", -1);
+                }
+                break;                 
             case 'client':
                 $this->setSimpleBit('client', 0, $fieldData);
 
