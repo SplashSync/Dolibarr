@@ -94,7 +94,7 @@ class Local implements LocalClassInterface
         //====================================================================//
         if (!empty(SPLASH_SERVER_MODE)) {
             // This is Webservice Access. We must be able to go on it from outside.
-            define('NOCSRFCHECK', 1);    
+            define('NOCSRFCHECK', 1);
         }
         
         //====================================================================//
@@ -209,24 +209,25 @@ class Local implements LocalClassInterface
     
     /**
      * {@inheritdoc}
-     * 
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testSequences($name = null)
     {
         global $db, $conf;
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
-                
+        $ent = $conf->entity;
+        
         switch ($name) {
             case "Monolangual":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", 'mod_codeclient_monkey', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SOCIETE_CODECOMPTA_ADDON", 'mod_codecompta_aquarium', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", 'mod_codeclient_monkey', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_CODECOMPTA_ADDON", 'mod_codecompta_aquarium', 'chaine', 0, '', $ent);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -237,23 +238,23 @@ class Local implements LocalClassInterface
                 return array();
                 
             case "Multilangual":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
-//                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
+//                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", '0', 'chaine', 0, '', $entity);
 
                 return array();
                 
             case "MultiPrices":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", (string) rand(1, 3), 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", (string) rand(1, 3), 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -264,11 +265,11 @@ class Local implements LocalClassInterface
                 return array();
                 
             case "ExtraFields":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", true);
@@ -279,11 +280,11 @@ class Local implements LocalClassInterface
                 return array();
 
             case "Variants":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -294,13 +295,13 @@ class Local implements LocalClassInterface
                 return array();
                 
             case "GuestOrders":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '1', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", '1', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $conf->entity);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);

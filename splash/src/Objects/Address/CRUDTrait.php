@@ -205,5 +205,5 @@ trait CRUDTrait
         }
 
         return (string) $this->object->id;
-    }    
+    }
 }

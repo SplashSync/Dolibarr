@@ -27,7 +27,7 @@ trait TriggersTrait
 {
     /**
      * Products Triggered Action Names
-     *  
+     *
      * @var array
      */
     private static $productActions = array(
@@ -74,20 +74,20 @@ trait TriggersTrait
      *
      * @param string $action Code de l'evenement
      * @param object $object Objet concerne
-     * 
+     *
      * @return bool
      */
     private function isProductCommitRequired($action, $object)
     {
         //====================================================================//
         // Filter on Event Action
-        if(!in_array($action, static::$productActions, true)) {
+        if (!in_array($action, static::$productActions, true)) {
             return false;
         }
         
         //====================================================================//
         // Prevent Commits for Variant Products
-        if(($object instanceof Product) && VariantsManager::hasProductVariants($object->id)){
+        if (($object instanceof Product) && VariantsManager::hasProductVariants($object->id)) {
             return false;
         }
    

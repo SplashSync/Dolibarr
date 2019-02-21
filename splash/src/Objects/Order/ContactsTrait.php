@@ -107,7 +107,7 @@ trait ContactsTrait
                 // If Contact was Deleted
                 if (false == $expected) {
                     break;
-                }  
+                }
                 //====================================================================//
                 // Add New Contact
                 $this->object->add_contact((int) $expected, $fieldName, 'external');

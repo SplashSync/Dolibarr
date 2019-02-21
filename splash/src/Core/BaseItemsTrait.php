@@ -247,7 +247,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Verify Lines List & Update if Needed
-        if(is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
+        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
             foreach ($fieldData as $itemData) {
                 $this->itemUpdate = false;
                 //====================================================================//
@@ -257,7 +257,7 @@ trait BaseItemsTrait
                 // Update Item Line
                 $this->setItem($itemData);
             }
-        }        
+        }
         //====================================================================//
         // Delete Remaining Lines
         foreach ($this->object->lines as $lineItem) {

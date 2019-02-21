@@ -68,7 +68,7 @@ trait CRUDTrait
         //====================================================================//
         // Load Product Combinations
         $this->combination = VariantsManager::getProductCombination((int) $objectId);
-        if($this->combination) {
+        if ($this->combination) {
             $this->baseProduct = new Product($db);
             $this->baseProduct->fetch($this->combination->fk_product_parent);
         }
@@ -149,37 +149,11 @@ trait CRUDTrait
                 " Unable to Update Product (" . $this->object->id . ")"
             ) ;
         }
-        
         //====================================================================//
-        // Update Base Product
-        if ($this->isToUpdate("baseProduct")) {
-            if ($this->baseProduct->update($this->baseProduct->id, $user) <= 0) {
-                $this->catchDolibarrErrors($this->baseProduct);
-
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    " Unable to Update Base Product (" . $this->baseProduct->id . ")"
-                ) ;
-            }
-        } 
-        
-        //====================================================================//
-        // Update Product Combination
-        if ($this->isToUpdate("combination")) {
-            if ($this->combination->update($user) <= 0) {
-                $this->catchDolibarrErrors($this->combination);
-
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    " Unable to Update Product Combination (" . $this->combination->id . ")"
-                ) ;
-            }
-        } 
-        
+        // Update Variant Product Specific Objects & Return Object Id
+        if (false == $this->updateVariantProduct()) {
+            return false;
+        }
         //====================================================================//
         // Update Object Extra Fields
         if ($this->object->insertExtraFields()  <= 0) {
@@ -226,18 +200,18 @@ trait CRUDTrait
         }
         //====================================================================//
         // Load Product Combination
-        $combination = VariantsManager::getProductCombination($objectId);
+        $combination = VariantsManager::getProductCombination((int) $objectId);
         //====================================================================//
         // Delete Object
         if ($object->delete($user) <= 0) {
             return $this->catchDolibarrErrors($object);
-        }        
+        }
         //====================================================================//
         // Parent Object if Last Product Variant
         if (empty($combination)) {
             return true;
-        }        
-        if ($combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent) == 0) {
+        }
+        if (0 == $combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent)) {
             //====================================================================//
             // Also Delete Parent Product
             $object->id = $combination->fk_product_parent;
@@ -245,6 +219,7 @@ trait CRUDTrait
                 return $this->catchDolibarrErrors($object);
             }
         }
+
         return true;
     }
     
@@ -263,9 +238,9 @@ trait CRUDTrait
     /**
      * Create Simple Product
      *
-     * @param string $ref   Product Reference
-     * @param string $label Product Label
-     * @param bool $triggers Product Label
+     * @param string $ref      Product Reference
+     * @param string $label    Product Label
+     * @param bool   $triggers Product Label
      *
      * @return false|Product
      */

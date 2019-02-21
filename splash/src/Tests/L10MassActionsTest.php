@@ -49,7 +49,7 @@ class L10MassActionsTest extends ObjectsCase
             'delete'    =>  true,
         ),
         "Order" => array(
-            'max'       =>  5000,
+            'max'       =>  100,
             'fields'    =>  array(
                 "images"    => array(),
                 //                "status"    => "OrderCanceled"
@@ -120,27 +120,27 @@ class L10MassActionsTest extends ObjectsCase
         //====================================================================//
         // Ensure Object Config Exists & Is Valid
         $this->assertArrayHasKey($objectType, self::CONFIG);
-        $config = self::CONFIG[$objectType];
-        $this->assertArrayHasKey("max", $config);
-        $this->assertArrayHasKey("fields", $config);
-        $this->assertArrayHasKey("verify", $config);
-        $this->assertArrayHasKey("update", $config);
-        $this->assertArrayHasKey("delete", $config);
+        $cfg = self::CONFIG[$objectType];
+        $this->assertArrayHasKey("max", $cfg);
+        $this->assertArrayHasKey("fields", $cfg);
+        $this->assertArrayHasKey("verify", $cfg);
+        $this->assertArrayHasKey("update", $cfg);
+        $this->assertArrayHasKey("delete", $cfg);
         
         //====================================================================//
         // Setup Custom Objects Fields
-        $this->customFieldsData = $config["fields"];
+        $this->customFieldsData = $cfg["fields"];
         
-        if ($config["update"]) {
+        if ($cfg["update"]) {
             //====================================================================//
             // Execute Mass Create / Update / Delete Test without Verifications
-            $this->coreTestMassCreateUpdateDelete($sequence, $objectType, $config["max"], $config["verify"], $config["delete"]);
+            $this->coreTestMassCreateUpdateDelete($sequence, $objectType, $cfg["max"], $cfg["verify"], $cfg["delete"]);
 
             return;
         }
         
         //====================================================================//
         // Execute Mass Create / Delete Test without Verifications
-        $this->coreTestMassCreateDelete($sequence, $objectType, $config["max"], $config["verify"], $config["delete"]);
+        $this->coreTestMassCreateDelete($sequence, $objectType, $cfg["max"], $cfg["verify"], $cfg["delete"]);
     }
 }

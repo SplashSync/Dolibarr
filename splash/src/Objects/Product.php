@@ -60,6 +60,7 @@ class Product extends AbstractObject
     use Product\PricesTrait;
     use Product\StockTrait;
     use Product\MetaTrait;
+    use Product\Variants\CRUDTrait;
     use Product\Variants\CoreTrait;
     use Product\Variants\AttributesTrait;
         

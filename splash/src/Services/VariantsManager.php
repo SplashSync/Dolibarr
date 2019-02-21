@@ -38,7 +38,7 @@ class VariantsManager
     /**
      * Products Combinations Values Pairs Static Instance
      *
-     * @var ProductCombination
+     * @var ProductCombination2ValuePair
      */
     private static $valuePair;
 
@@ -165,11 +165,11 @@ class VariantsManager
         //====================================================================//
         // Create New Product Combination Class
         $combination = new ProductCombination($db);
-        $combination->fk_product_parent = $parentProduct->id;
-        $combination->fk_product_child = $childProduct->id;
-        $combination->variation_price = 0;
-        $combination->variation_price_percentage = 0;
-        $combination->variation_weight = 0;
+        $combination->fk_product_parent         = $parentProduct->id;
+        $combination->fk_product_child          = $childProduct->id;
+        $combination->variation_price           = 0;
+        $combination->variation_price_percentage = false;
+        $combination->variation_weight          = 0;
         if ($combination->create($user) < 0) {
             return null;
         }
@@ -251,19 +251,19 @@ class VariantsManager
         // Safety Check
         if ((null === $combination) || !isset(static::$attr2ValuesCache[$productId])) {
             return false;
-        }       
+        }
         //====================================================================//
         // Update Combination Attributes
         foreach ($attributes as $attributeId => $valueId) {
             //====================================================================//
             // Update Combination Attribute
             self::setProductAttribute(
-                    $combination,
-                    array_shift(static::$attr2ValuesCache[$productId]),
-                    $attributeId,
-                    $valueId
+                $combination,
+                array_shift(static::$attr2ValuesCache[$productId]),
+                $attributeId,
+                $valueId
             );
-        }        
+        }
         //====================================================================//
         // Reload Load Product Combination Class
         $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
@@ -284,7 +284,7 @@ class VariantsManager
      */
     private static function setProductAttribute($combination, $attr2Value, $attributeId, $valueId)
     {
-        global $db, $user;
+        global $db;
         
         //====================================================================//
         // Combination Attribute Do Not Exists
@@ -293,8 +293,13 @@ class VariantsManager
             $attr2Value->fk_prod_combination = $combination->id;
             $attr2Value->fk_prod_attr = $attributeId;
             $attr2Value->fk_prod_attr_val = $valueId;
-            if ($attr2Value->create($user) < 0) {
-                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Unable to Create Product Combination ValuePair.");
+            if ($attr2Value->create() < 0) {
+                return Splash::log()->err(
+                    "ErrLocalTpl",
+                    __CLASS__,
+                    __FUNCTION__,
+                    " Unable to Create Product Combination ValuePair."
+                );
             }
 
             return true;
@@ -303,13 +308,13 @@ class VariantsManager
         //====================================================================//
         // Combination Attribute Already Exists
         if (($attr2Value->fk_prod_attr != $attributeId)
-            || ($attr2Value->fk_prod_attr_val != $valueId)) {            
+            || ($attr2Value->fk_prod_attr_val != $valueId)) {
             //====================================================================//
             // Delete Attribute Value from Db
             $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val";
             $sql.= " WHERE fk_prod_combination = ". (int) $attr2Value->fk_prod_combination;
             $sql.= " AND fk_prod_attr = ". (int) $attr2Value->fk_prod_attr;
-            $db->query($sql);            
+            $db->query($sql);
             //====================================================================//
             // Update Attribute Value Parameters
             $attr2Value->fk_prod_combination = $combination->id;
@@ -317,8 +322,13 @@ class VariantsManager
             $attr2Value->fk_prod_attr_val = $valueId;
             //====================================================================//
             // Re-Create Attribute Value Parameters
-            if ($attr2Value->create($user) < 0) {
-                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Unable to Update Product Combination ValuePair.");
+            if ($attr2Value->create() < 0) {
+                return Splash::log()->err(
+                    "ErrLocalTpl",
+                    __CLASS__,
+                    __FUNCTION__,
+                    " Unable to Update Product Combination ValuePair."
+                );
             }
         }
                         

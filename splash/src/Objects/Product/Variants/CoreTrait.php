@@ -26,40 +26,6 @@ use Splash\Local\Services\VariantsManager;
  */
 trait CoreTrait
 {
-    /**
-     * @var Product
-     */
-    protected $parent;
-    
-    /**
-     * @var null|ProductCombination
-     */
-    protected $combination = null;
-    
-    //====================================================================//
-    // General Variants Functions
-    //====================================================================//
-    
-    /**
-     * Check if Variants Module is Active
-     *
-     * @return bool
-     */
-    public static function isVariantEnabled()
-    {
-        return (bool) Local::getParameter("MAIN_MODULE_VARIANTS", false);
-    }
-    
-    /**
-     * Check if Product is Variants 
-     *
-     * @return bool
-     */
-    public function isVariant()
-    {
-        return (null !== $this->combination);
-    }    
-    
     //====================================================================//
     // Fields Generation Functions
     //====================================================================//
@@ -107,6 +73,10 @@ trait CoreTrait
             ->isReadOnly();
     }
     
+    //====================================================================//
+    // Fields Getter Functions
+    //====================================================================//
+    
     /**
      * Read requested Field
      *
@@ -147,22 +117,19 @@ trait CoreTrait
         if (!$fieldId) {
             return;
         }
-        
         //====================================================================//
         // Check if Product is Variant
-        if (!$this->isVariant()) {
+        if (null === $this->combination) {
             unset($this->in[$key]);
             
             return;
         }
-        
         //====================================================================//
         // Load Product Variants
         $variants = VariantsManager::getProductVariants($this->combination->fk_product_parent);
 
         /** @var ProductCombination $combinaition */
         foreach ($variants as $index => $combination) {
-            
             //====================================================================//
             // SKIP Current Variant When in PhpUnit/Travis Mode
             // Only Existing Variant will be Returned
@@ -180,10 +147,10 @@ trait CoreTrait
                     break;
                 case 'sku':
                     $value = $this->object->getValueFrom(
-                            $this->object->table_element,
-                            $combination->fk_product_child,
-                            "ref"
-                        );
+                        $this->object->table_element,
+                        $combination->fk_product_child,
+                        "ref"
+                    );
 
                     break;
                 default:
@@ -199,88 +166,9 @@ trait CoreTrait
         ksort($this->out["variants"]);
     }
     
-    /**
-     * Create Variant Product
-     *
-     * @return false|Product
-     */
-    private function createVariantProduct()
-    {
-        //====================================================================//
-        // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
-        //====================================================================//
-        // Identify Parent Product using Given Variants Ids
-        $parentProduct = $this->identifyParent();
-        if(!$parentProduct) {
-            //====================================================================//
-            // Create New Parent Product
-            $parentProduct = $this->createSimpleProduct($this->in["ref"] . "_base", $this->in["label"], false);
-        }
-        //====================================================================//
-        // Create New Parent Product Failed
-        if(!$parentProduct) {
-            return false;
-        }
-        //====================================================================//
-        // Create New Variant Product 
-        $variantProduct = $this->createSimpleProduct($this->in["ref"], $this->in["label"], true);
-        if($variantProduct) {
-            //====================================================================//
-            // Create New Product Combination
-            $this->combination = VariantsManager::addProductCombination($parentProduct, $variantProduct);
-        }
-      
-        return $variantProduct;
-    }   
-    
-    
-    /**
-     * Identify Parent Product Id
-     *
-     * @return false|Product
-     */
-    public function identifyParent()
-    {
-        //====================================================================//
-        // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
-        //====================================================================//
-        // Check Variant Products Array
-        if (!isset($this->in["variants"]) || !is_iterable($this->in["variants"])) {
-            return false;
-        }
-        //====================================================================//
-        // Walk on Variant Products
-        $variantProductId = false;
-        foreach ($this->in["variants"] as $listData) {
-            //====================================================================//
-            // Check Product Id is here
-            if (!isset($listData["id"]) || !is_string($listData["id"])) {
-                continue;
-            }
-            //====================================================================//
-            // Extract Variable Product Id
-            $variantProductId = self::objects()->id($listData["id"]);
-            if (false !== $variantProductId) {
-                break;
-            }
-        }
-        //====================================================================//
-        // No Variant Products Id Given
-        if(false == $variantProductId) {
-            return false;
-        }
-        //====================================================================//
-        // Load Product Combinations
-        $combination = VariantsManager::getProductCombination((int) $variantProductId);        
-        if(null == $combination) {
-            return false;
-        }
-        //====================================================================//
-        // Load Simple Product
-        return $this->load($combination->fk_product_parent);
-    }
+    //====================================================================//
+    // Fields Setter Functions
+    //====================================================================//
     
     /**
      * Write Given Fields
@@ -289,6 +177,7 @@ trait CoreTrait
      * @param mixed  $fieldData Field Data
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function setVariantsListFields($fieldName, $fieldData)
     {

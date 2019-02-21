@@ -179,8 +179,8 @@ class AttributesManager
     /**
      * Update Product Combinations Attribute Name
      *
-     * @param null|ProductAttribute $attribute Product Attribute Object
-     * @param string $attributeName Product Attribute Name
+     * @param false|ProductAttribute $attribute     Product Attribute Object
+     * @param string                $attributeName Product Attribute Name
      *
      * @return bool
      */
@@ -196,7 +196,7 @@ class AttributesManager
         // Ensure Attribute Update is Required
         if ($attributeName == $attribute->label) {
             return true;
-        }        
+        }
         //====================================================================//
         // Update Attribute
         $attribute->label = $attributeName;
@@ -232,9 +232,9 @@ class AttributesManager
         }
         //====================================================================//
         // DEBUG MODE => Update Attributes Names
-        if (defined("SPLASH_DEBUG") && !empty(SPLASH_DEBUG)) {          
+        if (defined("SPLASH_DEBUG") && !empty(SPLASH_DEBUG)) {
             self::updateAttribute($attribute, $name);
-        }            
+        }
 
         return $attribute;
     }
@@ -248,12 +248,9 @@ class AttributesManager
      */
     public static function removeAttribute($attribute)
     {
-        global $user;
-        
         //====================================================================//
         // Ensure Service Init
         self::init();
-
         //====================================================================//
         // Ensure Attribute has No Child Values or Product
         if (($attribute->countChildValues() > 0) || ($attribute->countChildProducts() > 0)) {
@@ -264,10 +261,9 @@ class AttributesManager
                 "Unable to Delete Product Attribute (" . $attribute->ref . "): Has Child Values or Product"
             );
         }
-
         //====================================================================//
         // Delete Attribute
-        if ($attribute->delete($user) < 0) {
+        if ($attribute->delete() < 0) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
@@ -275,7 +271,6 @@ class AttributesManager
                 " Unable to Delete Product Attribute (" . $attribute->ref . ")."
             );
         }
-        
         //====================================================================//
         // Reload Load Attributes Cache
         static::$attributesCache = $attribute->fetchAll();
@@ -365,7 +360,7 @@ class AttributesManager
         $value->ref = strtoupper($valueCode);
         $value->value = is_string($valueName) ? $valueName : $valueCode;
         
-        if ($value->create($user) < 0) {            
+        if ($value->create($user) < 0) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,

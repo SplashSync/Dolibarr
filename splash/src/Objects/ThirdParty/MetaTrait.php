@@ -140,10 +140,10 @@ trait MetaTrait
                 $this->setSimple($fieldName, $fieldData);
                 //====================================================================//
                 // Empty Code => Ask to for a New One
-                if(!empty($fieldData) && empty($this->object->code_fournisseur)) {
+                if (!empty($fieldData) && empty($this->object->code_fournisseur)) {
                     $this->setSimple("code_fournisseur", -1);
                 }
-                break;                 
+                break;
             case 'client':
                 $this->setSimpleBit('client', 0, $fieldData);
 

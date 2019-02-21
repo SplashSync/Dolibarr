@@ -28,7 +28,7 @@ trait MainTrait
      */
     protected function buildMainFields()
     {
-        global $conf,$langs;
+        global $langs;
         
         //====================================================================//
         // PRODUCT SPECIFICATIONS
@@ -182,25 +182,26 @@ trait MainTrait
     
     /**
      * Update Product Weight with Variants Management
-     * 
+     *
      * @param float $fieldData
      * @return void
      */
-    private function updateProductWeight($fieldData) {
+    private function updateProductWeight($fieldData)
+    {
         //====================================================================//
-        // Check if Product Weight Updated        
-        $weightStr = $this->convertWeight($this->object->weight,$this->object->weight_units);
+        // Check if Product Weight Updated
+        $weightStr = $this->convertWeight($this->object->weight, $this->object->weight_units);
         if ((string)$fieldData == (string) $weightStr) {
             return;
         }
         //====================================================================//
-        // Update Current Product Weight        
+        // Update Current Product Weight
         $nomalized                      =   $this->normalizeWeight($fieldData);
         $this->object->weight           =   $nomalized->weight;
         $this->object->weight_units     =   $nomalized->weight_units;
         $this->needUpdate();
         //====================================================================//
-        // Update Current Product Weight 
+        // Update Current Product Weight
         if ($this->isVariant() && !empty($this->baseProduct)) {
             // Update Unit on Base Product
             $this->setSimple("weight_units", $nomalized->weight_units, "baseProduct");

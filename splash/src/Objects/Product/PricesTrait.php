@@ -55,7 +55,7 @@ trait PricesTrait
      * Read requested Field
      *
      * @param null|string $key       Input List Key
-     * @param string $fieldName Field Identifier / Name
+     * @param string      $fieldName Field Identifier / Name
      *
      * @return void
      */
@@ -115,7 +115,7 @@ trait PricesTrait
                 return;
         }
             
-        if ($key != null) {
+        if (null != $key) {
             unset($this->in[$key]);
         }
     }
@@ -195,26 +195,9 @@ trait PricesTrait
         }
                     
         //====================================================================//
-        // Update Variant Product Weight 
+        // Update Variant Product Weight
         if ($this->isVariant() && !empty($this->baseProduct)) {
-            //====================================================================//
-            // If multiprices are enabled
-            if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-                $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
-                        ? $conf->global->SPLASH_MULTIPRICE_LEVEL
-                        : null;
-                $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
-                $parentPrice= (double) $this->baseProduct->multiprices[$priceLevel];
-            } else {
-                $parentPrice    = (double) $this->baseProduct->price;
-            }            
-            //====================================================================//
-            // Update Price on Product Combination
-            $this->setSimple("variation_price_percentage", 0, "combination");
-            // Update Combination
-            $this->setSimple("variation_price", $price - $parentPrice, "combination");
-            
-            return true;
+            return $this->setVariantPrice($price, $priceLevel);
         }
         
         //====================================================================//
@@ -231,6 +214,34 @@ trait PricesTrait
             return false;
         }
         $this->needUpdate();
+
+        return true;
+    }
+    
+    /**
+     * Write New Price
+     *
+     * @param float $price      New Variant Price
+     * @param int   $priceLevel MultiPrice Level
+     *
+     * @return bool
+     */
+    private function setVariantPrice($price, $priceLevel)
+    {
+        global $conf;
+        
+        //====================================================================//
+        // If multiprices are enabled
+        if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
+            $parentPrice= (double) $this->baseProduct->multiprices[$priceLevel];
+        } else {
+            $parentPrice    = (double) $this->baseProduct->price;
+        }
+        //====================================================================//
+        // Update Price on Product Combination
+        $this->setSimple("variation_price_percentage", 0, "combination");
+        // Update Combination
+        $this->setSimple("variation_price", $price - $parentPrice, "combination");
 
         return true;
     }

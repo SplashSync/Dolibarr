@@ -35,7 +35,7 @@ trait ErrorParserTrait
         //====================================================================//
         // Use Current Parser Object
         if (is_null($subject)) {
-            $subject    = $this->object;
+            $subject    = isset($this->object) ? $this->object : null;
         }
         
         //====================================================================//
@@ -115,17 +115,18 @@ trait ErrorParserTrait
      */
     private function catchDatabaseErrors($subject = null)
     {
+        global $db;
+        
         //====================================================================//
         // DataBase Error
-        if (isset($subject->error) && !empty($subject->error) && !empty($subject->db->lasterror())) {
+        if (isset($subject->error) && !empty($subject->error) && !empty($db->lasterror())) {
             $trace = (new Exception())->getTrace()[2];
             Splash::log()->err(
                 "ErrLocalTpl",
                 $trace["class"],
                 $trace["function"],
-                html_entity_decode($subject->db->lasterror())
+                html_entity_decode($db->lasterror())
             );
         }
-    }    
-    
+    }
 }

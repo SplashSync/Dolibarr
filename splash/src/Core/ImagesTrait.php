@@ -228,7 +228,7 @@ trait ImagesTrait
         //====================================================================//
         // Verify Images List & Update if Needed
         $position = 1;
-        if(is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
+        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
             foreach ($fieldData as $imageData) {
                 //====================================================================//
                 // Check if Visible Image
