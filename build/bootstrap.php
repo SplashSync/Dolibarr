@@ -15,6 +15,11 @@ require_once(dirname(dirname(__DIR__)) . "/master.inc.php");
 require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
 
 //====================================================================//
+// Ensure Minimal Dolibarr Config
+dolibarr_set_const($db, "MAIN_INFO_SOCIETE_NOM", 'Splash Sync Tester', 'chaine', 0, '', $conf->entity);
+dolibarr_set_const($db, "MAIN_INFO_SOCIETE_COUNTRY", '1:FR:France', 'chaine', 0, '', $conf->entity);
+
+//====================================================================//
 // Disable Log Module
 dolibarr_set_const($db, "MAIN_MODULE_SYSLOG", '0', 'chaine', 0, '', 0);
 
@@ -32,3 +37,6 @@ dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "1", 'chaine', 0, '', $conf->
 //====================================================================//
 // Activate Splash Module
 activateModule("modSplash");
+activateModule("modExpedition");
+activateModule("modProductBatch");
+activateModule("modAccounting");
