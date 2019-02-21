@@ -228,19 +228,21 @@ trait ImagesTrait
         //====================================================================//
         // Verify Images List & Update if Needed
         $position = 1;
-        foreach ($fieldData as $imageData) {
-            //====================================================================//
-            // Check if Visible Image
-            if (isset($imageData['visible']) && empty($imageData['visible'])) {
-                continue;
+        if(is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
+            foreach ($fieldData as $imageData) {
+                //====================================================================//
+                // Check if Visible Image
+                if (isset($imageData['visible']) && empty($imageData['visible'])) {
+                    continue;
+                }
+                //====================================================================//
+                // Check if Cover Image
+                $isCover  =   isset($imageData['cover']) ? $imageData['cover'] : false;
+                //====================================================================//
+                // Update Item Line
+                $this->setImage($position, $imageData['image'], $isCover);
+                $position++;
             }
-            //====================================================================//
-            // Check if Cover Image
-            $isCover  =   isset($imageData['cover']) ? $imageData['cover'] : false;
-            //====================================================================//
-            // Update Item Line
-            $this->setImage($position, $imageData['image'], $isCover);
-            $position++;
         }
         
         //====================================================================//

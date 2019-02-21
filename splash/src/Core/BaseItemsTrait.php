@@ -247,15 +247,17 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Verify Lines List & Update if Needed
-        foreach ($fieldData as $itemData) {
-            $this->itemUpdate = false;
-            //====================================================================//
-            // Read Next Item Line
-            $this->currentItem = array_shift($this->object->lines);
-            //====================================================================//
-            // Update Item Line
-            $this->setItem($itemData);
-        }
+        if(is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
+            foreach ($fieldData as $itemData) {
+                $this->itemUpdate = false;
+                //====================================================================//
+                // Read Next Item Line
+                $this->currentItem = array_shift($this->object->lines);
+                //====================================================================//
+                // Update Item Line
+                $this->setItem($itemData);
+            }
+        }        
         //====================================================================//
         // Delete Remaining Lines
         foreach ($this->object->lines as $lineItem) {

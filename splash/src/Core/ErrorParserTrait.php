@@ -38,6 +38,10 @@ trait ErrorParserTrait
             $subject    = $this->object;
         }
         
+        //====================================================================//
+        // Catch Database Errors
+        $this->catchDatabaseErrors($subject);
+                
         return $this->catchSimpleErrors($subject) && $this->catchArrayErrors($subject);
     }
     
@@ -55,7 +59,7 @@ trait ErrorParserTrait
         //====================================================================//
         // Simple Error
         if (isset($subject->error) && !empty($subject->error) && is_scalar($subject->error)) {
-            $trace = (new Exception())->getTrace()[1];
+            $trace = (new Exception())->getTrace()[2];
 
             return  Splash::log()->err(
                 "ErrLocalTpl",
@@ -86,7 +90,7 @@ trait ErrorParserTrait
         if (!isset($subject->errors) || empty($subject->errors)) {
             return true;
         }
-        $trace = (new Exception())->getTrace()[1];
+        $trace = (new Exception())->getTrace()[2];
         foreach ($subject->errors as $error) {
             if (is_scalar($error) && !empty($error)) {
                 $noError    =    Splash::log()->err(
@@ -100,4 +104,28 @@ trait ErrorParserTrait
         
         return $noError;
     }
+    
+    
+    /**
+     * Catch Dolibarr Common Objects Simple Errors
+     *
+     * @param object $subject Focus on a specific object
+     *
+     * @return void
+     */
+    private function catchDatabaseErrors($subject = null)
+    {
+        //====================================================================//
+        // DataBase Error
+        if (isset($subject->error) && !empty($subject->error) && !empty($subject->db->lasterror())) {
+            $trace = (new Exception())->getTrace()[2];
+            Splash::log()->err(
+                "ErrLocalTpl",
+                $trace["class"],
+                $trace["function"],
+                html_entity_decode($subject->db->lasterror())
+            );
+        }
+    }    
+    
 }
