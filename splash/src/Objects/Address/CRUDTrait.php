@@ -123,7 +123,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$needed) {
-            return (string) $this->object->id;
+            return $this->getObjectIdentifier();
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -148,7 +148,7 @@ trait CRUDTrait
             $this->catchDolibarrErrors();
         }
 
-        return (string) $this->object->id;
+        return $this->getObjectIdentifier();
     }
     
     /**
@@ -188,11 +188,22 @@ trait CRUDTrait
         }
         //====================================================================//
         // Delete Object
-//        $Arg1 = ( Local::dolVersionCmp("6.0.0") > 0 ) ? $user : 0;
         if ($object->delete() <= 0) {
             return $this->catchDolibarrErrors($object);
         }
 
         return true;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        if (!isset($this->object->id)) {
+            return false;
+        }
+
+        return (string) $this->object->id;
+    }    
 }
