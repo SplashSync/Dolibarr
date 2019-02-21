@@ -30,6 +30,11 @@ require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/cpaiement.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/stock/class/mouvementstock.class.php';
         
+require_once DOL_DOCUMENT_ROOT."/variants/class/ProductAttribute.class.php";
+require_once DOL_DOCUMENT_ROOT."/variants/class/ProductAttributeValue.class.php";
+require_once DOL_DOCUMENT_ROOT."/variants/class/ProductCombination.class.php";
+require_once DOL_DOCUMENT_ROOT."/variants/class/ProductCombination2ValuePair.class.php";
+        
 //====================================================================//
 // Widgets Classes
 require_once(DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php');
