@@ -118,10 +118,12 @@ script:
     - php build/bootstrap.php
     # Show PhpUnit Version
     - splash/vendor/phpunit/phpunit/phpunit --version
-    # Run PhpUnit Main Sequence
-    - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist 
     # Run PhpUnit Main Local Testsuite
     - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist --testsuite=Local
+    # Run PhpUnit Main Sequence
+    - phpdbg -qrr -d memory_limit=-1 splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist 
+    # Without Php Debugger (Coverage x2 Faster)
+#    - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist 
         
 notifications:
   email:         
