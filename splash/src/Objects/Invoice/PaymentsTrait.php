@@ -253,8 +253,10 @@ trait PaymentsTrait
         require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
         //====================================================================//
         // Verify Lines List & Update if Needed
-        foreach ($fieldData as $lineData) {
-            $this->setPaymentLineData($lineData);
+        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
+            foreach ($fieldData as $lineData) {
+                $this->setPaymentLineData($lineData);
+            }
         }
         //====================================================================//
         // Delete Remaining Lines

@@ -15,11 +15,11 @@
 
 namespace Splash\Local\Objects\Invoice;
 
-use User;
 use DateTime;
 use Facture;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use User;
 
 /**
  * Dolibarr Customer Invoice CRUD Functions
@@ -141,7 +141,7 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         if (!$needed) {
-            return (string) $this->object->id;
+            return $this->getObjectIdentifier();
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
@@ -166,7 +166,7 @@ trait CRUDTrait
             $this->catchDolibarrErrors();
         }
 
-        return (string) $this->object->id;
+        return $this->getObjectIdentifier();
     }
     
     /**
@@ -224,5 +224,17 @@ trait CRUDTrait
         }
 
         return true;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        if (!isset($this->object->id)) {
+            return false;
+        }
+
+        return (string) $this->object->id;
     }
 }
