@@ -93,7 +93,8 @@ class Local implements LocalClassInterface
         // When Library is called in server mode ONLY
         //====================================================================//
         if (!empty(SPLASH_SERVER_MODE)) {
-            define('NOCSRFCHECK', 1);    // This is Webservice Access. We must be able to go on it from outside.
+            // This is Webservice Access. We must be able to go on it from outside.
+            define('NOCSRFCHECK', 1);    
         }
         
         //====================================================================//
@@ -208,6 +209,8 @@ class Local implements LocalClassInterface
     
     /**
      * {@inheritdoc}
+     * 
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testSequences($name = null)
     {
@@ -221,6 +224,9 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", 'mod_codeclient_monkey', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SOCIETE_CODECOMPTA_ADDON", 'mod_codecompta_aquarium', 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -235,6 +241,8 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
+//                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", '0', 'chaine', 0, '', $conf->entity);
 
                 return array();
                 
@@ -245,6 +253,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", (string) rand(1, 3), 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -259,12 +268,28 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("commande", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", true);
+
+                return array();
+
+            case "Variants":
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $conf->entity);
+                
+                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
+                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
 
                 return array();
                 
@@ -275,6 +300,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '1', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", '1', 'chaine', 0, '', $conf->entity);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $conf->entity);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $conf->entity);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -285,12 +311,7 @@ class Local implements LocalClassInterface
                 return array();
                 
             case "List":
-                return array("Monolangual", "Multilangual", "MultiPrices", "GuestOrders", "ExtraFields" );
-//                return array("Monolangual");
-//                return array("Multilangual");
-//                return array("MultiPrices");
-//                return array( "GuestOrders" );
-//                return array( "ExtraFields" );
+                return array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
         }
     }
     
