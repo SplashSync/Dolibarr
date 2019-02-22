@@ -110,9 +110,8 @@ class modSplash extends DolibarrModules
         // List of modules id to disable if this one is disabled
         $this->requiredby = array();
         $this->phpmin = array(5,6);                                 // Min version of PHP required by module
-            $this->need_dolibarr_version = array(6,0);                  // Min version of Dolibarr required by module
-            $this->langfiles = array(SPL_MOD_NAME."@".SPL_MOD_NAME);
-
+        $this->need_dolibarr_version = array(7,0);                  // Min version of Dolibarr required by module
+        $this->langfiles = array(SPL_MOD_NAME."@".SPL_MOD_NAME);
 
         //====================================================================//
         // Constants
