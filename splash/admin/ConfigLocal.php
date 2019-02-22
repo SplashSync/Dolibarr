@@ -30,7 +30,9 @@ echo '<table class="noborder" width="100%"><tbody>';
 //====================================================================//
 // Build Language Combo
 $langcombo  =   '<select name="DefaultLang" id="DefaultLang" class="form-control" >';
-foreach ($langs->get_available_languages() as $key => $value) {
+$languages  = $langs->get_available_languages();
+ksort($languages);
+foreach ($languages as $key => $value) {
     if ($conf->global->SPLASH_LANG == $key) {
         $langcombo .=  '<option value="' . $key . '" selected="true">' . $value . '</option>';
     } else {
@@ -52,7 +54,7 @@ if ($conf->global->MAIN_MULTILANGS) {
     echo '      <td width="30%">';
     echo $form->multiselectarray(
         "OtherLangs",
-        $langs->get_available_languages(),
+        $languages,
         unserialize($conf->global->SPLASH_LANGS)
     );
     echo '      </td>';
