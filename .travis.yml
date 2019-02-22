@@ -31,10 +31,10 @@ matrix:
 #          env: DOL=9.0 DATA=9.0.0    
 
 #        # Dolibarr V8.0 Branch       
-        - php: 7.2
-          env: DOL=8.0 DATA=7.0.0     
-#        - php: 7.1
+#        - php: 7.2
 #          env: DOL=8.0 DATA=7.0.0     
+        - php: 7.1
+          env: DOL=8.0 DATA=7.0.0     
 #        - php: 5.6
 #          env: DOL=8.0 DATA=7.0.0    
         

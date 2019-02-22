@@ -99,7 +99,7 @@ trait ExtraFieldsTrait
                     1,
                     '',
                     '0',
-                    ($visible ? 0:1)
+                    ($visible ? '0':'1')
                 );
             //====================================================================//
             // ExtraField Not Found = Create
@@ -118,7 +118,7 @@ trait ExtraFieldsTrait
                     1,
                     '',
                     '0',
-                    ($visible ? 0:1)
+                    ($visible ? '0':'1')
                 );
             }
         }
