@@ -58,8 +58,8 @@ trait BaseLabelTrait
                 ->Identifier("base_label")
                 ->Name($langs->trans("ProductLabel"))
                 ->Group($groupName)
-                ->setMultilang($isoCode)
                 ->MicroData("http://schema.org/Product", "alternateName")
+                ->setMultilang($isoCode)
                 ->isRequired(self::isDefaultLanguage($isoCode))
                 ->isLogged();
         }

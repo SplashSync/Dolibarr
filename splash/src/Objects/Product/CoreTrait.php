@@ -56,8 +56,8 @@ trait CoreTrait
                 ->isListed(self::isDefaultLanguage($isoCode))
                 ->isLogged()
                 ->Group($groupName)
-                ->setMultilang($isoCode)
                 ->MicroData("http://schema.org/Product", "name")
+                ->setMultilang($isoCode)
                 //====================================================================//
                 // If Product Variation Module is Active => Read Only
                 ->isReadOnly(self::isVariantEnabled())
@@ -74,8 +74,8 @@ trait CoreTrait
                 ->isListed(self::isDefaultLanguage($isoCode))
                 ->isLogged()
                 ->Group($groupName)
-                ->setMultilang($isoCode)
-                ->MicroData("http://schema.org/Product", "description");
+                ->MicroData("http://schema.org/Product", "description")
+                ->setMultilang($isoCode);
         }
         
         //====================================================================//
