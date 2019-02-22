@@ -149,7 +149,7 @@ trait CRUDTrait
      *
      * @return false|Product
      */
-    protected function identifyParent()
+    private function identifyParent()
     {
         //====================================================================//
         // Stack Trace
@@ -187,7 +187,7 @@ trait CRUDTrait
             return false;
         }
         //====================================================================//
-        // Load Simple Product
-        return $this->load((string) $combination->fk_product_parent);
+        // Load Base Product (Jedi Mode => Force Loading)
+        return $this->load((string) $combination->fk_product_parent, true);
     }
 }

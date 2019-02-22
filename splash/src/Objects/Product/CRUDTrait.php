@@ -28,23 +28,22 @@ trait CRUDTrait
     /**
      * Load Request Object
      *
-     * @param string $objectId Object id
+     * @param string $objectId Dolibarr Product Id
+     * @param bool   $force    Force Loading of Variant Base Product
      *
      * @return false|Product
      */
-    public function load($objectId)
+    public function load($objectId, $force = false)
     {
         global $db;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
-        
         //====================================================================//
         // Loading Variant Parent Product is Forbidden!
-        if (VariantsManager::hasProductVariants((int) $objectId)) {
+        if (!$force && VariantsManager::hasProductVariants((int) $objectId)) {
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, Splash::trans("ProductIsVariantBase"));
         }
-        
         //====================================================================//
         // Init Object
         $object = new Product($db);
