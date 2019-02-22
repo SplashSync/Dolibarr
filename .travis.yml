@@ -98,7 +98,7 @@ before_script:
     - cd "$DOL_BUILD_DIR/htdocs/custom/"
     # With PHP 7 => Load Phpstan   
     - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove friendsofphp/php-cs-fixer --no-update --dev; fi
-    - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove phpstan/phpstan-shim --no-update --dev; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove phpstan/phpstan --no-update --dev; fi
     - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove phpstan/phpstan-phpunit --no-update --dev; fi    
     - composer update 
     
