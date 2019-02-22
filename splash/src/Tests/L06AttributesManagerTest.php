@@ -36,7 +36,7 @@ class L06AttributesManagerTest extends ObjectsCase
      *
      * @return void
      */
-    public function testStatusChanges($attrCode, $attrName, $attrValues)
+    public function testAttributesManager($attrCode, $attrName, $attrValues)
     {
         //====================================================================//
         //   Ensure Attribute Doesn't Already Exists
@@ -75,7 +75,7 @@ class L06AttributesManagerTest extends ObjectsCase
             );
             $this->assertInstanceOf(
                 ProductAttributeValue::class,
-                AttrManager::getAttributeValueByName($attribute, $valueCode)
+                AttrManager::getAttributeValueByName($attribute, $valueName)
             );
             
             //====================================================================//
