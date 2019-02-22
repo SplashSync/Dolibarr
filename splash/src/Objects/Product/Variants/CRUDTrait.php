@@ -70,6 +70,9 @@ trait CRUDTrait
             //====================================================================//
             // Create New Product Combination
             $this->combination = VariantsManager::addProductCombination($parentProduct, $variantProduct);
+            //====================================================================//
+            // Store Parent Product
+            $this->baseProduct = $parentProduct;
         }
       
         return $variantProduct;

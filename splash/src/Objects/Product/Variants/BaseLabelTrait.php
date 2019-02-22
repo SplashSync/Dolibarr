@@ -82,7 +82,7 @@ trait BaseLabelTrait
         //====================================================================//
         // Read Default Lang Base Label
         if ('base_label' == $fieldName) {
-            $this->out["base_label"] = $this->baseProduct->label;
+            $this->out["base_label"] = self::isVariant() ? $this->baseProduct->label : $this->object->label;
             unset($this->in[$key]);
         }
         
@@ -113,7 +113,7 @@ trait BaseLabelTrait
         //====================================================================//
         // Write Default Lang Base Label
         if ('base_label' == $fieldName) {
-            $this->setSimple('label', $fieldData, 'baseProduct');
+            $this->setSimple('label', $fieldData, self::isVariant() ? 'baseProduct' : "object");
             unset($this->in[$fieldName]);
         }
         
