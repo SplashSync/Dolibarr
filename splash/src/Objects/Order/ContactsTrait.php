@@ -60,7 +60,7 @@ trait ContactsTrait
             case 'SHIPPING':
             case 'BILLING':
                 $contactsArray   =  $this->object->liste_contact(-1, 'external', 1, $fieldName);
-                if (!empty($contactsArray)) {
+                if (is_array($contactsArray) && !empty($contactsArray)) {
                     $this->out[$fieldName] = self::objects()->Encode("Address", array_shift($contactsArray));
                 } else {
                     $this->out[$fieldName] = null;
@@ -84,38 +84,37 @@ trait ContactsTrait
      */
     protected function setContactsFields($fieldName, $fieldData)
     {
-        switch ($fieldName) {
-            case 'SHIPPING':
-            case 'BILLING':
-                //====================================================================//
-                // Load Current Contact
-                $contactsArray   =  $this->object->liste_contact(-1, 'external', 0, $fieldName);
-                $current    =   empty($contactsArray) ? null : array_shift($contactsArray);
-
-                //====================================================================//
-                // Compare to Expected
-                $expected = self::objects()->Id($fieldData);
-                if ($current && ($current["id"] == $expected)) {
-                    break;
-                }
-                //====================================================================//
-                // Delete if Changed
-                if ($current && ($current["id"] != $expected)) {
-                    $this->object->delete_contact($current["rowid"]);
-                }
-                //====================================================================//
-                // If Contact was Deleted
-                if (false == $expected) {
-                    break;
-                }
-                //====================================================================//
-                // Add New Contact
-                $this->object->add_contact((int) $expected, $fieldName, 'external');
-
-                break;
-            default:
-                return;
+        if (!in_array($fieldName, array('SHIPPING', 'BILLING'), true)) {
+            return;
         }
         unset($this->in[$fieldName]);
+        
+        //====================================================================//
+        // Load Current Contact
+        $contactsArray   =  $this->object->liste_contact(-1, 'external', 0, $fieldName);
+        if (is_array($contactsArray) && !empty($contactsArray)) {
+            $current = self::objects()->Encode("Address", array_shift($contactsArray));
+        } else {
+            $current = null;
+        }
+        //====================================================================//
+        // Compare to Expected
+        $expected = self::objects()->Id($fieldData);
+        if ($current && ($current["id"] == $expected)) {
+            return;
+        }
+        //====================================================================//
+        // Delete if Changed
+        if ($current && ($current["id"] != $expected)) {
+            $this->object->delete_contact($current["rowid"]);
+        }
+        //====================================================================//
+        // If Contact was Deleted
+        if (false == $expected) {
+            return;
+        }
+        //====================================================================//
+        // Add New Contact
+        $this->object->add_contact((int) $expected, $fieldName, 'external');
     }
 }

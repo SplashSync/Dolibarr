@@ -1,21 +1,22 @@
 <?php
+
 /*
- * This file is part of SplashSync Project.
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace Splash\Local\Core;
 
-use Exception;
 use CommonObject;
+use Exception;
 use Splash\Core\SplashCore  as Splash;
 use Splash\Local\Local;
 
@@ -26,29 +27,98 @@ trait MultiCompanyTrait
 {
     private static $DEFAULT_ENTITY    =   1;
     
-
+    /**
+     * Check if MultiCompany Module is Active
+     *
+     * @return bool
+     */
     public function isMultiCompany()
     {
         return (bool) Local::getParameter("MAIN_MODULE_MULTICOMPANY");
     }
     
+    /**
+     * Ensure Dolibarr Object Access is Allowed from this Entity
+     *
+     * @param CommonObject $subject Focus on a specific object
+     *
+     * @return bool False if Error was Found
+     */
+    public function isMultiCompanyAllowed($subject = null)
+    {
+        global $langs;
+        
+        //====================================================================//
+        // Detect MultiCompany Module
+        if (!$this->isMultiCompany()) {
+            return true;
+        }
+        //====================================================================//
+        // Check Object
+        if (is_null($subject)) {
+            return false;
+        }
+        //====================================================================//
+        // Load Object Entity
+        if (isset($subject->entity) && !empty($subject->entity)) {
+            $entityId   =   $subject->entity;
+        } else {
+            $entityId   =   $subject->getValueFrom($subject->table_element, $subject->id, "entity");
+        }
+        //====================================================================//
+        // Check Object Entity
+        if ($entityId != $this->getMultiCompanyEntityId()) {
+            $trace = (new Exception())->getTrace()[1];
+            $langs->load("errors");
+
+            return  Splash::log()->err(
+                "ErrLocalTpl",
+                $trace["class"],
+                $trace["function"],
+                html_entity_decode($langs->trans('ErrorForbidden'))
+            );
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Check if Current Entity is Default Multicompany Entity
+     *
+     * @return bool
+     */
     protected function isMultiCompanyDefaultEntity()
     {
         return $this->isMultiCompany() && ($this->getMultiCompanyEntityId() == static::$DEFAULT_ENTITY);
     }
     
+    /**
+     * Check if Current Entity is a Child Multicompany Entity
+     *
+     * @return bool
+     */
     protected function isMultiCompanyChildEntity()
     {
         return $this->isMultiCompany() && ($this->getMultiCompanyEntityId() != static::$DEFAULT_ENTITY);
     }
     
-    
+    /**
+     * Get Multicompany Current Entity Id
+     *
+     * @return int
+     */
     protected function getMultiCompanyEntityId()
     {
         global $conf;
+
         return $conf->entity;
     }
 
+    /**
+     * Configure Multicompany to Use Current Entity
+     *
+     * @return null|int
+     */
     protected function setupMultiCompany()
     {
         global $conf, $db, $user;
@@ -56,13 +126,13 @@ trait MultiCompanyTrait
         //====================================================================//
         // Detect MultiCompany Module
         if (!$this->isMultiCompany()) {
-            return;
+            return null;
         }
         //====================================================================//
         // Detect Required to Switch Entity
         if (empty(Splash::input("Entity", INPUT_GET))
                 || (Splash::input("Entity", INPUT_GET) == static::$DEFAULT_ENTITY)) {
-            return;
+            return null;
         }
         //====================================================================//
         // Switch Entity
@@ -90,49 +160,5 @@ trait MultiCompanyTrait
         }
         
         return   null;
-    }
-    
-    /**
-     * Ensure Dolibarr Object Access is Allowed from this Entity
-     *
-     * @param   CommonObject  $subject    Focus on a specific object
-     *
-     * @return  bool                False if Error was Found
-     */
-    public function isMultiCompanyAllowed($subject = null)
-    {
-        global $langs;
-        
-        //====================================================================//
-        // Detect MultiCompany Module
-        if (!$this->isMultiCompany()) {
-            return true;
-        }
-        //====================================================================//
-        // Check Object
-        if (is_null($subject)) {
-            return false;
-        }
-        //====================================================================//
-        // Load Object Entity
-        if (isset($subject->entity)) {
-            $entityId   =   $subject->entity;
-        } else {
-            $entityId   =   $subject->getValueFrom($subject->table_element, $subject->id, "entity");
-        }
-        //====================================================================//
-        // Check Object Entity
-        if ($entityId != $this->getMultiCompanyEntityId()) {
-            $trace = (new Exception())->getTrace()[1];
-            $langs->load("errors");
-            return  Splash::log()->err(
-                "ErrLocalTpl",
-                $trace["class"],
-                $trace["function"],
-                html_entity_decode($langs->trans('ErrorForbidden'))
-            );
-        }
-        
-        return true;
     }
 }

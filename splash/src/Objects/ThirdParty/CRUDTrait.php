@@ -18,6 +18,7 @@ namespace Splash\Local\Objects\ThirdParty;
 use Societe;
 use Splash\Core\SplashCore      as Splash;
 use User;
+use Splash\Local\Local;
 
 /**
  * Dolibarr Contacts Address CRUD Functions
@@ -78,28 +79,16 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
-        // Check Customer Name is given
-        if (empty($this->in["name"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "name");
-        }
-        //====================================================================//
-        // LOAD USER FROM DATABASE
-        if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+        // Check Customer Required Fields are given
+        if (false == $this->isReadyForCreate()) {
+            return false;
         }
         //====================================================================//
         // Init Object
         $this->object = new Societe($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("name", $this->in["name"]);
-        //====================================================================//
-        // Dolibarr infos
-        $this->object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
-        $this->object->prospect           = 0;        // 0=no prospect, 1=prospect
-        $this->object->fournisseur        = 0;        // 0=no supplier, 1=supplier
-        $this->object->code_client        = "auto";   // If not erased, will be created by system
-        $this->object->code_fournisseur   = "auto";   // If not erased, will be created by system
+        $this->setupBeforeCreate();
         //====================================================================//
         // Create Object In Database
         if ($this->object->create($user) <= 0) {
@@ -185,7 +174,7 @@ trait CRUDTrait
         $object->id = $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = null;
+        $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
@@ -196,7 +185,6 @@ trait CRUDTrait
         }
         //====================================================================//
         // Delete Object
-//        $Arg1 = ( Local::dolVersionCmp("6.0.0") > 0 ) ? $user : 0;
         if ($object->delete($objectId) <= 0) {
             return $this->catchDolibarrErrors($object);
         }
@@ -214,5 +202,81 @@ trait CRUDTrait
         }
 
         return (string) $this->object->id;
+    }
+    
+    /**
+     * Ensure Required Fields for Create are Available
+     *
+     * @return bool
+     */
+    private function isReadyForCreate()
+    {
+        global $user;
+        //====================================================================//
+        // LOAD USER FROM DATABASE
+        if (!($user instanceof User) || empty($user->login)) {
+            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+        }
+
+        //====================================================================//
+        // Check Customer Name is given
+        if (empty($this->in["name"])) {
+            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "name");
+        }
+        
+        //====================================================================//
+        // If Mandatory, Check Email is given
+        if (Local::getParameter("SOCIETE_EMAIL_MANDATORY") && empty($this->in["email"])) {
+            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
+        }
+        
+        //====================================================================//
+        // Check Required Id Prof are given
+        for ($i=1; $i<5; $i++) {
+            //====================================================================//
+            // If Mandatory, Check IdProf is given
+            if (Local::getParameter("SOCIETE_IDPROF".$i."_MANDATORY") && empty($this->in["idprof".$i])) {
+                return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "idprof".$i);
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Setup Required Fields Before ThirdParty Creation
+     */
+    private function setupBeforeCreate()
+    {
+        //====================================================================//
+        // Pre-Setup of Dolibarr infos
+        $this->setSimple("name", $this->in["name"]);
+        
+        //====================================================================//
+        // Dolibarr infos
+        $this->object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
+        $this->object->prospect           = 0;        // 0=no prospect, 1=prospect
+        $this->object->fournisseur        = 0;        // 0=no supplier, 1=supplier
+        $this->object->code_client        = "auto";   // If not erased, will be created by system
+        $this->object->code_fournisseur   = "auto";   // If not erased, will be created by system
+
+        //====================================================================//
+        // Optionnal Mandatory Fields
+        //====================================================================//
+
+        //====================================================================//
+        // Required ThirdParty Email
+        if (Local::getParameter("SOCIETE_EMAIL_MANDATORY")) {
+            $this->setSimple("email", $this->in["email"]);
+        }
+        //====================================================================//
+        // Required ThirdParty Id Profs
+        for ($i=1; $i<5; $i++) {
+            //====================================================================//
+            // If Mandatory, Check IdProf is given
+            if (Local::getParameter("SOCIETE_IDPROF".$i."_MANDATORY")) {
+                $this->setSimple("idprof".$i, $this->in["idprof".$i]);
+            }
+        }
     }
 }

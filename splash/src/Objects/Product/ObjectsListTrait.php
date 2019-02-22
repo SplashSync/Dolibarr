@@ -50,9 +50,10 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database tables
         $sql   .= " FROM " . MAIN_DB_PREFIX . "product as p ";
+        $sql   .= "LEFT JOIN " . MAIN_DB_PREFIX . "product_attribute_combination as c ON p.rowid = c.fk_product_parent";
         //====================================================================//
         // Entity Filter
-        $sql   .= " WHERE p.entity IN (".getEntity('product', 1).")";
+        $sql   .= " WHERE p.entity IN (".getEntity('product', 1).") AND c.rowid IS NULL";
         //====================================================================//
         // Setup filters
         //====================================================================//

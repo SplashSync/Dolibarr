@@ -177,7 +177,7 @@ trait CRUDTrait
         $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = null;
+        $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",

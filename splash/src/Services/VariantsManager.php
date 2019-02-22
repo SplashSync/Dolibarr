@@ -16,8 +16,6 @@
 namespace Splash\Local\Services;
 
 use Product;
-use ProductAttribute;
-use ProductAttributeValue;
 use ProductCombination;
 use ProductCombination2ValuePair;
 use Splash\Core\SplashCore as Splash;

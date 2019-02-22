@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Objects\Product;
 
+use Splash\Core\SplashCore as Splash;
+
 /**
  * Dolibarr Products Core Fields (Required)
  */
@@ -27,8 +29,14 @@ trait CoreTrait
     {
         global $langs;
         
-        $groupName  =   $langs->trans("Description");
-
+        //====================================================================//
+        // Setup Default Language of Fields Factory
+        $this->fieldsFactory()->setDefaultLanguage($langs->getDefaultLang());
+        //====================================================================//
+        // Setup Some Labels Translation
+        $groupName      =   $langs->trans("Description");
+        $withVariants   =   self::isVariantEnabled() ? (" (+" . $langs->trans("VariantAttributes") . ")"): "";
+        
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -39,31 +47,37 @@ trait CoreTrait
             ->isLogged()
             ->isRequired();
         
-        //====================================================================//
-        // Name (Default Language)
-        $this->fieldsFactory()
-            ->Create(SPL_T_VARCHAR)
-            ->Identifier("label")
-            ->Name($langs->trans("ProductLabel"))
-            ->isListed()
-            ->isLogged()
-            ->Group($groupName)
-            ->addOption('language', $langs->getDefaultLang())
-            ->MicroData("http://schema.org/Product", "name")
-            ->isRequired();
+        foreach ($this->getAvailableLanguages() as $isoCode) {
+            //====================================================================//
+            // Full Name (Label with Options)
+            $this->fieldsFactory()->Create(SPL_T_VARCHAR)
+                ->Identifier("label")
+                ->Name($langs->trans("ProductLabel") . $withVariants)
+                ->isListed(self::isDefaultLanguage($isoCode))
+                ->isLogged()
+                ->Group($groupName)
+                ->setMultilang($isoCode)
+                ->MicroData("http://schema.org/Product", "name")
+                //====================================================================//
+                // If Product Variation Module is Active => Read Only
+                ->isReadOnly(self::isVariantEnabled())
+                //====================================================================//
+                // If Product Variation Module is Active => Required in Default Language
+                ->isRequired(!self::isVariantEnabled() && self::isDefaultLanguage($isoCode));
+            
+            //====================================================================//
+            // Product Description
+            $this->fieldsFactory()
+                ->Create(SPL_T_VARCHAR)
+                ->Identifier("description")
+                ->Name($langs->trans("Description"))
+                ->isListed(self::isDefaultLanguage($isoCode))
+                ->isLogged()
+                ->Group($groupName)
+                ->setMultilang($isoCode)
+                ->MicroData("http://schema.org/Product", "description");
+        }
         
-        //====================================================================//
-        // Description (Default Language)
-        $this->fieldsFactory()
-            ->Create(SPL_T_VARCHAR)
-            ->Identifier("description")
-            ->Name($langs->trans("Description"))
-            ->isListed()
-            ->isLogged()
-            ->Group($groupName)
-            ->addOption('language', $langs->getDefaultLang())
-            ->MicroData("http://schema.org/Product", "description");
-
         //====================================================================//
         // Note
         $this->fieldsFactory()->create(SPL_T_TEXT)
@@ -130,6 +144,15 @@ trait CoreTrait
 
                 break;
             case 'label':
+                if (self::isVariantEnabled()) {
+                    Splash::log()->war("ErrLocalTpl", __CLASS__, __FUNCTION__, Splash::trans("ProductLabelIsRo"));
+
+                    return;
+                }
+                $this->setSimple($fieldName, $fieldData);
+                $this->setMultilangContent($fieldName, $langs->getDefaultLang(), $fieldData);
+
+                break;
             case 'description':
             case 'note':
                 $this->setSimple($fieldName, $fieldData);

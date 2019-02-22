@@ -23,11 +23,46 @@ use Splash\Core\SplashCore      as Splash;
 trait MultilangualTrait
 {
     /**
+     * Check if ISO Code is Default Languages
+     *
+     * @param string $isoCode ISO Language Code
+     *
+     * @return bool
+     */
+    public static function isDefaultLanguage($isoCode)
+    {
+        global $langs;
+        
+        return ($langs->getDefaultLang() == $isoCode);
+    }
+    
+    /**
+     * Get All Available Languages
+     *
+     * @return array
+     */
+    public function getAvailableLanguages()
+    {
+        global $conf, $langs;
+        //====================================================================//
+        // We Are in Monolangual Mode
+        if (!$conf->global->MAIN_MULTILANGS) {
+            return array($langs->getDefaultLang());
+        }
+        //====================================================================//
+        // We Are in Multilangual Mode
+        return array_merge(
+            array($langs->getDefaultLang()),
+            $this->getExtraLanguages()
+        );
+    }
+    
+    /**
      * Get Available Extra Languages
      *
      * @return array
      */
-    public function getExtraLangauges()
+    public function getExtraLanguages()
     {
         global $conf;
         

@@ -52,17 +52,15 @@ class Product extends AbstractObject
     use \Splash\Local\Core\MultiCompanyTrait;
     
     // Dolibarr Products Traits
-    use Product\ObjectsListTrait;
-    use Product\CRUDTrait;
-    use Product\CoreTrait;
-    use Product\MultilangTrait;
-    use Product\MainTrait;
-    use Product\PricesTrait;
-    use Product\StockTrait;
-    use Product\MetaTrait;
-    use Product\Variants\CRUDTrait;
-    use Product\Variants\CoreTrait;
-    use Product\Variants\AttributesTrait;
+    use Product\ObjectsListTrait;                   // Objecst List Readings Product Specifiers
+    use Product\CRUDTrait;                          // Local Products CRUD Functions
+    use Product\CoreTrait;                          // Access to Required Fields
+    use Product\MultilangTrait;                     // Access to Multilangual Fielms
+    use Product\MainTrait;                          // Access to Dimensions, Weights & more...
+    use Product\PricesTrait;                        // Access to Product Sell & Wholsale Prices
+    use Product\StockTrait;                         // Access to Product Stocks
+    use Product\MetaTrait;                          // Access to Products Metadatas
+    use Product\VariantsTrait;                      // Access to Variants Fileds & Management Functions
         
     //====================================================================//
     // Object Definition Parameters

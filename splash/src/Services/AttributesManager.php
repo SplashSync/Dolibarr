@@ -17,8 +17,6 @@ namespace Splash\Local\Services;
 
 use ProductAttribute;
 use ProductAttributeValue;
-use ProductCombination;
-use ProductCombination2ValuePair;
 use Splash\Core\SplashCore as Splash;
 
 /**
@@ -328,7 +326,7 @@ class AttributesManager
         //====================================================================//
         // Walk on Attributes Cache
         foreach (static::$attributesValuesCache[$attribute->id] as $value) {
-            if (strtolower($valueName) == strtolower($value->ref)) {
+            if (strtolower($valueName) == strtolower($value->value)) {
                 return $value;
             }
         }

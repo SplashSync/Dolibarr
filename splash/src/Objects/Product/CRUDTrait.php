@@ -17,7 +17,6 @@ namespace Splash\Local\Objects\Product;
 
 use Product;
 use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Local;
 use Splash\Local\Services\VariantsManager;
 use User;
 
@@ -39,6 +38,13 @@ trait CRUDTrait
         //====================================================================//
         // Stack Trace
         Splash::log()->trace(__CLASS__, __FUNCTION__);
+        
+        //====================================================================//
+        // Loading Variant Parent Product is Forbidden!
+        if (VariantsManager::hasProductVariants((int) $objectId)) {
+            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, Splash::trans("ProductIsVariantBase"));
+        }
+        
         //====================================================================//
         // Init Object
         $object = new Product($db);
@@ -64,7 +70,6 @@ trait CRUDTrait
                 " Unable to load Product (" . $objectId . ")."
             );
         }
-        
         //====================================================================//
         // Load Product Combinations
         $this->combination = VariantsManager::getProductCombination((int) $objectId);
@@ -94,7 +99,8 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Product Label is given
-        if (empty($this->in["label"])) {
+        $labelKey = self::isVariantEnabled() ? "base_label" : "label";
+        if (empty($this->in[$labelKey])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, $langs->trans("ProductLabel"));
         }
         //====================================================================//
@@ -189,7 +195,7 @@ trait CRUDTrait
         $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = null;
+        $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",

@@ -126,7 +126,7 @@ class Local implements LocalClassInterface
             //====================================================================//
             // Load Default Language
             self::loadDefaultLanguage();
-            
+                    
             //====================================================================//
             // Manage MultiCompany
             //====================================================================//
@@ -228,6 +228,12 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", 'mod_codeclient_monkey', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_CODECOMPTA_ADDON", 'mod_codecompta_aquarium', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF1_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
+                
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -243,7 +249,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-//                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", '0', 'chaine', 0, '', $entity);
+                dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF1_MANDATORY", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
 
                 return array();
                 
@@ -255,6 +265,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF1_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '1', 'chaine', 0, '', $ent);
                 
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
@@ -387,6 +402,11 @@ class Local implements LocalClassInterface
         if (!empty(self::getParameter("SPLASH_LANG"))) {
             $langs->setDefaultLang(self::getParameter("SPLASH_LANG"));
         }
+        
+        //====================================================================//
+        // Load Required Splash Translation Files
+        Splash::translator()->load("main@local");
+        Splash::translator()->load("objects@local");
     }
     
     /**

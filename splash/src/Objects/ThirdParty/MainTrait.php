@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\ThirdParty;
 
+use Splash\Local\Local;
+
 /**
  * Dolibarr ThirdParty Main Fields
  */
@@ -41,6 +43,8 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_EMAIL)
             ->Identifier("email")
             ->Name($langs->trans("Email"))
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_EMAIL_MANDATORY"))
             ->MicroData("http://schema.org/ContactPoint", "email")
             ->isLogged()
             ->isListed();
@@ -58,6 +62,8 @@ trait MainTrait
             ->Identifier("idprof1")
             ->Group("ID")
             ->Name($langs->trans("ProfId1Short"))
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF1_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "duns");
         
         //====================================================================//
@@ -66,6 +72,8 @@ trait MainTrait
             ->Identifier("idprof2")
             ->Group("ID")
             ->Name($langs->trans("ProfId2Short"))
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF2_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "taxID");
 
         //====================================================================//
@@ -74,6 +82,8 @@ trait MainTrait
             ->Identifier("idprof3")
             ->Group("ID")
             ->Name($langs->trans("ProfId3Short"))
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF3_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "naics");
         
         //====================================================================//
@@ -82,6 +92,8 @@ trait MainTrait
             ->Identifier("idprof4")
             ->Group("ID")
             ->Name($langs->trans("ProfId4Short"))
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF4_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "isicV4");
         
         //====================================================================//

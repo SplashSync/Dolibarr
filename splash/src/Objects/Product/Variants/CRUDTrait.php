@@ -56,7 +56,7 @@ trait CRUDTrait
         if (!$parentProduct) {
             //====================================================================//
             // Create New Parent Product
-            $parentProduct = $this->createSimpleProduct($this->in["ref"] . "_base", $this->in["label"], false);
+            $parentProduct = $this->createSimpleProduct($this->in["ref"] . "_base", $this->in["base_label"], false);
         }
         //====================================================================//
         // Create New Parent Product Failed
@@ -65,7 +65,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Create New Variant Product
-        $variantProduct = $this->createSimpleProduct($this->in["ref"], $this->in["label"], true);
+        $variantProduct = $this->createSimpleProduct($this->in["ref"], $this->in["base_label"], true);
         if ($variantProduct) {
             //====================================================================//
             // Create New Product Combination
