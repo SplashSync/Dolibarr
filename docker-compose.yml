@@ -1,0 +1,49 @@
+
+################################################################################
+#
+#  This file is part of SplashSync Project.
+# 
+#  Copyright (C) Splash Sync <www.splashsync.com>
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+# 
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+version: "3.2"
+
+services:
+
+    mysql:
+        image: mysql:5.7
+        restart: always
+        environment:
+            - "MYSQL_ROOT_PASSWORD=dolibarr"
+            - "MYSQL_DATABASE=dolibarr"
+            - "MYSQL_USER=dolibarr"
+            - "MYSQL_PASSWORD=dolibarr"
+
+    dolibarr:
+        image: monogramm/docker-dolibarr
+        restart: on-failure
+        depends_on:
+            - mysql
+        ports:
+            - "10107:80"
+        environment:
+            - "DOLI_DB_TYPE=mysqli"
+            - "DOLI_DB_HOST=mysql"
+            - "DOLI_DB_NAME=dolibarr"
+            - "DOLI_DB_USER=root"
+            - "DOLI_DB_PASSWORD=dolibarr"
+            - "DOLI_ADMIN_LOGIN=PhpUnit"
+            - "PHP_MEMORY_LIMIT=-1"
+        volumes:
+            - "./:/var/www/html/custom"
+            
