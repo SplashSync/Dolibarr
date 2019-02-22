@@ -120,10 +120,10 @@ script:
     - splash/vendor/phpunit/phpunit/phpunit --version
     # Run PhpUnit Main Local Testsuite
     - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist --testsuite=Local
-    # Run PhpUnit Main Sequence
-    - phpdbg -qrr -d memory_limit=-1 splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist 
-    # Without Php Debugger (Coverage x2 Faster)
-#    - splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist 
+    # PHP7+     =>  Run PhpUnit Main Sequence
+    - if [[ ${TRAVIS_PHP_VERSION:0:1} > "5" ]]; then phpdbg -qrr -d memory_limit=-1 splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist; fi  
+    # PHP5.6    =>  Without Php Debugger (Coverage x2 Faster)
+    - if [[ ${TRAVIS_PHP_VERSION:0:1} < "7" ]]; then splash/vendor/phpunit/phpunit/phpunit -c build/phpunit.xml.dist; fi  
         
 notifications:
   email:         
