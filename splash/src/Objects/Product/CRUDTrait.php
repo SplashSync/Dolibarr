@@ -117,7 +117,7 @@ trait CRUDTrait
         
         //====================================================================//
         // Create Simple Product
-        return $this->createSimpleProduct($this->in["ref"], $this->in["label"], true);
+        return $this->createSimpleProduct($this->in["ref"], $this->in[$labelKey], true);
     }
     
     /**
