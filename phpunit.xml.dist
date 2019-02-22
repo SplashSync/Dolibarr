@@ -11,7 +11,7 @@
     processIsolation            = "false"
     stopOnFailure               = "true"
     bootstrap                   = "splash/vendor/autoload.php" 
-    verbose                     = "false"
+    verbose                     = "true"
     timeoutForLargeTests        = "120"  
 >
 
@@ -25,25 +25,32 @@
     </testsuites>
 
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true" >
-            <directory>splash/src/Tests</directory>
-            <directory>splash/vendor/splash/phpcore</directory>
-            <exclude>
-                <directory>splash/vendor</directory>
-            </exclude>
+        <whitelist>
+            <directory>../splash/src/Objects</directory>
         </whitelist>
     </filter>
-    
+
     <logging>
-        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70" />
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+        <log type="testdox-text" target="coverage/executed.txt"/>        
     </logging> 
         
     <php>
         <ini    name="display_errors"   value="true"/>
         <const  name="SPLASH_DEBUG"     value="true" />
-        <server name="SPLASH_TRAVIS"    value="false" />
+        <server name="SPLASH_TRAVIS"    value="true" />
         <server name="SERVER_NAME"      value="http://localhost/Dolibarr/Dol-7.0/custom"/>
+        
         <!-- Only Test Specified Types -->
+        <!--<const  name="SPLASH_TYPES"     value="Address" />-->
+        <!--<const  name="SPLASH_TYPES"     value="ThirdParty" />-->
         <!--<const  name="SPLASH_TYPES"     value="Product" />-->
+        <!--<const  name="SPLASH_TYPES"     value="Order" />-->
+        <!--<const  name="SPLASH_TYPES"     value="Invoice" />-->
+        
+        <!-- Only Test Specified Sequence -->
+        <!--<const  name="SPLASH_SEQUENCE"  value="Monolangual" />-->           
+        <!--<const  name="SPLASH_SEQUENCE"  value="Variants" />-->           
     </php>
 </phpunit>
