@@ -93,7 +93,7 @@ trait ContactsTrait
         // Load Current Contact
         $contactsArray   =  $this->object->liste_contact(-1, 'external', 0, $fieldName);
         if (is_array($contactsArray) && !empty($contactsArray)) {
-            $current = self::objects()->Encode("Address", array_shift($contactsArray));
+            $current = array_shift($contactsArray);
         } else {
             $current = null;
         }
