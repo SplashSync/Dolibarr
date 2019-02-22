@@ -26,43 +26,49 @@ class L10MassActionsTest extends ObjectsCase
     
     const CONFIG = array(
         "Address" => array(
-            'max'       =>  100,
+            'max'       =>  50,
+            'batch'     =>  7,
             'fields'    =>  array(),
-            'verify'    =>  false,
+            'verify'    =>  true,
             'update'    =>  true,
             'delete'    =>  true,
         ),
         "ThirdParty" => array(
-            'max'       =>  100,
+            'max'       =>  50,
+            'batch'     =>  5,
             'fields'    =>  array(),
-            'verify'    =>  false,
-            'update'    =>  false,
+            'verify'    =>  true,
+            'update'    =>  true,
             'delete'    =>  true,
         ),
         "Product" => array(
-            'max'       =>  100,
+            'max'       =>  50,
+            'batch'     =>  5,
             'fields'    =>  array(
                 "images"    => array(),
             ),
-            'verify'    =>  false,
-            'update'    =>  false,
+            'verify'    =>  true,
+            'update'    =>  true,
             'delete'    =>  true,
         ),
         "Order" => array(
-            'max'       =>  100,
+            'max'       =>  50,
+            'batch'     =>  5,
             'fields'    =>  array(
                 "images"    => array(),
                 //                "status"    => "OrderCanceled"
                 //                "status"    => "OrderInTransit"
                 "status"    => "OrderDelivered",
             ),
-            'verify'    =>  false,
-            'update'    =>  true,
+            'verify'    =>  true,
+            'update'    =>  false,
             'delete'    =>  true,
         ),
         "Invoice" => array(
-            'max'       =>  3,
+            'max'       =>  50,
+            'batch'     =>  5,
             'fields'    =>  array(
+                //                "status" => "PaymentDue",
                 "status" => "PaymentComplete",
             ),
             'verify'    =>  true,
@@ -72,7 +78,7 @@ class L10MassActionsTest extends ObjectsCase
     );
 
     /**
-     * Test Loading of Object that are not on Selected Entity
+     * Execute a Complete Mass Create/Update/Delete Test From Module
      *
      * @dataProvider ObjectTypesProvider
      *
@@ -88,9 +94,9 @@ class L10MassActionsTest extends ObjectsCase
         // Execute Mass Create / Update / Delete Test
         $this->baseMassCrudActions($sequence, $objectType);
     }
-    
+
     /**
-     * Test Loading of Object that are not on Selected Entity
+     * Execute a Complete Mass Create/Update/Delete Test From Service
      *
      * @dataProvider ObjectTypesProvider
      *
@@ -108,6 +114,58 @@ class L10MassActionsTest extends ObjectsCase
     }
 
     /**
+     * Execute a Complete Batch Create/Update/Delete Test From Service
+     *
+     * @dataProvider ObjectTypesProvider
+     *
+     * @param string $sequence
+     * @param string $objectType
+     */
+    public function testBatchCrudActions($sequence, $objectType)
+    {
+        //====================================================================//
+        // Ensure Object Config Exists & Is Valid
+        $this->assertArrayHasKey($objectType, self::CONFIG);
+        $cfg = self::CONFIG[$objectType];
+        $this->assertArrayHasKey("max", $cfg);
+        $this->assertArrayHasKey("batch", $cfg);
+        $this->assertArrayHasKey("fields", $cfg);
+        $this->assertArrayHasKey("verify", $cfg);
+        $this->assertArrayHasKey("update", $cfg);
+        $this->assertArrayHasKey("delete", $cfg);
+        
+        //====================================================================//
+        // Setup Custom Objects Fields
+        $this->customFieldsData = $cfg["fields"];
+        
+        if ($cfg["update"]) {
+            //====================================================================//
+            // Execute Mass Create / Update / Delete Test without Verifications
+            $this->coreTestBatchCreateUpdateDelete(
+                $sequence,
+                $objectType,
+                $cfg["max"],
+                $cfg["batch"],
+                $cfg["verify"],
+                $cfg["delete"]
+            );
+
+            return;
+        }
+        
+        //====================================================================//
+        // Execute Mass Create / Delete Test without Verifications
+        $this->coreTestBatchCreateDelete(
+            $sequence,
+            $objectType,
+            $cfg["max"],
+            $cfg["batch"],
+            $cfg["verify"],
+            $cfg["delete"]
+        );
+    }
+    
+    /**
      * Test Loading of Object that are not on Selected Entity
      *
      * @dataProvider ObjectTypesProvider
@@ -115,7 +173,7 @@ class L10MassActionsTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      */
-    public function baseMassCrudActions($sequence, $objectType)
+    private function baseMassCrudActions($sequence, $objectType)
     {
         //====================================================================//
         // Ensure Object Config Exists & Is Valid
