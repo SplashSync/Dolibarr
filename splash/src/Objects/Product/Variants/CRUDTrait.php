@@ -156,7 +156,10 @@ trait CRUDTrait
         Splash::log()->trace(__CLASS__, __FUNCTION__);
         //====================================================================//
         // Check Variant Products Array
-        if (!isset($this->in["variants"]) || !is_iterable($this->in["variants"])) {
+//        if (!isset($this->in["variants"]) || !is_iterable($this->in["variants"])) {
+//            return false;
+//        }
+        if (!is_array($this->in["variants"]) && !is_a($this->in["variants"], "ArrayObject")) {
             return false;
         }
         //====================================================================//
