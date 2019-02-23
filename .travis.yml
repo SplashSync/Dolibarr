@@ -43,8 +43,8 @@ matrix:
 #          env: DOL=7.0 DATA=7.0.0
         - php: 7.0
           env: DOL=7.0 DATA=7.0.0      
-#        - php: 5.6
-#          env: DOL=7.0 DATA=7.0.0    
+        - php: 5.6
+          env: DOL=7.0 DATA=7.0.0    
 #          
 ##        # Dolibarr V6.0 Branch       
 ##        - php: 7.1
