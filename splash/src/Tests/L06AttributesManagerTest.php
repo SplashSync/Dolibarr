@@ -113,7 +113,7 @@ class L06AttributesManagerTest extends ObjectsCase
      */
     public function attributesProvider()
     {
-        $index = random_int(100, 1000);
+        $index = rand(100, 1000);
         
         return array(
             //====================================================================//
