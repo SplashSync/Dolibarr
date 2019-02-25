@@ -1,15 +1,16 @@
 <?php
+
 /*
- * This file is part of SplashSync Project.
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 use Splash\Core\SplashCore as Splash;
@@ -23,7 +24,6 @@ echo    '<input type="hidden" name="action" value="UpdateLocal">';
 //====================================================================//
 // Open Local Configuration Tab
 dol_fiche_head(array(), null, $langs->trans("SPL_Local_Config"), 0, null);
-
 
 echo '<table class="noborder" width="100%"><tbody>';
 
@@ -78,7 +78,6 @@ echo '      <td>' . $langs->trans("SPL_DfStock") . '</td>';
 echo '      <td>' . $formproduct->selectWarehouses($conf->global->SPLASH_STOCK, 'stock', '', 1) . '</td>';
 echo '  </tr>';
 
-
 //====================================================================//
 // If multiprices are enabled
 if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
@@ -96,8 +95,8 @@ if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
         }
         print '>'. $langs->trans('SellingPrice') . " " .$i;
         $keyforlabel='PRODUIT_MULTIPRICES_LABEL'.$i;
-        if (! empty($conf->global->$keyforlabel)) {
-            print ' - '.$langs->trans($conf->global->$keyforlabel);
+        if (! empty($conf->global->{$keyforlabel})) {
+            print ' - '.$langs->trans($conf->global->{$keyforlabel});
         }
         print '</option>';
     }
@@ -108,7 +107,6 @@ if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
 }
 
 echo '</tbody></table>';
-
 
 //====================================================================//
 // Close Local Configuration Tab

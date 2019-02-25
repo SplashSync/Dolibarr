@@ -1,15 +1,16 @@
 <?php
+
 /*
- * This file is part of SplashSync Project.
+ *  This file is part of SplashSync Project.
  *
- * Copyright (C) Splash Sync <www.splashsync.com>
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 //====================================================================//
@@ -20,7 +21,7 @@
 
 //====================================================================//
 // Update Detect Tax Names Mode
-if ($action == 'UpdateOrderTaxMode') {
+if ('UpdateOrderTaxMode' == $action) {
     $DetectTaxMode = GETPOST('DetectTax')?1:0;
     dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", $DetectTaxMode, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
@@ -29,7 +30,7 @@ if ($action == 'UpdateOrderTaxMode') {
 
 //====================================================================//
 // Update Allow Guests Orders
-if ($action == 'UpdateOrderAllowGuest') {
+if ('UpdateOrderAllowGuest' == $action) {
     $AllowGuest = GETPOST('AllowGuest')?1:0;
     dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", $AllowGuest, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
@@ -38,7 +39,7 @@ if ($action == 'UpdateOrderAllowGuest') {
 
 //====================================================================//
 // Update Detcet Customer Email on Order Import
-if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW && ($action == 'UpdateOrderEmail')) {
+if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW && ('UpdateOrderEmail' == $action)) {
     $DetectEmail = GETPOST('DetectEmail')?1:0;
     dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", $DetectEmail, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
@@ -47,7 +48,7 @@ if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW && ($action == 'UpdateOrderEmail'))
 
 //====================================================================//
 // Update of Orders & Invoices Parameters
-if ($action == 'UpdateOrder') {
+if ('UpdateOrder' == $action) {
     //====================================================================//
     // Init DB Transaction
     $db->begin();
