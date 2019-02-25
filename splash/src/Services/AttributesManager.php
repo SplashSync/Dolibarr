@@ -178,7 +178,7 @@ class AttributesManager
      * Update Product Combinations Attribute Name
      *
      * @param false|ProductAttribute $attribute     Product Attribute Object
-     * @param string                $attributeName Product Attribute Name
+     * @param string                 $attributeName Product Attribute Name
      *
      * @return bool
      */
