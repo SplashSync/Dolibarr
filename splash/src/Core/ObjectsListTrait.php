@@ -99,9 +99,9 @@ trait ObjectsListTrait
     /**
      * Get Results Count for Sql query
      *
-     * @param        string   $sql                   Sql Raw Query
+     * @param string $sql Sql Raw Query
      *
-     * @return       int
+     * @return int
      */
     private function getSqlResultsCount($sql)
     {
@@ -118,13 +118,13 @@ trait ObjectsListTrait
     /**
      * Return Raw Sql Pagination
      *
-     * @param        array   $params                   Search parameters for result List.
-     *                        $params["max"]            Maximum Number of results
-     *                        $params["offset"]         List Start Offset
-     *                        $params["sortfield"]      Field name for sort list (Available fields listed below)
-     *                        $params["sortorder"]      List Order Constraign (Default = ASC)
+     * @param array $params Search parameters for result List.
+     *                      $params["max"]            Maximum Number of results
+     *                      $params["offset"]         List Start Offset
+     *                      $params["sortfield"]      Field name for sort list (Available fields listed below)
+     *                      $params["sortorder"]      List Order Constraign (Default = ASC)
      *
-     * @return       string
+     * @return string
      */
     private function getSqlPagination($params)
     {

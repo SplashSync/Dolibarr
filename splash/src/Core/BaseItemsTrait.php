@@ -185,9 +185,9 @@ trait BaseItemsTrait
      * Read requested Field
      *
      * @param FactureLigne|OrderLine $line      Line Data Object
-     * @param string $fieldName Field Identifier / Name
+     * @param string                 $fieldName Field Identifier / Name
      *
-     * @return null|float|bool|array|int|string
+     * @return null|array|bool|float|int|string
      */
     private function getItemField($line, $fieldName)
     {

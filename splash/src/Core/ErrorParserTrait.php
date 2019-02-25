@@ -105,7 +105,6 @@ trait ErrorParserTrait
         return $noError;
     }
     
-    
     /**
      * Catch Dolibarr Common Objects Simple Errors
      *

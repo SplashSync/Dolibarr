@@ -15,10 +15,10 @@
 
 namespace   Splash\Local\Core;
 
+use ArrayObject;
 use EcmFiles;
 use EcmfilesLine;
 use Exception;
-use ArrayObject;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 

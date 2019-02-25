@@ -28,7 +28,7 @@ trait LocalizationTrait
      *
      * @param mixed $code
      *
-     * @return false|int    Country Dolibarr Id, else 0
+     * @return false|int Country Dolibarr Id, else 0
      */
     protected function getCountryByCode($code)
     {
