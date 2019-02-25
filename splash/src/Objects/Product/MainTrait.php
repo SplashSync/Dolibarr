@@ -184,6 +184,7 @@ trait MainTrait
      * Update Product Weight with Variants Management
      *
      * @param float $fieldData
+     *
      * @return void
      */
     private function updateProductWeight($fieldData)
@@ -211,6 +212,7 @@ trait MainTrait
                 $nomalized->weight - $this->baseProduct->weight,
                 "combination"
             );
+
             return;
         }
     }

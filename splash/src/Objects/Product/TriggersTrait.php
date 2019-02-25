@@ -15,8 +15,8 @@
 
 namespace Splash\Local\Objects\Product;
 
-use Product;
 use MouvementStock;
+use Product;
 use Splash\Client\Splash;
 use Splash\Local\Services\VariantsManager;
 
@@ -31,12 +31,12 @@ trait TriggersTrait
      * @var array
      */
     private static $productActions = array(
-            'PRODUCT_CREATE',
-            'PRODUCT_MODIFY',
-            'PRODUCT_DELETE',
-            'PRODUCT_SET_MULTILANGS',
-            'PRODUCT_PRICE_MODIFY',
-            'STOCK_MOVEMENT',
+        'PRODUCT_CREATE',
+        'PRODUCT_MODIFY',
+        'PRODUCT_DELETE',
+        'PRODUCT_SET_MULTILANGS',
+        'PRODUCT_PRICE_MODIFY',
+        'STOCK_MOVEMENT',
     );
     
     /**
