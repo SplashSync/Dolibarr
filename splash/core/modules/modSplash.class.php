@@ -31,7 +31,7 @@ dol_include_once("/splash/_conf/defines.inc.php");
 
 /**
  * Splash Module For Dolibarr
- * 
+ *
  * @SuppressWarnings(PHPMD.CamelCaseClassName)
  */
 class modSplash extends DolibarrModules
@@ -131,8 +131,8 @@ class modSplash extends DolibarrModules
      * It also creates data directories.
      *
      * @param mixed $options
-     * 
-     * @return     int             1 if OK, 0 if KO
+     *
+     * @return int 1 if OK, 0 if KO
      */
     public function init($options = '')
     {
@@ -156,8 +156,8 @@ class modSplash extends DolibarrModules
      * Data directories are not deleted.
      *
      * @param mixed $options
-     * 
-     * @return     int             1 if OK, 0 if KO
+     *
+     * @return int 1 if OK, 0 if KO
      */
     public function remove($options = '')
     {
@@ -172,8 +172,8 @@ class modSplash extends DolibarrModules
      * and create data commands must be stored in directory /mymodule/sql/
      * This function is called by this->init.
      *
-     * @return     int             1 if OK, 0 if KO
-     * 
+     * @return int 1 if OK, 0 if KO
+     *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function load_tables()
