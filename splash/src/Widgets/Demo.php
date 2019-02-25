@@ -24,17 +24,20 @@
 namespace   Splash\Local\Widgets;
 
 use Splash\Core\SplashCore      as Splash;
-use Splash\Models\AbstractWidget;
 use Splash\Local\Local;
+use Splash\Models\AbstractWidget;
 
 /**
  *  TEST & DEMONSTRATION WIDGET
  */
 class Demo extends AbstractWidget
 {
-    //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
+    /**
+     * Define Standard Options for this Widget
+     * Override this array to change default options for your widget
+     *
+     * @var array
+     */
     public static $OPTIONS       = array(
         "Width"     =>      self::SIZE_XL
     );

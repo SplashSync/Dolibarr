@@ -16,8 +16,8 @@
 namespace   Splash\Local\Widgets;
 
 use Splash\Core\SplashCore      as Splash;
-use Splash\Models\AbstractWidget;
 use Splash\Local\Local;
+use Splash\Models\AbstractWidget;
 
 /**
  * BANK ACCOUNTS LEVELS WIDGET

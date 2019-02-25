@@ -16,17 +16,20 @@
 namespace   Splash\Local\Widgets;
 
 use Splash\Core\SplashCore      as Splash;
-use Splash\Models\AbstractWidget;
 use Splash\Local\Local;
+use Splash\Models\AbstractWidget;
 
 /**
  * LAST CUSTOMER BOX WIDGET
  */
 class UpdatedCustomers extends AbstractWidget
 {
-    //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
+    /**
+     * Define Standard Options for this Widget
+     * Override this array to change default options for your widget
+     *
+     * @var array
+     */
     public static $OPTIONS       = array(
         "Width"         =>  self::SIZE_M,
         "Header"        =>  true,
@@ -61,7 +64,7 @@ class UpdatedCustomers extends AbstractWidget
     // General Class Variables
     //====================================================================//
 
-    private $MaxItems   =   10;
+    private $maxItems   =   10;
     
     //====================================================================//
     // Class Main Functions
@@ -123,7 +126,7 @@ class UpdatedCustomers extends AbstractWidget
         //====================================================================//
         // Build Disabled Block
         //====================================================================//
-        $this->MaxItems = !empty($params["max"]) ? $params["max"] : 10;
+        $this->maxItems = !empty($params["max"]) ? $params["max"] : 10;
         $this->buildTableBlock();
         
         //====================================================================//
@@ -201,7 +204,7 @@ class UpdatedCustomers extends AbstractWidget
         $sql = "SELECT s.nom as name, s.rowid as socid, s.tms as modified, s.status as status";
         $sql.= " FROM ".MAIN_DB_PREFIX."societe as s";
         $sql.= " ORDER BY s.tms DESC";
-        $sql.= $db->plimit($this->MaxItems, 0);
+        $sql.= $db->plimit($this->maxItems, 0);
         dol_syslog(get_class($this)."::loadLastModifiedUsers", LOG_DEBUG);
         $result = $db->query($sql);
         

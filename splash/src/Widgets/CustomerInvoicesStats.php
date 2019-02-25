@@ -1,30 +1,17 @@
 <?php
+
 /*
- * Copyright (C) 2011-2014  Bernard Paquier       <bernard.paquier@gmail.com>
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- *  \Id 	$Id: osws-local-Customers.class.php 92 2014-09-16 22:18:01Z Nanard33 $
- *  \version    $Revision: 92 $
- *  \date       $LastChangedDate: 2014-09-17 00:18:01 +0200 (mer. 17 sept. 2014) $
- *  \ingroup    Splash - Open Synchronisation WebService
- *  \brief      Local Function Definition for Management of Customers Data
- *  \class      SplashDemo
- *  \remarks	Designed for Splash Module - Dolibar ERP Version
-*/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
                     
 //====================================================================//
 // *******************************************************************//
@@ -36,12 +23,26 @@
 
 namespace   Splash\Local\Widgets;
 
-use Splash\Models\AbstractWidget;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Models\AbstractWidget;
 
 class CustomerInvoicesStats extends AbstractWidget
 {
+    /**
+     * Define Standard Options for this Widget
+     * Override this array to change default options for your widget
+     *
+     * @var array
+     */
+    public static $OPTIONS       = array(
+        "Width"         =>  self::SIZE_M,
+        "Header"        =>  true,
+        "Footer"        =>  true,
+        'UseCache'      =>  true,
+        'CacheLifeTime' =>  60,
+    );
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
@@ -65,17 +66,6 @@ class CustomerInvoicesStats extends AbstractWidget
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
     protected static $ICO            =  "fa fa-line-chart";
-    
-    //====================================================================//
-    // Define Standard Options for this Widget
-    // Override this array to change default options for your widget
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_M,
-        "Header"        =>  true,
-        "Footer"        =>  true,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
-    );
 
     //====================================================================//
     // Class Main Functions
@@ -116,7 +106,6 @@ class CustomerInvoicesStats extends AbstractWidget
         
         $this->importDates($params);
         
-        
         $this->buildMorrisBarBlock();
         
         //====================================================================//
@@ -143,6 +132,7 @@ class CustomerInvoicesStats extends AbstractWidget
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
+
         return html_entity_decode($langs->trans(static::$NAME));
     }
 
@@ -154,6 +144,7 @@ class CustomerInvoicesStats extends AbstractWidget
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
+
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
 
@@ -194,10 +185,9 @@ class CustomerInvoicesStats extends AbstractWidget
         return $this->parseDatedData($rawData);
     }
    
-    
     /**
-    *   @abstract     Block Building - Morris Bar Graph
-    */
+     *   @abstract     Block Building - Morris Bar Graph
+     */
     private function buildMorrisBarBlock()
     {
         global $langs;
