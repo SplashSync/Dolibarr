@@ -1,19 +1,16 @@
 <?php
-/* Copyright (C) 2015      Splash Sync <www.splashsync.com>
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 /**
@@ -26,7 +23,6 @@
  *  \remarks
  */
 
-
 include_once(DOL_DOCUMENT_ROOT ."/core/modules/DolibarrModules.class.php");
 
 //====================================================================//
@@ -34,14 +30,16 @@ include_once(DOL_DOCUMENT_ROOT ."/core/modules/DolibarrModules.class.php");
 dol_include_once("/splash/_conf/defines.inc.php");
 
 /**
- * @abstract Splash Module For Dolibarr
+ * Splash Module For Dolibarr
+ * 
  * @SuppressWarnings(PHPMD.CamelCaseClassName)
  */
 class modSplash extends DolibarrModules
 {
     /**
-     *   \brief      Constructor. Define names, constants, directories, boxes, permissions
-     *   \param      $db      Database handler
+     * Constructor. Define names, constants, directories, boxes, permissions
+     *
+     * @param mixed $db
      */
     public function __construct($db)
     {
@@ -88,16 +86,16 @@ class modSplash extends DolibarrModules
         // for specific path of parts (eg: /mymodule/core/modules/barcode)
         // for specific css file (eg: /mymodule/css/mymodule.css.php)
         $this->module_parts = array(
-                'triggers' => 1,            // Set this to 1 if module has its own trigger directory
-                'login' => 0,               // Set this to 1 if module has its own login method directory
-                'substitutions' => 0,       // Set this to 1 if module has its own substitution function file
-                'menus' => 0,               // Set this to 1 if module has its own menus handler directory
-                'barcode' => 0,             // Set this to 1 if module has its own barcode directory
-                'models' => 0,              // Set this to 1 if module has its own models directory
-                'css' => '',                 // Set this to relative path of css if module has its own css file
-                'hooks' => '',              // Set here all hooks context managed by module
-                'workflow' => ''            // Set here all workflow context managed by module
-            );
+            'triggers' => 1,            // Set this to 1 if module has its own trigger directory
+            'login' => 0,               // Set this to 1 if module has its own login method directory
+            'substitutions' => 0,       // Set this to 1 if module has its own substitution function file
+            'menus' => 0,               // Set this to 1 if module has its own menus handler directory
+            'barcode' => 0,             // Set this to 1 if module has its own barcode directory
+            'models' => 0,              // Set this to 1 if module has its own models directory
+            'css' => '',                 // Set this to relative path of css if module has its own css file
+            'hooks' => '',              // Set here all hooks context managed by module
+            'workflow' => ''            // Set here all workflow context managed by module
+        );
 
         // Config pages. Put here list of php page names stored in admmin directory used to setup module.
         $this->config_page_url = array("index.php@".SPL_MOD_NAME);
@@ -106,7 +104,7 @@ class modSplash extends DolibarrModules
         // Dependencies
         // List of modules id that must be enabled if this module is enabled
         $this->depends = array(
-                "modCommande","modProduct","modCategorie","modStock","modBanque","modSociete","modFacture");
+            "modCommande","modProduct","modCategorie","modStock","modBanque","modSociete","modFacture");
         // List of modules id to disable if this one is disabled
         $this->requiredby = array();
         $this->phpmin = array(5,6);                                 // Min version of PHP required by module
@@ -125,35 +123,92 @@ class modSplash extends DolibarrModules
             // Main menu entries
             $this->menu = array();         // List of menus to add
     }
+        
+    /**
+     * Function called when module is enabled.
+     * The init function add constants, boxes, permissions
+     * and menus (defined in constructor) into Dolibarr database.
+     * It also creates data directories.
+     *
+     * @param mixed $options
+     * 
+     * @return     int             1 if OK, 0 if KO
+     */
+    public function init($options = '')
+    {
+        global $langs;
+
+        // Module Init
+        $sql = array();
+        $result =  $this->_init($sql, $options);
+
+        if ($result) {
+            // Display Welcome Message
+            setEventMessage($langs->trans("SPL_Welcome", SPL_MOD_VERSION), 'mesgs');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Function called when module is disabled.
+     * Remove from database constants, boxes and permissions from Dolibarr database.
+     * Data directories are not deleted.
+     *
+     * @param mixed $options
+     * 
+     * @return     int             1 if OK, 0 if KO
+     */
+    public function remove($options = '')
+    {
+        $sql = array();
+
+        return $this->_remove($sql, $options);
+    }
+
+    /**
+     * Create tables, keys and data required by module
+     * Files llx_table1.sql, llx_table1.key.sql llx_data.sql with create table, create keys
+     * and create data commands must be stored in directory /mymodule/sql/
+     * This function is called by this->init.
+     *
+     * @return     int             1 if OK, 0 if KO
+     * 
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
+    public function load_tables()
+    {
+        return 1;
+    }
 
     private function getConstants()
     {
         //====================================================================//
         // Constants
         return array(
-                //====================================================================//
-                // Splash Core Parameters
-                array('SPLASH_WS_ID',   'chaine',   '', 'Identifier on Splash Server',                      0),
-                array('SPLASH_WS_KEY',  'chaine',   '',  'Encryption Key for Splash Server communications',  0),
-                array('SPLASH_WS_EXPERT',  'int',   '',   'Use Expert Mode or Not',  0),
-                array('SPLASH_WS_METHOD',  'chaine',   'NuSOAP',  'Communication Method to Use',  0),
-                array('SPLASH_WS_HOST', 'chaine',   "https://www.splashsync.com/ws/soap",   'Splash Server Address',0),
-                //====================================================================//
-                // Splash Locals Parameters
-                array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),
-                array('SPLASH_LANGS',   'chaine',   serialize(array()), 'Others Languages to use for Splash Server Transactions', 0),
-                array('SPLASH_USER',    'chaine',   '',  'Local User to use for Splash Server Transactions', 0),
-                array('SPLASH_STOCK',   'chaine',   '',  'Local Warhouse to use for Splash Server Transactions', 0),
-                array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),
-                //====================================================================//
-                // Splash Order & Invoices Parameters
-                array('SPLASH_DETECT_TAX_NAME', 'chaine', '0', 'Use Tax Names to detect Vat Types', 0),
-                array('SPLASH_BANK',    'chaine',   '',  'Local Default Bank Account Id', 0),
-                array('SPLASH_DEFAULT_PAYMENT', 'chaine', 'CHQ', 'Local Default Payment Method', 0),
-                array('SPLASH_GUEST_ORDERS_ALLOW', 'chaine', '', 'Allow Import of Guests Orders & Invoices', 0),
-                array('SPLASH_GUEST_ORDERS_CUSTOMER', 'chaine', '', 'Select Guest Orders Customer', 0),
-                array('SPLASH_GUEST_ORDERS_EMAIL', 'chaine', '', 'Try to detect Customer Using Email ', 0),
-            );
+            //====================================================================//
+            // Splash Core Parameters
+            array('SPLASH_WS_ID',   'chaine',   '', 'Identifier on Splash Server',                      0),
+            array('SPLASH_WS_KEY',  'chaine',   '',  'Encryption Key for Splash Server communications',  0),
+            array('SPLASH_WS_EXPERT',  'int',   '',   'Use Expert Mode or Not',  0),
+            array('SPLASH_WS_METHOD',  'chaine',   'NuSOAP',  'Communication Method to Use',  0),
+            array('SPLASH_WS_HOST', 'chaine',   "https://www.splashsync.com/ws/soap",   'Splash Server Address',0),
+            //====================================================================//
+            // Splash Locals Parameters
+            array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),
+            array('SPLASH_LANGS',   'chaine',   serialize(array()), 'Others Languages to use for Splash Server Transactions', 0),
+            array('SPLASH_USER',    'chaine',   '',  'Local User to use for Splash Server Transactions', 0),
+            array('SPLASH_STOCK',   'chaine',   '',  'Local Warhouse to use for Splash Server Transactions', 0),
+            array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),
+            //====================================================================//
+            // Splash Order & Invoices Parameters
+            array('SPLASH_DETECT_TAX_NAME', 'chaine', '0', 'Use Tax Names to detect Vat Types', 0),
+            array('SPLASH_BANK',    'chaine',   '',  'Local Default Bank Account Id', 0),
+            array('SPLASH_DEFAULT_PAYMENT', 'chaine', 'CHQ', 'Local Default Payment Method', 0),
+            array('SPLASH_GUEST_ORDERS_ALLOW', 'chaine', '', 'Allow Import of Guests Orders & Invoices', 0),
+            array('SPLASH_GUEST_ORDERS_CUSTOMER', 'chaine', '', 'Select Guest Orders Customer', 0),
+            array('SPLASH_GUEST_ORDERS_EMAIL', 'chaine', '', 'Try to detect Customer Using Email ', 0),
+        );
     }
         
     private function getRights()
@@ -192,54 +247,5 @@ class modSplash extends DolibarrModules
         $index++;
             
         return $rights;
-    }
-        
-    /**
-     *      \brief      Function called when module is enabled.
-     *                  The init function add constants, boxes, permissions
-     *                  and menus (defined in constructor) into Dolibarr database.
-     *                  It also creates data directories.
-     *      \return     int             1 if OK, 0 if KO
-     */
-    public function init($options = '')
-    {
-        global $langs;
-
-        // Module Init
-        $sql = array();
-        $result =  $this->_init($sql, $options);
-
-        if ($result) {
-            // Display Welcome Message
-            setEventMessage($langs->trans("SPL_Welcome", SPL_MOD_VERSION), 'mesgs');
-        }
-
-        return $result;
-    }
-
-    /**
-     *      \brief      Function called when module is disabled.
-     *                  Remove from database constants, boxes and permissions from Dolibarr database.
-     *                  Data directories are not deleted.
-     *      \return     int             1 if OK, 0 if KO
-     */
-    public function remove($options = '')
-    {
-        $sql = array();
-        return $this->_remove($sql, $options);
-    }
-
-
-    /**
-     *      \brief      Create tables, keys and data required by module
-     *                  Files llx_table1.sql, llx_table1.key.sql llx_data.sql with create table, create keys
-     *                  and create data commands must be stored in directory /mymodule/sql/
-     *                  This function is called by this->init.
-     *      \return     int     <=0 if KO, >0 if OK
-         * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-     */
-    public function load_tables()
-    {
-        return 1;
     }
 }

@@ -41,7 +41,7 @@ class InterfaceSplash
     private $version;
     private $description;
     
-    /** @var null|string|array */
+    /** @var null|array|string */
     private $objectId;
     /** @var null|string */
     private $action;
@@ -157,7 +157,7 @@ class InterfaceSplash
      *
      * @param string $action Code de l'evenement
      * @param object $object Objet concerne
-     * @param User $user   Objet user
+     * @param User   $user   Objet user
      *
      * @return void
      *
