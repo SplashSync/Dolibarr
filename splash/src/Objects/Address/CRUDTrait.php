@@ -15,9 +15,9 @@
 
 namespace Splash\Local\Objects\Address;
 
-use User;
 use Contact;
 use Splash\Core\SplashCore      as Splash;
+use User;
 
 /**
  * Dolibarr Contacts Address CRUD Functions
