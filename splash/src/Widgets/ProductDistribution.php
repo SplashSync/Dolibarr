@@ -143,7 +143,7 @@ class ProductDistribution extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($params = null)
+    public function get($parameters = null)
     {
         //====================================================================//
         // Stack Trace
@@ -163,16 +163,16 @@ class ProductDistribution extends AbstractWidget
         // Build Data Blocks
         //====================================================================//
         
-        if (isset($params["mode"])
-                && in_array($params["mode"], array("Invoices", "InvoicesCount", "Orders", "OrdersCount"), true)) {
-            $this->mode = $params["mode"];
+        if (isset($parameters["mode"])
+                && in_array($parameters["mode"], array("Invoices", "InvoicesCount", "Orders", "OrdersCount"), true)) {
+            $this->mode = $parameters["mode"];
         }
         
-        if (isset($params["chart_type"]) && in_array($params["chart_type"], array("Bar", "Pie"), true)) {
-            $this->chartType = $params["chart_type"];
+        if (isset($parameters["chart_type"]) && in_array($parameters["chart_type"], array("Bar", "Pie"), true)) {
+            $this->chartType = $parameters["chart_type"];
         }
         
-        $this->importDates($params);
+        $this->importDates($parameters);
         $this->setupMode();
         
         if ("Bar" == $this->chartType) {

@@ -97,7 +97,7 @@ class Demo extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($params = null)
+    public function get($parameters = null)
     {
         //====================================================================//
         // Stack Trace
@@ -121,7 +121,7 @@ class Demo extends AbstractWidget
         //====================================================================//
         // Build Inputs Block
         //====================================================================//
-        $this->buildParametersBlock($params);
+        $this->buildParametersBlock($parameters);
         
         //====================================================================//
         // Build Inputs Block

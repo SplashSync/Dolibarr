@@ -103,7 +103,7 @@ class UpdatedCustomers extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($params = null)
+    public function get($parameters = null)
     {
         //====================================================================//
         // Stack Trace
@@ -126,7 +126,7 @@ class UpdatedCustomers extends AbstractWidget
         //====================================================================//
         // Build Disabled Block
         //====================================================================//
-        $this->maxItems = !empty($params["max"]) ? $params["max"] : 10;
+        $this->maxItems = !empty($parameters["max"]) ? $parameters["max"] : 10;
         $this->buildTableBlock();
         
         //====================================================================//

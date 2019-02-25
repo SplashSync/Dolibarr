@@ -96,7 +96,7 @@ class BankAccounts extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($params = null)
+    public function get($parameters = null)
     {
         //====================================================================//
         // Stack Trace
@@ -120,8 +120,8 @@ class BankAccounts extends AbstractWidget
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
-        $this->maxItems = !empty($params["max"]) ? $params["max"] : 10;
-        if ($params["compact"]) {
+        $this->maxItems = !empty($parameters["max"]) ? $parameters["max"] : 10;
+        if ($parameters["compact"]) {
             $this->buildSparkBlock();
         } else {
             $this->buildTableBlock();

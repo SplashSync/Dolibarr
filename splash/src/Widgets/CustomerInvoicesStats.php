@@ -84,7 +84,7 @@ class CustomerInvoicesStats extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($params = null)
+    public function get($parameters = null)
     {
         //====================================================================//
         // Stack Trace
@@ -104,7 +104,7 @@ class CustomerInvoicesStats extends AbstractWidget
         // Build Data Blocks
         //====================================================================//
         
-        $this->importDates($params);
+        $this->importDates($parameters);
         
         $this->buildMorrisBarBlock();
         

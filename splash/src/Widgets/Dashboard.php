@@ -86,7 +86,7 @@ class Dashboard extends AbstractWidget
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function get($params = null)
+    public function get($parameters = null)
     {
         //====================================================================//
         // Stack Trace
