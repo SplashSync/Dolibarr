@@ -148,12 +148,13 @@ class StatGraphs extends AbstractWidget
         // Build Data Blocks
         //====================================================================//
         
-        if (isset($parameters["mode"])
-                && in_array($parameters["mode"], array("CustomerInvoices", "CustomerOrders", "SupplierInvoices"), true)) {
+        $allowedModes = array("CustomerInvoices", "CustomerOrders", "SupplierInvoices");
+        if (isset($parameters["mode"]) && in_array($parameters["mode"], $allowedModes, true)) {
             $this->mode = $parameters["mode"];
         }
         
-        if (isset($parameters["chart_type"]) && in_array($parameters["chart_type"], array("Bar", "Line", "Area"), true)) {
+        $allowedTypes = array("Bar", "Line", "Area");
+        if (isset($parameters["chart_type"]) && in_array($parameters["chart_type"], $allowedTypes, true)) {
             $this->chartType = $parameters["chart_type"];
         }
         
