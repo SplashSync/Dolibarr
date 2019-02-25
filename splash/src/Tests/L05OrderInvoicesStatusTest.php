@@ -18,9 +18,9 @@ namespace Splash\Local\Tests;
 use Commande;
 use Facture;
 use Splash\Client\Splash;
-use Splash\Tests\Tools\ObjectsCase;
-use Splash\Local\Objects\Order;
 use Splash\Local\Objects\Invoice;
+use Splash\Local\Objects\Order;
+use Splash\Tests\Tools\ObjectsCase;
 
 /**
  * Local Test Suite - Verify Writing of Orders & Invoices Status

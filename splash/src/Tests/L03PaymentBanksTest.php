@@ -17,8 +17,8 @@ namespace Splash\Local\Tests;
 
 use Account;
 use Splash\Client\Splash;
-use Splash\Tests\Tools\ObjectsCase;
 use Splash\Components\FieldsFactory;
+use Splash\Tests\Tools\ObjectsCase;
 
 /**
  * Local Test Suite - Verify Mapping of Invoices Payments Lines to Selected Bank Accounts
@@ -32,15 +32,6 @@ class L03PaymentBanksTest extends ObjectsCase
     protected $in;
     protected $out;
     protected $object;
-    
-    /**
-     * @return     FieldsFactory
-     */
-    protected static function fieldsFactory()
-    {
-        return new FieldsFactory();
-        ;
-    }
     
     /**
      * @dataProvider paymentsTypesProvider
@@ -148,7 +139,7 @@ class L03PaymentBanksTest extends ObjectsCase
     /**
      * Setup Payment Method to Bank Account
      *
-     * @param string $paymentType
+     * @param string  $paymentType
      * @param Account $account
      *
      * @return Account
@@ -198,5 +189,14 @@ class L03PaymentBanksTest extends ObjectsCase
             array("Invoice",    "CB",     "DirectDebit"),
             array("Invoice",    "VAD",    "PayPal"),
         );
+    }
+    
+    /**
+     * @return FieldsFactory
+     */
+    protected static function fieldsFactory()
+    {
+        return new FieldsFactory();
+        ;
     }
 }

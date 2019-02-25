@@ -16,8 +16,8 @@
 namespace Splash\Local\Tests;
 
 use Splash\Client\Splash;
-use Splash\Tests\Tools\ObjectsCase;
 use Splash\Local\Local;
+use Splash\Tests\Tools\ObjectsCase;
 
 /**
  * Local Test Suite - Verify Acces to MultiCompany Objects
