@@ -189,7 +189,9 @@ class Dashboard extends AbstractWidget
     }
     
     /**
-     * @abstract    Read Late Actions Dashboard
+     * Read Late Actions Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getLateActions(&$dashboardlines)
     {
@@ -206,6 +208,8 @@ class Dashboard extends AbstractWidget
 
     /**
      * Read Customers Orders Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getCustomerOrders(&$dashboardlines)
     {
@@ -222,6 +226,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Suppliers Orders Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getSupplierOrders(&$dashboardlines)
     {
@@ -235,8 +241,11 @@ class Dashboard extends AbstractWidget
             $dashboardlines[] = $board->load_board($user);
         }
     }
+    
     /**
      * Read Suppliers Orders Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getOpenPropals(&$dashboardlines)
     {
@@ -255,6 +264,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Suppliers Orders Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getDelayedServices(&$dashboardlines)
     {
@@ -273,6 +284,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Customers Invoices Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getCustomersInvoices(&$dashboardlines)
     {
@@ -288,6 +301,8 @@ class Dashboard extends AbstractWidget
   
     /**
      * Read Supplier Invoices Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getSupplierInvoices(&$dashboardlines)
     {
@@ -303,6 +318,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Transactions Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getTransactionsDashboard(&$dashboardlines)
     {
@@ -321,6 +338,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Bank Wire Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getBankWire(&$dashboardlines)
     {
@@ -336,6 +355,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Bank Wire Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getMembers(&$dashboardlines)
     {
@@ -351,6 +372,8 @@ class Dashboard extends AbstractWidget
     
     /**
      * Read Expenses Dashboard
+     *
+     * @param array $dashboardlines
      */
     private function getExpenesDashboard(&$dashboardlines)
     {
