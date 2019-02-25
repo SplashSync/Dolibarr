@@ -234,7 +234,6 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
                 
-                
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
@@ -242,7 +241,6 @@ class Local implements LocalClassInterface
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
 
                 return array();
-                
             case "Multilangual":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
@@ -256,7 +254,6 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
 
                 return array();
-                
             case "MultiPrices":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
@@ -278,7 +275,6 @@ class Local implements LocalClassInterface
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
 
                 return array();
-                
             case "ExtraFields":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
@@ -293,7 +289,6 @@ class Local implements LocalClassInterface
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", true);
 
                 return array();
-
             case "Variants":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
@@ -308,7 +303,6 @@ class Local implements LocalClassInterface
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
 
                 return array();
-                
             case "GuestOrders":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
@@ -325,7 +319,6 @@ class Local implements LocalClassInterface
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
 
                 return array();
-                
             case "List":
                 return array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
         }
