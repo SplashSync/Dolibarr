@@ -505,7 +505,7 @@ trait PaymentsTrait
     /**
      * Write Given Fields
      *
-     * @param mixed  $methodType
+     * @param string $methodType
      *
      * @return string
      *
@@ -539,7 +539,7 @@ trait PaymentsTrait
     /**
      * Write Given Fields
      *
-     * @param mixed  $methodType
+     * @param string $methodType
      *
      * @return int
      *

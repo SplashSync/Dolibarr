@@ -15,8 +15,8 @@
 
 namespace Splash\Local\Objects\Invoice;
 
-use FactureLigne;
 use Facture;
+use FactureLigne;
 use Paiement;
 use Splash\Client\Splash;
 use Splash\Local\Objects\Invoice;
@@ -108,6 +108,7 @@ trait TriggersTrait
             $this->objectId = !empty($object->fk_facture)
                 ? (string) $object->fk_facture
                 : (string) $object->oldline->fk_facture;
+
             return;
         }
         
@@ -120,6 +121,7 @@ trait TriggersTrait
             //====================================================================//
             // Create Impacted Invoices Ids Array
             $this->objectId        = array_keys($amounts);
+
             return;
         }
         
