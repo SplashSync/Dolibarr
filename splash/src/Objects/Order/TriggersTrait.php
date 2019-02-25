@@ -27,7 +27,7 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Order
      *
-     * @param string             $action Code de l'evenement
+     * @param string $action Code de l'evenement
      * @param object $object Objet concerne
      *
      * @return bool Commit is required
@@ -101,6 +101,7 @@ trait TriggersTrait
             $this->objectId = !empty($object->fk_commande)
                 ? (string) $object->fk_commande
                 : (string) $object->oldline->fk_commande;
+
             return;
         }
         //====================================================================//
@@ -153,7 +154,5 @@ trait TriggersTrait
 
                 break;
         }
-        
-        return;
     }
 }
