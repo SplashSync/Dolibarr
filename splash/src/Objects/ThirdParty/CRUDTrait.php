@@ -17,8 +17,8 @@ namespace Splash\Local\Objects\ThirdParty;
 
 use Societe;
 use Splash\Core\SplashCore      as Splash;
-use User;
 use Splash\Local\Local;
+use User;
 
 /**
  * Dolibarr Contacts Address CRUD Functions

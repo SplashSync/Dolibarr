@@ -25,7 +25,7 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for ThirdParty
      *
-     * @param string  $action Code de l'evenement
+     * @param string $action Code de l'evenement
      * @param object $object Objet concerne
      *
      * @return bool Commit is required

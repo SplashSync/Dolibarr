@@ -143,6 +143,7 @@ trait MetaTrait
                 if (!empty($fieldData) && empty($this->object->code_fournisseur)) {
                     $this->setSimple("code_fournisseur", -1);
                 }
+
                 break;
             case 'client':
                 $this->setSimpleBit('client', 0, $fieldData);
