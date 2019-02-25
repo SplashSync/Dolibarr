@@ -1,35 +1,32 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects;
 
-use Splash\Core\SplashCore      as Splash;
-
 use Product as BaseProduct;
+use Splash\Core\SplashCore      as Splash;
 use Splash\Models\AbstractObject;
-use Splash\Models\Objects\IntelParserTrait;
-use Splash\Models\Objects\SimpleFieldsTrait;
-use Splash\Models\Objects\PricesTrait;
-use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ImagesTrait;
+use Splash\Models\Objects\IntelParserTrait;
+use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
+use Splash\Models\Objects\PricesTrait;
+use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
- * @abstract Dolibarr Product for SplashSync
+ * Dolibarr Product for SplashSync
  */
 class Product extends AbstractObject
 {
@@ -61,6 +58,12 @@ class Product extends AbstractObject
     use Product\StockTrait;                         // Access to Product Stocks
     use Product\MetaTrait;                          // Access to Products Metadatas
     use Product\VariantsTrait;                      // Access to Variants Fileds & Management Functions
+    
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public static $ExtraFieldsType    =  "product";
         
     //====================================================================//
     // Object Definition Parameters
@@ -85,12 +88,6 @@ class Product extends AbstractObject
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
     protected static $ICO     =  "fa fa-product-hunt";
-    
-    //====================================================================//
-    // ExtraFields Type
-    //====================================================================//
-    
-    public static $ExtraFieldsType    =  "product";
     
     //====================================================================//
     // Class Constructor

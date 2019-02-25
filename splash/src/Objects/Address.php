@@ -1,28 +1,25 @@
 <?php
-/**
- * This file is part of SplashSync Project.
+
+/*
+ *  This file is part of SplashSync Project.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- *  @author    Splash Sync <www.splashsync.com>
- *  @copyright 2015-2017 Splash Sync
- *  @license   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
- *
- **/
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
 
 namespace   Splash\Local\Objects;
 
 use Splash\Core\SplashCore      as Splash;
-
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\IntelParserTrait;
-use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\Models\Objects\ObjectsTrait;
+use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * Dolibarr Contacts Address for SplashSync
@@ -48,6 +45,12 @@ class Address extends AbstractObject
     use \Splash\Local\Objects\Address\CRUDTrait;
     use \Splash\Local\Objects\Address\CoreTrait;
     use \Splash\Local\Objects\Address\MainTrait;
+    
+    //====================================================================//
+    // ExtraFields Type
+    //====================================================================//
+    
+    public static $ExtraFieldsType    =  "socpeople";
         
     //====================================================================//
     // Object Definition Parameters
@@ -72,12 +75,6 @@ class Address extends AbstractObject
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
     protected static $ICO     =  "fa fa-envelope-o";
-    
-    //====================================================================//
-    // ExtraFields Type
-    //====================================================================//
-    
-    public static $ExtraFieldsType    =  "socpeople";
     
     //====================================================================//
     // Class Constructor
