@@ -25,7 +25,7 @@ if ('UpdatePayments' == $action) {
     //====================================================================//
     // Init DB Transaction
     $db->begin();
-    
+
     $errors = 0;
 
     //====================================================================//
@@ -36,7 +36,7 @@ if ('UpdatePayments' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Payment Methods to Bank Account Associations
     $form->load_cache_types_paiements();
@@ -55,7 +55,7 @@ if ('UpdatePayments' == $action) {
             }
         }
     }
-    
+
     //====================================================================//
     // DB Commit & Display User Message
     if (! $error) {

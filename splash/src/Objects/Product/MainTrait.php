@@ -16,7 +16,6 @@
 namespace   Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Local;
 
 /**
  * Dolibarr Products Main Fields
@@ -29,7 +28,7 @@ trait MainTrait
     protected function buildMainFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // PRODUCT SPECIFICATIONS
         //====================================================================//
@@ -39,31 +38,31 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("weight")
             ->Name($langs->trans("Weight"))
-            ->Description($langs->trans("Weight") . "(" . $langs->trans("WeightUnitkg") . ")")
+            ->Description($langs->trans("Weight")."(".$langs->trans("WeightUnitkg").")")
             ->MicroData("http://schema.org/Product", "weight");
-        
+
         //====================================================================//
         // Lenght
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("length")
             ->Name($langs->trans("Length"))
-            ->Description($langs->trans("Length") . "(" . $langs->trans("LengthUnitm") . ")")
+            ->Description($langs->trans("Length")."(".$langs->trans("LengthUnitm").")")
             ->MicroData("http://schema.org/Product", "depth");
-        
+
         //====================================================================//
         // Surface
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("surface")
             ->Name($langs->trans("Surface"))
-            ->Description($langs->trans("Surface") . "(" . $langs->trans("SurfaceUnitm2") . ")")
+            ->Description($langs->trans("Surface")."(".$langs->trans("SurfaceUnitm2").")")
             ->MicroData("http://schema.org/Product", "surface");
-        
+
         //====================================================================//
         // Volume
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("volume")
             ->Name($langs->trans("Volume"))
-            ->Description($langs->trans("Volume") . "(" . $langs->trans("VolumeUnitm3") . ")")
+            ->Description($langs->trans("Volume")."(".$langs->trans("VolumeUnitm3").")")
             ->MicroData("http://schema.org/Product", "volume");
     }
 
@@ -72,8 +71,6 @@ trait MainTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getMainFields($key, $fieldName)
     {
@@ -114,7 +111,7 @@ trait MainTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -123,8 +120,6 @@ trait MainTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setMainFields($fieldName, $fieldData)
     {
@@ -136,16 +131,16 @@ trait MainTrait
             //====================================================================//
             case 'weight':
                 $this->updateProductWeight($fieldData);
-                
+
                 break;
             case 'length':
                 if ((string)$fieldData !== (string) $this->convertLength(
                     $this->object->length,
                     $this->object->length_units
                 )) {
-                    $nomalized                      =   $this->normalizeLength($fieldData);
-                    $this->object->length           =   $nomalized->length;
-                    $this->object->length_units     =   $nomalized->length_units;
+                    $nomalized = $this->normalizeLength($fieldData);
+                    $this->object->length = $nomalized->length;
+                    $this->object->length_units = $nomalized->length_units;
                     $this->needUpdate();
                 }
 
@@ -155,9 +150,9 @@ trait MainTrait
                     $this->object->surface,
                     $this->object->surface_units
                 )) {
-                    $nomalized                      =   $this->normalizeSurface($fieldData);
-                    $this->object->surface          =   $nomalized->surface;
-                    $this->object->surface_units    =   $nomalized->surface_units;
+                    $nomalized = $this->normalizeSurface($fieldData);
+                    $this->object->surface = $nomalized->surface;
+                    $this->object->surface_units = $nomalized->surface_units;
                     $this->needUpdate();
                 }
 
@@ -167,9 +162,9 @@ trait MainTrait
                     $this->object->volume,
                     $this->object->volume_units
                 )) {
-                    $nomalized                      =   $this->normalizeVolume($fieldData);
-                    $this->object->volume           =   $nomalized->volume;
-                    $this->object->volume_units     =   $nomalized->volume_units;
+                    $nomalized = $this->normalizeVolume($fieldData);
+                    $this->object->volume = $nomalized->volume;
+                    $this->object->volume_units = $nomalized->volume_units;
                     $this->needUpdate();
                 }
 
@@ -179,13 +174,11 @@ trait MainTrait
         }
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Update Product Weight with Variants Management
      *
      * @param float $fieldData
-     *
-     * @return void
      */
     private function updateProductWeight($fieldData)
     {
@@ -197,9 +190,9 @@ trait MainTrait
         }
         //====================================================================//
         // Update Current Product Weight
-        $nomalized                      =   $this->normalizeWeight($fieldData);
-        $this->object->weight           =   $nomalized->weight;
-        $this->object->weight_units     =   $nomalized->weight_units;
+        $nomalized = $this->normalizeWeight($fieldData);
+        $this->object->weight = $nomalized->weight;
+        $this->object->weight_units = $nomalized->weight_units;
         $this->needUpdate();
         //====================================================================//
         // Update Current Product Weight

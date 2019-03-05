@@ -30,12 +30,12 @@ trait CRUDTrait
      * @var Product
      */
     protected $parent;
-    
+
     /**
      * @var null|ProductCombination
      */
     protected $combination;
-    
+
     //====================================================================//
     // Variants CRUD Functions
     //====================================================================//
@@ -49,14 +49,14 @@ trait CRUDTrait
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Identify Parent Product using Given Variants Ids
         $parentProduct = $this->identifyParent();
         if (!$parentProduct) {
             //====================================================================//
             // Create New Parent Product
-            $parentProduct = $this->createSimpleProduct($this->in["ref"] . "_base", $this->in["base_label"], false);
+            $parentProduct = $this->createSimpleProduct($this->in["ref"]."_base", $this->in["base_label"], false);
         }
         //====================================================================//
         // Create New Parent Product Failed
@@ -74,7 +74,7 @@ trait CRUDTrait
             // Store Parent Product
             $this->baseProduct = $parentProduct;
         }
-      
+
         return $variantProduct;
     }
 
@@ -86,7 +86,7 @@ trait CRUDTrait
     protected function updateVariantProduct()
     {
         global $user;
-        
+
         //====================================================================//
         // Update Base Product
         if ($this->isToUpdate("baseProduct")) {
@@ -97,11 +97,11 @@ trait CRUDTrait
                     "ErrLocalTpl",
                     __CLASS__,
                     __FUNCTION__,
-                    " Unable to Update Base Product (" . $this->baseProduct->id . ")"
+                    " Unable to Update Base Product (".$this->baseProduct->id.")"
                 ) ;
             }
         }
-        
+
         //====================================================================//
         // Update Product Combination
         if ($this->isToUpdate("combination") && (null !== $this->combination)) {
@@ -112,18 +112,18 @@ trait CRUDTrait
                     "ErrLocalTpl",
                     __CLASS__,
                     __FUNCTION__,
-                    " Unable to Update Product Combination (" . $this->combination->id . ")"
+                    " Unable to Update Product Combination (".$this->combination->id.")"
                 ) ;
             }
         }
-        
+
         return true;
     }
-        
+
     //====================================================================//
     // General Variants Functions
     //====================================================================//
-    
+
     /**
      * Check if Variants Module is Active
      *
@@ -133,7 +133,7 @@ trait CRUDTrait
     {
         return (bool) Local::getParameter("MAIN_MODULE_VARIANTS");
     }
-    
+
     /**
      * Check if Product is Variants
      *
@@ -143,7 +143,7 @@ trait CRUDTrait
     {
         return (null !== $this->combination);
     }
-    
+
     /**
      * Identify Parent Product Id
      *
@@ -153,7 +153,7 @@ trait CRUDTrait
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Check Variant Products Array
 //        if (!isset($this->in["variants"]) || !is_iterable($this->in["variants"])) {

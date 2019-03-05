@@ -15,8 +15,8 @@
 
 //====================================================================//
 // Splash Module Definitions
-include_once(dirname(dirname(dirname(__FILE__))) ."/_conf/defines.inc.php");
-        
+include_once(dirname(dirname(dirname(__FILE__)))."/_conf/defines.inc.php");
+
 use Splash\Client\Splash;
 use Splash\Components\Logger;
 
@@ -40,7 +40,7 @@ class InterfaceSplash
     private $family;
     private $version;
     private $description;
-    
+
     /** @var null|array|string */
     private $objectId;
     /** @var null|string */
@@ -48,10 +48,10 @@ class InterfaceSplash
     /** @var null|string */
     private $objectType;
     /** @var string */
-    private $login      =   "Unknown User";
+    private $login = "Unknown User";
     /** @var null|string */
-    private $comment    =   "Dolibarr Commit";
-    
+    private $comment = "Dolibarr Commit";
+
     /**
      * Class Constructor.
      *
@@ -60,20 +60,20 @@ class InterfaceSplash
     public function __construct($db)
     {
         global $langs;
-        
+
         //====================================================================//
         // Class Init
         $this->db = $db ;
-        $this->name         = preg_replace('/^Interface/i', '', get_class($this));
-        $this->family       = "Modules";
-        $this->description  = "Triggers of Splash module.";
-        $this->version      = 'dolibarr';
-        
+        $this->name = preg_replace('/^Interface/i', '', get_class($this));
+        $this->family = "Modules";
+        $this->description = "Triggers of Splash module.";
+        $this->version = 'dolibarr';
+
         //====================================================================//
         // Load traductions files requiredby by page
         $langs->load("errors");
     }
-        
+
     /**
      * Renvoi nom du lot de triggers
      *
@@ -83,7 +83,7 @@ class InterfaceSplash
     {
         return $this->name;
     }
-    
+
     /**
      * Renvoi descriptif du lot de triggers
      *
@@ -124,8 +124,6 @@ class InterfaceSplash
      * Read all log messages posted by OsWs and post it on dolibarr
      *
      * @param Logger $log Input Log Class
-     *
-     * @return void
      */
     public function postMessages(Logger $log)
     {
@@ -147,10 +145,10 @@ class InterfaceSplash
         if (!empty($log->deb)) {
             setEventMessage($log->GetHtml($log->deb), 'warnings');
         }
-        
+
         $log->CleanLog();
     }
-    
+
     /**
      * Fonction appelee lors du declenchement d'un evenement Dolibarr.
      * D'autres fonctions run_trigger peuvent etre presentes dans includes/triggers
@@ -159,23 +157,21 @@ class InterfaceSplash
      * @param object $object Objet concerne
      * @param User   $user   Objet user
      *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function run_trigger($action, $object, $user)
     {
-        Splash::log()->deb("Start of Splash Module Trigger Actions (Action=" . $action . ")");
-            
+        Splash::log()->deb("Start of Splash Module Trigger Actions (Action=".$action.")");
+
         //====================================================================//
         // Init Action Parameters
-        $this->objectType   = null;
-        $this->objectId     = null;
-        $this->action       = null;
-        $this->login        = ($user->login)?$user->login:"Unknown";
-        $this->comment      = null;
-        
-        $doCommit           = false;
+        $this->objectType = null;
+        $this->objectId = null;
+        $this->action = null;
+        $this->login = ($user->login)?$user->login:"Unknown";
+        $this->comment = null;
+
+        $doCommit = false;
 
         //====================================================================//
         // TRIGGER ACTION FOR : ThirdParty
@@ -205,7 +201,7 @@ class InterfaceSplash
         //====================================================================//
         // Log Trigger Action
         Splash::log()->deb("Trigger for action '${action}' launched by '".$this->login."' for Object id=".$this->objectId);
-        
+
         //====================================================================//
         // No Action To Perform
         if (!$doCommit) {
@@ -215,20 +211,18 @@ class InterfaceSplash
 
             return;
         }
-        
+
         //====================================================================//
         // Commit change to Splash Server
         $this->doSplashCommit();
-        
+
         //====================================================================//
         // Add Dolibarr Log Message
         dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
     }
- 
+
     /**
      * Publish Object Change to Splash Sync Server
-     *
-     * @return void
      */
     protected function doSplashCommit()
     {
@@ -237,7 +231,7 @@ class InterfaceSplash
         if ((null === $this->objectId) || (null === $this->objectType)) {
             return;
         }
-        
+
         //====================================================================//
         // Prevent Repeated Commit if Needed
         if ((SPL_A_UPDATE == $this->action) && Splash::object($this->objectType)->isLocked()) {
@@ -256,11 +250,11 @@ class InterfaceSplash
                 $this->login,               // Current User Login
                 (string) $this->comment     // Action Comment
             );
-            Splash::log()->deb("Change Commited (Action=" . $this->comment . ") Object => ". $this->objectType);
+            Splash::log()->deb("Change Commited (Action=".$this->comment.") Object => ".$this->objectType);
         } else {
-            Splash::log()->war("Commit Id Missing (Action=" . $this->comment . ") Object => ". $this->objectType);
+            Splash::log()->war("Commit Id Missing (Action=".$this->comment.") Object => ".$this->objectType);
         }
-        
+
         //====================================================================//
         //  Post User Messages
         $this->postMessages(Splash::log());

@@ -37,7 +37,7 @@ trait TriggersTrait
     protected function doInvoiceCommit($action, $object)
     {
         global $db;
-        
+
         //====================================================================//
         // Check if Commit is Requierd
         if (!$this->isInvoiceCommitRequired($action)) {
@@ -52,11 +52,11 @@ trait TriggersTrait
         // Store Global Action Parameters
         $this->setInvoiceObjectId($object);
         $this->setInvoiceParameters($action);
-        
+
         if (empty($this->objectId)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -97,8 +97,6 @@ trait TriggersTrait
      * Identify Order Id from Given Object
      *
      * @param object $object Objet concerne
-     *
-     * @return void
      */
     private function setInvoiceObjectId($object)
     {
@@ -111,7 +109,7 @@ trait TriggersTrait
 
             return;
         }
-        
+
         //====================================================================//
         // Identify Invoice Id from Payment Line
         if ($object instanceof Paiement) {
@@ -120,34 +118,32 @@ trait TriggersTrait
             $amounts = Invoice::getPaiementAmounts($object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array
-            $this->objectId        = array_keys($amounts);
+            $this->objectId = array_keys($amounts);
 
             return;
         }
-        
+
         //====================================================================//
         // Invoice Given
         if ($object instanceof Facture) {
             $this->objectId = (string) $object->id;
         }
     }
-    
+
     /**
      * Prepare Object Commit for Product
      *
      * @param string $action Code de l'evenement
      *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setInvoiceParameters($action)
     {
-        $this->objectType      = "Invoice";
+        $this->objectType = "Invoice";
         switch ($action) {
             case 'BILL_CREATE':
-                $this->action       = SPL_A_CREATE;
-                $this->comment      = "Invoice Created on Dolibarr";
+                $this->action = SPL_A_CREATE;
+                $this->comment = "Invoice Created on Dolibarr";
 
                 break;
             case 'BILL_MODIFY':
@@ -163,13 +159,13 @@ trait TriggersTrait
             case 'LINEBILL_INSERT':
             case 'LINEBILL_UPDATE':
             case 'LINEBILL_DELETE':
-                $this->action       = (Splash::object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
-                $this->comment      = "Invoice Updated on Dolibarr";
+                $this->action = (Splash::object("Invoice")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->comment = "Invoice Updated on Dolibarr";
 
                 break;
             case 'BILL_DELETE':
-                $this->action       = SPL_A_DELETE;
-                $this->comment      = "Invoice Deleted on Dolibarr";
+                $this->action = SPL_A_DELETE;
+                $this->comment = "Invoice Deleted on Dolibarr";
 
                 break;
         }

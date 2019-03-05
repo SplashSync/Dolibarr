@@ -28,7 +28,7 @@ trait StatusTrait
     protected function buildStatusFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Order Current Status
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -44,38 +44,36 @@ trait StatusTrait
             ->isNotTested()
                 ;
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getStatusFields($key, $fieldName)
     {
         if ('status' != $fieldName) {
             return;
         }
-        
+
         if (-1 == $this->object->statut) {
-            $this->out[$fieldName]  = "OrderCanceled";
+            $this->out[$fieldName] = "OrderCanceled";
         } elseif (0 == $this->object->statut) {
-            $this->out[$fieldName]  = "OrderDraft";
+            $this->out[$fieldName] = "OrderDraft";
         } elseif (1 == $this->object->statut) {
-            $this->out[$fieldName]  = "OrderProcessing";
+            $this->out[$fieldName] = "OrderProcessing";
         } elseif (2 == $this->object->statut) {
-            $this->out[$fieldName]  = "OrderInTransit";
+            $this->out[$fieldName] = "OrderInTransit";
         } elseif (3 == $this->object->statut) {
-            $this->out[$fieldName]  = "OrderDelivered";
+            $this->out[$fieldName] = "OrderDelivered";
         } else {
-            $this->out[$fieldName]  = "Unknown";
+            $this->out[$fieldName] = "Unknown";
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
@@ -90,7 +88,7 @@ trait StatusTrait
     private function setStatusFields($fieldName, $fieldData)
     {
         global $conf, $langs, $user;
-        
+
         if ('status' != $fieldName) {
             return true;
         }

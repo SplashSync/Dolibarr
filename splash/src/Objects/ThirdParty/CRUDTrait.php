@@ -37,7 +37,7 @@ trait CRUDTrait
         global $db;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Init Object
         $object = new Societe($db);
@@ -50,7 +50,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load ThirdParty (" . $objectId . ")."
+                " Unable to load ThirdParty (".$objectId.")."
             );
         }
         //====================================================================//
@@ -60,7 +60,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load ThirdParty (" . $objectId . ")."
+                " Unable to load ThirdParty (".$objectId.")."
             );
         }
 
@@ -77,7 +77,7 @@ trait CRUDTrait
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Check Customer Required Fields are given
         if (false == $this->isReadyForCreate()) {
@@ -96,10 +96,10 @@ trait CRUDTrait
 
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdParty. ");
         }
-        
+
         return $this->object;
     }
-    
+
     /**
      * Update Request Object
      *
@@ -115,7 +115,7 @@ trait CRUDTrait
         $this->updateFullName();
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         if (!$needed && !$this->isToUpdate()) {
             return $this->getObjectIdentifier();
         }
@@ -133,18 +133,18 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update ThirdParty (" . $this->object->id . ")"
+                " Unable to Update ThirdParty (".$this->object->id.")"
             );
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
 
         return $this->getObjectIdentifier();
     }
-    
+
     /**
      * Delete requested Object
      *
@@ -157,7 +157,7 @@ trait CRUDTrait
         global $db,$user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         if (null === $objectId) {
             return false;
         }
@@ -180,7 +180,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete ThirdParty (" . $objectId . ")."
+                " Unable to Delete ThirdParty (".$objectId.")."
             );
         }
         //====================================================================//
@@ -191,7 +191,7 @@ trait CRUDTrait
 
         return true;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -203,7 +203,7 @@ trait CRUDTrait
 
         return (string) $this->object->id;
     }
-    
+
     /**
      * Ensure Required Fields for Create are Available
      *
@@ -223,26 +223,26 @@ trait CRUDTrait
         if (empty($this->in["name"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "name");
         }
-        
+
         //====================================================================//
         // If Mandatory, Check Email is given
         if (Local::getParameter("SOCIETE_EMAIL_MANDATORY") && empty($this->in["email"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
         }
-        
+
         //====================================================================//
         // Check Required Id Prof are given
-        for ($i=1; $i<5; $i++) {
+        for ($i = 1; $i < 5; $i++) {
             //====================================================================//
             // If Mandatory, Check IdProf is given
             if (Local::getParameter("SOCIETE_IDPROF".$i."_MANDATORY") && empty($this->in["idprof".$i])) {
                 return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "idprof".$i);
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Setup Required Fields Before ThirdParty Creation
      */
@@ -251,14 +251,14 @@ trait CRUDTrait
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("name", $this->in["name"]);
-        
+
         //====================================================================//
         // Dolibarr infos
-        $this->object->client             = 1;        // 0=no customer, 1=customer, 2=prospect
-        $this->object->prospect           = 0;        // 0=no prospect, 1=prospect
-        $this->object->fournisseur        = 0;        // 0=no supplier, 1=supplier
-        $this->object->code_client        = "auto";   // If not erased, will be created by system
-        $this->object->code_fournisseur   = "auto";   // If not erased, will be created by system
+        $this->object->client = 1;        // 0=no customer, 1=customer, 2=prospect
+        $this->object->prospect = 0;        // 0=no prospect, 1=prospect
+        $this->object->fournisseur = 0;        // 0=no supplier, 1=supplier
+        $this->object->code_client = "auto";   // If not erased, will be created by system
+        $this->object->code_fournisseur = "auto";   // If not erased, will be created by system
 
         //====================================================================//
         // Optionnal Mandatory Fields
@@ -271,7 +271,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Required ThirdParty Id Profs
-        for ($i=1; $i<5; $i++) {
+        for ($i = 1; $i < 5; $i++) {
             //====================================================================//
             // If Mandatory, Check IdProf is given
             if (Local::getParameter("SOCIETE_IDPROF".$i."_MANDATORY")) {

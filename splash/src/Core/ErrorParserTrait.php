@@ -35,16 +35,16 @@ trait ErrorParserTrait
         //====================================================================//
         // Use Current Parser Object
         if (is_null($subject)) {
-            $subject    = isset($this->object) ? $this->object : null;
+            $subject = isset($this->object) ? $this->object : null;
         }
-        
+
         //====================================================================//
         // Catch Database Errors
         $this->catchDatabaseErrors($subject);
-                
+
         return $this->catchSimpleErrors($subject) && $this->catchArrayErrors($subject);
     }
-    
+
     /**
      * Catch Dolibarr Common Objects Simple Errors
      *
@@ -55,7 +55,7 @@ trait ErrorParserTrait
     private function catchSimpleErrors($subject = null)
     {
         global $langs;
-        
+
         //====================================================================//
         // Simple Error
         if (isset($subject->error) && !empty($subject->error) && is_scalar($subject->error)) {
@@ -68,10 +68,10 @@ trait ErrorParserTrait
                 html_entity_decode($langs->trans($subject->error))
             );
         }
-        
+
         return true;
     }
-    
+
     /**
      * Catch Dolibarr Common Objects Array Errors
      *
@@ -82,9 +82,9 @@ trait ErrorParserTrait
     private function catchArrayErrors($subject = null)
     {
         global $langs;
-        
-        $noError    =   true;
-        
+
+        $noError = true;
+
         //====================================================================//
         // Array of Errors
         if (!isset($subject->errors) || empty($subject->errors)) {
@@ -93,7 +93,7 @@ trait ErrorParserTrait
         $trace = (new Exception())->getTrace()[2];
         foreach ($subject->errors as $error) {
             if (is_scalar($error) && !empty($error)) {
-                $noError    =    Splash::log()->err(
+                $noError = Splash::log()->err(
                     "ErrLocalTpl",
                     $trace["class"],
                     $trace["function"],
@@ -101,21 +101,19 @@ trait ErrorParserTrait
                 );
             }
         }
-        
+
         return $noError;
     }
-    
+
     /**
      * Catch Dolibarr Common Objects Simple Errors
      *
      * @param object $subject Focus on a specific object
-     *
-     * @return void
      */
     private function catchDatabaseErrors($subject = null)
     {
         global $db;
-        
+
         //====================================================================//
         // DataBase Error
         if (isset($subject->error) && !empty($subject->error) && !empty($db->lasterror())) {

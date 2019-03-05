@@ -29,56 +29,56 @@ use User;
 class Local implements LocalClassInterface
 {
     use MultiCompanyTrait;
-    
+
     //====================================================================//
     // *******************************************************************//
     //  MANDATORY CORE MODULE LOCAL FUNCTIONS
     // *******************************************************************//
     //====================================================================//
-    
+
     /**
      * {@inheritdoc}
      */
     public function parameters()
     {
         global $langs;
-        
-        $parameters       =     array();
+
+        $parameters = array();
         //====================================================================//
         // Server Identification Parameters
-        $parameters["WsIdentifier"]         =   self::getParameter("SPLASH_WS_ID");
-        $parameters["WsEncryptionKey"]      =   self::getParameter("SPLASH_WS_KEY");
+        $parameters["WsIdentifier"] = self::getParameter("SPLASH_WS_ID");
+        $parameters["WsEncryptionKey"] = self::getParameter("SPLASH_WS_KEY");
         //====================================================================//
         // If Expert Mode => Allow Overide of Server Host Address
         if ((self::getParameter("SPLASH_WS_EXPERT")) && !empty(self::getParameter("SPLASH_WS_HOST"))) {
-            $parameters["WsHost"]           =   self::getParameter("SPLASH_WS_HOST");
+            $parameters["WsHost"] = self::getParameter("SPLASH_WS_HOST");
         }
         //====================================================================//
         // If Expert Mode => Allow Update of Communication Protocol
         if ((self::getParameter("SPLASH_WS_EXPERT")) && !empty(self::getParameter("SPLASH_WS_METHOD"))) {
-            $parameters["WsMethod"]           =   self::getParameter("SPLASH_WS_METHOD");
+            $parameters["WsMethod"] = self::getParameter("SPLASH_WS_METHOD");
         }
         //====================================================================//
         // Overide Module Parameters with Local User Selected Lang
         if (self::getParameter("SPLASH_LANG")) {
-            $parameters["DefaultLanguage"]      =   self::getParameter("SPLASH_LANG");
+            $parameters["DefaultLanguage"] = self::getParameter("SPLASH_LANG");
         //====================================================================//
         // Overide Module Parameters with Local Default System Lang
         } elseif (($langs) && $langs->getDefaultLang()) {
-            $parameters["DefaultLanguage"]      =   $langs->getDefaultLang();
+            $parameters["DefaultLanguage"] = $langs->getDefaultLang();
         }
         //====================================================================//
         // Overide Module Local Name in Logs
-        $parameters["localname"]        =   self::getParameter("MAIN_INFO_SOCIETE_NOM");
+        $parameters["localname"] = self::getParameter("MAIN_INFO_SOCIETE_NOM");
         //====================================================================//
         // Overide Webserver Path if MultiCompany Module Is Active
         if ($this->isMultiCompanyChildEntity()) {
-            $parameters["ServerPath"]        =   $this->getMultiCompanyServerPath();
+            $parameters["ServerPath"] = $this->getMultiCompanyServerPath();
         }
 
         return $parameters;
     }
-    
+
     /**
      * {@inheritdoc}
      *
@@ -96,13 +96,13 @@ class Local implements LocalClassInterface
             // This is Webservice Access. We must be able to go on it from outside.
             define('NOCSRFCHECK', 1);
         }
-        
+
         //====================================================================//
         // When Library is called in client mode ONLY
         //====================================================================//
 
         // NOTHING TO DO
-        
+
         //====================================================================//
         // When Library is called in both client & server mode
         //====================================================================//
@@ -113,29 +113,29 @@ class Local implements LocalClassInterface
             /** @codingStandardsIgnoreEnd */
             //====================================================================//
             // Initiate Dolibarr Global Envirement Variables
-            require_once($this->getDolibarrRoot() . "/master.inc.php");
-           
+            require_once($this->getDolibarrRoot()."/master.inc.php");
+
             //====================================================================//
             // Splash Modules Constant Definition
             dol_include_once("/splash/_conf/defines.inc.php");
-            
+
             //====================================================================//
             // Load Default User
             $this->loadLocalUser();
-            
+
             //====================================================================//
             // Load Default Language
             self::loadDefaultLanguage();
-                    
+
             //====================================================================//
             // Manage MultiCompany
             //====================================================================//
             $this->setupMultiCompany();
         }
-        
+
         return true;
     }
-           
+
     /**
      * {@inheritdoc}
      */
@@ -147,7 +147,7 @@ class Local implements LocalClassInterface
         //  Load Local Translation File
         Splash::translator()->load("main@local");
         $langs->load("errors");
-        
+
         //====================================================================//
         //  Verify - Server Core Infos
         if (!self::selfTestCore()) {
@@ -158,7 +158,7 @@ class Local implements LocalClassInterface
         if (!self::selfTestConfig()) {
             return false;
         }
-        
+
         Splash::log()->msg("MsgSelfTestOk");
 
         return true;
@@ -175,38 +175,38 @@ class Local implements LocalClassInterface
 
         //====================================================================//
         // Company Informations
-        $response->company          =   self::getParameter("MAIN_INFO_SOCIETE_NOM", "...");
-        $response->address          =   self::getParameter("MAIN_INFO_SOCIETE_ADDRESS", "...");
-        $response->zip              =   self::getParameter("MAIN_INFO_SOCIETE_ZIP", "...");
-        $response->town             =   self::getParameter("MAIN_INFO_SOCIETE_TOWN", "...");
-        $response->country          =   self::getParameter("MAIN_INFO_SOCIETE_COUNTRY", "...");
-        $response->www              =   self::getParameter("MAIN_INFO_SOCIETE_WEB", "...");
-        $response->email            =   self::getParameter("MAIN_INFO_SOCIETE_MAIL", "...");
-        $response->phone            =   self::getParameter("MAIN_INFO_SOCIETE_TEL", "...");
-        
+        $response->company = self::getParameter("MAIN_INFO_SOCIETE_NOM", "...");
+        $response->address = self::getParameter("MAIN_INFO_SOCIETE_ADDRESS", "...");
+        $response->zip = self::getParameter("MAIN_INFO_SOCIETE_ZIP", "...");
+        $response->town = self::getParameter("MAIN_INFO_SOCIETE_TOWN", "...");
+        $response->country = self::getParameter("MAIN_INFO_SOCIETE_COUNTRY", "...");
+        $response->www = self::getParameter("MAIN_INFO_SOCIETE_WEB", "...");
+        $response->email = self::getParameter("MAIN_INFO_SOCIETE_MAIL", "...");
+        $response->phone = self::getParameter("MAIN_INFO_SOCIETE_TEL", "...");
+
         //====================================================================//
         // Server Logo & Images
-        $response->icoraw           =   Splash::file()->readFileContents(DOL_DOCUMENT_ROOT . "/favicon.ico");
-        $response->logourl          =   "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
-        
+        $response->icoraw = Splash::file()->readFileContents(DOL_DOCUMENT_ROOT."/favicon.ico");
+        $response->logourl = "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
+
         //====================================================================//
         // Server Informations
-        $response->servertype       =   "Dolibarr ERP";
-        $response->serverurl        =   DOL_MAIN_URL_ROOT;
-        
+        $response->servertype = "Dolibarr ERP";
+        $response->serverurl = DOL_MAIN_URL_ROOT;
+
         //====================================================================//
         // Current Module Version
-        $response->moduleversion    =   SPL_MOD_VERSION;
-        
+        $response->moduleversion = SPL_MOD_VERSION;
+
         return $response;
     }
-    
+
     //====================================================================//
     // *******************************************************************//
     //  OPTIONNAl CORE MODULE LOCAL FUNCTIONS
     // *******************************************************************//
     //====================================================================//
-    
+
     /**
      * {@inheritdoc}
      *
@@ -217,7 +217,7 @@ class Local implements LocalClassInterface
         global $db, $conf;
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
         $ent = $conf->entity;
-        
+
         switch ($name) {
             case "Monolangual":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
@@ -233,7 +233,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
-                
+
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
@@ -267,7 +267,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '1', 'chaine', 0, '', $ent);
-                
+
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
@@ -281,7 +281,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-                
+
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", true);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", true);
@@ -295,7 +295,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
-                
+
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
@@ -311,7 +311,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-                
+
                 ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
                 ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
@@ -323,7 +323,7 @@ class Local implements LocalClassInterface
                 return array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -334,11 +334,11 @@ class Local implements LocalClassInterface
         return array();
         // CHANGE SOMETHING
     }
-    
+
     //====================================================================//
     //  Dolibarr Specific Tools
     //====================================================================//
-    
+
     /**
      * Compare Dolibarr version is lower/greater then version given.
      *
@@ -353,10 +353,10 @@ class Local implements LocalClassInterface
      */
     public static function dolVersionCmp($version)
     {
-        $current    = explode('.', DOL_VERSION);
-        $cmp        = explode('.', $version);
-        
-        if (($current["0"] == $cmp ["0"]) && ($current["1"] == $cmp ["1"]) &&  ($current["2"]   == $cmp ["2"])) {
+        $current = explode('.', DOL_VERSION);
+        $cmp = explode('.', $version);
+
+        if (($current["0"] == $cmp ["0"]) && ($current["1"] == $cmp ["1"]) && ($current["2"] == $cmp ["2"])) {
             return 0;
         }
         if (($current["0"] > $cmp ["0"])) {
@@ -380,11 +380,9 @@ class Local implements LocalClassInterface
 
         return 0;
     }
-    
+
     /**
      * Initiate Local Request User if not already defined
-     *
-     * @return void
      */
     public static function loadDefaultLanguage()
     {
@@ -395,13 +393,13 @@ class Local implements LocalClassInterface
         if (!empty(self::getParameter("SPLASH_LANG"))) {
             $langs->setDefaultLang(self::getParameter("SPLASH_LANG"));
         }
-        
+
         //====================================================================//
         // Load Required Splash Translation Files
         Splash::translator()->load("main@local");
         Splash::translator()->load("objects@local");
     }
-    
+
     /**
      * Safe Get of A Global Parameter
      *
@@ -416,13 +414,13 @@ class Local implements LocalClassInterface
 
         return isset($conf->global->{$key})  ? $conf->global->{$key} : $default;
     }
-        
+
     //====================================================================//
     // *******************************************************************//
     // Place Here Any SPECIFIC or COMMON Local Functions
     // *******************************************************************//
     //====================================================================//
-    
+
     /**
      * Execute Core Module SelfTest
      *
@@ -439,13 +437,13 @@ class Local implements LocalClassInterface
         if (!isset($conf->global->SPLASH_WS_ID) || empty($conf->global->SPLASH_WS_ID)) {
             return Splash::log()->err("ErrSelfTestNoWsId");
         }
-                
+
         //====================================================================//
         //  Verify - Server Encrypt Key Given
         if (!isset($conf->global->SPLASH_WS_KEY) || empty($conf->global->SPLASH_WS_KEY)) {
             return Splash::log()->err("ErrSelfTestNoWsKey");
         }
-        
+
         return true;
     }
 
@@ -463,31 +461,31 @@ class Local implements LocalClassInterface
         if (!isset($conf->global->SPLASH_USER) || ($conf->global->SPLASH_USER <= 0)) {
             return Splash::log()->err("ErrSelfTestNoUser");
         }
-        
+
         //====================================================================//
         //  Verify - Stock Selected
         if (!isset($conf->global->SPLASH_STOCK) || ($conf->global->SPLASH_STOCK <= 0)) {
             return Splash::log()->err("ErrSelfTestNoStock");
         }
-        
+
         //====================================================================//
         // Check if company name is defined (first install)
         if (empty($conf->global->MAIN_INFO_SOCIETE_NOM) || empty($conf->global->MAIN_INFO_SOCIETE_COUNTRY)) {
             return Splash::log()->err($langs->trans("WarningMandatorySetupNotComplete"));
         }
-        
+
         //====================================================================//
         // Check Version is Above 4.0
         if (self::dolVersionCmp("4.0.0") < 0) {
             return Splash::log()->err(
                 "Splash Module for Dolibarr require Dolibarr Version Above 4.0. "
-                    . "Please update your system before using Splash."
+                    ."Please update your system before using Splash."
             );
         }
-        
+
         return true;
     }
-    
+
     /**
      * Initiate Local Request User if not already defined
      *
@@ -496,18 +494,18 @@ class Local implements LocalClassInterface
     private function loadLocalUser()
     {
         global $conf,$db,$user;
-        
+
         //====================================================================//
         // CHECK USER ALREADY LOADED
         //====================================================================//
         if (isset($user->id) && !empty($user->id)) {
             return true;
         }
-        
+
         //====================================================================//
         // LOAD USER FROM DATABASE
         //====================================================================//
-        
+
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
@@ -525,16 +523,16 @@ class Local implements LocalClassInterface
         if (1 != $user->fetch($userId)) {
             Splash::log()->err("Local : Unable to Load Local User");
 
-            return Splash::log()->err("Local - Dolibarr Error : " . $user->error);
+            return Splash::log()->err("Local - Dolibarr Error : ".$user->error);
         }
-        
+
         //====================================================================//
         // Load Local User Rights
         if (!$user->all_permissions_are_loaded) {
             $user->getrights();
         }
     }
-    
+
     /**
      * Search for Dolibarr Root Folder in upper folders - Maximum 5 Levels
      *
@@ -549,13 +547,13 @@ class Local implements LocalClassInterface
         //====================================================================//
         // Start From Folder Above this module
         $rootFolder = dirname(dirname(dirname(__FILE__)));
-        for ($i=0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             //====================================================================//
             // Check if main.inc.phpo file exist
-            if (is_file($rootFolder . "/main.inc.php")) {
+            if (is_file($rootFolder."/main.inc.php")) {
                 return $rootFolder;
             }
-            
+
             //====================================================================//
             // Move one folder above
             $rootFolder = dirname($rootFolder);

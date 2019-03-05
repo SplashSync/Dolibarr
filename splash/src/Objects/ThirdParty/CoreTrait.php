@@ -25,14 +25,14 @@ trait CoreTrait
     private $firstname;
     private $lastname;
     private $name;
-            
+
     /**
      * Build Core Fields using FieldFactory
      */
     protected function buildCoreFields()
     {
         global $langs,$conf;
-        
+
         //====================================================================//
         // Company
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -52,7 +52,7 @@ trait CoreTrait
             ->isLogged()
             ->MicroData("http://schema.org/Person", "familyName")
             ->Association("firstname", "lastname");
-        
+
         //====================================================================//
         // Lastname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -61,7 +61,7 @@ trait CoreTrait
             ->isLogged()
             ->MicroData("http://schema.org/Person", "givenName")
             ->Association("firstname", "lastname");
-                
+
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -82,15 +82,13 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getCoreFields($key, $fieldName)
     {
         //====================================================================//
         // Read Company FullName => Firstname, Lastname - Compagny
         $fullname = $this->decodeFullName($this->object->name);
-        
+
         //====================================================================//
         // READ Fields
         switch ($fieldName) {
@@ -111,17 +109,15 @@ trait CoreTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setCoreFields($fieldName, $fieldData)
     {
@@ -147,7 +143,7 @@ trait CoreTrait
         }
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Check FullName Array and update if needed
      */
@@ -155,7 +151,7 @@ trait CoreTrait
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Get Current Values if Not Written
         $currentName = $this->decodeFullName($this->object->name);
@@ -180,11 +176,11 @@ trait CoreTrait
         $encodedFullName = $this->encodeFullName($this->firstname, $this->lastname, $this->name);
         $this->setSimple("name", $encodedFullName);
     }
-    
+
     //====================================================================//
     // Class Tooling Functions
     //====================================================================//
-    
+
     /**
      * Encode Full Name String using Firstname, Lastname & Compagny Name
      *
@@ -198,10 +194,10 @@ trait CoreTrait
     {
         //====================================================================//
         // Clean Input Data
-        $fullName   = (string) preg_replace('/[-,]/', '', trim($firstname));
-        $last       = preg_replace('/[-,]/', '', trim($lastname));
-        $comp       = preg_replace('/[-,]/', '', trim($company));
-        
+        $fullName = (string) preg_replace('/[-,]/', '', trim($firstname));
+        $last = preg_replace('/[-,]/', '', trim($lastname));
+        $comp = preg_replace('/[-,]/', '', trim($company));
+
         //====================================================================//
         // Encode Full Name
         if (!empty($last)) {
@@ -213,7 +209,7 @@ trait CoreTrait
 
         return $fullName;
     }
-    
+
     /**
      * Decode Firstname, Lastname & Compagny Name using Full Name String
      *
@@ -228,31 +224,31 @@ trait CoreTrait
         if (empty($fullName)) {
             return null;
         }
-        
+
         //====================================================================//
         // Init
         $result = array('name' => "", 'lastname' => "",'firstname' => ""  );
-        
+
         //====================================================================//
         // Detect Single Company Name
         if ((false == strpos($fullName, ' - ')) && (false == strpos($fullName, ', '))) {
-            $result['name']  =   $fullName;
+            $result['name'] = $fullName;
 
             return $result;
         }
         //====================================================================//
         // Detect Compagny Name
         if (false != ($pos = strpos($fullName, ' - '))) {
-            $result['name']     =   substr($fullName, $pos + 3);
-            $fullName           =   substr($fullName, 0, $pos);
+            $result['name'] = substr($fullName, $pos + 3);
+            $fullName = substr($fullName, 0, $pos);
         }
         //====================================================================//
         // Detect Last Name
         if (false != ($pos = strpos($fullName, ', '))) {
-            $result['lastname'] =   substr($fullName, $pos + 2);
-            $fullName           =   substr($fullName, 0, $pos);
+            $result['lastname'] = substr($fullName, $pos + 2);
+            $fullName = substr($fullName, 0, $pos);
         }
-        $result['firstname']         =   $fullName;
+        $result['firstname'] = $fullName;
 
         return $result;
     }

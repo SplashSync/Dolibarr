@@ -19,7 +19,6 @@ use Product;
 use ProductCombination;
 use ProductCombination2ValuePair;
 use Splash\Core\SplashCore as Splash;
-use Splash\Local\Services\AttributesManager;
 
 /**
  * Products Variants Manager
@@ -56,26 +55,24 @@ class VariantsManager
 
     /**
      * Service Constructor
-     *
-     * @return void
      */
     public static function init()
     {
         global $db;
-        
+
         if (isset(static::$combinations)) {
             return;
         }
-        
+
         //====================================================================//
         // Load Required Dolibarr Product Variants Classes
         dol_include_once("/variants/class/ProductCombination.class.php");
         static::$combinations = new ProductCombination($db);
-        
+
         dol_include_once("/variants/class/ProductCombination2ValuePair.class.php");
         static::$valuePair = new ProductCombination2ValuePair($db);
     }
-    
+
     /**
      * Fetch Product Combinations Array
      *
@@ -93,15 +90,15 @@ class VariantsManager
         if (isset(static::$combinationsCache[$fkParent])) {
             return static::$combinationsCache[$fkParent];
         }
-        
+
         //====================================================================//
         // Load from Db
         $variants = static::$combinations->fetchAllByFkProductParent($fkParent);
         static::$combinationsCache[$fkParent] = is_array($variants) ? $variants : array();
-        
+
         return static::$combinationsCache[$fkParent];
     }
-    
+
     /**
      * Check if Product has Combinations
      *
@@ -113,7 +110,7 @@ class VariantsManager
     {
         return !empty(self::getProductVariants($fkParent));
     }
-    
+
     /**
      * Fetch Product Combination Object
      *
@@ -124,7 +121,7 @@ class VariantsManager
     public static function getProductCombination($productId)
     {
         global $db;
-        
+
         //====================================================================//
         // Ensure Service Init
         self::init();
@@ -134,17 +131,17 @@ class VariantsManager
         if ($combination->fetchByFkProductChild($productId) < 0) {
             return null;
         }
-        
+
         //====================================================================//
         // Load Combination Attributes from Db if First Loading
         if (!isset(static::$attr2ValuesCache[$productId])) {
             $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
             static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
         }
-        
+
         return $combination;
     }
-    
+
     /**
      * Add Variant Product
      *
@@ -156,26 +153,26 @@ class VariantsManager
     public static function addProductCombination(Product $parentProduct, Product $childProduct)
     {
         global $db, $user;
-        
+
         //====================================================================//
         // Ensure Service Init
         self::init();
         //====================================================================//
         // Create New Product Combination Class
         $combination = new ProductCombination($db);
-        $combination->fk_product_parent         = $parentProduct->id;
-        $combination->fk_product_child          = $childProduct->id;
-        $combination->variation_price           = 0;
+        $combination->fk_product_parent = $parentProduct->id;
+        $combination->fk_product_child = $childProduct->id;
+        $combination->variation_price = 0;
         $combination->variation_price_percentage = false;
-        $combination->variation_weight          = 0;
+        $combination->variation_weight = 0;
         if ($combination->create($user) < 0) {
             return null;
         }
-        
+
         //====================================================================//
         // Setup Combination Attributes
         static::$attr2ValuesCache[$childProduct->id] = array();
-        
+
         return $combination;
     }
 
@@ -202,7 +199,7 @@ class VariantsManager
         if (!isset(static::$attr2ValuesCache[$productId])) {
             return array();
         }
-        
+
         //====================================================================//
         // Parse Combination Attributes to Details Array
         $result = array();
@@ -219,16 +216,16 @@ class VariantsManager
             //====================================================================//
             // Push to Details Array
             $result[] = array(
-                'combination'   =>  $combination,
-                'valuePair'     =>  $valuePair,
-                'attribute'     =>  $attribute,
-                'value'         =>  $attributeValue,
+                'combination' => $combination,
+                'valuePair' => $valuePair,
+                'attribute' => $attribute,
+                'value' => $attributeValue,
             );
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Update Product Combination Attributes from Ids Array
      *
@@ -266,10 +263,10 @@ class VariantsManager
         // Reload Load Product Combination Class
         $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
         static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
-       
+
         return true;
     }
-    
+
     /**
      * Update Product Combination Attributes 2 Value Pair from Ids Array
      *
@@ -283,7 +280,7 @@ class VariantsManager
     private static function setProductAttribute($combination, $attr2Value, $attributeId, $valueId)
     {
         global $db;
-        
+
         //====================================================================//
         // Combination Attribute Do Not Exists
         if (empty($attr2Value)) {
@@ -302,7 +299,7 @@ class VariantsManager
 
             return true;
         }
-        
+
         //====================================================================//
         // Combination Attribute Already Exists
         if (($attr2Value->fk_prod_attr != $attributeId)
@@ -310,8 +307,8 @@ class VariantsManager
             //====================================================================//
             // Delete Attribute Value from Db
             $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val";
-            $sql.= " WHERE fk_prod_combination = ". (int) $attr2Value->fk_prod_combination;
-            $sql.= " AND fk_prod_attr = ". (int) $attr2Value->fk_prod_attr;
+            $sql .= " WHERE fk_prod_combination = ".(int) $attr2Value->fk_prod_combination;
+            $sql .= " AND fk_prod_attr = ".(int) $attr2Value->fk_prod_attr;
             $db->query($sql);
             //====================================================================//
             // Update Attribute Value Parameters
@@ -329,7 +326,7 @@ class VariantsManager
                 );
             }
         }
-                        
+
         return true;
     }
 }

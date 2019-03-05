@@ -38,7 +38,7 @@ trait CRUDTrait
         global $db;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Loading Variant Parent Product is Forbidden!
         if (!$force && VariantsManager::hasProductVariants((int) $objectId)) {
@@ -56,7 +56,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Product (" . $objectId . ")."
+                " Unable to load Product (".$objectId.")."
             );
         }
         //====================================================================//
@@ -66,7 +66,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Product (" . $objectId . ")."
+                " Unable to load Product (".$objectId.")."
             );
         }
         //====================================================================//
@@ -76,7 +76,7 @@ trait CRUDTrait
             $this->baseProduct = new Product($db);
             $this->baseProduct->fetch($this->combination->fk_product_parent);
         }
-        
+
         return $object;
     }
 
@@ -90,7 +90,7 @@ trait CRUDTrait
         global $user, $langs;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Check Product Ref is given
         if (empty($this->in["ref"])) {
@@ -113,12 +113,12 @@ trait CRUDTrait
         if (isset($this->in["attributes"]) && !empty($this->in["attributes"])) {
             return $this->createVariantProduct();
         }
-        
+
         //====================================================================//
         // Create Simple Product
         return $this->createSimpleProduct($this->in["ref"], $this->in[$labelKey], true);
     }
-    
+
     /**
      * Update Request Object
      *
@@ -131,7 +131,7 @@ trait CRUDTrait
         global $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         if (!$needed) {
             Splash::log()->deb("Product Update not Needed");
 
@@ -151,7 +151,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Product (" . $this->object->id . ")"
+                " Unable to Update Product (".$this->object->id.")"
             ) ;
         }
         //====================================================================//
@@ -161,13 +161,13 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
 
         return $this->getObjectIdentifier();
     }
-    
+
     /**
      * Delete requested Object
      *
@@ -180,7 +180,7 @@ trait CRUDTrait
         global $db,$user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Object
         $object = new Product($db);
@@ -200,7 +200,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Product (" . $objectId . ")."
+                " Unable to Delete Product (".$objectId.")."
             );
         }
         //====================================================================//
@@ -227,7 +227,7 @@ trait CRUDTrait
 
         return true;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -239,7 +239,7 @@ trait CRUDTrait
 
         return (string) $this->object->id;
     }
-    
+
     /**
      * Create Simple Product
      *
@@ -254,7 +254,7 @@ trait CRUDTrait
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Init Object
         $this->object = new Product($db);
@@ -265,10 +265,10 @@ trait CRUDTrait
         $this->setSimple("weight", 0);
         //====================================================================//
         // Required For Dolibarr Below 3.6
-        $this->object->type        = 0;
+        $this->object->type = 0;
         //====================================================================//
         // Required For Dolibarr BarCode Module
-        $this->object->barcode     = -1;
+        $this->object->barcode = -1;
         //====================================================================//
         // Create Object In Database
         /** @var User $user */
@@ -277,7 +277,7 @@ trait CRUDTrait
 
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
         }
-        
+
         return $this->object;
     }
 }

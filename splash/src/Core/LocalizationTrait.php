@@ -33,7 +33,7 @@ trait LocalizationTrait
     protected function getCountryByCode($code)
     {
         global $db;
-        require_once DOL_DOCUMENT_ROOT . '/core/class/ccountry.class.php';
+        require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
         $pays = new \Ccountry($db);
         if ($pays->fetch(0, $code) > 0) {
             return $pays->id;
@@ -41,7 +41,7 @@ trait LocalizationTrait
 
         return false;
     }
-    
+
     /**
      * Search For State Dolibarr Id using State Code & Country Id
      *
@@ -55,15 +55,15 @@ trait LocalizationTrait
     protected function getStateByCode($stateCode, $countryId)
     {
         global $db;
-        
+
         if (empty($countryId)) {
             return false;
         }
-        
+
         //====================================================================//
         // Select State Id &œ Code
-        $sql =  "SELECT d.rowid as id, d.code_departement as code";
-        $sql .= " FROM ".MAIN_DB_PREFIX ."c_departements as d, ";
+        $sql = "SELECT d.rowid as id, d.code_departement as code";
+        $sql .= " FROM ".MAIN_DB_PREFIX."c_departements as d, ";
         if (Local::dolVersionCmp("3.7.0") >= 0) {
             $sql .= MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_country as p";
         } else {
@@ -74,18 +74,18 @@ trait LocalizationTrait
         $sql .= " WHERE d.fk_region=r.code_region and r.fk_pays=p.rowid";
         $sql .= " AND p.rowid = '".$countryId."'";
         $sql .= " AND d.code_departement = '".$stateCode."'";
-        
+
         //====================================================================//
         // Execute final request
         $resql = $db->query($sql);
         if (empty($resql)) {
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->lasterror());
         }
-        
+
         if (1 == $db->num_rows($resql)) {
             return $db->fetch_object($resql)->id;
         }
-                
+
         return false;
     }
 }

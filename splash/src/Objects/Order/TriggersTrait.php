@@ -41,16 +41,16 @@ trait TriggersTrait
         if (!$this->isOrderCommitRequired($action)) {
             return false;
         }
-        
+
         //====================================================================//
         // Commit Last Changes done On DataBase
         $db->Commit();
-        
+
         //====================================================================//
         // Store Global Action Parameters
         $this->setOrderObjectId($object);
         $this->setOrderParameters($action);
-        
+
         return true;
     }
 
@@ -85,13 +85,11 @@ trait TriggersTrait
             'COMMANDE_DELETE_CONTACT',
         ), true);
     }
-    
+
     /**
      * Identify Order Id from Given Object
      *
      * @param object $object Objet concerne
-     *
-     * @return void
      */
     private function setOrderObjectId($object)
     {
@@ -110,13 +108,11 @@ trait TriggersTrait
             $this->objectId = (string) $object->id;
         }
     }
-    
+
     /**
      * Prepare Object Commit for Product
      *
      * @param string $action Code de l'evenement
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -124,12 +120,12 @@ trait TriggersTrait
     {
         //====================================================================//
         // Store Global Action Parameters
-        $this->objectType      = "Order";
-        
+        $this->objectType = "Order";
+
         switch ($action) {
             case 'ORDER_CREATE':
-                $this->action       = SPL_A_CREATE;
-                $this->comment      = "Order Created on Dolibarr";
+                $this->action = SPL_A_CREATE;
+                $this->comment = "Order Created on Dolibarr";
 
                 break;
             case 'ORDER_VALIDATE':
@@ -144,13 +140,13 @@ trait TriggersTrait
             case 'LINEORDER_DELETE':
             case 'COMMANDE_ADD_CONTACT':
             case 'COMMANDE_DELETE_CONTACT':
-                $this->action       = (Splash::object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
-                $this->comment      = "Order Updated on Dolibarr";
+                $this->action = (Splash::object("Order")->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->comment = "Order Updated on Dolibarr";
 
                 break;
             case 'ORDER_DELETE':
-                $this->action       = SPL_A_DELETE;
-                $this->comment      = "Order Deleted on Dolibarr";
+                $this->action = SPL_A_DELETE;
+                $this->comment = "Order Deleted on Dolibarr";
 
                 break;
         }

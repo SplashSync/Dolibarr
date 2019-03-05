@@ -35,7 +35,7 @@ class Invoice extends AbstractObject
     use ObjectsTrait;
     use PricesTrait;
     use ListsTrait;
-    
+
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\LocalizationTrait;
@@ -45,7 +45,7 @@ class Invoice extends AbstractObject
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\CustomerTrait;
     use \Splash\Local\Core\MultiCompanyTrait;
-    
+
     // Dolibarr Invoices Traits
     use \Splash\Local\Objects\Invoice\ObjectsListTrait;
     use \Splash\Local\Objects\Invoice\CRUDTrait;
@@ -54,46 +54,46 @@ class Invoice extends AbstractObject
     use \Splash\Local\Objects\Invoice\ItemsTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
     use \Splash\Local\Objects\Invoice\StatusTrait;
-    
+
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
-    
-    public static $ExtraFieldsType    =  "facture";
-    
+
+    public static $ExtraFieldsType = "facture";
+
     /**
      * @var Facture
      */
     protected $object;
-    
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Object Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
 //    protected static    $DISABLED        =  True;
-    
+
     /**
      *  Object Name (Translated by Module)
      */
-    protected static $NAME            =  "Customer Invoice";
-    
+    protected static $NAME = "Customer Invoice";
+
     /**
      *  Object Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "Dolibarr Customers Invoice Object";
-    
+    protected static $DESCRIPTION = "Dolibarr Customers Invoice Object";
+
     /**
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO     =  "fa fa-money";
-    
+    protected static $ICO = "fa fa-money";
+
     //====================================================================//
     // Class Constructor
     //====================================================================//
-    
+
     /**
      * Class Constructor (Used only if localy necessary)
      */

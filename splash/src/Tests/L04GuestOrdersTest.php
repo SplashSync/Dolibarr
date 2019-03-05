@@ -34,7 +34,7 @@ class L04GuestOrdersTest extends ObjectsCase
      * @var array
      */
     private $Field;
-    
+
     /**
      * Test Objects Have Corrects Fields Definitions
      *
@@ -46,7 +46,7 @@ class L04GuestOrdersTest extends ObjectsCase
     public function testFieldsDefinitions($sequence, $objectType)
     {
         global $conf;
-        
+
         //====================================================================//
         //   Only For Orders & Invoices
         if (!in_array($objectType, array("Order", "Invoice"), true)) {
@@ -54,43 +54,43 @@ class L04GuestOrdersTest extends ObjectsCase
 
             return;
         }
-        
+
         $this->loadLocalTestSequence($sequence);
-        
+
         //====================================================================//
         //   Load Object Fields
-        $fields =   Splash::object($objectType)->fields();
+        $fields = Splash::object($objectType)->fields();
         $this->assertNotEmpty($fields);
-        
+
         //====================================================================//
         //   If Guest Mode not Active
         if (!$conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
             //====================================================================//
             //   Verify SocId Field
-            $socId  = $this->findField($fields, array("socid"));
+            $socId = $this->findField($fields, array("socid"));
             $this->assertNotEmpty($socId);
             $this->assertInstanceOf(ArrayObject::class, $socId);
             $this->assertTrue($socId->required);
             //====================================================================//
             //   Verify Email Field
             $this->assertEmpty($this->findField($fields, array("email")));
-            
+
             return;
         }
-        
+
         //====================================================================//
         //   If Guest Mode is Active
         //====================================================================//
 
         //====================================================================//
         //   Verify SocId Field
-        $socId  = $this->findField($fields, array("socid"));
+        $socId = $this->findField($fields, array("socid"));
         $this->assertNotEmpty($socId);
         $this->assertInstanceOf(ArrayObject::class, $socId);
         $this->assertFalse($socId->required);
         //====================================================================//
         //   Verify Email Field
-        $email  = $this->findField($fields, array("email"));
+        $email = $this->findField($fields, array("email"));
         $this->assertNotEmpty($email);
         $this->assertInstanceOf(ArrayObject::class, $email);
         $this->assertEquals(SPL_T_EMAIL, $email->type);
@@ -98,7 +98,7 @@ class L04GuestOrdersTest extends ObjectsCase
         $this->assertFalse($email->read);
         $this->assertTrue($email->write);
     }
-        
+
     /**
      * Test Create & Update Without Customer Email
      *
@@ -110,7 +110,7 @@ class L04GuestOrdersTest extends ObjectsCase
     public function testGuestWithoutEmailDetection($sequence, $objectType)
     {
         global $db, $conf;
-        
+
         //====================================================================//
         //   Safety Checks
         if (!$this->isAllowedGuestSequence($sequence, $objectType)) {
@@ -119,26 +119,26 @@ class L04GuestOrdersTest extends ObjectsCase
         //====================================================================//
         //   Disable Email Detection
         dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '0', 'chaine', 0, '', $conf->entity);
-        
+
         //====================================================================//
         //   Create Fake Order/Invoice Data
-        $this->Fields   =   $this->fakeFieldsList($objectType, false, true);
-        $this->Field    =   array($this->findField($this->Fields, array("socid")));
-        $fakeData       =   $this->fakeObjectData($this->Fields);
+        $this->Fields = $this->fakeFieldsList($objectType, false, true);
+        $this->Field = array($this->findField($this->Fields, array("socid")));
+        $fakeData = $this->fakeObjectData($this->Fields);
 
         //====================================================================//
         //   Setup Given
-        $givenData  =   $fakeData;
+        $givenData = $fakeData;
         unset($givenData["socid"]);
-        
+
         //====================================================================//
         //   Setup Expected Guest Customer Id
-        $expectedData   =   ObjectsHelper::encode("ThirdParty", $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER);
-        
+        $expectedData = ObjectsHelper::encode("ThirdParty", $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER);
+
         //====================================================================//
         //   Verify On Create Operation
         $objectId = $this->verifyCreate($objectType, $givenData, array("socid" => $expectedData));
-        
+
         //====================================================================//
         //   Verify On Update Operation => With Provided SocId
         $this->verifyUpdate($objectType, $objectId, $fakeData, array("socid" => $fakeData["socid"]));
@@ -162,7 +162,7 @@ class L04GuestOrdersTest extends ObjectsCase
     public function testGuestWithEmailDetection($sequence, $objectType)
     {
         global $db, $conf;
-        
+
         //====================================================================//
         //   Safety Checks
         if (!$this->isAllowedGuestSequence($sequence, $objectType)) {
@@ -171,27 +171,27 @@ class L04GuestOrdersTest extends ObjectsCase
         //====================================================================//
         //   Disable Email Detection
         dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $conf->entity);
-        
+
         //====================================================================//
         //   Create Fake Order/Invoice Data
-        $this->Fields   =   $this->fakeFieldsList($objectType, false, true);
-        $this->Field    =   array($this->findField($this->Fields, array("socid")));
-        $fakeData       =   $this->fakeObjectData($this->Fields);
-        
+        $this->Fields = $this->fakeFieldsList($objectType, false, true);
+        $this->Field = array($this->findField($this->Fields, array("socid")));
+        $fakeData = $this->fakeObjectData($this->Fields);
+
         //====================================================================//
         //   Create Fake Customer with Email
         $customerData = $this->createThirdPartyWithEmail();
-        
+
         //====================================================================//
         //   Setup Expected Guest Customer Id
-        $expectedData   =   ObjectsHelper::encode("ThirdParty", $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER);
+        $expectedData = ObjectsHelper::encode("ThirdParty", $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER);
 
         //====================================================================//
         //   Setup Given
-        $givenData  =   $fakeData;
+        $givenData = $fakeData;
         unset($givenData["socid"]);
-        $givenData["email"] =   $customerData["Email"];
-        
+        $givenData["email"] = $customerData["Email"];
+
         //====================================================================//
         //   Verify On Create Operation => Without SocId (but Email)
         $objectId = $this->verifyCreate($objectType, $givenData, array("socid" => $customerData["ObjectId"]));
@@ -213,7 +213,7 @@ class L04GuestOrdersTest extends ObjectsCase
         $givenData["email"] = null;
         $this->verifyUpdate($objectType, $objectId, $givenData, array("socid" => $expectedData));
     }
-    
+
     /**
      * Ensure We are in Correct ObjectType & Guest Mode is Allowed
      *
@@ -223,7 +223,7 @@ class L04GuestOrdersTest extends ObjectsCase
     public function isAllowedGuestSequence($sequence, $objectType)
     {
         global $conf;
-        
+
         //====================================================================//
         //   Only For Orders & Invoices
         if (!in_array($objectType, array("Order", "Invoice"), true)) {
@@ -241,10 +241,10 @@ class L04GuestOrdersTest extends ObjectsCase
 
             return false;
         }
-        
+
         return true;
     }
-    
+
     private function verifyCreate($objectType, $givenData, $expectedData)
     {
         //====================================================================//
@@ -253,7 +253,7 @@ class L04GuestOrdersTest extends ObjectsCase
         $objectId = Splash::object($objectType)->set(null, $givenData);
         $this->assertNotEmpty($objectId);
         $this->assertInternalType("string", $objectId);
-        
+
         //====================================================================//
         //   Verify Object Id Is Not Empty
         $this->assertNotEmpty($objectId, "Returned New Object Id is Empty");
@@ -264,14 +264,14 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Read Object Data
-        $objectData  =   Splash::object($objectType)
+        $objectData = Splash::object($objectType)
             ->get($objectId, array("socid"));
 
         //====================================================================//
         //   Verify Object Data are Ok
         $this->assertInternalType("array", $objectData);
         $this->compareDataBlocks($this->Field, $expectedData, $objectData, $objectType);
-        
+
         return $objectId;
     }
 
@@ -282,7 +282,7 @@ class L04GuestOrdersTest extends ObjectsCase
         Splash::object($objectType)->lock();
         $writeObjectId = Splash::object($objectType)->set($objectId, $givenData);
         $this->assertNotEmpty($objectId);
-        
+
         //====================================================================//
         //   Verify Object Id Is Not Empty
         $this->assertNotEmpty($writeObjectId, "Returned New Object Id is Empty");
@@ -293,23 +293,23 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Read Object Data
-        $objectData  =   Splash::object($objectType)
+        $objectData = Splash::object($objectType)
             ->get($objectId, array("socid"));
 
         //====================================================================//
         //   Verify Object Data are Ok
         $this->assertInternalType("array", $objectData);
         $this->compareDataBlocks($this->Field, $expectedData, $objectData, $objectType);
-        
+
         return $writeObjectId;
     }
-    
+
     private function createThirdPartyWithEmail()
     {
         //====================================================================//
         //   Create Fake ThirdParty Data
-        $fields   =   $this->fakeFieldsList("ThirdParty", false, true);
-        $fakeData       =   $this->fakeObjectData($fields);
+        $fields = $this->fakeFieldsList("ThirdParty", false, true);
+        $fakeData = $this->fakeObjectData($fields);
         $this->assertNotEmpty($fakeData['email']);
 
         //====================================================================//
@@ -320,8 +320,8 @@ class L04GuestOrdersTest extends ObjectsCase
         $this->assertInternalType("string", $objectId);
 
         return array(
-            "ObjectId"  =>  ObjectsHelper::encode("ThirdParty", $objectId),
-            "Email"     =>  $fakeData['email']
+            "ObjectId" => ObjectsHelper::encode("ThirdParty", $objectId),
+            "Email" => $fakeData['email']
         );
     }
 }

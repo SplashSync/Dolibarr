@@ -29,22 +29,22 @@ trait PricesTrait
     protected function buildPricesFields()
     {
         global $conf,$langs;
-        
+
         //====================================================================//
         // Product Selling Price
         $this->fieldsFactory()->create(SPL_T_PRICE)
             ->Identifier("price")
-            ->Name($langs->trans("SellingPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
+            ->Name($langs->trans("SellingPrice")." (".$conf->global->MAIN_MONNAIE.")")
             ->MicroData("http://schema.org/Product", "price")
             ->isLogged()
             ->isListed();
-        
+
         if (Local::dolVersionCmp("4.0.0") >= 0) {
             //====================================================================//
             // WholeSale Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
                 ->Identifier("cost_price")
-                ->Name($langs->trans("CostPrice") . " (" . $conf->global->MAIN_MONNAIE . ")")
+                ->Name($langs->trans("CostPrice")." (".$conf->global->MAIN_MONNAIE.")")
                 ->Description($langs->trans("CostPriceDescription"))
                 ->isLogged()
                 ->MicroData("http://schema.org/Product", "wholesalePrice");
@@ -56,13 +56,11 @@ trait PricesTrait
      *
      * @param null|string $key       Input List Key
      * @param string      $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getPricesFields($key, $fieldName)
     {
         global $conf;
-        
+
         //====================================================================//
         // READ Fields
         switch ($fieldName) {
@@ -77,15 +75,15 @@ trait PricesTrait
                             ? $conf->global->SPLASH_MULTIPRICE_LEVEL
                             : null;
                     $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
-                    $priceType  = $this->object->multiprices_base_type[$priceLevel];
-                    $priceHT    = (double) $this->object->multiprices[$priceLevel];
-                    $priceTTC   = (double) $this->object->multiprices_ttc[$priceLevel];
-                    $priceVAT   = (double) $this->object->multiprices_tva_tx[$priceLevel];
+                    $priceType = $this->object->multiprices_base_type[$priceLevel];
+                    $priceHT = (double) $this->object->multiprices[$priceLevel];
+                    $priceTTC = (double) $this->object->multiprices_ttc[$priceLevel];
+                    $priceVAT = (double) $this->object->multiprices_tva_tx[$priceLevel];
                 } else {
-                    $priceType  = $this->object->price_base_type;
-                    $priceHT    = (double) $this->object->price;
-                    $priceTTC   = (double) $this->object->price_ttc;
-                    $priceVAT   = (double) $this->object->tva_tx;
+                    $priceType = $this->object->price_base_type;
+                    $priceHT = (double) $this->object->price;
+                    $priceTTC = (double) $this->object->price_ttc;
+                    $priceVAT = (double) $this->object->tva_tx;
                 }
 
                 if ('TTC' === $priceType) {
@@ -106,7 +104,7 @@ trait PricesTrait
 
                 break;
             case 'cost_price':
-                    $priceHT    = (double) $this->object->cost_price;
+                    $priceHT = (double) $this->object->cost_price;
                     $this->out[$fieldName] = self::prices()
                         ->Encode($priceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
 
@@ -114,19 +112,17 @@ trait PricesTrait
             default:
                 return;
         }
-            
+
         if (null != $key) {
             unset($this->in[$key]);
         }
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setPricesFields($fieldName, $fieldData)
     {
@@ -149,7 +145,7 @@ trait PricesTrait
         }
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Write New Price
      *
@@ -160,7 +156,7 @@ trait PricesTrait
     private function setProductPrice($newPrice)
     {
         global $user, $conf;
-        
+
         //====================================================================//
         // Read Current Product Price (Via Out Buffer)
         $this->getPricesFields(null, "price");
@@ -169,7 +165,7 @@ trait PricesTrait
         if (self::prices()->Compare($this->out["price"], $newPrice)) {
             return true;
         }
-                        
+
         //====================================================================//
         // Perform Prices Update
         //====================================================================//
@@ -177,13 +173,13 @@ trait PricesTrait
         //====================================================================//
         // Update Based on TTC Price
         if ($newPrice["base"]) {
-            $price      = $newPrice["ttc"];
-            $priceBase  = "TTC";
+            $price = $newPrice["ttc"];
+            $priceBase = "TTC";
         //====================================================================//
         // Update Based on HT Price
         } else {
-            $price      = $newPrice["ht"];
-            $priceBase  = "HT";
+            $price = $newPrice["ht"];
+            $priceBase = "HT";
         }
 
         //====================================================================//
@@ -193,19 +189,19 @@ trait PricesTrait
         } else {
             $priceLevel = 0;
         }
-                    
+
         //====================================================================//
         // Update Variant Product Weight
         if ($this->isVariant() && !empty($this->baseProduct)) {
             return $this->setVariantPrice($price, $priceLevel);
         }
-        
+
         //====================================================================//
         // Commit Price Update on Product Object
         //====================================================================//
         // For compatibility with previous versions => V3.5.0 or Above
         $result = $this->object->updatePrice($price, $priceBase, $user, $newPrice["vat"], 0.0, $priceLevel);
-        
+
         //====================================================================//
         // Check potential Errors
         if ($result < 0) {
@@ -217,7 +213,7 @@ trait PricesTrait
 
         return true;
     }
-    
+
     /**
      * Write New Price
      *
@@ -229,13 +225,13 @@ trait PricesTrait
     private function setVariantPrice($price, $priceLevel)
     {
         global $conf;
-        
+
         //====================================================================//
         // If multiprices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $parentPrice= (double) $this->baseProduct->multiprices[$priceLevel];
+            $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
         } else {
-            $parentPrice    = (double) $this->baseProduct->price;
+            $parentPrice = (double) $this->baseProduct->price;
         }
         //====================================================================//
         // Update Price on Product Combination

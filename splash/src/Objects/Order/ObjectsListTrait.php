@@ -33,7 +33,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Prepare SQL request for reading in Database
         //====================================================================//
-        $sql    = "SELECT ";
+        $sql = "SELECT ";
         //====================================================================//
         // Select Database fields
         $sql .= " o.rowid as id,";                  // Object Id
@@ -46,36 +46,36 @@ trait ObjectsListTrait
         $sql .= " o.date_commande as date";         // Order date
         //====================================================================//
         // Select Database tables
-        $sql   .= " FROM " . MAIN_DB_PREFIX . "commande as o ";
+        $sql .= " FROM ".MAIN_DB_PREFIX."commande as o ";
         //====================================================================//
         // Entity Filter
-        $sql   .= " WHERE o.entity IN (".getEntity('commande', 1).")";
+        $sql .= " WHERE o.entity IN (".getEntity('commande', 1).")";
         //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
-            $sql   .= " AND ( ";
+            $sql .= " AND ( ";
             //====================================================================//
             // Search in Order Ref.
-            $sql   .= " LOWER( o.ref ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " LOWER( o.ref ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Order Internal Ref
-            $sql   .= " OR LOWER( o.ref_int ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( o.ref_int ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Order External Ref
-            $sql   .= " OR LOWER( o.ref_ext ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( o.ref_ext ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Order Customer Ref
-            $sql   .= " OR LOWER( o.ref_client ) LIKE LOWER( '%" . $filter ."%') ";
-            $sql   .= " ) ";
+            $sql .= " OR LOWER( o.ref_client ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " ) ";
         }
         //====================================================================//
         // Setup sortorder
         $sortfield = empty($params["sortfield"])?"o.rowid":$params["sortfield"];
         $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
-        $sql   .= " ORDER BY " . $sortfield . " " . $sortorder;
-        
+        $sql .= " ORDER BY ".$sortfield." ".$sortorder;
+
         return $sql;
     }
 }

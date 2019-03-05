@@ -25,8 +25,8 @@ use Splash\Local\Local;
  */
 trait MultiCompanyTrait
 {
-    private static $DEFAULT_ENTITY    =   1;
-    
+    private static $DEFAULT_ENTITY = 1;
+
     /**
      * Check if MultiCompany Module is Active
      *
@@ -36,7 +36,7 @@ trait MultiCompanyTrait
     {
         return (bool) Local::getParameter("MAIN_MODULE_MULTICOMPANY");
     }
-    
+
     /**
      * Ensure Dolibarr Object Access is Allowed from this Entity
      *
@@ -47,7 +47,7 @@ trait MultiCompanyTrait
     public function isMultiCompanyAllowed($subject = null)
     {
         global $langs;
-        
+
         //====================================================================//
         // Detect MultiCompany Module
         if (!$this->isMultiCompany()) {
@@ -61,9 +61,9 @@ trait MultiCompanyTrait
         //====================================================================//
         // Load Object Entity
         if (isset($subject->entity) && !empty($subject->entity)) {
-            $entityId   =   $subject->entity;
+            $entityId = $subject->entity;
         } else {
-            $entityId   =   $subject->getValueFrom($subject->table_element, $subject->id, "entity");
+            $entityId = $subject->getValueFrom($subject->table_element, $subject->id, "entity");
         }
         //====================================================================//
         // Check Object Entity
@@ -78,10 +78,10 @@ trait MultiCompanyTrait
                 html_entity_decode($langs->trans('ErrorForbidden'))
             );
         }
-        
+
         return true;
     }
-    
+
     /**
      * Check if Current Entity is Default Multicompany Entity
      *
@@ -91,7 +91,7 @@ trait MultiCompanyTrait
     {
         return $this->isMultiCompany() && ($this->getMultiCompanyEntityId() == static::$DEFAULT_ENTITY);
     }
-    
+
     /**
      * Check if Current Entity is a Child Multicompany Entity
      *
@@ -101,7 +101,7 @@ trait MultiCompanyTrait
     {
         return $this->isMultiCompany() && ($this->getMultiCompanyEntityId() != static::$DEFAULT_ENTITY);
     }
-    
+
     /**
      * Get Multicompany Current Entity Id
      *
@@ -122,7 +122,7 @@ trait MultiCompanyTrait
     protected function setupMultiCompany()
     {
         global $conf, $db, $user;
-        
+
         //====================================================================//
         // Detect MultiCompany Module
         if (!$this->isMultiCompany()) {
@@ -136,13 +136,13 @@ trait MultiCompanyTrait
         }
         //====================================================================//
         // Switch Entity
-        $conf->entity   =   (int)   Splash::input("Entity", INPUT_GET);
+        $conf->entity = (int)   Splash::input("Entity", INPUT_GET);
         $conf->setValues($db);
-        $user->entity   =   $conf->entity;
+        $user->entity = $conf->entity;
 
         return $conf->entity;
     }
-    
+
     /**
      * Get Web Path for Multicompany Server
      *
@@ -150,15 +150,15 @@ trait MultiCompanyTrait
      */
     protected function getMultiCompanyServerPath()
     {
-        $serverRoot     =   (string) realpath((string) Splash::input("DOCUMENT_ROOT"));
-        $prefix         =   $this->isMultiCompanyChildEntity() ? ("?Entity=" . $this->getMultiCompanyEntityId()) : "";
-        $fullPath       =   dirname(dirname(__DIR__)) . "/vendor/splash/phpcore/soap.php" . $prefix;
-        $relativePath   =   explode($serverRoot, $fullPath);
-        
+        $serverRoot = (string) realpath((string) Splash::input("DOCUMENT_ROOT"));
+        $prefix = $this->isMultiCompanyChildEntity() ? ("?Entity=".$this->getMultiCompanyEntityId()) : "";
+        $fullPath = dirname(dirname(__DIR__))."/vendor/splash/phpcore/soap.php".$prefix;
+        $relativePath = explode($serverRoot, $fullPath);
+
         if (is_array($relativePath) && isset($relativePath[1])) {
             return  $relativePath[1];
         }
-        
+
         return   null;
     }
 }

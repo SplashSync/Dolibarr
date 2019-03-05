@@ -22,7 +22,7 @@ require(is_file("../../main.inc.php") ? "../../main.inc.php" : "../../../main.in
 
 //====================================================================//
 // Splash Module Definitions
-include_once(dirname(dirname(__FILE__)) ."/_conf/defines.inc.php");
+include_once(dirname(dirname(__FILE__))."/_conf/defines.inc.php");
 
 //====================================================================//
 // Functions Dolibarr
@@ -44,14 +44,14 @@ $langs->load("splash@splash");
 //====================================================================//
 
 $form = new Form($db);
-        
+
 //====================================================================//
 // Get parameters
-$node       = GETPOST("node");
+$node = GETPOST("node");
 $ObjectType = GETPOST("ObjectType");
-$action     = GETPOST("action");
-$show       = GETPOST("show");
-    
+$action = GETPOST("action");
+$show = GETPOST("show");
+
 // Protection if not admin user
 if (!$user->admin) {
     accessforbidden();
@@ -60,7 +60,7 @@ if (!$user->admin) {
 //====================================================================//
 // Create Dolibarr Form Class
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
-$form   =   new Form($db);
+$form = new Form($db);
 
 //====================================================================//
 // *******************************************************************//
@@ -93,13 +93,13 @@ llxHeader($header, $langs->trans("Setup"));
 
 //====================================================================//
 // Display Page Title
-$title = $langs->trans("SPL_Name") . " - ". $langs->trans("Setup");
-$linkback= '<a href="' . DOL_URL_ROOT.'/admin/modules.php' . '" >' . $langs->trans("BackToModuleList") . '</a>';
+$title = $langs->trans("SPL_Name")." - ".$langs->trans("Setup");
+$linkback = '<a href="'.DOL_URL_ROOT.'/admin/modules.php'.'" >'.$langs->trans("BackToModuleList").'</a>';
 print_fiche_titre($title, $linkback, 'setup');
 
 //====================================================================//
 // Display Module Description
-print "</br>" . $langs->trans("SPL_Full_Desc") . "</br></br>";
+print "</br>".$langs->trans("SPL_Full_Desc")."</br></br>";
 
 //====================================================================//
 // Display Module Main Configuration Block

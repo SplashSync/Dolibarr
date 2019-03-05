@@ -28,11 +28,11 @@ class L03PaymentBanksTest extends ObjectsCase
     use \Splash\Models\Objects\ListsTrait;
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
-    
+
     protected $in;
     protected $out;
     protected $object;
-    
+
     /**
      * @dataProvider paymentsTypesProvider
      *
@@ -46,18 +46,18 @@ class L03PaymentBanksTest extends ObjectsCase
         //   Create Bank Account for this Payment Type
         $account = $this->createBankAccount($paymentType);
         $this->setupBankAccount($paymentType, $account);
-        
+
         //====================================================================//
         //   Create Fake Invoice Data
-        $fields         =   $this->fakeFieldsList($objectType, array(), true);
-        $fakeData       =   $this->fakeObjectData($fields);
-        
+        $fields = $this->fakeFieldsList($objectType, array(), true);
+        $fakeData = $this->fakeObjectData($fields);
+
         //====================================================================//
         //   Setup Tax Names
         foreach ($fakeData["payments"] as $index => $data) {
-            $fakeData["payments"][$index]["mode"]   =   $splashMethod;
+            $fakeData["payments"][$index]["mode"] = $splashMethod;
         }
-        
+
         //====================================================================//
         //   Execute Action Directly on Module
         Splash::object($objectType)->lock();
@@ -68,12 +68,12 @@ class L03PaymentBanksTest extends ObjectsCase
         //   Add Object Id to Created List
         $this->assertInternalType("string", $objectId);
         $this->addTestedObject($objectType, $objectId);
-        
+
         //====================================================================//
         //   Read Order Data
-        $objectData  =   Splash::object($objectType)
+        $objectData = Splash::object($objectType)
             ->get($objectId, array("mode@payments", "number@payments", "amount@payments"));
-        
+
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData["payments"] as $data) {
@@ -90,7 +90,7 @@ class L03PaymentBanksTest extends ObjectsCase
             $this->assertEquals($payment->code, $paymentType);
         }
     }
-    
+
     /**
      * Create a Dedicated Bank Account
      *
@@ -103,11 +103,11 @@ class L03PaymentBanksTest extends ObjectsCase
         global $db, $user;
 
         require_once(DOL_DOCUMENT_ROOT."/compta/bank/class/account.class.php");
-        
+
         //====================================================================//
         //   Load Bank Account for this Payment Type
         $account = new Account($db);
-        
+
         $account->fetch(0, $paymentType);
         if ($account->rowid) {
             $this->assertNotEmpty($account);
@@ -116,18 +116,18 @@ class L03PaymentBanksTest extends ObjectsCase
 
             return $account;
         }
-        
+
         //====================================================================//
         //   Create Bank Account for this Payment Type
-        $account->state_id      = 40;
-        $account->country_id    = 1;
-        $account->date_solde    = dol_now();
-        $account->entity        = 1;
-        $account->ref           = $paymentType;
-        $account->label         = $paymentType;
-        $account->courant       = \Account::TYPE_CURRENT;
+        $account->state_id = 40;
+        $account->country_id = 1;
+        $account->date_solde = dol_now();
+        $account->entity = 1;
+        $account->ref = $paymentType;
+        $account->label = $paymentType;
+        $account->courant = \Account::TYPE_CURRENT;
         $account->currency_code = "EUR";
-        
+
         $this->assertGreaterThan(0, $account->create($user, 0));
         $this->assertEquals($paymentType, $account->ref);
         $this->assertEquals($paymentType, $account->label);
@@ -135,7 +135,7 @@ class L03PaymentBanksTest extends ObjectsCase
 
         return $account;
     }
-    
+
     /**
      * Setup Payment Method to Bank Account
      *
@@ -149,29 +149,29 @@ class L03PaymentBanksTest extends ObjectsCase
         global $db, $conf, $user;
 
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
-        
+
         $this->assertNotEmpty($account->rowid);
-        
+
         //====================================================================//
         //   Identify Payment Method Id
-        $paymentMethodId    = $this->identifyPaymentType($paymentType);
+        $paymentMethodId = $this->identifyPaymentType($paymentType);
         $this->assertNotEmpty($paymentMethodId);
 
         //====================================================================//
         //   Activate Payment Method if Disabled
         require_once(DOL_DOCUMENT_ROOT."/compta/paiement/class/cpaiement.class.php");
-        $payment    =   new \Cpaiement($db);
+        $payment = new \Cpaiement($db);
         $payment->fetch($paymentMethodId);
         if (!$payment->active) {
             $payment->active = 1;
             $payment->update($user, false);
         }
-        
+
         //====================================================================//
         //   Map Payment Method to Dedicated Account
-        $parameterName  =    "SPLASH_BANK_FOR_".$paymentMethodId;
+        $parameterName = "SPLASH_BANK_FOR_".$paymentMethodId;
         dolibarr_set_const($db, $parameterName, (string) $account->rowid, 'chaine', 0, '', $conf->entity);
-        
+
         $this->assertEquals(
             $account->rowid,
             $conf->global->{$parameterName}
@@ -190,7 +190,7 @@ class L03PaymentBanksTest extends ObjectsCase
             array("Invoice",    "VAD",    "PayPal"),
         );
     }
-    
+
     /**
      * @return FieldsFactory
      */

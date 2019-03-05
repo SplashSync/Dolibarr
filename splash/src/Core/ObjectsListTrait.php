@@ -28,53 +28,53 @@ trait ObjectsListTrait
     public function objectsList($filter = null, $params = null)
     {
         global $db;
-        
+
         Splash::log()->deb("MsgLocalFuncTrace", __CLASS__, __FUNCTION__);
-        
+
         //====================================================================//
         // Init Data Array
         $data = array();
-        
+
         //====================================================================//
         // Prepare SQL request for reading in Database
-        $sql    = $this->getSqlBaseRequest($filter, $params);
-        
+        $sql = $this->getSqlBaseRequest($filter, $params);
+
         //====================================================================//
         // Execute request to get total number of row
-        $data["meta"]["total"]   =   $this->getSqlResultsCount($sql);
-        
+        $data["meta"]["total"] = $this->getSqlResultsCount($sql);
+
         //====================================================================//
         // Setup limits
-        $sql   .= $this->getSqlPagination(is_null($params) ? array() : $params);
-        
+        $sql .= $this->getSqlPagination(is_null($params) ? array() : $params);
+
         //====================================================================//
         // Execute final request
         $resql = $this->getSqlResults($sql);
         if (empty($resql)) {
             return array();
         }
-        
+
         //====================================================================//
         // Read Data and prepare Response Array
         $num = $db->num_rows($resql);           // Read number of results
-        $data["meta"]["current"]   =   $num;    // Store Current Number of results
-        
+        $data["meta"]["current"] = $num;    // Store Current Number of results
+
         $index = 0;
-        
+
         //====================================================================//
         // For each result, read information and add to $data
         while ($index < $num) {
             $data[$index] = (array) $db->fetch_object($resql);
             $index++;
         }
-        
+
         $db->free($resql);
-        
-        Splash::log()->deb("MsgLocalTpl", __CLASS__, __FUNCTION__, " " . $index . " Objects Found.");
-        
+
+        Splash::log()->deb("MsgLocalTpl", __CLASS__, __FUNCTION__, " ".$index." Objects Found.");
+
         return $data;
     }
- 
+
     /**
      * Get Results for Sql query
      *
@@ -86,7 +86,7 @@ trait ObjectsListTrait
     {
         global $db;
         $resql = $db->query($sql);
-        Splash::log()->deb("MsgLocalTpl", __CLASS__, __FUNCTION__, " SQL : " . $sql);
+        Splash::log()->deb("MsgLocalTpl", __CLASS__, __FUNCTION__, " SQL : ".$sql);
         if (empty($resql)) {
             Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->lasterror());
 
@@ -95,7 +95,7 @@ trait ObjectsListTrait
 
         return $resql;
     }
-    
+
     /**
      * Get Results Count for Sql query
      *
@@ -106,15 +106,15 @@ trait ObjectsListTrait
     private function getSqlResultsCount($sql)
     {
         global $db;
-        
+
         $resqlcount = $db->query($sql);
         if ($resqlcount) {
             return $db->num_rows($resqlcount);
         }
-        
+
         return 0;
     }
-    
+
     /**
      * Return Raw Sql Pagination
      *
@@ -132,10 +132,10 @@ trait ObjectsListTrait
         //====================================================================//
         // Setup limmits
         if (!empty($params["max"])) {
-            $sql   .= " LIMIT " . $params["max"];
+            $sql .= " LIMIT ".$params["max"];
         }
         if (!empty($params["offset"])) {
-            $sql   .= " OFFSET " . $params["offset"];
+            $sql .= " OFFSET ".$params["offset"];
         }
 
         return $sql;

@@ -12,7 +12,7 @@
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
-                    
+
 namespace   Splash\Local\Widgets;
 
 use Splash\Core\SplashCore      as Splash;
@@ -30,46 +30,46 @@ class UpdatedCustomers extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_M,
-        "Header"        =>  true,
-        "Footer"        =>  false
+    public static $OPTIONS = array(
+        "Width" => self::SIZE_M,
+        "Header" => true,
+        "Footer" => false
     );
-    
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Widget Disable Flag. Uncomment thius line to Override this flag and disable Object.
      */
 //    protected static    $DISABLED        =  True;
-    
+
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static $NAME            =  "BoxLastCustomers";
-    
+    protected static $NAME = "BoxLastCustomers";
+
     /**
      *  Widget Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "BoxTitleLastModifiedCustomers";
-    
+    protected static $DESCRIPTION = "BoxTitleLastModifiedCustomers";
+
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO            =  "fa fa-users";
-    
+    protected static $ICO = "fa fa-users";
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
 
-    private $maxItems   =   10;
-    
+    private $maxItems = 10;
+
     //====================================================================//
     // Class Main Functions
     //====================================================================//
-    
+
     /**
      * Class Constructor
      */
@@ -79,7 +79,7 @@ class UpdatedCustomers extends AbstractWidget
         // Load Default Language
         Local::loadDefaultLanguage();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -87,19 +87,19 @@ class UpdatedCustomers extends AbstractWidget
     {
         global $langs;
         $langs->load("admin");
-        
+
         //====================================================================//
         // Max Number of Entities
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("max")
             ->Name($langs->trans("MaxNbOfLinesForBoxes"))
             ->Description($langs->trans("BoxTitleLastModifiedCustomers"));
-      
+
         //====================================================================//
         // Publish Fields
         return $this->fieldsFactory()->publish();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -107,7 +107,7 @@ class UpdatedCustomers extends AbstractWidget
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Default Language
         Local::loadDefaultLanguage();
@@ -117,18 +117,18 @@ class UpdatedCustomers extends AbstractWidget
 
         $this->setTitle($this->getName());
         $this->setIcon($this->getIcon());
-        
+
         //====================================================================//
         // Build Disabled Block
         //====================================================================//
         $this->buildDisabledBlock();
-          
+
         //====================================================================//
         // Build Disabled Block
         //====================================================================//
         $this->maxItems = !empty($parameters["max"]) ? $parameters["max"] : 10;
         $this->buildTableBlock();
-        
+
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
@@ -166,7 +166,7 @@ class UpdatedCustomers extends AbstractWidget
 
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-        
+
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
@@ -177,67 +177,67 @@ class UpdatedCustomers extends AbstractWidget
     private function buildDisabledBlock()
     {
         global $langs, $user;
-        
+
         if (!$user->rights->societe->lire) {
             $langs->load("admin");
-            $contents   = array("warning"   => $langs->trans("PreviewNotAvailable"));
+            $contents = array("warning" => $langs->trans("PreviewNotAvailable"));
             //====================================================================//
             // Warning Block
             $this->blocksFactory()->addNotificationsBlock($contents);
         }
     }
-  
+
     /**
      * Block Building - Text Intro
      */
     private function buildTableBlock()
     {
         global $langs, $db, $user;
-        
+
         if (!$user->rights->societe->lire) {
             return;
         }
-        
+
         //====================================================================//
         // Execute SQL Request
         //====================================================================//
         $sql = "SELECT s.nom as name, s.rowid as socid, s.tms as modified, s.status as status";
-        $sql.= " FROM ".MAIN_DB_PREFIX."societe as s";
-        $sql.= " ORDER BY s.tms DESC";
-        $sql.= $db->plimit($this->maxItems, 0);
+        $sql .= " FROM ".MAIN_DB_PREFIX."societe as s";
+        $sql .= " ORDER BY s.tms DESC";
+        $sql .= $db->plimit($this->maxItems, 0);
         dol_syslog(get_class($this)."::loadLastModifiedUsers", LOG_DEBUG);
         $result = $db->query($sql);
-        
+
         //====================================================================//
         // Empty Contents
         //====================================================================//
         if ($db->num_rows($result) < 1) {
             $langs->load("admin");
-            $contents   = array("warning"   => $langs->trans("NoRecordedCustomers"));
+            $contents = array("warning" => $langs->trans("NoRecordedCustomers"));
             //====================================================================//
             // Warning Block
             $this->blocksFactory()->addNotificationsBlock($contents);
-            
+
             return;
         }
-        
+
         //====================================================================//
         // Build Table Contents
         //====================================================================//
         $langs->load('companies');
-        $contents   = array();
-        $num        = $db->num_rows($result);           // Read number of results
-        $index      = 0;
-        
+        $contents = array();
+        $num = $db->num_rows($result);           // Read number of results
+        $index = 0;
+
         while ($index < $num) {
             $value = $db->fetch_array($result);
-            $name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>' . $value["name"];
+            $name = '<i class="fa fa-building-o" aria-hidden="true">&nbsp;-&nbsp;</i>'.$value["name"];
             if ($value["status"]) {
                 $status = '<i class="fa fa-check-circle-o text-success" aria-hidden="true">&nbsp;';
-                $status.= $langs->trans("InActivity").'</i>';
+                $status .= $langs->trans("InActivity").'</i>';
             } else {
                 $status = '<i class="fa fa-times-circle-o text-danger" aria-hidden="true">&nbsp;';
-                $status.= $langs->trans("ActivityCeased").'</i>';
+                $status .= $langs->trans("ActivityCeased").'</i>';
             }
             $contents[] = array($name, $value["modified"], $status);
             $index++;
@@ -246,8 +246,8 @@ class UpdatedCustomers extends AbstractWidget
         // Build Table Options
         //====================================================================//
         $options = array(
-            "AllowHtml"         => true,
-            "HeadingRows"       => 0,
+            "AllowHtml" => true,
+            "HeadingRows" => 0,
         );
         //====================================================================//
         // Add Table Block

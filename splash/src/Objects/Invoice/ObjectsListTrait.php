@@ -33,7 +33,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Prepare SQL request for reading in Database
         //====================================================================//
-        $sql    = "SELECT ";
+        $sql = "SELECT ";
         //====================================================================//
         // Select Database fields
         $sql .= " f.rowid as id,";                  // Object Id
@@ -46,37 +46,37 @@ trait ObjectsListTrait
         $sql .= " f.datef as date";                 // Invoice date
         //====================================================================//
         // Select Database tables
-        $sql   .= " FROM " . MAIN_DB_PREFIX . "facture as f ";
-        
+        $sql .= " FROM ".MAIN_DB_PREFIX."facture as f ";
+
         //====================================================================//
         // Entity Filter
-        $sql   .= " WHERE f.entity IN (".getEntity('facture', 1).")";
-        
+        $sql .= " WHERE f.entity IN (".getEntity('facture', 1).")";
+
         //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
-            $sql   .= " AND ( ";
+            $sql .= " AND ( ";
             //====================================================================//
             // Search in Invoice Ref.
-            $sql   .= " LOWER( f.facnumber ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " LOWER( f.facnumber ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice Internal Ref
-            $sql   .= " OR LOWER( f.ref_int ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( f.ref_int ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice External Ref
-            $sql   .= " OR LOWER( f.ref_ext ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( f.ref_ext ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice Customer Ref
-            $sql   .= " OR LOWER( f.ref_client ) LIKE LOWER( '%" . $filter ."%') ";
-            $sql   .= " ) ";
+            $sql .= " OR LOWER( f.ref_client ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " ) ";
         }
         //====================================================================//
         // Setup sortorder
         $sortfield = empty($params["sortfield"])?"f.rowid":$params["sortfield"];
         $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
-        $sql   .= " ORDER BY " . $sortfield . " " . $sortorder;
+        $sql .= " ORDER BY ".$sortfield." ".$sortorder;
 
         return $sql;
     }

@@ -36,7 +36,7 @@ trait CoreTrait
             ->isListed()
             ->isLogged()
             ->isRequired();
-        
+
         //====================================================================//
         // Lastname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -45,14 +45,14 @@ trait CoreTrait
             ->MicroData("http://schema.org/Person", "givenName")
             ->isLogged()
             ->isListed();
-                
+
         //====================================================================//
         // Customer
         $this->fieldsFactory()->create((string) self::objects()->Encode("ThirdParty", SPL_T_ID))
             ->Identifier("socid")
             ->Name($langs->trans("Company"))
             ->MicroData("http://schema.org/Organization", "ID");
-        
+
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -63,14 +63,12 @@ trait CoreTrait
             ->isLogged()
             ->MicroData("http://schema.org/PostalAddress", "name");
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getCoreFields($key, $fieldName)
     {
@@ -95,7 +93,7 @@ trait CoreTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -104,8 +102,6 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setCoreFields($fieldName, $fieldData)
     {

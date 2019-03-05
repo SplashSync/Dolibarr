@@ -28,15 +28,15 @@ trait CoreTrait
     protected function buildCoreFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Setup Default Language of Fields Factory
         $this->fieldsFactory()->setDefaultLanguage($langs->getDefaultLang());
         //====================================================================//
         // Setup Some Labels Translation
-        $groupName      =   $langs->trans("Description");
-        $withVariants   =   self::isVariantEnabled() ? (" (+" . $langs->trans("VariantAttributes") . ")"): "";
-        
+        $groupName = $langs->trans("Description");
+        $withVariants = self::isVariantEnabled() ? (" (+".$langs->trans("VariantAttributes").")"): "";
+
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -46,13 +46,13 @@ trait CoreTrait
             ->MicroData("http://schema.org/Product", "model")
             ->isLogged()
             ->isRequired();
-        
+
         foreach ($this->getAvailableLanguages() as $isoCode) {
             //====================================================================//
             // Full Name (Label with Options)
             $this->fieldsFactory()->Create(SPL_T_VARCHAR)
                 ->Identifier("label")
-                ->Name($langs->trans("ProductLabel") . $withVariants)
+                ->Name($langs->trans("ProductLabel").$withVariants)
                 ->isListed(self::isDefaultLanguage($isoCode))
                 ->isLogged()
                 ->Group($groupName)
@@ -64,7 +64,7 @@ trait CoreTrait
                 //====================================================================//
                 // If Product Variation Module is Active => Required in Default Language
                 ->isRequired(!self::isVariantEnabled() && self::isDefaultLanguage($isoCode));
-            
+
             //====================================================================//
             // Product Description
             $this->fieldsFactory()
@@ -77,7 +77,7 @@ trait CoreTrait
                 ->MicroData("http://schema.org/Product", "description")
                 ->setMultilang($isoCode);
         }
-        
+
         //====================================================================//
         // Note
         $this->fieldsFactory()->create(SPL_T_TEXT)
@@ -93,8 +93,6 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getCoreFields($key, $fieldName)
     {
@@ -111,12 +109,12 @@ trait CoreTrait
             case 'description':
             case 'note':
                 $this->getSimple($fieldName);
-                
+
                 break;
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -125,13 +123,11 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setCoreFields($fieldName, $fieldData)
     {
         global $langs;
-        
+
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {

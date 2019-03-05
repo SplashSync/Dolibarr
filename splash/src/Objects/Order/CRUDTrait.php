@@ -37,7 +37,7 @@ trait CRUDTrait
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
@@ -55,7 +55,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Customer Order (" . $objectId . ")."
+                " Unable to load Customer Order (".$objectId.")."
             );
         }
         //====================================================================//
@@ -65,7 +65,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Customer Order (" . $objectId . ")."
+                " Unable to load Customer Order (".$objectId.")."
             );
         }
         $object->fetch_lines();
@@ -84,7 +84,7 @@ trait CRUDTrait
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Check Invoice Date is given
         if (empty($this->in["date"])) {
@@ -100,7 +100,7 @@ trait CRUDTrait
         $this->object = new Commande($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $dateTime   =   new DateTime($this->in["date"]);
+        $dateTime = new DateTime($this->in["date"]);
         $this->setSimple('date', $dateTime->getTimestamp());
         $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
@@ -116,7 +116,7 @@ trait CRUDTrait
 
         return $this->object;
     }
-    
+
     /**
      * Update Request Object
      *
@@ -129,7 +129,7 @@ trait CRUDTrait
         global $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         if (!$needed) {
             return $this->getObjectIdentifier();
         }
@@ -140,25 +140,25 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Product Object
-        if ($this->object->update($user)  <= 0) {
+        if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Customer Order (" . $this->object->id . ")"
+                " Unable to Update Customer Order (".$this->object->id.")"
             ) ;
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
 
         return $this->getObjectIdentifier();
     }
-    
+
     /**
      * Delete requested Object
      *
@@ -171,7 +171,7 @@ trait CRUDTrait
         global $db,$user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Object
         $object = new Commande($db);
@@ -191,7 +191,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Customer Order (" . $objectId . ")."
+                " Unable to Delete Customer Order (".$objectId.")."
             );
         }
         //====================================================================//
@@ -203,7 +203,7 @@ trait CRUDTrait
 
         return true;
     }
-    
+
     /**
      * {@inheritdoc}
      */

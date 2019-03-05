@@ -30,8 +30,8 @@ trait PaymentsTrait
     /**
      * @var array
      */
-    protected $payments           = array();
-    
+    protected $payments = array();
+
     /**
      * Fetch List of Invoices Payments Amounts
      *
@@ -48,8 +48,8 @@ trait PaymentsTrait
         //====================================================================//
         // SELECT SQL Request
         $sql = 'SELECT fk_facture, amount';
-        $sql.= ' FROM '.MAIN_DB_PREFIX.'paiement_facture';
-        $sql.= ' WHERE fk_paiement = '.$paiementId;
+        $sql .= ' FROM '.MAIN_DB_PREFIX.'paiement_facture';
+        $sql .= ' WHERE fk_paiement = '.$paiementId;
         $resql = $db->query($sql);
         //====================================================================//
         // SQL Error
@@ -60,30 +60,30 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Populate Object
-        for ($i=0; $i < $db->num_rows($resql); $i++) {
+        for ($i = 0; $i < $db->num_rows($resql); $i++) {
             $obj = $db->fetch_object($resql);
-            $amounts[$obj->fk_facture]    =   $obj->amount;
+            $amounts[$obj->fk_facture] = $obj->amount;
         }
         $db->free($resql);
 
         return $amounts;
     }
-     
+
     /**
      * Build Address Fields using FieldFactory
      */
     protected function buildPaymentsFields()
     {
         global $langs;
-        
+
         $listName = "" ;
-        
+
         //====================================================================//
         // Payment Line Payment Method
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("mode")
             ->InList("payments")
-            ->Name($listName . $langs->trans("PaymentMode"))
+            ->Name($listName.$langs->trans("PaymentMode"))
             ->MicroData("http://schema.org/Invoice", "PaymentMethod")
             ->AddChoice("ByBankTransferInAdvance", "By bank transfer in advance")
             ->AddChoice("CheckInAdvance", "Check in advance")
@@ -98,7 +98,7 @@ trait PaymentsTrait
         $this->fieldsFactory()->create(SPL_T_DATE)
             ->Identifier("date")
             ->InList("payments")
-            ->Name($listName . $langs->trans("Date"))
+            ->Name($listName.$langs->trans("Date"))
             ->MicroData("http://schema.org/PaymentChargeSpecification", "validFrom")
             ->Association("date@payments", "mode@payments", "amount@payments");
 
@@ -107,7 +107,7 @@ trait PaymentsTrait
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("number")
             ->InList("payments")
-            ->Name($listName . $langs->trans('Numero'))
+            ->Name($listName.$langs->trans('Numero'))
             ->MicroData("http://schema.org/Invoice", "paymentMethodId")
             ->Association("date@payments", "mode@payments", "amount@payments");
 
@@ -116,11 +116,11 @@ trait PaymentsTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("amount")
             ->InList("payments")
-            ->Name($listName . $langs->trans("PaymentAmount"))
+            ->Name($listName.$langs->trans("PaymentAmount"))
             ->MicroData("http://schema.org/PaymentChargeSpecification", "price")
             ->Association("date@payments", "mode@payments", "amount@payments");
     }
-    
+
     /**
      * Fetch Invoive Payments List (Done after Load)
      *
@@ -131,7 +131,7 @@ trait PaymentsTrait
     protected function loadPayments($invoiceId)
     {
         global $db;
-        
+
         //====================================================================//
         // Prepare SQL Request
         // Payments already done (from payment on this invoice)
@@ -139,11 +139,11 @@ trait PaymentsTrait
         $sql .= ' c.code as code, c.libelle as payment_label,';
         $sql .= ' pf.amount as amount,';
         $sql .= ' ba.rowid as baid, ba.ref, ba.label';
-        $sql .= ' FROM ' . MAIN_DB_PREFIX . 'c_paiement as c, ' ;
-        $sql .= MAIN_DB_PREFIX . 'paiement_facture as pf, ' . MAIN_DB_PREFIX . 'paiement as p';
-        $sql .= ' LEFT JOIN ' . MAIN_DB_PREFIX . 'bank as b ON p.fk_bank = b.rowid';
-        $sql .= ' LEFT JOIN ' . MAIN_DB_PREFIX . 'bank_account as ba ON b.fk_account = ba.rowid';
-        $sql .= ' WHERE pf.fk_facture = ' . $invoiceId . ' AND p.fk_paiement = c.id AND pf.fk_paiement = p.rowid';
+        $sql .= ' FROM '.MAIN_DB_PREFIX.'c_paiement as c, ' ;
+        $sql .= MAIN_DB_PREFIX.'paiement_facture as pf, '.MAIN_DB_PREFIX.'paiement as p';
+        $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'bank as b ON p.fk_bank = b.rowid';
+        $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'bank_account as ba ON b.fk_account = ba.rowid';
+        $sql .= ' WHERE pf.fk_facture = '.$invoiceId.' AND p.fk_paiement = c.id AND pf.fk_paiement = p.rowid';
         $sql .= ' ORDER BY p.rowid';
 
         //====================================================================//
@@ -167,21 +167,19 @@ trait PaymentsTrait
             $this->payments[$index] = $db->fetch_object($result);
             //====================================================================//
             // Detect Payment Method Type from Default Payment "known" methods
-            $this->payments[$index]->method =   $this->identifySplashPaymentMethod($this->payments[$index]->code);
+            $this->payments[$index]->method = $this->identifySplashPaymentMethod($this->payments[$index]->code);
             $index ++;
         }
         $db->free($result);
 
         return true;
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getPaymentsFields($key, $fieldName)
     {
@@ -236,8 +234,6 @@ trait PaymentsTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setPaymentLineFields($fieldName, $fieldData)
     {
@@ -274,7 +270,7 @@ trait PaymentsTrait
             // Try to delete Payment Line
             $payment->delete();
         }
-        
+
         unset($this->in[$fieldName]);
     }
 
@@ -300,7 +296,7 @@ trait PaymentsTrait
             $payment->fetch($paymentData->id);
             //====================================================================//
             // Check If Payment impact another Bill
-            $billArray  =   $payment->getBillsArray();
+            $billArray = $payment->getBillsArray();
             if (is_array($billArray) && count($billArray) > 1) {
                 continue;
             }
@@ -309,7 +305,7 @@ trait PaymentsTrait
             $payment->delete();
         }
     }
-    
+
     /**
      * Update a Payment line Data
      *
@@ -344,7 +340,7 @@ trait PaymentsTrait
 
         return $this->createPaymentItem($lineData);
     }
-    
+
     /**
      * Update an Exiting Payment
      *
@@ -356,49 +352,47 @@ trait PaymentsTrait
     private function updatePaymentItem($paymentId, $lineData)
     {
         global $db;
-        
+
         //====================================================================//
         // Load Payment Item
         $payment = new Paiement($db);
         $payment->fetch($paymentId);
-        
+
         //====================================================================//
         // Update Payment Values
         $this->updatePaymentItemDatas($payment, $lineData);
-        
+
         //====================================================================//
         // Check If Payment impact another Bill => Too Late to Delete & recreate this payment
         if (count($payment->getBillsArray()) > 1) {
             // Payment is Used by Another Bill => No Recreate
             return false;
         }
-            
+
         //====================================================================//
         // Check If Payment Amount are Different
         if (!array_key_exists("amount", $lineData)
-            || ($payment->amount ==  $lineData["amount"])) {
+            || ($payment->amount == $lineData["amount"])) {
             // Amounts are Similar => No Recreate
             return false;
         }
-         
+
         //====================================================================//
         // Try to delete Payment
         if ($payment->delete() <= 0) {
             // Unable to Delete Payment => No Recreate
             return false;
         }
-        
+
         // Payment Was Deleted => Recreate
         return true;
     }
-    
+
     /**
      * Update an Exiting Payment Datas
      *
      * @param Paiement $payment  Payment Item Id
      * @param array    $lineData Line Data Array
-     *
-     * @return void
      */
     private function updatePaymentItemDatas($payment, $lineData)
     {
@@ -409,7 +403,7 @@ trait PaymentsTrait
             $payment->update_date($lineData["date"]);
             $this->catchDolibarrErrors($payment);
         }
-            
+
         //====================================================================//
         // Update Payment Number
         if (array_key_exists("number", $lineData)
@@ -417,21 +411,21 @@ trait PaymentsTrait
             $payment->update_num($lineData["number"]);
             $this->catchDolibarrErrors($payment);
         }
-            
+
         //====================================================================//
         // Update Payment Method
         if (array_key_exists("mode", $lineData)) {
             //====================================================================//
             // Detect Payment Method Id
-            $newMethodId        = $this->identifyPaymentMethod($lineData["mode"]);
-            $currentMethodId    = $this->identifyPaymentType($payment->type_code);
+            $newMethodId = $this->identifyPaymentMethod($lineData["mode"]);
+            $currentMethodId = $this->identifyPaymentType($payment->type_code);
             if ($newMethodId && ($currentMethodId !== $newMethodId)) {
                 $payment->setValueFrom("fk_paiement", $newMethodId);
                 $this->catchDolibarrErrors($payment);
             }
         }
     }
-    
+
     /**
      * Update an Exiting Payment
      *
@@ -442,7 +436,7 @@ trait PaymentsTrait
     private function createPaymentItem($lineData)
     {
         global $db,$user;
-        
+
         //====================================================================//
         // Verify Minimal Fields Ar available
         if (!array_key_exists("mode", $lineData)
@@ -451,24 +445,24 @@ trait PaymentsTrait
                 || empty((double) $lineData["amount"])) {
             return false;
         }
-        
+
         $payment = new Paiement($db);
         //====================================================================//
         // Setup Payment Invoice Id
-        $payment->facid       =   $this->object->id;
+        $payment->facid = $this->object->id;
         //====================================================================//
         // Setup Payment Date
-        $payment->datepaye    =   $lineData["date"];
+        $payment->datepaye = $lineData["date"];
         //====================================================================//
         // Setup Payment Method
-        $payment->paiementid =   $this->identifyPaymentMethod($lineData["mode"]);
+        $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
         //====================================================================//
         // Setup Payment Refrence
-        $payment->num_paiement=   $lineData["number"];
+        $payment->num_paiement = $lineData["number"];
         //====================================================================//
         // Setup Payment Amount
-        $payment->amounts[$payment->facid]    = $lineData["amount"];
-        
+        $payment->amounts[$payment->facid] = $lineData["amount"];
+
         //====================================================================//
         // Create Payment Line
         if ($payment->create($user) <= 0) {
@@ -487,7 +481,7 @@ trait PaymentsTrait
             "",
             ""
         );
-        
+
         if ($result < 0) {
             Splash::log()->err(
                 "ErrLocalTpl",
@@ -498,10 +492,10 @@ trait PaymentsTrait
 
             return $this->catchDolibarrErrors($payment);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Write Given Fields
      *
@@ -535,7 +529,7 @@ trait PaymentsTrait
                 return "Unknown";
         }
     }
-    
+
     /**
      * Write Given Fields
      *
@@ -548,7 +542,7 @@ trait PaymentsTrait
     private function identifyPaymentMethod($methodType)
     {
         global $conf;
-        
+
         //====================================================================//
         // Detect Payment Method Type from Default Payment "known/standard" methods
         switch ($methodType) {
@@ -566,7 +560,7 @@ trait PaymentsTrait
             case "DirectDebit":
                 return $this->identifyPaymentType("CB");
         }
-        
+
         //====================================================================//
         // Return Default Payment Method or 0 (Default)
         if (isset($conf->global->SPLASH_DEFAULT_PAYMENT) && !empty($conf->global->SPLASH_DEFAULT_PAYMENT)) {
@@ -575,7 +569,7 @@ trait PaymentsTrait
 
         return $this->identifyPaymentType("VAD");
     }
-    
+
     /**
      * Identify Payment Method Id using Payment Method Code
      *
@@ -586,7 +580,7 @@ trait PaymentsTrait
     private function identifyPaymentType($paymentTypeCode)
     {
         global $db;
-        
+
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
@@ -608,7 +602,7 @@ trait PaymentsTrait
         // Default Payment Method Id
         return 0;
     }
-    
+
     /**
      * Identify Bank Accopunt Id using Splash Configuration
      *
@@ -619,14 +613,14 @@ trait PaymentsTrait
     private function identifyBankAccountId($paymentTypeId)
     {
         global $conf;
-        
+
         //====================================================================//
         // Detect Bank Account Id From Method Code
-        $parameterName   =   "SPLASH_BANK_FOR_".$paymentTypeId;
+        $parameterName = "SPLASH_BANK_FOR_".$paymentTypeId;
         if (isset($conf->global->{$parameterName}) && !empty($conf->global->{$parameterName})) {
             return $conf->global->{$parameterName};
         }
-        
+
         //====================================================================//
         // Default Payment Account Id
         return $conf->global->SPLASH_BANK;

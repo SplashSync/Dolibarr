@@ -24,13 +24,13 @@ echo Splash::log()->GetHtmlLog(true);
 //====================================================================//
 // List Objects
 //====================================================================//
-$list   =   Splash::objects();
+$list = Splash::objects();
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="pair">';
-echo '      <td width="60%">' . $langs->trans("SPL_ObjectsList") . '</td>';
+echo '      <td width="60%">'.$langs->trans("SPL_ObjectsList").'</td>';
 echo '      <td><ul>';
 foreach ($list as $value) {
-    echo "<li>" . $value . "</li>";
+    echo "<li>".$value."</li>";
 }
 echo '      </ul></td>';
 echo '  </tr>';
@@ -41,13 +41,13 @@ echo "</br>";
 //====================================================================//
 // List Widgets
 //====================================================================//
-$Widgets   =   Splash::Widgets();
+$Widgets = Splash::Widgets();
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="pair">';
-echo '      <td width="60%">' . $langs->trans("SPL_WidgetsList") . '</td>';
+echo '      <td width="60%">'.$langs->trans("SPL_WidgetsList").'</td>';
 echo '      <td><ul>';
 foreach ($Widgets as $value) {
-    echo "<li>" . $value . "</li>";
+    echo "<li>".$value."</li>";
 }
 echo '      </ul></td>';
 echo '  </tr>';
@@ -60,11 +60,11 @@ echo "</br>";
 //====================================================================//
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="impair">';
-echo '      <td width="60%">' . $langs->trans("SPL_SelfTest") . '</td>';
+echo '      <td width="60%">'.$langs->trans("SPL_SelfTest").'</td>';
 if (Splash::SelfTest()) {
-    echo '      <td>' . img_picto("Ok", "tick") . "&nbsp;" . $langs->trans("SPL_SelfTestOk") . '</td>';
+    echo '      <td>'.img_picto("Ok", "tick")."&nbsp;".$langs->trans("SPL_SelfTestOk").'</td>';
 } else {
-    echo '      <td>' . img_picto("Ko", "high") . "&nbsp;" . $langs->trans("SPL_SelfTestKo") . '</td>';
+    echo '      <td>'.img_picto("Ko", "high")."&nbsp;".$langs->trans("SPL_SelfTestKo").'</td>';
 }
 echo '  </tr>';
 echo '</tbody></table>';
@@ -76,11 +76,11 @@ echo "</br>";
 //====================================================================//
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="impair">';
-echo '      <td width="60%">' . $langs->trans("SPL_WsTestPing") . '</td>';
+echo '      <td width="60%">'.$langs->trans("SPL_WsTestPing").'</td>';
 if (Splash::Ping()) {
-    echo '      <td>' . img_picto("Ok", "tick") . "&nbsp;" . $langs->trans("SPL_WsPingOk") . '</td>';
+    echo '      <td>'.img_picto("Ok", "tick")."&nbsp;".$langs->trans("SPL_WsPingOk").'</td>';
 } else {
-    echo '      <td>' . img_picto("Ko", "high") . "&nbsp;" . $langs->trans("SPL_WsPingKo") . '</td>';
+    echo '      <td>'.img_picto("Ko", "high")."&nbsp;".$langs->trans("SPL_WsPingKo").'</td>';
 }
 echo '  </tr>';
 echo '</tbody></table>';
@@ -92,11 +92,11 @@ echo "</br>";
 //====================================================================//
 echo '<table class="noborder" width="100%"><tbody>';
 echo '  <tr class="pair">';
-echo '      <td width="60%">' . $langs->trans("SPL_WsTestConnect") . '</td>';
+echo '      <td width="60%">'.$langs->trans("SPL_WsTestConnect").'</td>';
 if (Splash::Connect()) {
-    echo '      <td>' . img_picto("Ok", "tick") . "&nbsp;" . $langs->trans("SPL_WsConnectOk") . '</td>';
+    echo '      <td>'.img_picto("Ok", "tick")."&nbsp;".$langs->trans("SPL_WsConnectOk").'</td>';
 } else {
-    echo '      <td>' . img_picto("Ko", "high") . "&nbsp;" . $langs->trans("SPL_WsConnectKo") . '</td>';
+    echo '      <td>'.img_picto("Ko", "high")."&nbsp;".$langs->trans("SPL_WsConnectKo").'</td>';
 }
 echo '  </tr>';
 echo '</tbody></table>';

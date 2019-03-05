@@ -28,7 +28,7 @@ trait StatusTrait
     protected function buildStatusFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Invoice Current Status
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -42,36 +42,34 @@ trait StatusTrait
             ->AddChoice("PaymentCanceled", $langs->trans("BillStatusCanceled"))
             ->isNotTested();
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getStatusFields($key, $fieldName)
     {
         if ('status' != $fieldName) {
             return;
         }
-        
+
         if (0 == $this->object->statut) {
-            $this->out[$fieldName]  = "PaymentDraft";
+            $this->out[$fieldName] = "PaymentDraft";
         } elseif (1 == $this->object->statut) {
-            $this->out[$fieldName]  = "PaymentDue";
+            $this->out[$fieldName] = "PaymentDue";
         } elseif (2 == $this->object->statut) {
-            $this->out[$fieldName]  = "PaymentComplete";
+            $this->out[$fieldName] = "PaymentComplete";
         } elseif (3 == $this->object->statut) {
-            $this->out[$fieldName]  = "PaymentCanceled";
+            $this->out[$fieldName] = "PaymentCanceled";
         } else {
-            $this->out[$fieldName]  = "Unknown";
+            $this->out[$fieldName] = "Unknown";
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
@@ -87,7 +85,7 @@ trait StatusTrait
     protected function setStatusFields($fieldName, $fieldData)
     {
         global $conf,$langs,$user;
-        
+
         if ('status' != $fieldName) {
             return true;
         }
@@ -111,7 +109,7 @@ trait StatusTrait
                 );
             }
         }
-        $initialStatut  =   $this->object->statut;
+        $initialStatut = $this->object->statut;
         switch ($fieldData) {
             //====================================================================//
             // Status Draft
@@ -196,7 +194,7 @@ trait StatusTrait
         if ($initialStatut != $this->object->statut) {
             $this->needUpdate();
         }
-        
+
         return true;
     }
 }

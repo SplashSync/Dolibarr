@@ -42,26 +42,26 @@ trait TriggersTrait
         if (!($object instanceof Societe)) {
             return false;
         }
-        
+
         //====================================================================//
         // Commit Last Changes done On DataBase
         $db->Commit();
-        
+
         //====================================================================//
         // Store Global Action Parameters
-        $this->objectType   = "ThirdParty";
-        $this->objectId     = (string) $object->id;
+        $this->objectType = "ThirdParty";
+        $this->objectId = (string) $object->id;
         if ('COMPANY_CREATE' == $action) {
-            $this->action    = SPL_A_CREATE;
-            $this->comment   = "Company Created on Dolibarr";
+            $this->action = SPL_A_CREATE;
+            $this->comment = "Company Created on Dolibarr";
         } elseif ('COMPANY_MODIFY' == $action) {
-            $this->action    = SPL_A_UPDATE;
-            $this->comment   = "Company Updated on Dolibarr";
+            $this->action = SPL_A_UPDATE;
+            $this->comment = "Company Updated on Dolibarr";
         } elseif ('COMPANY_DELETE' == $action) {
-            $this->action    = SPL_A_DELETE;
-            $this->comment   = "Company Deleted on Dolibarr";
+            $this->action = SPL_A_DELETE;
+            $this->comment = "Company Deleted on Dolibarr";
         }
-        
+
         return true;
     }
 

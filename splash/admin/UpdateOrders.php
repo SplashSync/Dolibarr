@@ -25,7 +25,7 @@ if ('UpdateOrderTaxMode' == $action) {
     $DetectTaxMode = GETPOST('DetectTax')?1:0;
     dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", $DetectTaxMode, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-    header("location:" . filter_input(INPUT_SERVER, "PHP_SELF"));
+    header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
 
 //====================================================================//
@@ -34,7 +34,7 @@ if ('UpdateOrderAllowGuest' == $action) {
     $AllowGuest = GETPOST('AllowGuest')?1:0;
     dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", $AllowGuest, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-    header("location:" . filter_input(INPUT_SERVER, "PHP_SELF"));
+    header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
 
 //====================================================================//
@@ -43,7 +43,7 @@ if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW && ('UpdateOrderEmail' == $action))
     $DetectEmail = GETPOST('DetectEmail')?1:0;
     dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", $DetectEmail, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
-    header("location:" . filter_input(INPUT_SERVER, "PHP_SELF"));
+    header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
 
 //====================================================================//
@@ -52,9 +52,9 @@ if ('UpdateOrder' == $action) {
     //====================================================================//
     // Init DB Transaction
     $db->begin();
-    
+
     $errors = 0;
-    
+
     //====================================================================//
     // Update Default Payment Mode Id
     $DfPayMode = GETPOST('paiementcode', 'alpha');
@@ -63,7 +63,7 @@ if ('UpdateOrder' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Default Guest Customer
     if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
@@ -74,7 +74,7 @@ if ('UpdateOrder' == $action) {
             }
         }
     }
-    
+
     //====================================================================//
     // DB Commit & Display User Message
     if (! $error) {

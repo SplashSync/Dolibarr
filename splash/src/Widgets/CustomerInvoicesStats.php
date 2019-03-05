@@ -12,7 +12,7 @@
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
-                    
+
 //====================================================================//
 // *******************************************************************//
 //                     SPLASH FOR DOLIBARR                            //
@@ -35,42 +35,42 @@ class CustomerInvoicesStats extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_M,
-        "Header"        =>  true,
-        "Footer"        =>  true,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
+    public static $OPTIONS = array(
+        "Width" => self::SIZE_M,
+        "Header" => true,
+        "Footer" => true,
+        'UseCache' => true,
+        'CacheLifeTime' => 60,
     );
 
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
-    protected static $DISABLED        =  true;
-    
+    protected static $DISABLED = true;
+
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static $NAME            =  "CustomersInvoices";
-    
+    protected static $NAME = "CustomersInvoices";
+
     /**
      *  Widget Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "CustomersInvoices";
-    
+    protected static $DESCRIPTION = "CustomersInvoices";
+
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO            =  "fa fa-line-chart";
+    protected static $ICO = "fa fa-line-chart";
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
-    
+
     /**
      * Class Constructor
      */
@@ -80,7 +80,7 @@ class CustomerInvoicesStats extends AbstractWidget
         // Load Default Language
         Local::loadDefaultLanguage();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -88,7 +88,7 @@ class CustomerInvoicesStats extends AbstractWidget
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Default Language
         Local::loadDefaultLanguage();
@@ -99,15 +99,15 @@ class CustomerInvoicesStats extends AbstractWidget
 
         $this->setTitle($this->getName());
         $this->setIcon($this->getIcon());
-        
+
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
-        
+
         $this->importDates($parameters);
-        
+
         $this->buildMorrisBarBlock();
-        
+
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
@@ -119,7 +119,7 @@ class CustomerInvoicesStats extends AbstractWidget
         // Publish Widget
         return $this->render();
     }
-    
+
     //====================================================================//
     // Overide Splash Functions
     //====================================================================//
@@ -151,29 +151,29 @@ class CustomerInvoicesStats extends AbstractWidget
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
-    
+
     /**
      * Read Widget Datas
      */
     private function getData()
     {
         global $db;
-        
+
         include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
-        
+
         $stats = new \FactureStats($db, 0, 'customer', 0);
-        
+
         //====================================================================//
         // Execute SQL Query
         //====================================================================//
-        
+
         $sql = "SELECT date_format(f.datef,'%".$this->GroupBy."') as step,";
-        $sql.= " COUNT(*) as nb, SUM(f.total) as total";
-        $sql.= " FROM ".$stats->from;
-        $sql.= " WHERE f.datef BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
-        $sql.= " AND ".$stats->where;
-        $sql.= " GROUP BY step";
-        $sql.= $db->order('step', 'ASC');
+        $sql .= " COUNT(*) as nb, SUM(f.total) as total";
+        $sql .= " FROM ".$stats->from;
+        $sql .= " WHERE f.datef BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql .= " AND ".$stats->where;
+        $sql .= " GROUP BY step";
+        $sql .= $db->order('step', 'ASC');
 
         $result = $db->query($sql);
 
@@ -181,40 +181,40 @@ class CustomerInvoicesStats extends AbstractWidget
         foreach (mysqli_fetch_all($result, MYSQLI_ASSOC) as $value) {
             $rawData[$value["step"]] = $value["total"];
         }
-        
+
         return $this->parseDatedData($rawData);
     }
-   
+
     /**
      *   @abstract     Block Building - Morris Bar Graph
      */
     private function buildMorrisBarBlock()
     {
         global $langs;
-        
+
         $langs->load("compta");
-        
+
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $data   = $this->getData();
+        $data = $this->getData();
 
         //====================================================================//
         // Chart Options
         $chartOptions = array(
-            "title"     => $langs->trans("SalesTurnover"),
-            "labels"            => array($langs->trans("AmountTTCShort")),
+            "title" => $langs->trans("SalesTurnover"),
+            "labels" => array($langs->trans("AmountTTCShort")),
         );
         //====================================================================//
         // Block Options
         $options = array(
-            "AllowHtml"         => true,
+            "AllowHtml" => true,
         );
         //====================================================================//
         // Add Table Block
         $this->blocksFactory()->addMorrisGraphBlock($data, "Bar", $chartOptions, $options);
     }
-    
+
     //====================================================================//
     // Class Tooling Functions
     //====================================================================//

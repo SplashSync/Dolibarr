@@ -28,7 +28,7 @@ trait AddressTrait
     protected function buildAddressFields()
     {
         global $langs;
-        
+
         $groupName = $langs->trans("CompanyAddress");
         //====================================================================//
         // Addess
@@ -49,7 +49,7 @@ trait AddressTrait
             ->AddOption('maxLength', "18")
             ->isLogged()
             ->isListed();
-        
+
         //====================================================================//
         // City Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -58,7 +58,7 @@ trait AddressTrait
             ->Group($groupName)
             ->isLogged()
             ->MicroData("http://schema.org/PostalAddress", "addressLocality");
-        
+
         //====================================================================//
         // Country Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -67,7 +67,7 @@ trait AddressTrait
             ->Group($groupName)
             ->isReadOnly()
             ->isListed();
-        
+
         //====================================================================//
         // Country ISO Code
         $this->fieldsFactory()->create(SPL_T_COUNTRY)
@@ -76,7 +76,7 @@ trait AddressTrait
             ->Group($groupName)
             ->isLogged()
             ->MicroData("http://schema.org/PostalAddress", "addressCountry");
-        
+
         //====================================================================//
         // State Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -84,7 +84,7 @@ trait AddressTrait
             ->Group($groupName)
             ->Name($langs->trans("State"))
             ->isReadOnly();
-        
+
         //====================================================================//
         // State code
         $this->fieldsFactory()->create(SPL_T_STATE)
@@ -94,14 +94,12 @@ trait AddressTrait
             ->MicroData("http://schema.org/PostalAddress", "addressRegion")
             ->isNotTested();
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getAddressFields($key, $fieldName)
     {
@@ -123,17 +121,15 @@ trait AddressTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setAddressFields($fieldName, $fieldData)
     {
@@ -156,7 +152,7 @@ trait AddressTrait
                 if (isset($this->in["country_code"])) {
                     $this->setSimple("country_id", $this->getCountryByCode($this->in["country_code"]));
                 }
-                $stateId    =   $this->getStateByCode($fieldData, $this->object->country_id);
+                $stateId = $this->getStateByCode($fieldData, $this->object->country_id);
                 $this->setSimple("state_id", $stateId);
 
                 break;

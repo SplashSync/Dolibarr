@@ -28,14 +28,14 @@ trait ContactsTrait
     protected function buildContactsFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Billing Address
         $this->fieldsFactory()->create((string) self::objects()->Encode("Address", SPL_T_ID))
             ->Identifier("BILLING")
             ->Name($langs->trans("TypeContact_commande_external_BILLING"))
             ->MicroData("http://schema.org/Order", "billingAddress");
-        
+
         //====================================================================//
         // Shipping Address
         $this->fieldsFactory()->create((string) self::objects()->Encode("Address", SPL_T_ID))
@@ -43,14 +43,12 @@ trait ContactsTrait
             ->Name($langs->trans("TypeContact_commande_external_SHIPPING"))
             ->MicroData("http://schema.org/Order", "orderDelivery");
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getContactsFields($key, $fieldName)
     {
@@ -59,7 +57,7 @@ trait ContactsTrait
         switch ($fieldName) {
             case 'SHIPPING':
             case 'BILLING':
-                $contactsArray   =  $this->object->liste_contact(-1, 'external', 1, $fieldName);
+                $contactsArray = $this->object->liste_contact(-1, 'external', 1, $fieldName);
                 if (is_array($contactsArray) && !empty($contactsArray)) {
                     $this->out[$fieldName] = self::objects()->Encode("Address", array_shift($contactsArray));
                 } else {
@@ -70,7 +68,7 @@ trait ContactsTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -79,8 +77,6 @@ trait ContactsTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setContactsFields($fieldName, $fieldData)
     {
@@ -88,10 +84,10 @@ trait ContactsTrait
             return;
         }
         unset($this->in[$fieldName]);
-        
+
         //====================================================================//
         // Load Current Contact
-        $contactsArray   =  $this->object->liste_contact(-1, 'external', 0, $fieldName);
+        $contactsArray = $this->object->liste_contact(-1, 'external', 0, $fieldName);
         if (is_array($contactsArray) && !empty($contactsArray)) {
             $current = array_shift($contactsArray);
         } else {

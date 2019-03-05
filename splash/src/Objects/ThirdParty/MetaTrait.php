@@ -41,7 +41,7 @@ trait MetaTrait
             ->Group("Meta")
             ->MicroData("http://schema.org/Organization", "active")
             ->isListed();
-        
+
         if (Local::dolVersionCmp("3.6.0") >= 0) {
             //====================================================================//
             // isProspect
@@ -76,14 +76,12 @@ trait MetaTrait
             ->Group("Meta")
             ->MicroData("http://schema.org/Organization", "UseVAT");
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     private function getMetaFields($key, $fieldName)
     {
@@ -105,24 +103,22 @@ trait MetaTrait
 
                 break;
             case 'prospect':
-                $this->object->prospect     =   $this->object->client;
+                $this->object->prospect = $this->object->client;
                 $this->getSimpleBit('prospect', 1);
 
                 break;
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     private function setMetaFields($fieldName, $fieldData)
     {

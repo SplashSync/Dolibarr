@@ -17,7 +17,6 @@ namespace Splash\Local\Objects\Order;
 
 use OrderLine;
 use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Local;
 
 /**
  * Dolibarr Customer Orders Items Fields
@@ -32,18 +31,18 @@ trait ItemsTrait
     protected function createItem()
     {
         global $db;
-        
-        $item   = new  OrderLine($db);
-        
+
+        $item = new  OrderLine($db);
+
         //====================================================================//
         // Pre-Setup of Item
         $item->fk_commande = $this->object->id;
-        
+
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
         return $this->insertItem($item);
     }
-    
+
     /**
      * Delete a Line Item
      *
@@ -56,8 +55,8 @@ trait ItemsTrait
         global $user;
         //====================================================================//
         // Force Order Status To Draft
-        $this->object->statut         = 0;
-        $this->object->brouillon      = 1;
+        $this->object->statut = 0;
+        $this->object->brouillon = 1;
         //====================================================================//
         // Perform Line Delete
         if ($this->object->deleteline($user, $orderLine->id) <= 0) {

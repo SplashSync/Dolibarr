@@ -30,46 +30,46 @@ class StatGraphs extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_M,
-        "Header"        =>  true,
-        "Footer"        =>  true,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
+    public static $OPTIONS = array(
+        "Width" => self::SIZE_M,
+        "Header" => true,
+        "Footer" => true,
+        'UseCache' => true,
+        'CacheLifeTime' => 60,
     );
-    
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static $NAME            =  "Statistics";
-    
+    protected static $NAME = "Statistics";
+
     /**
      *  Widget Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "Statistics";
-    
+    protected static $DESCRIPTION = "Statistics";
+
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO            =  "fa fa-line-chart";
-    
+    protected static $ICO = "fa fa-line-chart";
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
-    
+
     private $stats;
     private $select;
     private $where;
     private $title;
     private $labels;
-    
+
     private $mode = "CustomerInvoices";
-    private $chartType =   "Line";
-    
+    private $chartType = "Line";
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
@@ -77,7 +77,7 @@ class StatGraphs extends AbstractWidget
     //====================================================================//
     // Class Main Functions
     //====================================================================//
-    
+
     /**
      * Class Constructor
      */
@@ -87,7 +87,7 @@ class StatGraphs extends AbstractWidget
         // Load Default Language
         Local::loadDefaultLanguage();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -97,7 +97,7 @@ class StatGraphs extends AbstractWidget
         Local::loadDefaultLanguage();
         $langs->load("compta");
         $langs->load("bills");
-        
+
         //====================================================================//
         // Select Data Type Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
@@ -108,7 +108,7 @@ class StatGraphs extends AbstractWidget
             ->AddChoice("CustomerOrders", $langs->trans("OrderStats"))
             ->AddChoice("SupplierInvoices", $langs->trans("BillsSuppliers"))
                 ;
-      
+
         //====================================================================//
         // Select Chart Rendering Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
@@ -119,12 +119,12 @@ class StatGraphs extends AbstractWidget
             ->AddChoice("Bar", "Bar Chart")
             ->AddChoice("Area", "Area Chart")
                 ;
-        
+
         //====================================================================//
         // Publish Fields
         return $this->fieldsFactory()->publish();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -132,7 +132,7 @@ class StatGraphs extends AbstractWidget
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Default Language
         Local::loadDefaultLanguage();
@@ -143,24 +143,24 @@ class StatGraphs extends AbstractWidget
 
         $this->setTitle($this->getName());
         $this->setIcon($this->getIcon());
-        
+
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
-        
+
         $allowedModes = array("CustomerInvoices", "CustomerOrders", "SupplierInvoices");
         if (isset($parameters["mode"]) && in_array($parameters["mode"], $allowedModes, true)) {
             $this->mode = $parameters["mode"];
         }
-        
+
         $allowedTypes = array("Bar", "Line", "Area");
         if (isset($parameters["chart_type"]) && in_array($parameters["chart_type"], $allowedTypes, true)) {
             $this->chartType = $parameters["chart_type"];
         }
-        
+
         $this->importDates($parameters);
         $this->setupMode();
-        
+
         $this->buildMorrisBarBlock();
 
         //====================================================================//
@@ -174,7 +174,7 @@ class StatGraphs extends AbstractWidget
         // Publish Widget
         return $this->render();
     }
-    
+
     //====================================================================//
     // Overide Splash Functions
     //====================================================================//
@@ -200,7 +200,7 @@ class StatGraphs extends AbstractWidget
 
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-        
+
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
@@ -208,20 +208,20 @@ class StatGraphs extends AbstractWidget
     private function setupMode()
     {
         global $db, $langs;
-        
+
         switch ($this->mode) {
             case "CustomerInvoices":
                 $langs->load("compta");
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
-                $this->stats    = new \FactureStats($db, 0, 'customer', 0);
+                $this->stats = new \FactureStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total) as total";
-                $this->where    = "f.datef ";
-                $this->title    = $langs->trans("SalesTurnover");
-                $this->labels   = array($langs->trans("AmountTTCShort"));
+                $this->select = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total) as total";
+                $this->where = "f.datef ";
+                $this->title = $langs->trans("SalesTurnover");
+                $this->labels = array($langs->trans("AmountTTCShort"));
 
                 break;
             case "SupplierInvoices":
@@ -230,13 +230,13 @@ class StatGraphs extends AbstractWidget
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
-                $this->stats    = new \FactureStats($db, 0, 'supplier', 0);
+                $this->stats = new \FactureStats($db, 0, 'supplier', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select   = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total_ht) as total";
-                $this->where    = "f.datef ";
-                $this->title    = $langs->trans("BillsSuppliers");
-                $this->labels   = array($langs->trans("AmountHTShort"));
+                $this->select = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total_ht) as total";
+                $this->where = "f.datef ";
+                $this->title = $langs->trans("BillsSuppliers");
+                $this->labels = array($langs->trans("AmountHTShort"));
 
                 break;
             case "CustomerOrders":
@@ -244,76 +244,76 @@ class StatGraphs extends AbstractWidget
                 //====================================================================//
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
-                $this->stats    = new \CommandeStats($db, 0, 'customer', 0);
+                $this->stats = new \CommandeStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select   = "date_format(c.date_commande,'%".$this->GroupBy."') "
-                        . "as step, SUM(c.total_ht) as total";
-                $this->where    = "c.date_commande ";
-                $this->title    = $langs->trans("OrderStats");
-                $this->labels   = array($langs->trans("AmountHTShort"));
+                $this->select = "date_format(c.date_commande,'%".$this->GroupBy."') "
+                        ."as step, SUM(c.total_ht) as total";
+                $this->where = "c.date_commande ";
+                $this->title = $langs->trans("OrderStats");
+                $this->labels = array($langs->trans("AmountHTShort"));
 
                 break;
         }
     }
-    
+
     /**
      * @abstract    Read Widget Datas
      */
     private function getData()
     {
         global $db;
-                
+
         //====================================================================//
         // Execute SQL Query
         //====================================================================//
-        
-        $sql = "SELECT " . $this->select;
-        $sql.= " FROM ".$this->stats->from;
-        $sql.= " WHERE " . $this->where . " BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
-        $sql.= " AND ".$this->stats->where;
-        $sql.= " GROUP BY step";
-        $sql.= $db->order('step', 'ASC');
 
-        $result     = $db->query($sql);
-        $num        = $db->num_rows($result);           // Read number of results
-        $index          = 0;
-        $rawData    = array();
-        
+        $sql = "SELECT ".$this->select;
+        $sql .= " FROM ".$this->stats->from;
+        $sql .= " WHERE ".$this->where." BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql .= " AND ".$this->stats->where;
+        $sql .= " GROUP BY step";
+        $sql .= $db->order('step', 'ASC');
+
+        $result = $db->query($sql);
+        $num = $db->num_rows($result);           // Read number of results
+        $index = 0;
+        $rawData = array();
+
         while ($index < $num) {
             $value = $db->fetch_array($result);
             $rawData[$value["step"]] = $value["total"];
             $index++;
         }
-        
+
         return $this->parseDatedData($rawData);
     }
-   
+
     /**
      *   @abstract     Block Building - Morris Bar Graph
      */
     private function buildMorrisBarBlock()
     {
         global $langs;
-        
+
         $langs->load("compta");
         $langs->load("bills");
-        
+
         //====================================================================//
         // Build Chart Contents
         //====================================================================//
-        $data   = $this->getData();
+        $data = $this->getData();
 
         //====================================================================//
         // Chart Options
         $chartOptions = array(
-            "title"     => $this->title,
-            "labels"    => $this->labels,
+            "title" => $this->title,
+            "labels" => $this->labels,
         );
         //====================================================================//
         // Block Options
         $options = array(
-            "AllowHtml"         => true,
+            "AllowHtml" => true,
         );
         //====================================================================//
         // Add Table Block

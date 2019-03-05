@@ -23,7 +23,7 @@
  *  \remarks
  */
 
-include_once(DOL_DOCUMENT_ROOT ."/core/modules/DolibarrModules.class.php");
+include_once(DOL_DOCUMENT_ROOT."/core/modules/DolibarrModules.class.php");
 
 //====================================================================//
 // Splash Module Definitions
@@ -53,8 +53,8 @@ class modSplash extends DolibarrModules
 
         //====================================================================//
         // Module Editor Infos
-        $this->editor_name  = "Splash Sync";
-        $this->editor_url   = "www.splashsync.com";
+        $this->editor_name = "Splash Sync";
+        $this->editor_url = "www.splashsync.com";
 
         //====================================================================//
         // Id for module (must be unique).
@@ -123,7 +123,7 @@ class modSplash extends DolibarrModules
             // Main menu entries
             $this->menu = array();         // List of menus to add
     }
-        
+
     /**
      * Function called when module is enabled.
      * The init function add constants, boxes, permissions
@@ -140,7 +140,7 @@ class modSplash extends DolibarrModules
 
         // Module Init
         $sql = array();
-        $result =  $this->_init($sql, $options);
+        $result = $this->_init($sql, $options);
 
         if ($result) {
             // Display Welcome Message
@@ -210,13 +210,13 @@ class modSplash extends DolibarrModules
             array('SPLASH_GUEST_ORDERS_EMAIL', 'chaine', '', 'Try to detect Customer Using Email ', 0),
         );
     }
-        
+
     private function getRights()
     {
         //====================================================================//
             // Permissions
             $rights = array();      // Permission array used by this module
-            $index=0;
+            $index = 0;
 
         $rights[$index][0] = 9201; // id de la permission
             $rights[$index][1] = 'Lire les Données'; // libelle de la permission
@@ -245,7 +245,7 @@ class modSplash extends DolibarrModules
             $rights[$index][3] = 0; // La permission est-elle une permission par defaut
             $rights[$index][4] = 'supprimer';
         $index++;
-            
+
         return $rights;
     }
 }

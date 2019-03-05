@@ -30,7 +30,7 @@ class ThirdParty extends AbstractObject
     use IntelParserTrait;
     use SimpleFieldsTrait;
     use ObjectsTrait;
-    
+
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\LocalizationTrait;
@@ -38,7 +38,7 @@ class ThirdParty extends AbstractObject
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\MultiCompanyTrait;
-    
+
     // Dolibarr ThirdParty Traits
     use \Splash\Local\Objects\ThirdParty\ObjectsListTrait;
     use \Splash\Local\Objects\ThirdParty\CRUDTrait;
@@ -46,48 +46,48 @@ class ThirdParty extends AbstractObject
     use \Splash\Local\Objects\ThirdParty\MainTrait;
     use \Splash\Local\Objects\ThirdParty\AddressTrait;
     use \Splash\Local\Objects\ThirdParty\MetaTrait;
-    
+
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
-    
-    public static $ExtraFieldsType    =  "societe";
-    
+
+    public static $ExtraFieldsType = "societe";
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
      */
 //    protected static    $DISABLED        =  True;
-    
+
     /**
      *  Object Name (Translated by Module)
      */
-    protected static $NAME            =  "Company";
-    
+    protected static $NAME = "Company";
+
     /**
      *  Object Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "Dolibarr Company Object";
-    
+    protected static $DESCRIPTION = "Dolibarr Company Object";
+
     /**
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO     =  "fa fa-user";
-        
+    protected static $ICO = "fa fa-user";
+
     //====================================================================//
     // Class Constructor
     //====================================================================//
-        
+
     /**
      * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
         global $langs;
-        
+
         //====================================================================//
         // Load Required Dolibarr Translation Files
         $langs->load("main");

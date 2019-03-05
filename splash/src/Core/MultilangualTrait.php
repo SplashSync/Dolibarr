@@ -32,10 +32,10 @@ trait MultilangualTrait
     public static function isDefaultLanguage($isoCode)
     {
         global $langs;
-        
+
         return ($langs->getDefaultLang() == $isoCode);
     }
-    
+
     /**
      * Get All Available Languages
      *
@@ -56,7 +56,7 @@ trait MultilangualTrait
             $this->getExtraLanguages()
         );
     }
-    
+
     /**
      * Get Available Extra Languages
      *
@@ -65,7 +65,7 @@ trait MultilangualTrait
     public function getExtraLanguages()
     {
         global $conf;
-        
+
         //====================================================================//
         // We Are in Monolangual Mode
         if (!$conf->global->MAIN_MULTILANGS) {
@@ -78,23 +78,21 @@ trait MultilangualTrait
         if (!is_array($extraLangs)) {
             return array();
         }
-        
+
         return $extraLangs;
     }
-    
+
     /**
      * Update a Single Multilangual Field of an Object
      *
      * @param string $fieldName Id of a Multilangual Contents
      * @param string $isoCode   Language Iso Code
      * @param string $content   Content String
-     *
-     * @return void
      */
     public function setMultilangContent($fieldName, $isoCode, $content)
     {
         global $langs;
-        
+
         //====================================================================//
         // Create This Translation if empty
         if (!isset($this->object->multilangs[$isoCode])) {
@@ -114,7 +112,7 @@ trait MultilangualTrait
             $this->needUpdate();
         }
     }
-    
+
     /**
      * Read Multilangual Fields of an Object
      *
@@ -132,17 +130,17 @@ trait MultilangualTrait
         if (!$conf->global->MAIN_MULTILANGS) {
             return null;
         }
-        
+
         //====================================================================//
         // Native Multilangs Descriptions
         //====================================================================//
-        
+
         //====================================================================//
         // If Multilang Contents doesn't exists
         if (!isset($this->object->multilangs[$isoCode][$fieldName])) {
             return null;
         }
-            
+
         return $this->object->multilangs[$isoCode][$fieldName];
     }
 }

@@ -28,7 +28,7 @@ trait CoreTrait
     protected function buildCoreFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
@@ -37,7 +37,7 @@ trait CoreTrait
             ->MicroData("http://schema.org/Order", "orderDate")
             ->isRequired()
             ->isListed();
-        
+
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -46,7 +46,7 @@ trait CoreTrait
             ->MicroData("http://schema.org/Invoice", "name")
             ->isReadOnly()
             ->isListed();
-        
+
         //====================================================================//
         // Customer Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -54,14 +54,14 @@ trait CoreTrait
             ->Name($langs->trans("RefCustomer"))
             ->MicroData("http://schema.org/Invoice", "confirmationNumber")
             ->isListed();
-        
+
         //====================================================================//
         // Internal Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("ref_int")
-            ->Name($langs->trans("RefCustomer") . " " . $langs->trans("Internal"))
+            ->Name($langs->trans("RefCustomer")." ".$langs->trans("Internal"))
             ->MicroData("http://schema.org/Invoice", "description");
-                
+
         //====================================================================//
         // External Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -76,8 +76,6 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getCoreFields($key, $fieldName)
     {
@@ -96,14 +94,14 @@ trait CoreTrait
             //====================================================================//
             // Order Official Date
             case 'date':
-                $date   =   $this->object->date;
+                $date = $this->object->date;
                 $this->out[$fieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
 
                 break;
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -112,8 +110,6 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setCoreFields($fieldName, $fieldData)
     {
@@ -142,7 +138,7 @@ trait CoreTrait
             //====================================================================//
             // Order Official Date
             case 'date':
-                $dateTime   =   new DateTime($fieldData);
+                $dateTime = new DateTime($fieldData);
                 $this->setSimple('date', $dateTime->getTimestamp());
                 $this->setSimple('date_commande', $dateTime->getTimestamp());
 

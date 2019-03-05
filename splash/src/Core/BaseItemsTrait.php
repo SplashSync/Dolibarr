@@ -32,28 +32,28 @@ trait BaseItemsTrait
     /**
      * @var bool
      */
-    private $itemUpdate   = false;
-    
+    private $itemUpdate = false;
+
     /**
      * @var null|FactureLigne|OrderLine
      */
     private $currentItem;
-    
+
     /**
      * Build Address Fields using FieldFactory
      */
     protected function buildItemsFields()
     {
         global $langs;
-        
+
         if (is_a($this, 'Splash\Local\Objects\Order')) {
-            $groupName  = $langs->trans("OrderLine");
+            $groupName = $langs->trans("OrderLine");
         } elseif (is_a($this, 'Splash\Local\Objects\Invoice')) {
-            $groupName  = $langs->trans("InvoiceLine");
+            $groupName = $langs->trans("InvoiceLine");
         } else {
-            $groupName  = "Items";
+            $groupName = "Items";
         }
-        
+
         //====================================================================//
         // Order Line Description
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -124,8 +124,6 @@ trait BaseItemsTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getItemsFields($key, $fieldName)
     {
@@ -145,42 +143,42 @@ trait BaseItemsTrait
         foreach ($this->object->lines as $index => $orderLine) {
             //====================================================================//
             // Read Data from Line Item
-            $value  =   $this->getItemField($orderLine, $fieldName);
+            $value = $this->getItemField($orderLine, $fieldName);
             //====================================================================//
             // Insert Data in List
             self::lists()->Insert($this->out, "lines", $fieldName, $index, $value);
         }
         unset($this->in[$key]);
     }
-    
+
     protected function insertItem($item)
     {
-        $item->subprice                     = 0;
-        $item->price                        = 0;
-        $item->qty                          = 0;
-        
-        $item->total_ht                     = 0;
-        $item->total_tva                    = 0;
-        $item->total_ttc                    = 0;
-        $item->total_localtax1              = 0;
-        $item->total_localtax2              = 0;
-        
-        $item->fk_multicurrency             = "NULL";
-        $item->multicurrency_code           = "NULL";
-        $item->multicurrency_subprice       = "0.0";
-        $item->multicurrency_total_ht       = "0.0";
-        $item->multicurrency_total_tva      = "0.0";
-        $item->multicurrency_total_ttc      = "0.0";
-        
+        $item->subprice = 0;
+        $item->price = 0;
+        $item->qty = 0;
+
+        $item->total_ht = 0;
+        $item->total_tva = 0;
+        $item->total_ttc = 0;
+        $item->total_localtax1 = 0;
+        $item->total_localtax2 = 0;
+
+        $item->fk_multicurrency = "NULL";
+        $item->multicurrency_code = "NULL";
+        $item->multicurrency_subprice = "0.0";
+        $item->multicurrency_total_ht = "0.0";
+        $item->multicurrency_total_tva = "0.0";
+        $item->multicurrency_total_ttc = "0.0";
+
         if ($item->insert() <= 0) {
             $this->catchDolibarrErrors($item);
 
             return null;
         }
-                
+
         return $item;
     }
-    
+
     /**
      * Read requested Field
      *
@@ -192,7 +190,7 @@ trait BaseItemsTrait
     private function getItemField($line, $fieldName)
     {
         global $conf;
-        
+
         //====================================================================//
         // READ Fields
         switch ($fieldName) {
@@ -217,8 +215,8 @@ trait BaseItemsTrait
             //====================================================================//
             // Order Line Price
             case 'price@lines':
-                $price  =   (double) $line->subprice;
-                $vat    =   (double) $line->tva_tx;
+                $price = (double) $line->subprice;
+                $vat = (double) $line->tva_tx;
 
                 return  self::prices()->Encode($price, $vat, null, $conf->global->MAIN_MONNAIE);
             //====================================================================//
@@ -229,14 +227,12 @@ trait BaseItemsTrait
                 return null;
         }
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     private function setItemsFields($fieldName, $fieldData)
     {
@@ -269,27 +265,25 @@ trait BaseItemsTrait
         //====================================================================//
         // Reload Order/Invoice Lines
         $this->object->fetch_lines();
-        
+
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Write Data to Current Item
      *
      * @param array $itemData Input Item Data Array
-     *
-     * @return void
      */
     private function setItem($itemData)
     {
         global $user;
-        
+
         //====================================================================//
         // New Line ? => Create One
         if (!isset($this->currentItem)) {
             //====================================================================//
             // Create New Line Item
-            $this->currentItem =  $this->createItem();
+            $this->currentItem = $this->createItem();
             if (empty($this->currentItem)) {
                 Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create Line Item. ");
 
@@ -325,7 +319,7 @@ trait BaseItemsTrait
         if (!$this->itemUpdate) {
             return;
         }
-        
+
         //====================================================================//
         // Prepare Args
         $arg1 = (Local::dolVersionCmp("5.0.0") > 0) ? $user : 0;
@@ -334,21 +328,19 @@ trait BaseItemsTrait
         if ($this->currentItem->update($arg1) <= 0) {
             $this->catchDolibarrErrors($this->currentItem);
             Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to update Line Item. ");
-            
+
             return;
         }
         //====================================================================//
         // Update Item Totals
         $this->currentItem->update_total();
     }
-            
+
     /**
      * Write Given Data To Line Item
      *
      * @param array  $itemData  Input Item Data Array
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     private function setItemSimpleData($itemData, $fieldName)
     {
@@ -360,13 +352,11 @@ trait BaseItemsTrait
             $this->itemUpdate = true;
         }
     }
-    
+
     /**
      * Write Given Price to Line Item
      *
      * @param array $itemData Input Item Data Array
-     *
-     * @return void
      */
     private function setItemPrice($itemData)
     {
@@ -376,15 +366,15 @@ trait BaseItemsTrait
         //====================================================================//
         // Update Unit & Sub Prices
         if (abs($this->currentItem->subprice - $itemData["price"]["ht"]) > 1E-6) {
-            $this->currentItem->subprice    = $itemData["price"]["ht"];
-            $this->currentItem->price       = $itemData["price"]["ht"];
-            $this->itemUpdate      = true;
+            $this->currentItem->subprice = $itemData["price"]["ht"];
+            $this->currentItem->price = $itemData["price"]["ht"];
+            $this->itemUpdate = true;
         }
         //====================================================================//
         // Update VAT Rate
         if (abs($this->currentItem->tva_tx - $itemData["price"]["vat"]) > 1E-6) {
-            $this->currentItem->tva_tx      = $itemData["price"]["vat"];
-            $this->itemUpdate      = true;
+            $this->currentItem->tva_tx = $itemData["price"]["vat"];
+            $this->itemUpdate = true;
         }
         //====================================================================//
         // Prices Safety Check
@@ -395,18 +385,16 @@ trait BaseItemsTrait
             $this->currentItem->price = 0;
         }
     }
-    
+
     /**
      * Write Given Vat Source Code to Line Item
      *
      * @param array $itemData Input Item Data Array
-     *
-     * @return void
      */
     private function setItemVatSrcCode($itemData)
     {
         global $conf;
-        
+
         if (!isset($itemData["vat_src_code"]) || is_null($this->currentItem)) {
             return;
         }
@@ -433,20 +421,20 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
-        $identifiedVat      =   $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
+        $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
         if (!$identifiedVat) {
             return;
         }
 
         //====================================================================//
         // Update Rates from Vat Type
-        $this->currentItem->tva_tx          = $identifiedVat->tva_tx;
-        $this->currentItem->localtax1_tx    = $identifiedVat->localtax1_tx;
-        $this->currentItem->localtax1_type  = $identifiedVat->localtax1_type;
-        $this->currentItem->localtax2_tx    = $identifiedVat->localtax2_tx;
-        $this->currentItem->localtax2_type  = $identifiedVat->localtax2_type;
+        $this->currentItem->tva_tx = $identifiedVat->tva_tx;
+        $this->currentItem->localtax1_tx = $identifiedVat->localtax1_tx;
+        $this->currentItem->localtax1_type = $identifiedVat->localtax1_type;
+        $this->currentItem->localtax2_tx = $identifiedVat->localtax2_tx;
+        $this->currentItem->localtax2_type = $identifiedVat->localtax2_type;
     }
-    
+
     /**
      * Identify Vat Type by Source Code
      *
@@ -457,7 +445,7 @@ trait BaseItemsTrait
     private function getVatIdBySrcCode($vatSrcCode = null)
     {
         global $db;
-        
+
         //====================================================================//
         // Safety Check => VAT Type Code is Not Empty
         if (empty($vatSrcCode)) {
@@ -466,25 +454,23 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Serach for VAT Type from Given Code
-        $sql  = "SELECT t.rowid, t.taux as tva_tx, t.localtax1 as localtax1_tx,";
+        $sql = "SELECT t.rowid, t.taux as tva_tx, t.localtax1 as localtax1_tx,";
         $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type";
         $sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
-        $sql .= " WHERE t.code = '" . $vatSrcCode . "' AND t.active = 1";
+        $sql .= " WHERE t.code = '".$vatSrcCode."' AND t.active = 1";
 
-        $resql=$db->query($sql);
+        $resql = $db->query($sql);
         if ($resql) {
             return  $db->fetch_object($resql);
         }
-        
+
         return null;
     }
-    
+
     /**
      * Write Given Product to Line Item
      *
      * @param array $itemData Input Item Data Array
-     *
-     * @return void
      */
     private function setItemProductLink($itemData)
     {
@@ -498,54 +484,52 @@ trait BaseItemsTrait
             return;
         }
         if (empty($productId)) {
-            $productId  =   0;
+            $productId = 0;
         }
         $this->currentItem->setValueFrom("fk_product", $productId, '', null, '', '', "none");
         $this->catchDolibarrErrors($this->currentItem);
     }
-    
+
     /**
      * Update Item Totals
-     *
-     * @return void
      */
     private function updateItemTotals()
     {
         global $conf, $mysoc;
-        
+
         if (!$this->itemUpdate || is_null($this->currentItem)) {
             return;
         }
 
         //====================================================================//
         // Setup default VAT Rates from Current Item
-        $vatRateOrId=   $this->currentItem->tva_tx;
-        $useId      =   false;
-        
+        $vatRateOrId = $this->currentItem->tva_tx;
+        $useId = false;
+
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
         if ($conf->global->SPLASH_DETECT_TAX_NAME) {
-            $identifiedVat      =   $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
+            $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
             if ($identifiedVat) {
-                $vatRateOrId=   $identifiedVat->rowid;
-                $useId      =   true;
+                $vatRateOrId = $identifiedVat->rowid;
+                $useId = true;
             }
         }
-        
+
         //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne a partir de
         // qty, pu, remise_percent et txtva
-        $localtaxType    =   getLocalTaxesFromRate(
+        $localtaxType = getLocalTaxesFromRate(
             (string) $vatRateOrId,
             0,
             $this->object->fetch_thirdparty(),
             $mysoc,
             (int) $useId
         );
-        
+
         include_once DOL_DOCUMENT_ROOT.'/core/lib/price.lib.php';
-        
-        $tabPrice   =   calcul_price_total(
+
+        $tabPrice = calcul_price_total(
             (int) $this->currentItem->qty,
             $this->currentItem->subprice,
             $this->currentItem->remise_percent,
@@ -560,10 +544,10 @@ trait BaseItemsTrait
             $localtaxType
         );
 
-        $this->currentItem->total_ht            = $tabPrice[0];
-        $this->currentItem->total_tva           = $tabPrice[1];
-        $this->currentItem->total_ttc           = $tabPrice[2];
-        $this->currentItem->total_localtax1     = $tabPrice[9];
-        $this->currentItem->total_localtax2     = $tabPrice[10];
+        $this->currentItem->total_ht = $tabPrice[0];
+        $this->currentItem->total_tva = $tabPrice[1];
+        $this->currentItem->total_ttc = $tabPrice[2];
+        $this->currentItem->total_localtax1 = $tabPrice[9];
+        $this->currentItem->total_localtax2 = $tabPrice[10];
     }
 }

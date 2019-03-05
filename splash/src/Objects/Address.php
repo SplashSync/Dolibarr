@@ -39,54 +39,54 @@ class Address extends AbstractObject
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\MultiCompanyTrait;
-    
+
     // Dolibarr Address Traits
     use \Splash\Local\Objects\Address\ObjectsListTrait;
     use \Splash\Local\Objects\Address\CRUDTrait;
     use \Splash\Local\Objects\Address\CoreTrait;
     use \Splash\Local\Objects\Address\MainTrait;
-    
+
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
-    
-    public static $ExtraFieldsType    =  "socpeople";
-        
+
+    public static $ExtraFieldsType = "socpeople";
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Object Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
 //    protected static    $DISABLED        =  True;
-    
+
     /**
      *  Object Name (Translated by Module)
      */
-    protected static $NAME            =  "Contact Address";
-    
+    protected static $NAME = "Contact Address";
+
     /**
      *  Object Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "Dolibarr Contact Object";
-    
+    protected static $DESCRIPTION = "Dolibarr Contact Object";
+
     /**
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO     =  "fa fa-envelope-o";
-    
+    protected static $ICO = "fa fa-envelope-o";
+
     //====================================================================//
     // Class Constructor
     //====================================================================//
-        
+
     /**
      * Class Constructor (Used only if localy necessary)
      */
     public function __construct()
     {
         global $langs;
-        
+
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';

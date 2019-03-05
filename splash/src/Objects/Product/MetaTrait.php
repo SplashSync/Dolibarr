@@ -26,7 +26,7 @@ trait MetaTrait
     protected function buildMetaFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // On Sell
         $this->fieldsFactory()->create(SPL_T_BOOL)
@@ -35,7 +35,7 @@ trait MetaTrait
             ->MicroData("http://schema.org/Product", "ordered")
             ->Group("Meta")
             ->isListed();
-        
+
         //====================================================================//
         // On Buy
         $this->fieldsFactory()->create(SPL_T_BOOL)
@@ -51,8 +51,6 @@ trait MetaTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     private function getMetaFields($key, $fieldName)
     {
@@ -68,17 +66,15 @@ trait MetaTrait
 
                 break;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     private function setMetaFields($fieldName, $fieldData)
     {

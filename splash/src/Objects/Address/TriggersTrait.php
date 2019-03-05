@@ -33,7 +33,7 @@ trait TriggersTrait
     protected function doAddressCommit($action, $object)
     {
         global $db;
-        
+
         //====================================================================//
         // Check if Commit is Requierd
         if (!$this->isAddressCommitRequired($action)) {
@@ -42,27 +42,27 @@ trait TriggersTrait
         if (!($object instanceof Contact)) {
             return false;
         }
-        
+
         //====================================================================//
         // Commit Last Changes done On DataBase
         $db->Commit();
-        
+
         //====================================================================//
         // Store Global Action Parameters
-        $this->objectType   = "Address";
-        $this->objectId     = (string) $object->id;
-        
-        if ('CONTACT_CREATE'        == $action) {
-            $this->action   = SPL_A_CREATE;
-            $this->comment  = "Contact Created on Dolibarr";
-        } elseif ('CONTACT_MODIFY'  == $action) {
-            $this->action   = SPL_A_UPDATE;
-            $this->comment  = "Contact Updated on Dolibarr";
-        } elseif ('CONTACT_DELETE'  == $action) {
-            $this->action   = SPL_A_DELETE;
-            $this->comment  = "Contact Deleted on Dolibarr";
+        $this->objectType = "Address";
+        $this->objectId = (string) $object->id;
+
+        if ('CONTACT_CREATE' == $action) {
+            $this->action = SPL_A_CREATE;
+            $this->comment = "Contact Created on Dolibarr";
+        } elseif ('CONTACT_MODIFY' == $action) {
+            $this->action = SPL_A_UPDATE;
+            $this->comment = "Contact Updated on Dolibarr";
+        } elseif ('CONTACT_DELETE' == $action) {
+            $this->action = SPL_A_DELETE;
+            $this->comment = "Contact Deleted on Dolibarr";
         }
-        
+
         return true;
     }
 

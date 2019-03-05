@@ -37,7 +37,7 @@ class Order extends AbstractObject
     use PricesTrait;
     use ListsTrait;
     use ImagesTrait;
-        
+
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\LocalizationTrait;
@@ -48,7 +48,7 @@ class Order extends AbstractObject
     use \Splash\Local\Core\ImagesTrait;
     use \Splash\Local\Core\CustomerTrait;
     use \Splash\Local\Core\MultiCompanyTrait;
-    
+
     // Dolibarr Orders Traits
     use \Splash\Local\Objects\Order\ObjectsListTrait;
     use \Splash\Local\Objects\Order\CRUDTrait;
@@ -57,37 +57,37 @@ class Order extends AbstractObject
     use \Splash\Local\Objects\Order\ItemsTrait;
     use \Splash\Local\Objects\Order\StatusTrait;
     use \Splash\Local\Objects\Order\ContactsTrait;
-    
+
     //====================================================================//
     // ExtraFields Type
     //====================================================================//
-    
-    public static $ExtraFieldsType    =  "commande";
-    
+
+    public static $ExtraFieldsType = "commande";
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Object Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
 //    protected static    $DISABLED        =  True;
-    
+
     /**
      *  Object Name (Translated by Module)
      */
-    protected static $NAME            =  "Customer Order";
-    
+    protected static $NAME = "Customer Order";
+
     /**
      *  Object Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "Dolibarr Customers Order Object";
-    
+    protected static $DESCRIPTION = "Dolibarr Customers Order Object";
+
     /**
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO     =  "fa fa-shopping-cart ";
-    
+    protected static $ICO = "fa fa-shopping-cart ";
+
     //====================================================================//
     // Class Constructor
     //====================================================================//
@@ -96,7 +96,7 @@ class Order extends AbstractObject
      * @var Commande
      */
     protected $object;
-    
+
     /**
      * Class Constructor (Used only if localy necessary)
      */

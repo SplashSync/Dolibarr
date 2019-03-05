@@ -26,41 +26,41 @@ trait MainTrait
      * @var null|bool
      */
     private $updateBilled;
-    
+
     /**
      * Build Address Fields using FieldFactory
      */
     protected function buildMainFields()
     {
         global $langs,$conf;
-        
+
         //====================================================================//
         // Delivry Estimated Date
         $this->fieldsFactory()->create(SPL_T_DATE)
             ->Identifier("date_livraison")
             ->Name($langs->trans("DeliveryDate"))
             ->MicroData("http://schema.org/ParcelDelivery", "expectedArrivalUntil");
-        
+
         //====================================================================//
         // PRICES INFORMATIONS
         //====================================================================//
-        
+
         //====================================================================//
         // Order Total Price HT
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("total_ht")
-            ->Name($langs->trans("TotalHT") . " (" . $conf->global->MAIN_MONNAIE . ")")
+            ->Name($langs->trans("TotalHT")." (".$conf->global->MAIN_MONNAIE.")")
             ->MicroData("http://schema.org/Invoice", "totalPaymentDue")
             ->isReadOnly();
-        
+
         //====================================================================//
         // Order Total Price TTC
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("total_ttc")
-            ->Name($langs->trans("TotalTTC") . " (" . $conf->global->MAIN_MONNAIE . ")")
+            ->Name($langs->trans("TotalTTC")." (".$conf->global->MAIN_MONNAIE.")")
             ->MicroData("http://schema.org/Invoice", "totalPaymentDueTaxIncluded")
             ->isReadOnly();
-        
+
         //====================================================================//
         // ORDER STATUS FLAGS
         //====================================================================//
@@ -70,7 +70,7 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("isdraft")
             ->Group(html_entity_decode($langs->trans("Status")))
-            ->Name($langs->trans("Order") . " : " . $langs->trans("Draft"))
+            ->Name($langs->trans("Order")." : ".$langs->trans("Draft"))
             ->MicroData("http://schema.org/OrderStatus", "OrderDraft")
             ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
             ->isReadOnly();
@@ -80,26 +80,26 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("iscanceled")
             ->Group(html_entity_decode($langs->trans("Status")))
-            ->Name($langs->trans("Order") . " : " . $langs->trans("Canceled"))
+            ->Name($langs->trans("Order")." : ".$langs->trans("Canceled"))
             ->MicroData("http://schema.org/OrderStatus", "OrderCancelled")
             ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
             ->isReadOnly();
-        
+
         //====================================================================//
         // Is Validated
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("isvalidated")
             ->Group(html_entity_decode($langs->trans("Status")))
-            ->Name($langs->trans("Order") . " : " . $langs->trans("Validated"))
+            ->Name($langs->trans("Order")." : ".$langs->trans("Validated"))
             ->MicroData("http://schema.org/OrderStatus", "OrderProcessing")
             ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
             ->isReadOnly();
-        
+
         //====================================================================//
         // Is Closed
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("isclosed")
-            ->Name($langs->trans("Order") . " : " . $langs->trans("Closed"))
+            ->Name($langs->trans("Order")." : ".$langs->trans("Closed"))
             ->Group(html_entity_decode($langs->trans("Status")))
             ->MicroData("http://schema.org/OrderStatus", "OrderDelivered")
             ->Association("isdraft", "iscanceled", "isvalidated", "isclosed")
@@ -110,18 +110,16 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("billed")
             ->Group(html_entity_decode($langs->trans("Status")))
-            ->Name($langs->trans("Order") . " : " . $langs->trans("Paid"))
+            ->Name($langs->trans("Order")." : ".$langs->trans("Paid"))
             ->MicroData("http://schema.org/OrderStatus", "OrderPaid")
             ->isNotTested();
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getMainFields($key, $fieldName)
     {
@@ -131,7 +129,7 @@ trait MainTrait
             //====================================================================//
             // Order Delivery Date
             case 'date_livraison':
-                $dateLivraison   =  $this->object->date_livraison;
+                $dateLivraison = $this->object->date_livraison;
                 $this->out[$fieldName] = !empty($dateLivraison)?dol_print_date($dateLivraison, '%Y-%m-%d'):null;
 
                 break;
@@ -145,17 +143,15 @@ trait MainTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getTotalsFields($key, $fieldName)
     {
@@ -174,7 +170,7 @@ trait MainTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -183,8 +179,6 @@ trait MainTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getStatesFields($key, $fieldName)
     {
@@ -196,40 +190,38 @@ trait MainTrait
             //====================================================================//
 
             case 'isdraft':
-                $this->out[$fieldName]  = (0 == $this->object->statut)    ?   true:false;
+                $this->out[$fieldName] = (0 == $this->object->statut)    ?   true:false;
 
                 break;
             case 'iscanceled':
-                $this->out[$fieldName]  = (-1 == $this->object->statut)   ?   true:false;
+                $this->out[$fieldName] = (-1 == $this->object->statut)   ?   true:false;
 
                 break;
             case 'isvalidated':
-                $this->out[$fieldName]  = (1 == $this->object->statut)    ?   true:false;
+                $this->out[$fieldName] = (1 == $this->object->statut)    ?   true:false;
 
                 break;
             case 'isclosed':
-                $this->out[$fieldName]  = (3 == $this->object->statut)    ?   true:false;
+                $this->out[$fieldName] = (3 == $this->object->statut)    ?   true:false;
 
                 break;
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setMainFields($fieldName, $fieldData)
     {
         global $user;
-        
+
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
@@ -257,19 +249,17 @@ trait MainTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Update Order Billed Flag if Required & Possibe
-     *
-     * @return void
      */
     protected function updateBilledFlag()
     {
         global $user;
-        
+
         // Not Required
         if (is_null($this->updateBilled)) {
             return;
@@ -278,7 +268,7 @@ trait MainTrait
         if ($this->object->statut <= \Commande::STATUS_DRAFT) {
             return;
         }
-        
+
         // Update
         if ($this->updateBilled) {
             $this->object->classifyBilled($user);

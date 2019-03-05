@@ -28,11 +28,11 @@ trait StockTrait
     protected function buildStockFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // PRODUCT STOCKS
         //====================================================================//
-        
+
         //====================================================================//
         // Stock Reel
         $this->fieldsFactory()->create(SPL_T_INT)
@@ -47,7 +47,7 @@ trait StockTrait
             ->Identifier("seuil_stock_alerte")
             ->Name($langs->trans("StockLimit"))
             ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
-                
+
         //====================================================================//
         // Stock Alerte Flag
         $this->fieldsFactory()->create(SPL_T_BOOL)
@@ -55,7 +55,7 @@ trait StockTrait
             ->Name($langs->trans("StockTooLow"))
             ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
             ->isReadOnly();
-        
+
         //====================================================================//
         // Stock Expected Level
         $this->fieldsFactory()->create(SPL_T_INT)
@@ -77,8 +77,6 @@ trait StockTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getStockFields($key, $fieldName)
     {
@@ -107,7 +105,7 @@ trait StockTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 
@@ -116,8 +114,6 @@ trait StockTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setStockFields($fieldName, $fieldData)
     {
@@ -143,7 +139,7 @@ trait StockTrait
         }
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Create Stock Transaction to Update Products Stocks Level
      *
@@ -162,7 +158,7 @@ trait StockTrait
         }
         //====================================================================//
         // Update Product Stock
-        $delta  =   $this->object->stock_reel - $newStock;
+        $delta = $this->object->stock_reel - $newStock;
         //====================================================================//
         // Verify Default Product Stock is defined
         if (empty($conf->global->SPLASH_STOCK)) {

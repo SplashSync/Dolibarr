@@ -12,7 +12,7 @@
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
-                    
+
 //====================================================================//
 // *******************************************************************//
 //                     SPLASH FOR DOLIBARR                            //
@@ -40,37 +40,37 @@ class Dashboard extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS       = array(
-        "Width"         =>  self::SIZE_SM,
-        "Header"        =>  true,
-        "Footer"        =>  true,
-        'UseCache'      =>  true,
-        'CacheLifeTime' =>  60,
+    public static $OPTIONS = array(
+        "Width" => self::SIZE_SM,
+        "Header" => true,
+        "Footer" => true,
+        'UseCache' => true,
+        'CacheLifeTime' => 60,
     );
-    
+
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
-    
+
     /**
      *  Widget Name (Translated by Module)
      */
-    protected static $NAME            =  "DolibarrWorkBoard";
-    
+    protected static $NAME = "DolibarrWorkBoard";
+
     /**
      *  Widget Description (Translated by Module)
      */
-    protected static $DESCRIPTION     =  "DolibarrWorkBoard";
-    
+    protected static $DESCRIPTION = "DolibarrWorkBoard";
+
     /**
      *  Widget Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO            =  "fa fa-briefcase";
+    protected static $ICO = "fa fa-briefcase";
 
     //====================================================================//
     // Class Main Functions
     //====================================================================//
-    
+
     /**
      * Class Constructor
      */
@@ -80,7 +80,7 @@ class Dashboard extends AbstractWidget
         // Load Default Language
         Local::loadDefaultLanguage();
     }
-    
+
     /**
      * {@inheritdoc}
      *
@@ -90,7 +90,7 @@ class Dashboard extends AbstractWidget
     {
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Default Language
         Local::loadDefaultLanguage();
@@ -101,12 +101,12 @@ class Dashboard extends AbstractWidget
 
         $this->setTitle($this->getName());
         $this->setIcon($this->getIcon());
-        
+
         //====================================================================//
         // Build Data Blocks
         //====================================================================//
         $this->buildTableBlock();
-        
+
         //====================================================================//
         // Set Blocks to Widget
         $blocks = $this->blocksFactory()->render();
@@ -118,7 +118,7 @@ class Dashboard extends AbstractWidget
         // Publish Widget
         return $this->render();
     }
-        
+
     //====================================================================//
     // Overide Splash Functions
     //====================================================================//
@@ -146,7 +146,7 @@ class Dashboard extends AbstractWidget
 
         return html_entity_decode($langs->trans(static::$DESCRIPTION));
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -158,7 +158,7 @@ class Dashboard extends AbstractWidget
 
         return false;
     }
-    
+
     //====================================================================//
     // Blocks Generation Functions
     //====================================================================//
@@ -169,7 +169,7 @@ class Dashboard extends AbstractWidget
     private function getData()
     {
         //Array that contains all WorkboardResponse classes to process them
-        $dashboardlines=array();
+        $dashboardlines = array();
 
         require DOL_DOCUMENT_ROOT.'/core/class/workboardresponse.class.php';
 
@@ -184,10 +184,10 @@ class Dashboard extends AbstractWidget
         $this->getBankWire($dashboardlines);
         $this->getMembers($dashboardlines);
         $this->getExpenesDashboard($dashboardlines);
-        
+
         return $dashboardlines;
     }
-    
+
     /**
      * Read Late Actions Dashboard
      *
@@ -196,11 +196,11 @@ class Dashboard extends AbstractWidget
     private function getLateActions(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of actions to do (late)
         if (! empty($conf->agenda->enabled) && $user->rights->agenda->myactions->read) {
             include_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
-            $board=new \ActionComm($db);
+            $board = new \ActionComm($db);
 
             $dashboardlines[] = $board->load_board($user);
         }
@@ -214,16 +214,16 @@ class Dashboard extends AbstractWidget
     private function getCustomerOrders(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of customer orders a deal
         if (! empty($conf->commande->enabled) && $user->rights->commande->lire) {
             include_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
-            $board=new \Commande($db);
+            $board = new \Commande($db);
 
             $dashboardlines[] = $board->load_board($user);
         }
     }
-    
+
     /**
      * Read Suppliers Orders Dashboard
      *
@@ -232,16 +232,16 @@ class Dashboard extends AbstractWidget
     private function getSupplierOrders(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of suppliers orders a deal
         if (! empty($conf->fournisseur->enabled) && $user->rights->fournisseur->commande->lire) {
             include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
-            $board=new \CommandeFournisseur($db);
+            $board = new \CommandeFournisseur($db);
 
             $dashboardlines[] = $board->load_board($user);
         }
     }
-    
+
     /**
      * Read Suppliers Orders Dashboard
      *
@@ -250,18 +250,18 @@ class Dashboard extends AbstractWidget
     private function getOpenPropals(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of commercial proposals opened (expired)
         if (! empty($conf->propal->enabled) && $user->rights->propale->lire) {
             include_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
-            $board=new \Propal($db);
+            $board = new \Propal($db);
             $dashboardlines[] = $board->load_board($user, "opened");
 
             // Number of commercial proposals CLOSED signed (billed)
             $dashboardlines[] = $board->load_board($user, "signed");
         }
     }
-    
+
     /**
      * Read Suppliers Orders Dashboard
      *
@@ -270,18 +270,18 @@ class Dashboard extends AbstractWidget
     private function getDelayedServices(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of services enabled (delayed)
         if (! empty($conf->contrat->enabled) && $user->rights->contrat->lire) {
             include_once DOL_DOCUMENT_ROOT.'/contrat/class/contrat.class.php';
-            $board=new \Contrat($db);
+            $board = new \Contrat($db);
             $dashboardlines[] = $board->load_board($user, "inactives");
 
             // Number of active services (expired)
             $dashboardlines[] = $board->load_board($user, "expired");
         }
     }
-    
+
     /**
      * Read Customers Invoices Dashboard
      *
@@ -290,15 +290,15 @@ class Dashboard extends AbstractWidget
     private function getCustomersInvoices(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of invoices customers (has paid)
         if (! empty($conf->facture->enabled) && $user->rights->facture->lire) {
             include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
-            $board=new \Facture($db);
+            $board = new \Facture($db);
             $dashboardlines[] = $board->load_board($user);
         }
     }
-  
+
     /**
      * Read Supplier Invoices Dashboard
      *
@@ -307,15 +307,15 @@ class Dashboard extends AbstractWidget
     private function getSupplierInvoices(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of supplier invoices (has paid)
         if (! empty($conf->fournisseur->enabled) && ! empty($conf->facture->enabled) && $user->rights->facture->lire) {
             include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
-            $board=new \FactureFournisseur($db);
+            $board = new \FactureFournisseur($db);
             $dashboardlines[] = $board->load_board($user);
         }
     }
-    
+
     /**
      * Read Transactions Dashboard
      *
@@ -324,18 +324,18 @@ class Dashboard extends AbstractWidget
     private function getTransactionsDashboard(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of transactions to conciliate
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
-            $board=new \Account($db);
+            $board = new \Account($db);
             $count = $board::countAccountToReconcile();
             if ($count > 0) {
                 $dashboardlines[] = $board->load_board($user);
             }
         }
     }
-    
+
     /**
      * Read Bank Wire Dashboard
      *
@@ -344,15 +344,15 @@ class Dashboard extends AbstractWidget
     private function getBankWire(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of cheque to send
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/compta/paiement/cheque/class/remisecheque.class.php';
-            $board=new \RemiseCheque($db);
+            $board = new \RemiseCheque($db);
             $dashboardlines[] = $board->load_board($user);
         }
     }
-    
+
     /**
      * Read Bank Wire Dashboard
      *
@@ -365,11 +365,11 @@ class Dashboard extends AbstractWidget
         // Number of foundation members
         if (! empty($conf->adherent->enabled) && $user->rights->adherent->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/adherents/class/adherent.class.php';
-            $board=new \Adherent($db);
+            $board = new \Adherent($db);
             $dashboardlines[] = $board->load_board($user);
         }
     }
-    
+
     /**
      * Read Expenses Dashboard
      *
@@ -378,60 +378,60 @@ class Dashboard extends AbstractWidget
     private function getExpenesDashboard(&$dashboardlines)
     {
         global $user, $db, $conf;
-        
+
         // Number of expense reports to pay
         if (! empty($conf->expensereport->enabled) && $user->rights->expensereport->lire) {
             include_once DOL_DOCUMENT_ROOT.'/expensereport/class/expensereport.class.php';
-            $board=new \ExpenseReport($db);
+            $board = new \ExpenseReport($db);
 
             $dashboardlines[] = $board->load_board($user);
         }
     }
-    
+
     /**
      * Block Building - Text Intro
      */
     private function buildTableBlock()
     {
         global $langs;
-        
+
         $langs->load("orders");
-        
-        $data   = $this->getData();
-        
+
+        $data = $this->getData();
+
         //====================================================================//
         // Build Table Contents
         //====================================================================//
-        $contents       = array();
-        
+        $contents = array();
+
         $contents[] = array(
             $langs->trans("DolibarrWorkBoard"),
             $langs->trans("Number"),
             $langs->trans("Late"),
         );
-        
+
         foreach ($data as $workboardResponse) {
             if ($workboardResponse->nbtodolate > 0) {
                 $late = $workboardResponse->nbtodolate;
-                $late.= '&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i>';
-                $late.= "&nbsp;( >". ceil($workboardResponse->warning_delay) . ' ' . $langs->trans("days") . ")";
+                $late .= '&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i>';
+                $late .= "&nbsp;( >".ceil($workboardResponse->warning_delay).' '.$langs->trans("days").")";
             } else {
                 $late = '<i class="fa fa-check-circle-o text-success" aria-hidden="true"></i>';
             }
-            
+
             $contents[] = array(
                 $workboardResponse->label,
                 $workboardResponse->nbtodo,
                 $late,
             );
         }
-        
+
         //====================================================================//
         // Build Table Options
         //====================================================================//
         $options = array(
-            "AllowHtml"         => true,
-            "HeadingRows"       => 1,
+            "AllowHtml" => true,
+            "HeadingRows" => 1,
         );
         //====================================================================//
         // Add Table Block

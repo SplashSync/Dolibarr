@@ -21,14 +21,14 @@ namespace   Splash\Local\Core;
 trait MetaDatesTrait
 {
     private $infoloaded;
-    
+
     /**
      * Build Meta Fields using FieldFactory
      */
     private function buildMetaDatesFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // TMS - Last Change Date
         $this->fieldsFactory()->create(SPL_T_DATE)
@@ -37,7 +37,7 @@ trait MetaDatesTrait
             ->Group("Meta")
             ->MicroData("http://schema.org/DataFeedItem", "dateModified")
             ->isReadOnly();
-        
+
         //====================================================================//
         // datec - Creation Date
         $this->fieldsFactory()->create(SPL_T_DATE)
@@ -53,8 +53,6 @@ trait MetaDatesTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     private function getMetaDatesFields($key, $fieldName)
     {
@@ -75,7 +73,7 @@ trait MetaDatesTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
 }

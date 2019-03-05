@@ -18,7 +18,6 @@ namespace Splash\Local\Objects\Invoice;
 use DateTime;
 use Facture;
 use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Local;
 use User;
 
 /**
@@ -38,7 +37,7 @@ trait CRUDTrait
         global $db, $user, $conf;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (empty($user->login)) {
@@ -51,13 +50,13 @@ trait CRUDTrait
         // Fatch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
-            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Current Entity is : " . $conf->entity);
+            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Current Entity is : ".$conf->entity);
 
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Customer Invoice (" . $objectId . ")."
+                " Unable to load Customer Invoice (".$objectId.")."
             );
         }
         //====================================================================//
@@ -67,7 +66,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Customer Invoice (" . $objectId . ")."
+                " Unable to load Customer Invoice (".$objectId.")."
             );
         }
         $object->fetch_lines();
@@ -87,7 +86,7 @@ trait CRUDTrait
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Check Order Date is given
         if (empty($this->in["date"])) {
@@ -103,14 +102,14 @@ trait CRUDTrait
         $this->object = new Facture($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $dateTime   =   new DateTime($this->in["date"]);
+        $dateTime = new DateTime($this->in["date"]);
         $this->setSimple('date', $dateTime->getTimestamp());
         $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
         $this->setSimple("statut", Facture::STATUS_DRAFT);
         $this->object->statut = Facture::STATUS_DRAFT;
         $this->object->paye = 0;
-        
+
         //====================================================================//
         // Create Object In Database
         if ($this->object->create($user) <= 0) {
@@ -123,10 +122,10 @@ trait CRUDTrait
                 "Unable to create new Customer Invoice. "
             );
         }
-        
+
         return $this->object;
     }
-    
+
     /**
      * Update Request Object
      *
@@ -139,7 +138,7 @@ trait CRUDTrait
         global $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         if (!$needed) {
             return $this->getObjectIdentifier();
         }
@@ -150,25 +149,25 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object
-        if ($this->object->update($user)  <= 0) {
+        if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Customer Invoice (" . $this->object->id . ")"
+                " Unable to Update Customer Invoice (".$this->object->id.")"
             ) ;
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
 
         return $this->getObjectIdentifier();
     }
-    
+
     /**
      * Delete requested Object
      *
@@ -181,7 +180,7 @@ trait CRUDTrait
         global $db,$user,$conf;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Object
         $object = new Facture($db);
@@ -207,7 +206,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Customer Invoice (" . $objectId . ")."
+                " Unable to Delete Customer Invoice (".$objectId.")."
             );
         }
         //====================================================================//
@@ -219,13 +218,13 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Customer Invoice (" . $objectId . ")"
+                " Unable to Delete Customer Invoice (".$objectId.")"
             ) ;
         }
 
         return true;
     }
-    
+
     /**
      * {@inheritdoc}
      */

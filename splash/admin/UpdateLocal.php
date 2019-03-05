@@ -25,7 +25,7 @@ if ('UpdateLocal' == $action) {
     //====================================================================//
     // Init DB Transaction
     $db->begin();
-    
+
     $errors = 0;
     //====================================================================//
     // Update Default Lang
@@ -44,7 +44,7 @@ if ('UpdateLocal' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Default User
     $DfUser = GETPOST('user', 'alpha');
@@ -62,7 +62,7 @@ if ('UpdateLocal' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Default MultiPrice
     $DfPrice = GETPOST('price_level', 'alpha');

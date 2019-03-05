@@ -38,7 +38,7 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         dolibarr_set_const($db, "FACTURE_TVAOPTION", '1', 'chaine', 0, '', $conf->entity);
         dolibarr_set_const($db, "FACTURE_LOCAL_TAX1_OPTION", 'localtax1on', 'chaine', 0, '', $conf->entity);
-        
+
         //====================================================================//
         //   Configure Tax Classes
         $this->setTaxeCode(1, 5.5, "TVAFR05");      // French VAT  5%
@@ -47,7 +47,7 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         $this->setTaxeCode(14, 5, "CA-QC");        // Canadian Quebec VAT 5%
     }
-    
+
     /**
      * @dataProvider taxTypesProvider
      *
@@ -69,13 +69,13 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Create Fake Order Data
-        $fields         =   $this->fakeFieldsList($objectType, array("desc@lines"), true);
-        $fakeData       =   $this->fakeObjectData($fields);
-        
+        $fields = $this->fakeFieldsList($objectType, array("desc@lines"), true);
+        $fakeData = $this->fakeObjectData($fields);
+
         //====================================================================//
         //   Setup Tax Names
         foreach ($fakeData["lines"] as $index => $data) {
-            $fakeData["lines"][$index]["vat_src_code"]   =   $taxCode;
+            $fakeData["lines"][$index]["vat_src_code"] = $taxCode;
         }
 
         //====================================================================//
@@ -88,12 +88,12 @@ class L02TaxesByCodesTest extends ObjectsCase
         //====================================================================//
         //   Add Object Id to Created List
         $this->addTestedObject($objectType, $objectId);
-        
+
         //====================================================================//
         //   Read Order Data
-        $objectData  =   Splash::object($objectType)
+        $objectData = Splash::object($objectType)
             ->get($objectId, array("desc@lines", "price@lines", "vat_src_code@lines"));
-        
+
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData["lines"] as $data) {
@@ -103,14 +103,14 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Load Order Object
-        $splashObject  =   Splash::object($objectType);
+        $splashObject = Splash::object($objectType);
         $object = false;
         if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
-            $object  =   $splashObject->load($objectId);
+            $object = $splashObject->load($objectId);
         }
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
-        
+
         //====================================================================//
         //   Verify Tax Values
         foreach ($object->lines as $line) {
@@ -118,11 +118,11 @@ class L02TaxesByCodesTest extends ObjectsCase
             $this->assertEquals($vatRate1, $line->tva_tx);
             $this->assertEquals($vatRate2, $line->localtax1_tx);
         }
-        
+
         //====================================================================//
         //   Return Basic Tax Names
         foreach ($fakeData["lines"] as $index => $data) {
-            $fakeData["lines"][$index]["vat_src_code"]   =   "";
+            $fakeData["lines"][$index]["vat_src_code"] = "";
         }
 
         //====================================================================//
@@ -133,9 +133,9 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Read Order Data
-        $objectData2  =   Splash::object($objectType)
+        $objectData2 = Splash::object($objectType)
             ->get($objectId, array("desc@lines", "price@lines", "vat_src_code@lines"));
-        
+
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData2["lines"] as $data) {
@@ -143,7 +143,7 @@ class L02TaxesByCodesTest extends ObjectsCase
             $this->assertEquals(20, $data["price"]["vat"]);
         }
     }
-    
+
     public function testDisableFeature()
     {
         global $db, $conf;
@@ -151,11 +151,11 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", '0', 'chaine', 0, '', $conf->entity);
         $this->assertEquals(0, $conf->global->SPLASH_DETECT_TAX_NAME);
-        
+
         dolibarr_set_const($db, "FACTURE_TVAOPTION", '0', 'chaine', 0, '', $conf->entity);
         dolibarr_set_const($db, "FACTURE_LOCAL_TAX1_OPTION", '', 'chaine', 0, '', $conf->entity);
     }
-    
+
     public function taxTypesProvider()
     {
         return array(
@@ -173,41 +173,41 @@ class L02TaxesByCodesTest extends ObjectsCase
             array("Invoice",    "CA-QC",      5, 9.975),
         );
     }
-    
+
     private function setTaxeCode($countryId, $vatRate, $code)
     {
         global $db;
-        
+
         //====================================================================//
         //   Ensure Not Already Defined
         if ($this->isTaxeCode($countryId, $vatRate, $code)) {
             return;
         }
-        
+
         //====================================================================//
         //   Update Tax Code
-        $sql = "UPDATE " . MAIN_DB_PREFIX . "c_tva as t SET code = '" . $code;
-        $sql.= "' WHERE t.fk_pays = " . $countryId . " AND t.taux = " . $vatRate;
+        $sql = "UPDATE ".MAIN_DB_PREFIX."c_tva as t SET code = '".$code;
+        $sql .= "' WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
         $resql = $db->query($sql);
         if (!$resql) {
             dol_print_error($db);
         }
         $db->free($resql);
     }
-    
+
     private function isTaxeCode($countryId, $vatRate, $code)
     {
         global $db;
-        
-        $sql = "SELECT * FROM " . MAIN_DB_PREFIX . "c_tva as t";
-        $sql.= " WHERE t.fk_pays = " . $countryId . " AND t.taux = " . $vatRate;
-        $sql.= " AND t.code = '" . $code . "'";
-        
+
+        $sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_tva as t";
+        $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
+        $sql .= " AND t.code = '".$code."'";
+
         $resql = $db->query($sql);
         if (!$resql) {
             dol_print_error($db);
         }
-        
+
         return (bool) ($db->num_rows($resql) > 0);
     }
 }

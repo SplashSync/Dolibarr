@@ -33,55 +33,55 @@ trait ObjectsListTrait
         //====================================================================//
         // Prepare SQL request for reading in Database
         //====================================================================//
-        $sql    = "SELECT ";
+        $sql = "SELECT ";
         //====================================================================//
         // Select Database fields
-        $sql   .= " p.rowid as id,";                    // Object Id
-        $sql   .= " p.ref as ref,";                     // Reference
-        $sql   .= " p.label as label,";                 // Product Name
-        $sql   .= " p.description as description,";     // Short Description
-        $sql   .= " p.stock as stock_reel,";            // Stock Level
-        $sql   .= " ROUND(p.price, 3) as price,";                 // Price
-        $sql   .= " p.tobuy as status_buy,";            // Product may be Ordered / Bought
-        $sql   .= " p.tosell as status,";               // Product may be Sold
-        $sql   .= " p.tms as modified";                 // last modified date
+        $sql .= " p.rowid as id,";                    // Object Id
+        $sql .= " p.ref as ref,";                     // Reference
+        $sql .= " p.label as label,";                 // Product Name
+        $sql .= " p.description as description,";     // Short Description
+        $sql .= " p.stock as stock_reel,";            // Stock Level
+        $sql .= " ROUND(p.price, 3) as price,";                 // Price
+        $sql .= " p.tobuy as status_buy,";            // Product may be Ordered / Bought
+        $sql .= " p.tosell as status,";               // Product may be Sold
+        $sql .= " p.tms as modified";                 // last modified date
         //====================================================================//
         // Select Database tables
-        $sql   .= " FROM " . MAIN_DB_PREFIX . "product as p ";
-        $sql   .= "LEFT JOIN " . MAIN_DB_PREFIX . "product_attribute_combination as c ON p.rowid = c.fk_product_parent";
+        $sql .= " FROM ".MAIN_DB_PREFIX."product as p ";
+        $sql .= "LEFT JOIN ".MAIN_DB_PREFIX."product_attribute_combination as c ON p.rowid = c.fk_product_parent";
         //====================================================================//
         // Entity Filter
-        $sql   .= " WHERE p.entity IN (".getEntity('product', 1).") AND c.rowid IS NULL";
+        $sql .= " WHERE p.entity IN (".getEntity('product', 1).") AND c.rowid IS NULL";
         //====================================================================//
         // Setup filters
         //====================================================================//
         // Add filters with names convertions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
-            $sql   .= " AND ( ";
+            $sql .= " AND ( ";
             //====================================================================//
             // Search in Product Ref.
-            $sql   .= " LOWER( p.ref ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " LOWER( p.ref ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Product Label
-            $sql   .= " OR LOWER( p.label ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( p.label ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Product Description
-            $sql   .= " OR LOWER( p.description ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( p.description ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Product Stock
-            $sql   .= " OR LOWER( p.stock ) LIKE LOWER( '%" . $filter ."%') ";
+            $sql .= " OR LOWER( p.stock ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Product Price
-            $sql   .= " OR LOWER( p.price ) LIKE LOWER( '%" . $filter ."%') ";
-            $sql   .= " ) ";
+            $sql .= " OR LOWER( p.price ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " ) ";
         }
         //====================================================================//
         // Setup sortorder
         //====================================================================//
         $sortfield = empty($params["sortfield"])?"p.rowid":$params["sortfield"];
         $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
-        $sql   .= " ORDER BY " . $sortfield . " " . $sortorder;
-        
+        $sql .= " ORDER BY ".$sortfield." ".$sortorder;
+
         return $sql;
     }
 }

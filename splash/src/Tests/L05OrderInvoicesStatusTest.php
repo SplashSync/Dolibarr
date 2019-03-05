@@ -27,16 +27,16 @@ use Splash\Tests\Tools\ObjectsCase;
  */
 class L05OrderInvoicesStatusTest extends ObjectsCase
 {
-    private static $objectsIds     = array();
-    
+    private static $objectsIds = array();
+
     public function testCreateObjects()
     {
         $this->loadLocalTestSequence("Monolangual");
-        
+
         $this->createObject("Order", "OrderDraft");
         $this->createObject("Invoice", "PaymentDraft");
     }
-    
+
     /**
      * Test Oreder & Invoices Status
      *
@@ -59,10 +59,10 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Load Object
-        $splashObject  =   Splash::object($objectType);
+        $splashObject = Splash::object($objectType);
         $object = false;
         if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
-            $object  =   $splashObject->load($objectId);
+            $object = $splashObject->load($objectId);
         }
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
@@ -70,12 +70,12 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Reference
-        $this->assertContains($expectedRef, $object->ref, "Splash Status: " . $splashStatus);
+        $this->assertContains($expectedRef, $object->ref, "Splash Status: ".$splashStatus);
         if ("PROV" != $expectedRef) {
             $this->assertContains(dol_print_date($object->date, '%y%m'), $object->ref);
         }
     }
-    
+
     public function statusProvider()
     {
         //====================================================================//
@@ -97,7 +97,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
             //            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED),
             array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
-            
+
             //====================================================================//
             //   Tests For Invoices Objects
             array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
@@ -106,7 +106,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Invoice",    "PaymentCanceled",  Facture::STATUS_ABANDONED,  "FA"),
         );
     }
-    
+
     /**
      * @dataProvider statusOnCreateProvider
      *
@@ -119,27 +119,27 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     {
         //====================================================================//
         //   Create Fake Order Data
-        $fields             =   $this->fakeFieldsList($objectType, array(), true);
-        $fakeData           =   $this->fakeObjectData($fields);
-        $fakeData["status"] =   $splashStatus;
-        
+        $fields = $this->fakeFieldsList($objectType, array(), true);
+        $fakeData = $this->fakeObjectData($fields);
+        $fakeData["status"] = $splashStatus;
+
         //====================================================================//
         //   Execute Action Directly on Module
         Splash::object($objectType)->lock();
         $objectId = Splash::object($objectType)->set(null, $fakeData);
         $this->assertTrue(false !== $objectId);
         $this->assertNotEmpty($objectId);
-        
+
         //====================================================================//
         //   Add Object Id to Created List
         $this->addTestedObject($objectType, $objectId);
-        
+
         //====================================================================//
         //   Load Object
-        $splashObject  =   Splash::object($objectType);
+        $splashObject = Splash::object($objectType);
         $object = false;
         if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
-            $object  =   $splashObject->load($objectId);
+            $object = $splashObject->load($objectId);
         }
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
@@ -147,13 +147,13 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Reference
-        $this->assertContains($expectedRef, $object->ref, "Splash Status: " . $splashStatus);
+        $this->assertContains($expectedRef, $object->ref, "Splash Status: ".$splashStatus);
         if ("PROV" != $expectedRef) {
             $this->assertContains(dol_print_date($object->date, '%y%m'), $object->ref);
             $this->assertContains(dol_print_date($fakeData["date"], '%y%m'), $object->ref);
         }
     }
-    
+
     public function statusOnCreateProvider()
     {
         //====================================================================//
@@ -173,7 +173,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
             //            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED,  "CO"),
             array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
-            
+
             //====================================================================//
             //   Tests For Invoices Objects
             array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
@@ -181,15 +181,15 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
         );
     }
-    
+
     private function createObject($objectType, $status)
     {
         //====================================================================//
         //   Create Fake Order Data
-        $fields         =   $this->fakeFieldsList($objectType, array(), true);
-        $fakeData       =   $this->fakeObjectData($fields);
-        $fakeData["status"] =   $status;
-        
+        $fields = $this->fakeFieldsList($objectType, array(), true);
+        $fakeData = $this->fakeObjectData($fields);
+        $fakeData["status"] = $status;
+
         //====================================================================//
         //   Execute Action Directly on Module
         Splash::object($objectType)->lock();
@@ -200,19 +200,19 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Add Object Id to Created List
         $this->addTestedObject($objectType, $objectId);
         self::$objectsIds[$objectType] = $objectId;
-        
+
         //====================================================================//
         //   Load Object
-        $splashObject  =   Splash::object($objectType);
+        $splashObject = Splash::object($objectType);
         $object = false;
         if (($splashObject instanceof Order) || ($splashObject instanceof Invoice)) {
-            $object  =   $splashObject->load($objectId);
+            $object = $splashObject->load($objectId);
         }
 
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
         $this->assertEquals(Commande::STATUS_DRAFT, $object->statut);
-        
+
         return $object;
     }
 }

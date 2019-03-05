@@ -35,11 +35,11 @@ trait DirectAccessTrait
     public function setDatabaseField($name, $value, $table = null, $rowId = null)
     {
         global $db;
-        
+
         //====================================================================//
         // Parameters Overide
-        $realTable  =   is_null($table) ?  $this->object->table_element : $table;
-        $realRowId  =   is_null($rowId) ?  $this->object->id : $rowId;
+        $realTable = is_null($table) ?  $this->object->table_element : $table;
+        $realRowId = is_null($rowId) ?  $this->object->id : $rowId;
         //====================================================================//
         // Safety Check
         if (empty($realTable) || empty($realRowId)) {
@@ -48,8 +48,8 @@ trait DirectAccessTrait
         //====================================================================//
         // Prepare SQL Request
         //====================================================================//
-        $sql  = "UPDATE ". MAIN_DB_PREFIX . $realTable;
-        $sql .= " SET " . $name . "='".$db->escape($value)."'";
+        $sql = "UPDATE ".MAIN_DB_PREFIX.$realTable;
+        $sql .= " SET ".$name."='".$db->escape($value)."'";
         $sql .= " WHERE rowid=".$db->escape($realRowId);
         //====================================================================//
         // Execute SQL Query

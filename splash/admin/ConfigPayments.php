@@ -17,7 +17,7 @@ use Splash\Core\SplashCore as Splash;
 
 //====================================================================//
 // Create Setup Form
-echo    '<form name="MainSetup" action="'.  filter_input(INPUT_SERVER, "php_self").'" method="POST">';
+echo    '<form name="MainSetup" action="'.filter_input(INPUT_SERVER, "php_self").'" method="POST">';
 echo    '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 echo    '<input type="hidden" name="action" value="UpdatePayments">';
 
@@ -30,9 +30,9 @@ echo '<table class="noborder" width="100%"><tbody>';
 //====================================================================//
 // Default Bank Account Parameter
 require_once(DOL_DOCUMENT_ROOT."/core/class/html.form.class.php");
-$form=  new Form($db);
+$form = new Form($db);
 echo '  <tr class="pair">';
-echo '      <td>' . $langs->trans("SPL_DfBankAccount") . '</td>';
+echo '      <td>'.$langs->trans("SPL_DfBankAccount").'</td>';
 echo '      <td>';
 $form->select_comptes($conf->global->SPLASH_BANK);
 echo '      </td>';
@@ -49,9 +49,9 @@ foreach ($form->cache_types_paiements as $PaymentType) {
     }
     //====================================================================//
     // Render Account Select Line
-    $ParameterName  =   "SPLASH_BANK_FOR_" . $PaymentType["id"];
+    $ParameterName = "SPLASH_BANK_FOR_".$PaymentType["id"];
     echo '  <tr class="pair">';
-    echo '      <td>' . $langs->trans("SPL_BankAccountFor", $PaymentType["label"], $PaymentType["code"]) . '</td>';
+    echo '      <td>'.$langs->trans("SPL_BankAccountFor", $PaymentType["label"], $PaymentType["code"]).'</td>';
     echo '      <td>';
     $form->select_comptes($conf->global->{$ParameterName}, $PaymentType["id"]);
     echo '      </td>';
@@ -68,9 +68,9 @@ echo "</div>";
 // Display Save Btn | Help Link
 echo    '<div class="tabsAction">';
 echo    '      <div class="inline-block" >';
-echo    '           <a href="' . $langs->trans("SPL_Payment_Help") . '" target="_blank">';
+echo    '           <a href="'.$langs->trans("SPL_Payment_Help").'" target="_blank">';
 echo    '               <i class="fa fa-external-link">&nbsp;</i>';
-echo                    $langs->trans("SPL_Help_Msg") . '<i class="fa fa-question">&nbsp;</i>';
+echo                    $langs->trans("SPL_Help_Msg").'<i class="fa fa-question">&nbsp;</i>';
 echo    '           </a>';
 echo    '       </div>';
 echo    '       <input type="submit" class="butAction" align="right" value="'.$langs->trans("Save").'">';

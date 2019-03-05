@@ -29,7 +29,7 @@ if ('UpdateMode' == $action) {
     if (!$WsExpert) {
         dolibarr_set_const($db, "SPLASH_WS_HOST", "", 'chaine', 0, '', $conf->entity);
     }
-    header("location:" . filter_input(INPUT_SERVER, "PHP_SELF"));
+    header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
 
 //====================================================================//
@@ -38,7 +38,7 @@ if ('UpdateMain' == $action) {
     //====================================================================//
     // Init DB Transaction
     $db->begin();
-    
+
     $errors = 0;
     //====================================================================//
     // Update Server Id
@@ -48,7 +48,7 @@ if ('UpdateMain' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Server Encryption Key
     $WsKey = GETPOST('WsKey', 'alpha');
@@ -57,7 +57,7 @@ if ('UpdateMain' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Server Host Url
     $WsHost = GETPOST('WsHost', 'alpha');
@@ -66,7 +66,7 @@ if ('UpdateMain' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Protocl
     $WsMethod = GETPOST('WsMethod', 'alpha');
@@ -75,7 +75,7 @@ if ('UpdateMain' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // DB Commit & Display User Message
     if (! $error) {

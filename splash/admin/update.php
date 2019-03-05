@@ -20,7 +20,7 @@ require(is_file("../../main.inc.php") ? "../../main.inc.php" : "../../../main.in
 
 //====================================================================//
 // Splash Module Definitions
-include_once(dirname(dirname(__FILE__)) ."/_conf/defines.inc.php");
+include_once(dirname(dirname(__FILE__))."/_conf/defines.inc.php");
 
 //====================================================================//
 // Functions Dolibarr
@@ -40,7 +40,7 @@ $langs->load("splash@splash");
 //   INITIALISATION
 //====================================================================//
 //====================================================================//
-    
+
 // Protection if not admin user
 if (!$user->admin) {
     accessforbidden();
@@ -63,9 +63,9 @@ if (!$user->admin) {
 llxHeader($header, $langs->trans("Update"));
 
 $Path = dirname(dirname(dirname(__FILE__)));
-echo $Path . "</br>";
+echo $Path."</br>";
 
-print_r(shell_exec("composer update --ignore-platform-reqs -d " . $Path)  . "</br>");
+print_r(shell_exec("composer update --ignore-platform-reqs -d ".$Path)."</br>");
 //echo  shell_exec ( "curl -sS https://getcomposer.org/installer | php") . "</br>";
 
 //====================================================================//

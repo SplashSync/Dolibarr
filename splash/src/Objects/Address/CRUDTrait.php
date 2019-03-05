@@ -36,7 +36,7 @@ trait CRUDTrait
         global $db;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Init Object
         $object = new Contact($db);
@@ -49,7 +49,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Contact Address (" . $objectId . ")."
+                " Unable to load Contact Address (".$objectId.")."
             );
         }
         //====================================================================//
@@ -59,7 +59,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to load Contact Address (" . $objectId . ")."
+                " Unable to load Contact Address (".$objectId.")."
             );
         }
 
@@ -76,7 +76,7 @@ trait CRUDTrait
         global $db, $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Check Customer Name is given
         if (empty($this->in["firstname"])) {
@@ -105,10 +105,10 @@ trait CRUDTrait
                 "Unable to create new Contact Address. "
             );
         }
-        
+
         return $this->object;
     }
-    
+
     /**
      * Update Request Object
      *
@@ -121,7 +121,7 @@ trait CRUDTrait
         global $user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         if (!$needed) {
             return $this->getObjectIdentifier();
         }
@@ -139,18 +139,18 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Update Contact Address (" . $this->object->id . ")"
+                " Unable to Update Contact Address (".$this->object->id.")"
             ) ;
         }
         //====================================================================//
         // Update Object Extra Fields
-        if ($this->object->insertExtraFields()  <= 0) {
+        if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
 
         return $this->getObjectIdentifier();
     }
-    
+
     /**
      * Delete requested Object
      *
@@ -163,7 +163,7 @@ trait CRUDTrait
         global $db,$user;
         //====================================================================//
         // Stack Trace
-        Splash::log()->trace(__CLASS__, __FUNCTION__);
+        Splash::log()->trace();
         //====================================================================//
         // Load Object
         $object = new Contact($db);
@@ -183,7 +183,7 @@ trait CRUDTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to delete Product (" . $objectId . ")."
+                " Unable to delete Product (".$objectId.")."
             );
         }
         //====================================================================//
@@ -194,7 +194,7 @@ trait CRUDTrait
 
         return true;
     }
-    
+
     /**
      * {@inheritdoc}
      */

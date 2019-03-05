@@ -33,15 +33,13 @@ class L06AttributesManagerTest extends ObjectsCase
      * @param string $attrCode
      * @param string $attrName
      * @param array  $attrValues
-     *
-     * @return void
      */
     public function testAttributesManager($attrCode, $attrName, $attrValues)
     {
         //====================================================================//
         //   Ensure Attribute Doesn't Already Exists
         $this->assertNull(AttrManager::getAttributeByCode($attrCode));
-        
+
         //====================================================================//
         //   Create New Attribute
         $attribute = AttrManager::addAttribute($attrCode, $attrName);
@@ -49,7 +47,7 @@ class L06AttributesManagerTest extends ObjectsCase
         $this->assertNotEmpty($attribute->id);
         $this->assertEquals($attrCode, $attribute->ref);
         $this->assertEquals($attrName, $attribute->label);
-        
+
         //====================================================================//
         //   Test Loading Attribute
         $this->assertInstanceOf(ProductAttribute::class, AttrManager::getAttributeById($attribute->id));
@@ -66,7 +64,7 @@ class L06AttributesManagerTest extends ObjectsCase
             $this->assertNotEmpty($value->id);
             $this->assertEquals($valueCode, $value->ref);
             $this->assertEquals($valueName, $value->value);
-            
+
             //====================================================================//
             //   Test Loading Attribute Value
             $this->assertInstanceOf(
@@ -77,16 +75,16 @@ class L06AttributesManagerTest extends ObjectsCase
                 ProductAttributeValue::class,
                 AttrManager::getAttributeValueByName($attribute, $valueName)
             );
-            
+
             //====================================================================//
             // Store for Further Usage
             $values[$valueCode] = $value;
         }
-        
+
         //====================================================================//
         //   Test Delete Attribute Rejected when Values Exists
         $this->assertFalse(AttrManager::removeAttribute($attribute));
-        
+
         //====================================================================//
         //   Delete All Attribute Values
         foreach ($values as $valueCode => $value) {
@@ -94,18 +92,18 @@ class L06AttributesManagerTest extends ObjectsCase
             //   Delete Attribute Value
             $this->assertTrue($value instanceof ProductAttributeValue);
             $this->assertTrue(AttrManager::removeAttributeValue($value));
-            
+
             //====================================================================//
             //   Test Loading Attribute Value now Fail
             $this->assertNull(AttrManager::getAttributeValueById($attribute, $value->id));
             $this->assertNull(AttrManager::getAttributeValueByName($attribute, (string) $valueCode));
         }
-        
+
         //====================================================================//
         //   Test Delete Attribute
         $this->assertTrue(AttrManager::removeAttribute($attribute));
     }
-    
+
     /**
      * Generate a Combination of Dumy Attributes
      *
@@ -114,13 +112,13 @@ class L06AttributesManagerTest extends ObjectsCase
     public function attributesProvider()
     {
         $index = rand(100, 1000);
-        
+
         return array(
             //====================================================================//
             //   Dummy Attributes List
-            array("CODE" . $index, "Attr" . $index,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
-            array("CODE" . $index++, "Attr" . $index,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
-            array("CODE" . $index++, "Attr" . $index,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
+            array("CODE".$index, "Attr".$index,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
+            array("CODE".$index++, "Attr".$index,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
+            array("CODE".$index++, "Attr".$index,  array("S" => "Small", "M" => "Medium", "L" => "Large")),
         );
     }
 }

@@ -18,7 +18,6 @@ namespace Splash\Local\Objects\Product\Variants;
 use Product;
 use ProductCombination;
 use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Local;
 use Splash\Local\Services\VariantsManager;
 
 /**
@@ -40,7 +39,7 @@ trait CoreTrait
         if (!self::isVariantEnabled()) {
             return;
         }
-        
+
         //====================================================================//
         // Product Variation Parent Link
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -53,7 +52,7 @@ trait CoreTrait
         //====================================================================//
         // CHILD PRODUCTS INFORMATIONS
         //====================================================================//
-        
+
         //====================================================================//
         // Product Variation List - Product Link
         $this->fieldsFactory()->Create((string) self::objects()->Encode("Product", SPL_T_ID))
@@ -62,7 +61,7 @@ trait CoreTrait
             ->InList("variants")
             ->MicroData("http://schema.org/Product", "Variants")
             ->isNotTested();
-        
+
         //====================================================================//
         // Product Variation List - Product SKU
         $this->fieldsFactory()->Create(SPL_T_VARCHAR)
@@ -72,18 +71,16 @@ trait CoreTrait
             ->MicroData("http://schema.org/Product", "VariationName")
             ->isReadOnly();
     }
-    
+
     //====================================================================//
     // Fields Getter Functions
     //====================================================================//
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getVariantsCoreFields($key, $fieldName)
     {
@@ -106,8 +103,6 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getVariantsListFields($key, $fieldName)
     {
@@ -121,7 +116,7 @@ trait CoreTrait
         // Check if Product is Variant
         if (null === $this->combination) {
             unset($this->in[$key]);
-            
+
             return;
         }
         //====================================================================//
@@ -136,12 +131,12 @@ trait CoreTrait
             if (!empty(Splash::input('SPLASH_TRAVIS')) && ($combination->fk_product_child == $this->object->id)) {
                 continue;
             }
-            
+
             //====================================================================//
             // Get Variant Infos
             switch ($fieldId) {
                 case 'id':
-                    $value  =   self::objects()
+                    $value = self::objects()
                         ->encode("Product", (string) $combination->fk_product_child);
 
                     break;
@@ -159,24 +154,23 @@ trait CoreTrait
 
             self::lists()->insert($this->out, "variants", $fieldId, $index, $value);
         }
-        
+
         unset($this->in[$key]);
         //====================================================================//
         // Sort Attributes by Code
         ksort($this->out["variants"]);
     }
-    
+
     //====================================================================//
     // Fields Setter Functions
     //====================================================================//
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
      *
-     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function setVariantsListFields($fieldName, $fieldData)

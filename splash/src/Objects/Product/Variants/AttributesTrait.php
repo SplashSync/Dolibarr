@@ -16,8 +16,6 @@
 namespace Splash\Local\Objects\Product\Variants;
 
 use ArrayObject;
-use ProductAttribute;
-use ProductAttributeValue;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Services\AttributesManager;
 use Splash\Local\Services\VariantsManager;
@@ -33,20 +31,18 @@ trait AttributesTrait
 
     /**
      * Build Attributes Fields using FieldFactory
-     *
-     * @return void
      */
     protected function buildVariantsAttributesFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Ensure Product Variation Module is Active
         if (!self::isVariantEnabled()) {
             return;
         }
-        
-        $groupName  = $langs->trans("ProductCombinations");
+
+        $groupName = $langs->trans("ProductCombinations");
 
         //====================================================================//
         // Product Variation List - Variation Attribute Code
@@ -89,8 +85,6 @@ trait AttributesTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      */
     protected function getVariantsAttributesFields($key, $fieldName)
     {
@@ -110,21 +104,21 @@ trait AttributesTrait
             // Get Variant Infos
             switch ($fieldId) {
                 case 'code':
-                    $value  =   $details['attribute']->ref;
+                    $value = $details['attribute']->ref;
 
                     break;
                 case 'name':
-                    $value  =   $details['attribute']->label;
+                    $value = $details['attribute']->label;
 
                     break;
                 case 'value':
-                    $value  =   $details['value']->value;
+                    $value = $details['value']->value;
 
                     break;
                 default:
                     return;
             }
-            
+
             self::lists()->insert($this->out, "attributes", $fieldId, $details['attribute']->ref, $value);
         }
         unset($this->in[$key]);
@@ -132,7 +126,7 @@ trait AttributesTrait
         // Sort Attributes by Code
         ksort($this->out["attributes"]);
     }
-    
+
     //====================================================================//
     // Fields Writting Functions
     //====================================================================//
@@ -142,8 +136,6 @@ trait AttributesTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      */
     protected function setVariantsAttributesFields($fieldName, $fieldData)
     {
@@ -175,9 +167,9 @@ trait AttributesTrait
             }
             $attributes[$attribute->id] = $attributeValue->id;
         }
-        
+
         VariantsManager::setProductAttributes($this->object->id, $attributes);
-        
+
         unset($this->in[$fieldName]);
     }
 
@@ -222,7 +214,7 @@ trait AttributesTrait
 
         return true;
     }
-    
+
     /**
      * Check if Attribute Array is Valid for Writing
      *
@@ -241,7 +233,7 @@ trait AttributesTrait
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Product Attribute " . $name . " is Not Valid."
+                " Product Attribute ".$name." is Not Valid."
             );
         }
 

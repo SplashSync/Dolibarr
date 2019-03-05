@@ -31,18 +31,18 @@ trait ItemsTrait
     protected function createItem()
     {
         global $db;
-        
-        $item   = new  FactureLigne($db);
-        
+
+        $item = new  FactureLigne($db);
+
         //====================================================================//
         // Pre-Setup of Item
         $item->fk_facture = $this->object->id;
-        
+
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
         return $this->insertItem($item);
     }
-    
+
     /**
      * Delete a Line Item
      *
@@ -57,7 +57,7 @@ trait ItemsTrait
         if (defined("SPLASH_DEBUG") && !empty(SPLASH_DEBUG)) {
             //====================================================================//
             // Force Invoice Status To Draft
-            $this->object->statut         = 0;
+            $this->object->statut = 0;
         }
         //====================================================================//
         // Perform Line Delete

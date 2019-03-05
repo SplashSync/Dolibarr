@@ -25,7 +25,7 @@ use Splash\Core\SplashCore as Splash;
 class AttributesManager
 {
     use \Splash\Local\Core\ErrorParserTrait;
-    
+
     /**
      * Array Of Products Attributes
      *
@@ -39,20 +39,18 @@ class AttributesManager
      * @var array
      */
     private static $attributesValuesCache = array();
-    
+
     /**
      * Service Constructor
-     *
-     * @return void
      */
     public static function init()
     {
         global $db;
-        
+
         if (isset(static::$attributesCache)) {
             return;
         }
-        
+
         //====================================================================//
         // Load Attributes Cache
         dol_include_once("/variants/class/ProductAttribute.class.php");
@@ -64,8 +62,6 @@ class AttributesManager
      * Load All Attribute Values from Database
      *
      * @param int $attributeId Product Attribute Id
-     *
-     * @return void
      */
     public static function loadAttributeValues($attributeId)
     {
@@ -93,7 +89,7 @@ class AttributesManager
         //====================================================================//
         // Ensure Service Init
         self::init();
-        
+
         //====================================================================//
         // Walk on Attributes Cache
         foreach (static::$attributesCache as $attribute) {
@@ -117,7 +113,7 @@ class AttributesManager
         //====================================================================//
         // Ensure Service Init
         self::init();
-        
+
         //====================================================================//
         // Walk on Attributes Cache
         foreach (static::$attributesCache as $attribute) {
@@ -125,10 +121,10 @@ class AttributesManager
                 return $attribute;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Add Product Combinations Attribute
      *
@@ -140,7 +136,7 @@ class AttributesManager
     public static function addAttribute($attributeCode, $attributeName = null)
     {
         global $db, $user;
-        
+
         //====================================================================//
         // Ensure Service Init
         self::init();
@@ -151,26 +147,26 @@ class AttributesManager
         if (null !== $existingAttribute) {
             return $existingAttribute;
         }
-        
+
         //====================================================================//
         // Create New Attribute
         $attribute = new ProductAttribute($db);
         $attribute->ref = strtoupper($attributeCode);
         $attribute->label = is_string($attributeName) ? $attributeName : $attributeCode;
-        
+
         if ($attribute->create($user) < 0) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Create Product Attribute (" . $attributeCode . ")."
+                " Unable to Create Product Attribute (".$attributeCode.")."
             );
         }
-        
+
         //====================================================================//
         // Reload Load Attributes Cache
         static::$attributesCache = $attribute->fetchAll();
-        
+
         return $attribute;
     }
 
@@ -203,13 +199,13 @@ class AttributesManager
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Create Product Attribute (" . $attribute->ref . ")."
+                " Unable to Create Product Attribute (".$attribute->ref.")."
             );
         }
-        
+
         return true;
     }
-    
+
     /**
      * Load or Create Product Attribute Group
      *
@@ -222,7 +218,7 @@ class AttributesManager
     {
         //====================================================================//
         // Load Product Attribute Group
-        $attribute   =   self::getAttributeByCode($code);
+        $attribute = self::getAttributeByCode($code);
         if (!$attribute) {
             //====================================================================//
             // Add Product Attribute Group
@@ -256,7 +252,7 @@ class AttributesManager
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                "Unable to Delete Product Attribute (" . $attribute->ref . "): Has Child Values or Product"
+                "Unable to Delete Product Attribute (".$attribute->ref."): Has Child Values or Product"
             );
         }
         //====================================================================//
@@ -266,16 +262,16 @@ class AttributesManager
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Product Attribute (" . $attribute->ref . ")."
+                " Unable to Delete Product Attribute (".$attribute->ref.")."
             );
         }
         //====================================================================//
         // Reload Load Attributes Cache
         static::$attributesCache = $attribute->fetchAll();
-        
+
         return true;
     }
-    
+
     /**
      * Fetch Product Combinations Attribute Value
      *
@@ -301,10 +297,10 @@ class AttributesManager
                 return $value;
             }
         }
-       
+
         return null;
     }
-    
+
     /**
      * Fetch Product Combinations Attribute Value
      *
@@ -330,10 +326,10 @@ class AttributesManager
                 return $value;
             }
         }
-       
+
         return null;
     }
-    
+
     /**
      * Add Product Combinations Attribute VAlue
      *
@@ -346,18 +342,18 @@ class AttributesManager
     public static function addAttributeValue($attribute, $valueCode, $valueName = null)
     {
         global $db, $user;
-        
+
         //====================================================================//
         // Ensure Service Init
         self::init();
-        
+
         //====================================================================//
         // Create New Attribute
         $value = new ProductAttributeValue($db);
         $value->fk_product_attribute = $attribute->id;
         $value->ref = strtoupper($valueCode);
         $value->value = is_string($valueName) ? $valueName : $valueCode;
-        
+
         if ($value->create($user) < 0) {
             return Splash::log()->err(
                 "ErrLocalTpl",
@@ -366,14 +362,14 @@ class AttributesManager
                 " Unable to Create Product Attribute Value (".$valueCode."@".$attribute->ref.")."
             );
         }
-        
+
         //====================================================================//
         // Reload Load Attributes Values Cache
         self::loadAttributeValues($attribute->id);
-        
+
         return $value;
     }
-    
+
     /**
      * Load or Create Product Attribute Value
      *
@@ -386,7 +382,7 @@ class AttributesManager
     {
         //====================================================================//
         // Load Product Attribute Value
-        $attrValue   =   self::getAttributeValueByName($attribute, $value);
+        $attrValue = self::getAttributeValueByName($attribute, $value);
         if (!$attrValue) {
             //====================================================================//
             // Add Product Attribute Value
@@ -395,7 +391,7 @@ class AttributesManager
 
         return $attrValue;
     }
-    
+
     /**
      * Remove Product Combinations Attribute Value
      *
@@ -416,14 +412,14 @@ class AttributesManager
                 "ErrLocalTpl",
                 __CLASS__,
                 __FUNCTION__,
-                " Unable to Delete Product Attribute Value (" . $value->ref . ")."
+                " Unable to Delete Product Attribute Value (".$value->ref.")."
             );
         }
-        
+
         //====================================================================//
         // Reload Load Attributes Values Cache
         self::loadAttributeValues($value->fk_product_attribute);
-        
+
         return true;
     }
 }

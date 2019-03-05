@@ -26,7 +26,7 @@ trait MainTrait
     protected function buildMainFields()
     {
         global $conf,$langs;
-        
+
         $groupName = $langs->trans("CompanyAddress");
         //====================================================================//
         // Addess
@@ -47,7 +47,7 @@ trait MainTrait
             ->AddOption('maxLength', "18")
             ->isLogged()
             ->isListed();
-        
+
         //====================================================================//
         // City Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -57,7 +57,7 @@ trait MainTrait
             ->Group($groupName)
             ->isLogged()
             ->isListed();
-        
+
         //====================================================================//
         // Country Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -66,7 +66,7 @@ trait MainTrait
             ->isReadOnly()
             ->Group($groupName)
             ->isListed();
-        
+
         //====================================================================//
         // Country ISO Code
         $this->fieldsFactory()->create(SPL_T_COUNTRY)
@@ -103,7 +103,7 @@ trait MainTrait
     protected function buildMain2Fields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Phone Pro
         $this->fieldsFactory()->create(SPL_T_PHONE)
@@ -120,7 +120,7 @@ trait MainTrait
             ->Name($langs->trans("PhonePerso"))
             ->isLogged()
             ->MicroData("http://schema.org/PostalAddress", "telephone");
-        
+
         //====================================================================//
         // Mobile Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
@@ -138,7 +138,7 @@ trait MainTrait
             ->MicroData("http://schema.org/ContactPoint", "email")
             ->isLogged()
             ->isListed();
-        
+
         //====================================================================//
         // Active
         $this->fieldsFactory()->create(SPL_T_BOOL)
@@ -146,14 +146,12 @@ trait MainTrait
             ->Name($langs->trans("Active"))
             ->MicroData("http://schema.org/Person", "active");
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -185,17 +183,15 @@ trait MainTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -217,12 +213,12 @@ trait MainTrait
 
                 break;
             case 'state_code':
-                $stateId    =   $this->getStateByCode($fieldData, $this->object->country_id);
+                $stateId = $this->getStateByCode($fieldData, $this->object->country_id);
                 $this->setSimple("state_id", $stateId);
 
                 break;
             case 'country_code':
-                $countryId  =   $this->getCountryByCode($fieldData);
+                $countryId = $this->getCountryByCode($fieldData);
                 $this->setSimple("country_id", $countryId);
 
                 break;

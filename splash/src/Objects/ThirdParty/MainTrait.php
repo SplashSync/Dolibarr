@@ -28,7 +28,7 @@ trait MainTrait
     protected function buildMainFields()
     {
         global $langs;
-        
+
         //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
@@ -48,7 +48,7 @@ trait MainTrait
             ->MicroData("http://schema.org/ContactPoint", "email")
             ->isLogged()
             ->isListed();
-        
+
         //====================================================================//
         // WebSite
         $this->fieldsFactory()->create(SPL_T_URL)
@@ -65,7 +65,7 @@ trait MainTrait
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF1_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "duns");
-        
+
         //====================================================================//
         // Id Professionnal 2 SIRET
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -85,7 +85,7 @@ trait MainTrait
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF3_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "naics");
-        
+
         //====================================================================//
         // Id Professionnal 4 RCS
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -95,14 +95,14 @@ trait MainTrait
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF4_MANDATORY"))
             ->MicroData("http://schema.org/Organization", "isicV4");
-        
+
         //====================================================================//
         // Id Professionnal 5
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("idprof5")
             ->Group("ID")
             ->Name($langs->trans("ProfId5Short"));
-        
+
         //====================================================================//
         // Id Professionnal 6
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -120,14 +120,12 @@ trait MainTrait
             ->addOption('maxLength', "20")
             ->MicroData("http://schema.org/Organization", "vatID");
     }
-    
+
     /**
      * Read requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -154,17 +152,15 @@ trait MainTrait
             default:
                 return;
         }
-        
+
         unset($this->in[$key]);
     }
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
-     * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */

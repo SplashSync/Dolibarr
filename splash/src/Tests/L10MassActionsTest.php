@@ -23,57 +23,57 @@ use Splash\Tests\Tools\ObjectsCase;
 class L10MassActionsTest extends ObjectsCase
 {
     use \Splash\Tests\Tools\Traits\ObjectsMassActionsTrait;
-    
+
     const CONFIG = array(
         "Address" => array(
-            'max'       =>  50,
-            'batch'     =>  7,
-            'fields'    =>  array(),
-            'verify'    =>  true,
-            'update'    =>  true,
-            'delete'    =>  true,
+            'max' => 50,
+            'batch' => 7,
+            'fields' => array(),
+            'verify' => true,
+            'update' => true,
+            'delete' => true,
         ),
         "ThirdParty" => array(
-            'max'       =>  50,
-            'batch'     =>  5,
-            'fields'    =>  array(),
-            'verify'    =>  true,
-            'update'    =>  true,
-            'delete'    =>  true,
+            'max' => 50,
+            'batch' => 5,
+            'fields' => array(),
+            'verify' => true,
+            'update' => true,
+            'delete' => true,
         ),
         "Product" => array(
-            'max'       =>  50,
-            'batch'     =>  5,
-            'fields'    =>  array(
-                "images"    => array(),
+            'max' => 50,
+            'batch' => 5,
+            'fields' => array(
+                "images" => array(),
             ),
-            'verify'    =>  true,
-            'update'    =>  true,
-            'delete'    =>  true,
+            'verify' => true,
+            'update' => true,
+            'delete' => true,
         ),
         "Order" => array(
-            'max'       =>  50,
-            'batch'     =>  5,
-            'fields'    =>  array(
-                "images"    => array(),
+            'max' => 50,
+            'batch' => 5,
+            'fields' => array(
+                "images" => array(),
                 //                "status"    => "OrderCanceled"
                 //                "status"    => "OrderInTransit"
-                "status"    => "OrderDelivered",
+                "status" => "OrderDelivered",
             ),
-            'verify'    =>  true,
-            'update'    =>  false,
-            'delete'    =>  true,
+            'verify' => true,
+            'update' => false,
+            'delete' => true,
         ),
         "Invoice" => array(
-            'max'       =>  50,
-            'batch'     =>  5,
-            'fields'    =>  array(
+            'max' => 50,
+            'batch' => 5,
+            'fields' => array(
                 //                "status" => "PaymentDue",
                 "status" => "PaymentComplete",
             ),
-            'verify'    =>  true,
-            'update'    =>  false,
-            'delete'    =>  false,
+            'verify' => true,
+            'update' => false,
+            'delete' => false,
         ),
     );
 
@@ -133,11 +133,11 @@ class L10MassActionsTest extends ObjectsCase
         $this->assertArrayHasKey("verify", $cfg);
         $this->assertArrayHasKey("update", $cfg);
         $this->assertArrayHasKey("delete", $cfg);
-        
+
         //====================================================================//
         // Setup Custom Objects Fields
         $this->customFieldsData = $cfg["fields"];
-        
+
         if ($cfg["update"]) {
             //====================================================================//
             // Execute Mass Create / Update / Delete Test without Verifications
@@ -152,7 +152,7 @@ class L10MassActionsTest extends ObjectsCase
 
             return;
         }
-        
+
         //====================================================================//
         // Execute Mass Create / Delete Test without Verifications
         $this->coreTestBatchCreateDelete(
@@ -164,7 +164,7 @@ class L10MassActionsTest extends ObjectsCase
             $cfg["delete"]
         );
     }
-    
+
     /**
      * Test Loading of Object that are not on Selected Entity
      *
@@ -184,11 +184,11 @@ class L10MassActionsTest extends ObjectsCase
         $this->assertArrayHasKey("verify", $cfg);
         $this->assertArrayHasKey("update", $cfg);
         $this->assertArrayHasKey("delete", $cfg);
-        
+
         //====================================================================//
         // Setup Custom Objects Fields
         $this->customFieldsData = $cfg["fields"];
-        
+
         if ($cfg["update"]) {
             //====================================================================//
             // Execute Mass Create / Update / Delete Test without Verifications
@@ -196,7 +196,7 @@ class L10MassActionsTest extends ObjectsCase
 
             return;
         }
-        
+
         //====================================================================//
         // Execute Mass Create / Delete Test without Verifications
         $this->coreTestMassCreateDelete($sequence, $objectType, $cfg["max"], $cfg["verify"], $cfg["delete"]);
