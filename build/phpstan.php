@@ -18,11 +18,6 @@ require dirname(__DIR__)."/splash/vendor/autoload.php";
 global $db,$langs,$conf,$user,$hookmanager;
 
 //====================================================================//
-// Initiate Some Dolibarr Global Configs
-$conf->global = new stdClass();
-$conf->facture = new stdClass();
-
-//====================================================================//
 // Initiate Dolibarr Global Envirement Variables
 require_once(dirname(dirname(__DIR__))."/master.inc.php");
 

@@ -16,9 +16,12 @@ parameters:
     ignoreErrors: 
         - '#Function completeFileArrayWithDatabaseInfo not found.#'
 
-        # UIndefined in Dolibarr Class Property       
+        # Undefined in Dolibarr Class Property       
         - '#Access to an undefined property [a-zA-Z0-9]+::\$entity.#'
         - '#Access to an undefined property Paiement::\$type_code.#'
+        - '#Access to an undefined property object::\$global.#'
+        - '#Access to an undefined property object::\$facture.#'
+
 
         # Wrong Comments in Dolibarr Class
         - '#Parameter \#2 \$type_contact of method CommonObject\:\:add_contact\(\) expects int\, string given.#'
