@@ -34,8 +34,8 @@ trait ObjectsListTrait
     {
         //====================================================================//
         // Dolibarr Reference Colums Name was Updated in V10
-        $refColomn= (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
-        
+        $refColomn = (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
+
         //====================================================================//
         // Prepare SQL request for reading in Database
         //====================================================================//
@@ -57,7 +57,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Entity Filter
         $sql .= " WHERE f.entity IN (".getEntity('facture', 1).")";
-        $sql .= " AND f.type IN (". implode(", ", static::$dolibarrTypes). ")";
+        $sql .= " AND f.type IN (".implode(", ", static::$dolibarrTypes).")";
 
         //====================================================================//
         // Setup filters
@@ -84,7 +84,7 @@ trait ObjectsListTrait
         $sortfield = empty($params["sortfield"])?"f.rowid":$params["sortfield"];
         $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
         $sql .= " ORDER BY ".$sortfield." ".$sortorder;
-        
+
         return $sql;
     }
 }

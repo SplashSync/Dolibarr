@@ -50,6 +50,7 @@ trait TriggersTrait
 
         //====================================================================//
         // Store Global Action Parameters
+        $this->setInvoiceObjectType($object);
         $this->setInvoiceObjectId($object);
         $this->setInvoiceParameters($action);
 
@@ -131,6 +132,25 @@ trait TriggersTrait
     }
 
     /**
+     * Identify Splash Object type from Given Object
+     *
+     * @param object $object Objet concerne
+     */
+    private function setInvoiceObjectType($object)
+    {
+        //====================================================================//
+        // Credit Note Invoice
+        if (Facture::TYPE_CREDIT_NOTE == $object->type) {
+            $this->objectType = "CreditNote";
+
+            return;
+        }
+        //====================================================================//
+        // Standard Invoice
+        $this->objectType = "Invoice";
+    }
+
+    /**
      * Prepare Object Commit for Product
      *
      * @param string $action Code de l'evenement
@@ -139,7 +159,6 @@ trait TriggersTrait
      */
     private function setInvoiceParameters($action)
     {
-        $this->objectType = "Invoice";
         switch ($action) {
             case 'BILL_CREATE':
                 $this->action = SPL_A_CREATE;
