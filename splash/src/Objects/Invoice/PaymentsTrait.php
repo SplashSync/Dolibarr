@@ -216,7 +216,7 @@ trait PaymentsTrait
                 //====================================================================//
                 // Payment Line - Payment Amount
                 case 'amount@payments':
-                    $value = $paymentLine->amount;
+                    $value = self::parsePrice($paymentLine->amount);
 
                     break;
                 default:
@@ -368,22 +368,24 @@ trait PaymentsTrait
             // Payment is Used by Another Bill => No Recreate
             return false;
         }
-
+        //====================================================================//
+        // Safety Check => Amount is Defined
+        if (!array_key_exists("amount", $lineData)) {
+            return false;
+        }
         //====================================================================//
         // Check If Payment Amount are Different
-        if (!array_key_exists("amount", $lineData)
-            || ($payment->amount == $lineData["amount"])) {
+        if (abs($payment->amount - self::parsePrice($lineData["amount"])) < 1E-6) {
             // Amounts are Similar => No Recreate
             return false;
         }
-
         //====================================================================//
         // Try to delete Payment
         if ($payment->delete() <= 0) {
             // Unable to Delete Payment => No Recreate
             return false;
         }
-
+        //====================================================================//
         // Payment Was Deleted => Recreate
         return true;
     }
@@ -461,7 +463,7 @@ trait PaymentsTrait
         $payment->num_paiement = $lineData["number"];
         //====================================================================//
         // Setup Payment Amount
-        $payment->amounts[$payment->facid] = $lineData["amount"];
+        $payment->amounts[$payment->facid] = self::parsePrice($lineData["amount"]);
 
         //====================================================================//
         // Create Payment Line
@@ -483,12 +485,7 @@ trait PaymentsTrait
         );
 
         if ($result < 0) {
-            Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                "Unable to add Invoice Payment to Bank Account. "
-            );
+            Splash::log()->errTrace("Unable to add Invoice Payment to Bank Account.");
 
             return $this->catchDolibarrErrors($payment);
         }

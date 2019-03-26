@@ -75,6 +75,9 @@ class Local implements LocalClassInterface
         if ($this->isMultiCompanyChildEntity()) {
             $parameters["ServerPath"] = $this->getMultiCompanyServerPath();
         }
+        //====================================================================//
+        // Setup Custom Json Configuration Path to (../conf/splash.json)
+        $parameters["ConfiguratorPath"] = $this->getDolibarrRoot()."/conf/splash.json";
 
         return $parameters;
     }

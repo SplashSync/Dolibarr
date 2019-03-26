@@ -42,6 +42,7 @@ class Order extends AbstractObject
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\LocalizationTrait;
     use \Splash\Local\Core\MetaDatesTrait;
+    use \Splash\Local\Core\CreditModeTrait;
     use \Splash\Local\Core\BaseItemsTrait;
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;

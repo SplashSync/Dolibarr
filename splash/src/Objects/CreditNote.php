@@ -25,9 +25,9 @@ use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
- * CUSTOMERS INVOICE DATA MANAGEMENT
+ * CUSTOMERS CREDIT NOTES DATA MANAGEMENT
  */
-class Invoice extends AbstractObject
+class CreditNote extends AbstractObject
 {
     // Splash Php Core Traits
     use IntelParserTrait;
@@ -77,8 +77,8 @@ class Invoice extends AbstractObject
     /**
      * @var array
      */
-    public static $dolibarrTypes = array(0, 1);
-    
+    public static $dolibarrTypes = array(2);
+
     /**
      * @var Facture
      */
@@ -91,22 +91,22 @@ class Invoice extends AbstractObject
     /**
      *  Object Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
-//    protected static    $DISABLED        =  True;
+    protected static $DISABLED = true;
 
     /**
      *  Object Name (Translated by Module)
      */
-    protected static $NAME = "Customer Invoice";
+    protected static $NAME = "Customer Credit Note";
 
     /**
      *  Object Description (Translated by Module)
      */
-    protected static $DESCRIPTION = "Dolibarr Customers Invoice Object";
+    protected static $DESCRIPTION = "Dolibarr Customers Credit Note Object";
 
     /**
      *  Object Icon (FontAwesome or Glyph ico tag)
      */
-    protected static $ICO = "fa fa-money";
+    protected static $ICO = "fa fa-eur";
 
     //====================================================================//
     // Class Constructor
@@ -134,5 +134,9 @@ class Invoice extends AbstractObject
         //====================================================================//
         //  Load Local Translation File
         Splash::translator()->Load("objects@local");
+
+        //====================================================================//
+        //  Enable Credit Notes Mode for Prices
+        self::setCreditMode();
     }
 }

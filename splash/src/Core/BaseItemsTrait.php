@@ -151,6 +151,13 @@ trait BaseItemsTrait
         unset($this->in[$key]);
     }
 
+    /**
+     * Insert an Item to Order or Invoice
+     *
+     * @param FactureLine|OrderLine $item
+     *
+     * @return null|FactureLine|OrderLine
+     */
     protected function insertItem($item)
     {
         $item->subprice = 0;
@@ -215,7 +222,7 @@ trait BaseItemsTrait
             //====================================================================//
             // Order Line Price
             case 'price@lines':
-                $price = (double) $line->subprice;
+                $price = (double) self::parsePrice($line->subprice);
                 $vat = (double) $line->tva_tx;
 
                 return  self::prices()->Encode($price, $vat, null, $conf->global->MAIN_MONNAIE);
@@ -364,16 +371,20 @@ trait BaseItemsTrait
             return;
         }
         //====================================================================//
+        // Parse Item Prices
+        $htPrice = self::parsePrice($itemData["price"]["ht"]);
+        $vatPrecent = $itemData["price"]["vat"];
+        //====================================================================//
         // Update Unit & Sub Prices
-        if (abs($this->currentItem->subprice - $itemData["price"]["ht"]) > 1E-6) {
-            $this->currentItem->subprice = $itemData["price"]["ht"];
-            $this->currentItem->price = $itemData["price"]["ht"];
+        if (abs($this->currentItem->subprice - $htPrice) > 1E-6) {
+            $this->currentItem->subprice = $htPrice;
+            $this->currentItem->price = $htPrice;
             $this->itemUpdate = true;
         }
         //====================================================================//
         // Update VAT Rate
-        if (abs($this->currentItem->tva_tx - $itemData["price"]["vat"]) > 1E-6) {
-            $this->currentItem->tva_tx = $itemData["price"]["vat"];
+        if (abs($this->currentItem->tva_tx - $vatPrecent) > 1E-6) {
+            $this->currentItem->tva_tx = $vatPrecent;
             $this->itemUpdate = true;
         }
         //====================================================================//

@@ -18,6 +18,7 @@ namespace Splash\Local\Objects\Invoice;
 use DateTime;
 use Facture;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Objects\CreditNote;
 use User;
 
 /**
@@ -50,24 +51,19 @@ trait CRUDTrait
         // Fatch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
-            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, " Current Entity is : ".$conf->entity);
+            Splash::log()->errTrace("Current Entity is : ".$conf->entity);
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Customer Invoice (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load Customer Invoice (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Customer Invoice (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load Customer Invoice (".$objectId.").");
+        }
+        //====================================================================//
+        // Check Object Type Access (Invoices| Credit Notes)
+        if (!in_array($object->type, static::$dolibarrTypes, true)) {
+            return Splash::log()->errTrace("Wrong Invoice Object Type.");
         }
         $object->fetch_lines();
         $this->loadPayments($objectId);
@@ -109,18 +105,18 @@ trait CRUDTrait
         $this->setSimple("statut", Facture::STATUS_DRAFT);
         $this->object->statut = Facture::STATUS_DRAFT;
         $this->object->paye = 0;
+        //====================================================================//
+        // If Credit Note => Setup Type
+        if ($this instanceof CreditNote) {
+            $this->object->type = Facture::TYPE_CREDIT_NOTE;
+        }
 
         //====================================================================//
         // Create Object In Database
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                "Unable to create new Customer Invoice. "
-            );
+            return Splash::log()->errTrace("Unable to create new Customer Invoice.");
         }
 
         return $this->object;
@@ -152,12 +148,7 @@ trait CRUDTrait
         if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Update Customer Invoice (".$this->object->id.")"
-            ) ;
+            return Splash::log()->errTrace("Unable to Update Customer Invoice (".$this->object->id.")") ;
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -202,24 +193,14 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Delete Customer Invoice (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to Delete Customer Invoice (".$objectId.").");
         }
         //====================================================================//
         // Delete Object
         if ($object->delete($user) <= 0) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Delete Customer Invoice (".$objectId.")"
-            ) ;
+            return Splash::log()->errTrace("Unable to Delete Customer Invoice (".$objectId.")");
         }
 
         return true;

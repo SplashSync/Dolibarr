@@ -62,6 +62,7 @@ trait ImagesTrait
             ->InList("images")
             ->Name($langs->trans("PhotoFile"))
             ->Group("Images")
+            ->setPreferWrite()
             ->MicroData("http://schema.org/Product", "image");
 
         //====================================================================//
@@ -70,6 +71,7 @@ trait ImagesTrait
             ->Identifier("cover")
             ->InList("images")
             ->Name("Cover Image")
+            ->setPreferWrite()
             ->MicroData("http://schema.org/Product", "isCover")
             ->Group("Images")
             ->isNotTested();
@@ -80,16 +82,18 @@ trait ImagesTrait
             ->Identifier("visible")
             ->InList("images")
             ->Name("Visible Image")
+            ->setPreferWrite()
             ->MicroData("http://schema.org/Product", "isVisibleImage")
             ->Group("Images")
             ->isNotTested();
 
         //====================================================================//
-        // Product Images => Is Visible
+        // Product Images => Position in List
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("position")
             ->InList("images")
             ->Name("Position")
+            ->setPreferNone()
             ->MicroData("http://schema.org/Product", "positionImage")
             ->Group("Images")
             ->isReadOnly();

@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Objects\Invoice;
 
+use Splash\Local\Local;
+
 /**
  * Dolibarr Customer Invoice List Functions
  */
@@ -31,13 +33,17 @@ trait ObjectsListTrait
     protected function getSqlBaseRequest($filter = null, $params = null)
     {
         //====================================================================//
+        // Dolibarr Reference Colums Name was Updated in V10
+        $refColomn= (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
+        
+        //====================================================================//
         // Prepare SQL request for reading in Database
         //====================================================================//
         $sql = "SELECT ";
         //====================================================================//
         // Select Database fields
         $sql .= " f.rowid as id,";                  // Object Id
-        $sql .= " f.facnumber as ref,";             // Dolibarr Reference
+        $sql .= " ".$refColomn." as ref,";          // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
         $sql .= " f.ref_int as ref_int,";           // Internal Reference
         $sql .= " f.ref_client as ref_client,";     // Customer Reference
@@ -51,6 +57,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Entity Filter
         $sql .= " WHERE f.entity IN (".getEntity('facture', 1).")";
+        $sql .= " AND f.type IN (". implode(", ", static::$dolibarrTypes). ")";
 
         //====================================================================//
         // Setup filters
@@ -60,7 +67,7 @@ trait ObjectsListTrait
             $sql .= " AND ( ";
             //====================================================================//
             // Search in Invoice Ref.
-            $sql .= " LOWER( f.facnumber ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " LOWER( ".$refColomn." ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice Internal Ref
             $sql .= " OR LOWER( f.ref_int ) LIKE LOWER( '%".$filter."%') ";
@@ -77,7 +84,7 @@ trait ObjectsListTrait
         $sortfield = empty($params["sortfield"])?"f.rowid":$params["sortfield"];
         $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
         $sql .= " ORDER BY ".$sortfield." ".$sortorder;
-
+        
         return $sql;
     }
 }
