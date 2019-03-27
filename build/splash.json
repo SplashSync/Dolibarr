@@ -1,8 +1,8 @@
 {
-	"parameters": {
-		"WsMethod":"SOAP"
-	},
-	"CreditNote": {
-		"disabled": false
-	}
+    "parameters": {
+        "WsMethod":"SOAP"
+    },
+    "CreditNote": {
+        "disabled": false
+    }
 }
