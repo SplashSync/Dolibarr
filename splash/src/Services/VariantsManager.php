@@ -279,11 +279,15 @@ class VariantsManager
     public static function isProductLocked($productId)
     {
         global $db;
-
         //====================================================================//
         // If has Combinations => Is a Base Product
         if (!empty(self::getProductVariants($productId))) {
             return true;
+        }
+        //====================================================================//
+        // PhpUnit/Travis Mode => Do Not Filter Commits
+        if (!empty(Splash::input('SPLASH_TRAVIS'))) {
+            return false;
         }
         //====================================================================//
         // Prepare SQL request for Listing Combinations
