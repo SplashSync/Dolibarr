@@ -268,6 +268,51 @@ class VariantsManager
     }
 
     /**
+     * Check if Product is Loacked by Splash
+     * - If has Combinations
+     * - If is Combination & is On Update
+     *
+     * @param int $productId Rowid of the upated product
+     *
+     * @return bool
+     */
+    public static function isProductLocked($productId)
+    {
+        global $db;
+
+        //====================================================================//
+        // If has Combinations => Is a Base Product
+        if (!empty(self::getProductVariants($productId))) {
+            return true;
+        }
+        //====================================================================//
+        // Prepare SQL request for Listing Combinations
+        $sql = "SELECT  c.fk_product_child as id";
+        $sql .= " FROM ".MAIN_DB_PREFIX."product_attribute_combination as src ";
+        $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product_attribute_combination as c ";
+        $sql .= " ON src.fk_product_parent = c.fk_product_parent ";
+        $sql .= " WHERE src.fk_product_child = ".$productId;
+        //====================================================================//
+        // Execute request
+        $resql = $db->query($sql);
+        if (empty($resql) || (0 == $db->num_rows($resql))) {
+            return false;
+        }
+        //====================================================================//
+        // Walk on List of Combinations to Check Lock Flag
+        $index = 0;
+        while ($index < $db->num_rows($resql)) {
+            $row = $db->fetch_object($resql);
+            if (Splash::object("Product")->isLocked($row->id)) {
+                return true;
+            }
+            $index++;
+        }
+
+        return false;
+    }
+
+    /**
      * Update Product Combination Attributes 2 Value Pair from Ids Array
      *
      * @param ProductCombination                $combination Product Combination

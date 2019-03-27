@@ -185,7 +185,7 @@ trait MainTrait
         //====================================================================//
         // Check if Product Weight Updated
         $weightStr = $this->convertWeight($this->object->weight, $this->object->weight_units);
-        if ((string)$fieldData == (string) $weightStr) {
+        if ((string) $fieldData == (string) $weightStr) {
             return;
         }
         //====================================================================//

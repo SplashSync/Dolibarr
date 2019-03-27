@@ -62,7 +62,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Type Access (Invoices| Credit Notes)
-        if (!in_array($object->type, static::$dolibarrTypes, true)) {
+        if (!in_array((int) $object->type, static::$dolibarrTypes, true)) {
             return Splash::log()->errTrace("Wrong Invoice Object Type.");
         }
         $object->fetch_lines();

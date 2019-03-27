@@ -94,5 +94,8 @@ class ThirdParty extends AbstractObject
         $langs->load("admin");
         $langs->load("companies");
         $langs->load("other");
+        //====================================================================//
+        //  Translate Object Name
+        static::$NAME = $langs->trans("Module1Name");
     }
 }

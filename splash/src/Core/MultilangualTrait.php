@@ -101,7 +101,7 @@ trait MultilangualTrait
         //====================================================================//
         // Update Contents
         //====================================================================//
-        if ($this->object->multilangs[$isoCode][$fieldName] !== $content) {
+        if ($this->object->multilangs[$isoCode][$fieldName] != $content) {
             $this->object->multilangs[$isoCode][$fieldName] = $content;
             $this->needUpdate();
         }
@@ -109,7 +109,6 @@ trait MultilangualTrait
         // Duplicate Contents to Default language if needed
         if (($isoCode == $langs->getDefaultLang()) && property_exists(get_class($this->object), $fieldName)) {
             $this->object->{$fieldName} = $content;
-            $this->needUpdate();
         }
     }
 

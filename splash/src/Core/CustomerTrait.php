@@ -17,6 +17,7 @@ namespace Splash\Local\Core;
 
 use ArrayObject;
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Objects\Order;
 
 /**
  * Dolibarr Customer Fields (Required)
@@ -45,9 +46,9 @@ trait CustomerTrait
 
         //====================================================================//
         // Metadata are Specific to Object Type (Order/Invoice)
-        if (is_a($this, 'Splash\Local\Objects\Order')) {
+        if ($this instanceof Order) {
             $this->fieldsFactory()->MicroData("http://schema.org/Organization", "ID");
-        } elseif (is_a($this, 'Splash\Local\Objects\Invoice')) {
+        } else {
             $this->fieldsFactory()->MicroData("http://schema.org/Invoice", "customer");
         }
 

@@ -120,5 +120,8 @@ class Product extends AbstractObject
         $langs->load("other");
         $langs->load("products");
         $langs->load("stocks");
+        //====================================================================//
+        //  Translate Object Name
+        static::$NAME = $langs->trans("Products");
     }
 }

@@ -78,7 +78,7 @@ class Invoice extends AbstractObject
      * @var array
      */
     public static $dolibarrTypes = array(0, 1);
-    
+
     /**
      * @var Facture
      */
@@ -134,5 +134,8 @@ class Invoice extends AbstractObject
         //====================================================================//
         //  Load Local Translation File
         Splash::translator()->Load("objects@local");
+        //====================================================================//
+        //  Translate Object Name
+        static::$NAME = $langs->trans("CustomersInvoices");
     }
 }

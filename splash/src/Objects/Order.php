@@ -116,5 +116,8 @@ class Order extends AbstractObject
         $langs->load("orders");
         $langs->load("other");
         $langs->load("stocks");
+        //====================================================================//
+        //  Translate Object Name
+        static::$NAME = $langs->trans("Module25Name");
     }
 }

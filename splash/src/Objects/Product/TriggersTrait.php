@@ -86,8 +86,8 @@ trait TriggersTrait
         }
 
         //====================================================================//
-        // Prevent Commits for Variant Products
-        if (($object instanceof Product) && VariantsManager::hasProductVariants($object->id)) {
+        // Prevent Commits for Variants Base Products
+        if (($object instanceof Product) && VariantsManager::isProductLocked($object->id)) {
             return false;
         }
 

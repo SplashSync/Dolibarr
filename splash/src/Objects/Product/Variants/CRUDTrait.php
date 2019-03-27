@@ -93,12 +93,7 @@ trait CRUDTrait
             if ($this->baseProduct->update($this->baseProduct->id, $user) <= 0) {
                 $this->catchDolibarrErrors($this->baseProduct);
 
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    " Unable to Update Base Product (".$this->baseProduct->id.")"
-                ) ;
+                return Splash::log()->errTrace("Unable to Update Base Product (".$this->baseProduct->id.")");
             }
         }
 
@@ -108,12 +103,7 @@ trait CRUDTrait
             if ($this->combination->update($user) <= 0) {
                 $this->catchDolibarrErrors($this->combination);
 
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    " Unable to Update Product Combination (".$this->combination->id.")"
-                ) ;
+                return Splash::log()->errTrace("Unable to Update Product Combination (".$this->combination->id.")");
             }
         }
 

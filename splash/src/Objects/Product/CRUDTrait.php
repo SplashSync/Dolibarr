@@ -52,22 +52,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Product (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load Product (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Product (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load Product (".$objectId.").");
         }
         //====================================================================//
         // Load Product Combinations
@@ -147,12 +137,7 @@ trait CRUDTrait
         if ($this->object->update($this->object->id, $user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Update Product (".$this->object->id.")"
-            ) ;
+            return Splash::log()->errTrace("Unable to Update Product (".$this->object->id.")");
         }
         //====================================================================//
         // Update Variant Product Specific Objects & Return Object Id
@@ -196,12 +181,7 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Delete Product (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to Delete Product (".$objectId.").");
         }
         //====================================================================//
         // Load Product Combination

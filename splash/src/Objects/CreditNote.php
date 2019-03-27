@@ -134,7 +134,9 @@ class CreditNote extends AbstractObject
         //====================================================================//
         //  Load Local Translation File
         Splash::translator()->Load("objects@local");
-
+        //====================================================================//
+        //  Translate Object Name
+        static::$NAME = $langs->trans("CreditNotes");
         //====================================================================//
         //  Enable Credit Notes Mode for Prices
         self::setCreditMode();
