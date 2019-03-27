@@ -91,7 +91,7 @@ class CreditNote extends AbstractObject
     /**
      *  Object Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
-    protected static $DISABLED = true;
+    protected static $DISABLED = !SPLASH_DEBUG;
 
     /**
      *  Object Name (Translated by Module)
