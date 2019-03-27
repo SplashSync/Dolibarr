@@ -56,8 +56,6 @@ class L10MassActionsTest extends ObjectsCase
             'batch' => 5,
             'fields' => array(
                 "images" => array(),
-                //                "status"    => "OrderCanceled"
-                //                "status"    => "OrderInTransit"
                 "status" => "OrderDelivered",
             ),
             'verify' => true,
@@ -68,7 +66,16 @@ class L10MassActionsTest extends ObjectsCase
             'max' => 50,
             'batch' => 5,
             'fields' => array(
-                //                "status" => "PaymentDue",
+                "status" => "PaymentComplete",
+            ),
+            'verify' => true,
+            'update' => false,
+            'delete' => false,
+        ),
+        "CreditNote" => array(
+            'max' => 10,
+            'batch' => 5,
+            'fields' => array(
                 "status" => "PaymentComplete",
             ),
             'verify' => true,

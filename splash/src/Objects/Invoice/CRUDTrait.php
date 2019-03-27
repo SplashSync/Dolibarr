@@ -190,6 +190,11 @@ trait CRUDTrait
         // Set Object Id, fetch not needed
         $object->id = (int) $objectId;
         //====================================================================//
+        // If Credit Note => Setup Type
+        if ($this instanceof CreditNote) {
+            $this->object->type = Facture::TYPE_CREDIT_NOTE;
+        }
+        //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
