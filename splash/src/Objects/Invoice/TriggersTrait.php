@@ -139,9 +139,15 @@ trait TriggersTrait
     private function setInvoiceObjectType($object)
     {
         //====================================================================//
-        // Identify Invoice Id from Invoice Line
+        // Identify Invoice Type from Invoice Line
         if ($object instanceof FactureLigne) {
             $object->type = $object->getValueFrom("facture", $this->objectId, "type");
+        }
+        
+        //====================================================================//
+        // Identify Invoice Type from Payment Line
+        if (($object instanceof Paiement) && !empty($this->objectId)) {
+            $object->type = $object->getValueFrom("facture", $this->objectId[0], "type");
         }
 
         //====================================================================//
