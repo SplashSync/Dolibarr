@@ -143,7 +143,7 @@ trait TriggersTrait
         if ($object instanceof FactureLigne) {
             $object->type = $object->getValueFrom("facture", $this->objectId, "type");
         }
-        
+
         //====================================================================//
         // Identify Invoice Type from Payment Line
         if (($object instanceof Paiement) && !empty($this->objectId)) {
