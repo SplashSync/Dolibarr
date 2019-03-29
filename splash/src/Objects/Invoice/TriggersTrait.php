@@ -50,8 +50,8 @@ trait TriggersTrait
 
         //====================================================================//
         // Store Global Action Parameters
-        $this->setInvoiceObjectType($object);
         $this->setInvoiceObjectId($object);
+        $this->setInvoiceObjectType($object);
         $this->setInvoiceParameters($action);
 
         if (empty($this->objectId)) {
@@ -139,15 +139,14 @@ trait TriggersTrait
     private function setInvoiceObjectType($object)
     {
         //====================================================================//
-        // Credit Note Invoice
-        if (Facture::TYPE_CREDIT_NOTE == $object->type) {
-            $this->objectType = "CreditNote";
-
-            return;
+        // Identify Invoice Id from Invoice Line
+        if ($object instanceof FactureLigne) {
+            $object->type = $object->getValueFrom("facture", $this->objectId, "type");
         }
+
         //====================================================================//
-        // Standard Invoice
-        $this->objectType = "Invoice";
+        // Standard Invoice or Credit Note
+        $this->objectType = (Facture::TYPE_CREDIT_NOTE == $object->type) ? "CreditNote" : "Invoice";
     }
 
     /**
