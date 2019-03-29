@@ -192,7 +192,7 @@ trait CRUDTrait
         //====================================================================//
         // If Credit Note => Setup Type
         if ($this instanceof CreditNote) {
-            $this->object->type = Facture::TYPE_CREDIT_NOTE;
+            $object->type = Facture::TYPE_CREDIT_NOTE;
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
