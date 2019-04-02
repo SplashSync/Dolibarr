@@ -187,7 +187,7 @@ trait TriggersTrait
             case 'LINEBILL_INSERT':
             case 'LINEBILL_UPDATE':
             case 'LINEBILL_DELETE':
-                $this->action = (Splash::object((string) $this->objectType)->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->action = (Splash::object((string) $this->objectType)->isLocked() ? SPL_A_CREATE : SPL_A_UPDATE);
                 $this->comment = "Invoice Updated on Dolibarr";
 
                 break;
