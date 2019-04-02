@@ -91,7 +91,7 @@ class CreditNote extends AbstractObject
     /**
      *  Object Disable Flag. Uncomment this line to Override this flag and disable Object.
      */
-    protected static $DISABLED = !SPLASH_DEBUG;
+    protected static $DISABLED = true;
 
     /**
      *  Object Name (Translated by Module)
@@ -140,5 +140,17 @@ class CreditNote extends AbstractObject
         //====================================================================//
         //  Enable Credit Notes Mode for Prices
         self::setCreditMode();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getIsDisabled()
+    {
+        if (!empty(SPLASH_DEBUG)) {
+            return false;
+        }
+
+        return static::$DISABLED;
     }
 }

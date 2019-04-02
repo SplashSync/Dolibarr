@@ -56,7 +56,6 @@ trait CreditModeTrait
     /**
      * Convert a Price to Inverted if Credit Mode is Enabled
      *
-     * @param float|int
      * @param mixed $price
      *
      * @return float|int

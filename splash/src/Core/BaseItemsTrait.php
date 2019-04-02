@@ -154,9 +154,9 @@ trait BaseItemsTrait
     /**
      * Insert an Item to Order or Invoice
      *
-     * @param FactureLine|OrderLine $item
+     * @param FactureLigne|OrderLine $item
      *
-     * @return null|FactureLine|OrderLine
+     * @return null|FactureLigne|OrderLine
      */
     protected function insertItem($item)
     {

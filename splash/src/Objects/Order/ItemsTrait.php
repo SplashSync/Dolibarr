@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects\Order;
 
+use FactureLigne;
 use OrderLine;
 use Splash\Core\SplashCore      as Splash;
 
@@ -26,7 +27,7 @@ trait ItemsTrait
     /**
      * Create a New Line Item
      *
-     * @return OrderLine
+     * @return null|FactureLigne|OrderLine
      */
     protected function createItem()
     {

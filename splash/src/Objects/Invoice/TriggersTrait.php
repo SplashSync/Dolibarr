@@ -138,21 +138,25 @@ trait TriggersTrait
      */
     private function setInvoiceObjectType($object)
     {
+        $objectType = Facture::TYPE_STANDARD;
+        //====================================================================//
+        // Invoice Given
+        if ($object instanceof Facture) {
+            $objectType = $object->type;
+        }
         //====================================================================//
         // Identify Invoice Type from Invoice Line
-        if ($object instanceof FactureLigne) {
-            $object->type = $object->getValueFrom("facture", $this->objectId, "type");
+        if (($object instanceof FactureLigne) && is_scalar($this->objectId)) {
+            $objectType = $object->getValueFrom("facture", (int) $this->objectId, "type");
         }
-
         //====================================================================//
         // Identify Invoice Type from Payment Line
         if (($object instanceof Paiement) && !empty($this->objectId)) {
-            $object->type = $object->getValueFrom("facture", $this->objectId[0], "type");
+            $objectType = $object->getValueFrom("facture", $this->objectId[0], "type");
         }
-
         //====================================================================//
         // Standard Invoice or Credit Note
-        $this->objectType = (Facture::TYPE_CREDIT_NOTE == $object->type) ? "CreditNote" : "Invoice";
+        $this->objectType = (Facture::TYPE_CREDIT_NOTE == $objectType) ? "CreditNote" : "Invoice";
     }
 
     /**
@@ -183,7 +187,7 @@ trait TriggersTrait
             case 'LINEBILL_INSERT':
             case 'LINEBILL_UPDATE':
             case 'LINEBILL_DELETE':
-                $this->action = (Splash::object($this->objectType)->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
+                $this->action = (Splash::object((string) $this->objectType)->isLocked() ?   SPL_A_CREATE : SPL_A_UPDATE);
                 $this->comment = "Invoice Updated on Dolibarr";
 
                 break;
