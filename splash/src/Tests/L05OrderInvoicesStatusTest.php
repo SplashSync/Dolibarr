@@ -38,7 +38,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     }
 
     /**
-     * Test Oreder & Invoices Status
+     * Test Order & Invoices Status
      *
      * @dataProvider statusProvider
      *
@@ -55,7 +55,6 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         $objectId = Splash::object($objectType)->set(self::$objectsIds[$objectType], array("status" => $splashStatus));
         $this->assertTrue(false !== $objectId);
         $this->assertEquals(self::$objectsIds[$objectType], $objectId);
-        $this->assertSame(self::$objectsIds[$objectType], $objectId);
 
         //====================================================================//
         //   Load Object
