@@ -176,7 +176,7 @@ trait StockTrait
         // Identify Product Stock to Impact
         $locationId = $this->getStockLocationId();
         if (empty($locationId)) {
-            return;
+            return false;
         }
         //====================================================================//
         // Update Product Stock
@@ -209,12 +209,12 @@ trait StockTrait
         //====================================================================//
         // Check If Field Exists
         if (!isset($this->object->fk_default_warehouse)) {
-            return null;
+            return "";
         }
         //====================================================================//
         // Check If Field is Empty
         if (is_int($this->object->fk_default_warehouse)) {
-            return null;
+            return "";
         }
         //====================================================================//
         // Read Location Name from Database
