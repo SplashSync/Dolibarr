@@ -70,6 +70,13 @@ trait StockTrait
             ->Name($langs->trans("EstimatedStockValueShort"))
             ->MicroData("http://schema.org/Offer", "averagePrice")
             ->isReadOnly();
+
+        //====================================================================//
+        // Default Stock Location
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("fk_default_warehouse")
+            ->isReadOnly()
+            ->Name($langs->trans("DefaultWarehouse"));
     }
 
     /**
@@ -100,6 +107,12 @@ trait StockTrait
             case 'desiredstock':
             case 'pmp':
                 $this->getSimple($fieldName, "object", 0);
+
+                break;
+            //====================================================================//
+            // Default Stock Location
+            case 'fk_default_warehouse':
+                $this->out[$fieldName] = $this->getDefaultLocation();
 
                 break;
             default:
@@ -149,7 +162,7 @@ trait StockTrait
      */
     private function setProductStock($newStock)
     {
-        global $conf, $langs, $user;
+        global $langs, $user;
 
         //====================================================================//
         // Compare Current Product Stock with new Value
@@ -160,15 +173,16 @@ trait StockTrait
         // Update Product Stock
         $delta = $this->object->stock_reel - $newStock;
         //====================================================================//
-        // Verify Default Product Stock is defined
-        if (empty($conf->global->SPLASH_STOCK)) {
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Product : No Local WareHouse Defined.");
+        // Identify Product Stock to Impact
+        $locationId = $this->getStockLocationId();
+        if (empty($locationId)) {
+            return;
         }
         //====================================================================//
         // Update Product Stock
         $result = $this->object->correct_stock(
             $user,                                      // Current User Object
-            $conf->global->SPLASH_STOCK,                // Impacted Stock Id
+            $locationId,                                // Impacted Stock Id
             abs($delta),                                // Quantity to Move
             ($delta > 0)?1:0,                           // Direnction 0 = add, 1 = remove
             $langs->trans("Updated by Splash Module"),  // Operation Comment
@@ -183,5 +197,60 @@ trait StockTrait
         }
 
         return true;
+    }
+
+    /**
+     * Read Name of Product Default Stock Location
+     *
+     * @return string
+     */
+    private function getDefaultLocation()
+    {
+        //====================================================================//
+        // Check If Field Exists
+        if (!isset($this->object->fk_default_warehouse)) {
+            return null;
+        }
+        //====================================================================//
+        // Check If Field is Empty
+        if (is_int($this->object->fk_default_warehouse)) {
+            return null;
+        }
+        //====================================================================//
+        // Read Location Name from Database
+        return (string) $this->object->getValueFrom(
+            "entrepot",
+            $this->object->fk_default_warehouse,
+            "ref"
+        );
+    }
+
+    /**
+     * Read Id of Product Stock Location to Impact
+     *
+     * @return false|int
+     */
+    private function getStockLocationId()
+    {
+        global $conf;
+
+        //====================================================================//
+        // Check If Location Field Exists (Dolibarr > 7)
+        if (isset($this->object->fk_default_warehouse)) {
+            //====================================================================//
+            // Check If Location Id is Valid
+            $dfLocation = $this->object->fk_default_warehouse;
+            if (is_scalar($dfLocation) && ($dfLocation > 0)) {
+                return (int) $dfLocation;
+            }
+        }
+
+        //====================================================================//
+        // Verify Default Product Stock is defined
+        if (empty($conf->global->SPLASH_STOCK) || !is_scalar($conf->global->SPLASH_STOCK)) {
+            return Splash::log()->errTrace("Product : No Local WareHouse Defined.");
+        }
+
+        return (int) $conf->global->SPLASH_STOCK;
     }
 }
