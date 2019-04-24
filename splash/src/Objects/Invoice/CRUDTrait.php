@@ -155,6 +155,9 @@ trait CRUDTrait
         if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
+        //====================================================================//
+        // Update Object Pdf Document
+        $this->updateObjectPdf();
 
         return $this->getObjectIdentifier();
     }
@@ -221,5 +224,32 @@ trait CRUDTrait
         }
 
         return (string) $this->object->id;
+    }
+
+    /**
+     * Re-Generate Invoice Pdf if Needed
+     */
+    public function updateObjectPdf()
+    {
+        global $conf, $langs;
+        //====================================================================//
+        // Only if Feature is Not Disabled
+        if (!empty($conf->global->MAIN_DISABLE_PDF_AUTOUPDATE)) {
+            return;
+        }
+        //====================================================================//
+        // Only if Invoice is Valid
+        if ($this->object->statut <= 0) {
+            return;
+        }
+        //====================================================================//
+        // Reload to get new records
+        $this->object->fetch($this->object->id);
+        //====================================================================//
+        // Generate Pdf Document
+        $result = $this->object->generateDocument("", $langs);
+        if ($result < 0) {
+            $this->catchDolibarrErrors();
+        }
     }
 }
