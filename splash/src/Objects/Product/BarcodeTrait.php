@@ -146,7 +146,7 @@ trait BarcodeTrait
     /**
      * Get Default BarCode Type Splash Type
      *
-     * @return null|string
+     * @return string
      */
     private function getBarcodeFormat()
     {
@@ -165,7 +165,7 @@ trait BarcodeTrait
     /**
      * Get Default BarCode Type Splash Type
      *
-     * @return null|string
+     * @return string
      */
     private function getBarcodeSchema()
     {
