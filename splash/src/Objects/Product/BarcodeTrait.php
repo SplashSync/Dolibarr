@@ -15,11 +15,40 @@
 
 namespace   Splash\Local\Objects\Product;
 
+use Product;
+
 /**
- * Dolibarr Products BarCodes Fields
+ * Dolibarr Products BarCodes Fieldsconst
  */
 trait BarcodeTrait
 {
+    /**
+     * @var string
+     */
+    private $defaultBarcodeType;
+
+    /**
+     * List of Integer barcodes Types
+     *
+     * @var array
+     */
+    private static $intBarcodes = array(
+        "EAN8", "EAN13", "UPC",
+        "ISBN", "C39",
+    );
+
+    /**
+     * List of Known Barcodes Schemas
+     *
+     * @var array
+     */
+    private static $knownBarcodes = array(
+        "EAN8" => "gtin8",
+        "EAN13" => "gtin13",
+        "UPC" => "gtin12",
+        "ISBN" => "gtin14",
+    );
+
     /**
      * Build Fields using FieldFactory
      */
@@ -29,9 +58,11 @@ trait BarcodeTrait
 
         //====================================================================//
         // Bar Code Value
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("barcode")
-            ->Name($langs->trans("BarcodeValue"));
+        $this->fieldsFactory()->create($this->getBarcodeFormat())
+            ->identifier("barcode")
+            ->name($langs->trans("BarcodeValue"))
+            ->description($langs->trans("BarcodeValue")." (".$this->getDefaultBarcodeType().")")
+            ->microData("http://schema.org/Product", $this->getBarcodeSchema());
     }
 
     /**
@@ -79,5 +110,74 @@ trait BarcodeTrait
                 return;
         }
         unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Detect Default BarCode Type Code
+     *
+     * @return string
+     */
+    private function getDefaultBarcodeType()
+    {
+        global $db, $conf;
+        //====================================================================//
+        // Load from Cache
+        if (isset($this->defaultBarcodeType)) {
+            return $this->defaultBarcodeType;
+        }
+        //====================================================================//
+        // Check if Default Bar Code Type is Defined
+        if (empty($conf->global->PRODUIT_DEFAULT_BARCODE_TYPE)) {
+            return $this->defaultBarcodeType = "";
+        }
+        //====================================================================//
+        // Load Bar Code Type Values
+        $common = new Product($db);
+        $common->barcode_type = $conf->global->PRODUIT_DEFAULT_BARCODE_TYPE;
+        $common->barcode_type_code = "";
+        $common->fetch_barcode();
+        //====================================================================//
+        // Return Bar Code Name
+        $this->defaultBarcodeType = empty($common->barcode_type_code) ? "" : $common->barcode_type_code;
+
+        return $this->defaultBarcodeType;
+    }
+
+    /**
+     * Get Default BarCode Type Splash Type
+     *
+     * @return null|string
+     */
+    private function getBarcodeFormat()
+    {
+        //====================================================================//
+        // Get Default Bar Code Type Name
+        $dfType = $this->getDefaultBarcodeType();
+        //====================================================================//
+        // Check if Int Barcode Type
+        if (empty($dfType) || !in_array($dfType, static::$intBarcodes, true)) {
+            return SPL_T_VARCHAR;
+        }
+
+        return SPL_T_INT;
+    }
+
+    /**
+     * Get Default BarCode Type Splash Type
+     *
+     * @return null|string
+     */
+    private function getBarcodeSchema()
+    {
+        //====================================================================//
+        // Get Default Bar Code Type Name
+        $dfType = $this->getDefaultBarcodeType();
+        //====================================================================//
+        // Check if Int Barcode Type
+        if (empty($dfType) || !isset(static::$knownBarcodes[$dfType])) {
+            return "qrcode";
+        }
+
+        return static::$knownBarcodes[$dfType];
     }
 }
