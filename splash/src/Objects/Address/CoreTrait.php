@@ -47,6 +47,15 @@ trait CoreTrait
             ->isListed();
 
         //====================================================================//
+        // Job Title
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("poste")
+            ->Name($langs->trans("PostOrFunction"))
+            ->description("The job title of the person (for example, Financial Manager).")
+            ->MicroData("http://schema.org/Person", "jobTitle")
+            ->isLogged();
+
+        //====================================================================//
         // Customer
         $this->fieldsFactory()->create((string) self::objects()->Encode("ThirdParty", SPL_T_ID))
             ->Identifier("socid")
@@ -86,6 +95,7 @@ trait CoreTrait
             case 'name':
             case 'firstname':
             case 'lastname':
+            case 'poste':
             case 'ref_ext':
                 $this->getSimple($fieldName);
 
@@ -119,6 +129,7 @@ trait CoreTrait
             case 'name':
             case 'firstname':
             case 'lastname':
+            case 'poste':
                 $this->setSimple($fieldName, $fieldData);
 
                 break;
