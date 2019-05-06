@@ -28,16 +28,6 @@ class L07SkuItemsDetectionTest extends ObjectsCase
     use MethodInvokerTrait;
 
     /**
-     * @var array
-     */
-    protected $Fields;
-
-    /**
-     * @var array
-     */
-    private $Field;
-
-    /**
      * Test Product detection Without The Option
      *
      * @dataProvider ObjectTypesProvider
@@ -167,7 +157,7 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @param string $objectType
      * @param string $itemDesc
-     * @param string $itemFkProduct
+     * @param null|string $itemFkProduct
      * @param int    $result
      */
     private function verifyProductDetection($objectType, $itemDesc, $itemFkProduct, $result)

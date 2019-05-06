@@ -520,7 +520,7 @@ trait BaseItemsTrait
             // Decode Splash Id String
             $fkProduct = self::objects()->Id($itemData["fk_product"]);
             if ($fkProduct) {
-                return $fkProduct;
+                return (int) $fkProduct;
             }
         }
         //====================================================================//
