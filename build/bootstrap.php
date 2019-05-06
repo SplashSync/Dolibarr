@@ -1,15 +1,25 @@
 <?php
-/**
- * Bootstrap Dolibarr testing environment.
+
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
-require dirname(__DIR__) . "/splash/vendor/autoload.php";
+require dirname(__DIR__)."/splash/vendor/autoload.php";
 
 global $db,$langs,$conf,$user,$hookmanager;
 
 //====================================================================//
 // Initiate Dolibarr Global Envirement Variables
-require_once(dirname(dirname(__DIR__)) . "/master.inc.php");
+require_once(dirname(dirname(__DIR__))."/master.inc.php");
 //====================================================================//
 // Functions Dolibarr
 require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
