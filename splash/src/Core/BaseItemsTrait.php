@@ -17,6 +17,7 @@ namespace Splash\Local\Core;
 
 use FactureLigne;
 use OrderLine;
+use Product;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 
@@ -485,20 +486,62 @@ trait BaseItemsTrait
      */
     private function setItemProductLink($itemData)
     {
-        if (!array_key_exists("fk_product", $itemData) || is_null($this->currentItem)) {
+        //====================================================================//
+        // Safety Check
+        if (is_null($this->currentItem)) {
+            return;
+        }
+        //====================================================================//
+        // Compare Product Link
+        $productId = $this->detectProductId($itemData);
+        if ($this->currentItem->fk_product == $productId) {
             return;
         }
         //====================================================================//
         // Update Product Link
-        $productId = self::objects()->Id($itemData["fk_product"]);
-        if ($this->currentItem->fk_product == $productId) {
-            return;
-        }
-        if (empty($productId)) {
-            $productId = 0;
-        }
         $this->currentItem->setValueFrom("fk_product", $productId, '', null, '', '', "none");
         $this->catchDolibarrErrors($this->currentItem);
+    }
+
+    /**
+     * Detect Product Id from Input Line Item with SKU Detection
+     *
+     * @param array $itemData Input Item Data Array
+     *
+     * @return int
+     */
+    private function detectProductId($itemData)
+    {
+        global $db, $conf;
+        //====================================================================//
+        // Product Id is Given
+        if (array_key_exists("fk_product", $itemData)) {
+            //====================================================================//
+            // Decode Splash Id String
+            $fkProduct = self::objects()->Id($itemData["fk_product"]);
+            if ($fkProduct) {
+                return $fkProduct;
+            }
+        }
+        //====================================================================//
+        // Search for Product SKU from Item Description
+        if (!empty($conf->global->SPLASH_DECTECT_ITEMS_BY_SKU) && array_key_exists("desc", $itemData)) {
+            //====================================================================//
+            // Ensure Product Class is Loaded
+            include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
+            //====================================================================//
+            // Shorten Item Resume to remove potential spaces
+            $productRef = str_replace(" ", "", $itemData["desc"]);
+            //====================================================================//
+            // Try Loading product by SKU
+            $product = new Product($db);
+            $result = $product->fetch(0, $productRef);
+            if (($result > 0) && ($product->id > 0)) {
+                return $product->id;
+            }
+        }
+
+        return 0;
     }
 
     /**

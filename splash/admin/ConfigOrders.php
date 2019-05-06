@@ -60,6 +60,24 @@ if (Local::dolVersionCmp("5.0.0") >= 0) {
 }
 
 //====================================================================//
+// Product SKU Detection Mode
+echo '  <tr class="pair">';
+echo '      <td>'.$form->textwithpicto(
+    $langs->trans("SPL_DetectBySku"),
+    $langs->trans("SPL_DetectBySku_T")
+).'</td>';
+if ($conf->global->SPLASH_DECTECT_ITEMS_BY_SKU) {
+    echo '<td><a href="'.filter_input(INPUT_SERVER, "PHP_SELF").'?action=UpdateOrderDetectSkuMode&DetectSku=0">';
+    echo img_picto($langs->trans("Enabled"), 'switch_on');
+    echo '</a></td>';
+} else {
+    echo '<td><a href="'.filter_input(INPUT_SERVER, "PHP_SELF").'?action=UpdateOrderDetectSkuMode&DetectSku=1">';
+    echo img_picto($langs->trans("Disabled"), 'switch_off');
+    echo '</a></td>';
+}
+echo '  </tr>';
+
+//====================================================================//
 // Allow Import of Guests Orders & Invoices
 echo '  <tr class="impair">';
 echo '      <td>'.$form->textwithpicto(

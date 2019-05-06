@@ -29,6 +29,15 @@ if ('UpdateOrderTaxMode' == $action) {
 }
 
 //====================================================================//
+// Update Product SKU Detection Mode
+if ('UpdateOrderDetectSkuMode' == $action) {
+    $detectSkuMode = GETPOST('DetectSku')?1:0;
+    dolibarr_set_const($db, "SPLASH_DECTECT_ITEMS_BY_SKU", $detectSkuMode, 'chaine', 0, '', $conf->entity);
+    setEventMessage($langs->trans("SetupSaved"), 'mesgs');
+    header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
+}
+
+//====================================================================//
 // Update Allow Guests Orders
 if ('UpdateOrderAllowGuest' == $action) {
     $AllowGuest = GETPOST('AllowGuest')?1:0;

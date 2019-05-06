@@ -208,6 +208,7 @@ class modSplash extends DolibarrModules
             array('SPLASH_GUEST_ORDERS_ALLOW', 'chaine', '', 'Allow Import of Guests Orders & Invoices', 0),
             array('SPLASH_GUEST_ORDERS_CUSTOMER', 'chaine', '', 'Select Guest Orders Customer', 0),
             array('SPLASH_GUEST_ORDERS_EMAIL', 'chaine', '', 'Try to detect Customer Using Email ', 0),
+            array('SPLASH_DECTECT_ITEMS_BY_SKU', 'chaine', '', 'Try to detect Products Items by SKU', 0),
         );
     }
 
