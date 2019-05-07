@@ -155,10 +155,10 @@ class L07SkuItemsDetectionTest extends ObjectsCase
     /**
      * Test of Product Detection
      *
-     * @param string $objectType
-     * @param string $itemDesc
+     * @param string      $objectType
+     * @param string      $itemDesc
      * @param null|string $itemFkProduct
-     * @param int    $result
+     * @param int         $result
      */
     private function verifyProductDetection($objectType, $itemDesc, $itemFkProduct, $result)
     {
