@@ -38,7 +38,7 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("weight")
             ->Name($langs->trans("Weight"))
-            ->Description($langs->trans("Weight")."(".$langs->trans("WeightUnitkg").")")
+            ->Description($langs->trans("Weight")." (".$langs->trans("WeightUnitkg").")")
             ->MicroData("http://schema.org/Product", "weight");
 
         //====================================================================//
@@ -46,15 +46,31 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("length")
             ->Name($langs->trans("Length"))
-            ->Description($langs->trans("Length")."(".$langs->trans("LengthUnitm").")")
+            ->Description($langs->trans("Length")." (".$langs->trans("LengthUnitm").")")
             ->MicroData("http://schema.org/Product", "depth");
+
+        //====================================================================//
+        // Width
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
+            ->Identifier("width")
+            ->Name($langs->trans("Width"))
+            ->Description($langs->trans("Width")." (".$langs->trans("LengthUnitm").")")
+            ->MicroData("http://schema.org/Product", "width");
+
+        //====================================================================//
+        // Height
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
+            ->Identifier("height")
+            ->Name($langs->trans("Height"))
+            ->Description($langs->trans("Heigth")." (".$langs->trans("LengthUnitm").")")
+            ->MicroData("http://schema.org/Product", "height");
 
         //====================================================================//
         // Surface
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("surface")
             ->Name($langs->trans("Surface"))
-            ->Description($langs->trans("Surface")."(".$langs->trans("SurfaceUnitm2").")")
+            ->Description($langs->trans("Surface")." (".$langs->trans("SurfaceUnitm2").")")
             ->MicroData("http://schema.org/Product", "surface");
 
         //====================================================================//
@@ -62,7 +78,7 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("volume")
             ->Name($langs->trans("Volume"))
-            ->Description($langs->trans("Volume")."(".$langs->trans("VolumeUnitm3").")")
+            ->Description($langs->trans("Volume")." (".$langs->trans("VolumeUnitm3").")")
             ->MicroData("http://schema.org/Product", "volume");
     }
 
@@ -88,9 +104,11 @@ trait MainTrait
 
                 break;
             case 'length':
+            case 'width':
+            case 'height':
                 $this->out[$fieldName] = (float) $this->convertLength(
-                    $this->object->length,
-                    $this->object->length_units
+                    $this->object->{ $fieldName },
+                    $this->object->{ $fieldName."_units" }
                 );
 
                 break;
@@ -133,14 +151,16 @@ trait MainTrait
                 $this->updateProductWeight($fieldData);
 
                 break;
+            case 'width':
+            case 'height':
             case 'length':
                 if ((string)$fieldData !== (string) $this->convertLength(
-                    $this->object->length,
-                    $this->object->length_units
+                    $this->object->{ $fieldName },
+                    $this->object->{ $fieldName."_units" }
                 )) {
                     $nomalized = $this->normalizeLength($fieldData);
-                    $this->object->length = $nomalized->length;
-                    $this->object->length_units = $nomalized->length_units;
+                    $this->object->{ $fieldName } = $nomalized->length;
+                    $this->object->{ $fieldName."_units" } = $nomalized->length_units;
                     $this->needUpdate();
                 }
 

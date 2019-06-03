@@ -155,12 +155,7 @@ class AttributesManager
         $attribute->label = is_string($attributeName) ? $attributeName : $attributeCode;
 
         if ($attribute->create($user) < 0) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Create Product Attribute (".$attributeCode.")."
-            );
+            return Splash::log()->errTrace("Unable to Create Product Attribute (".$attributeCode.").");
         }
 
         //====================================================================//
@@ -195,12 +190,7 @@ class AttributesManager
         // Update Attribute
         $attribute->label = $attributeName;
         if ($attribute->update($user) < 0) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Create Product Attribute (".$attribute->ref.")."
-            );
+            return Splash::log()->errTrace("Unable to Create Product Attribute (".$attribute->ref.").");
         }
 
         return true;
@@ -248,20 +238,14 @@ class AttributesManager
         //====================================================================//
         // Ensure Attribute has No Child Values or Product
         if (($attribute->countChildValues() > 0) || ($attribute->countChildProducts() > 0)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
+            return Splash::log()->errTrace(
                 "Unable to Delete Product Attribute (".$attribute->ref."): Has Child Values or Product"
             );
         }
         //====================================================================//
         // Delete Attribute
         if ($attribute->delete() < 0) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
+            return Splash::log()->errTrace(
                 " Unable to Delete Product Attribute (".$attribute->ref.")."
             );
         }
@@ -355,11 +339,8 @@ class AttributesManager
         $value->value = is_string($valueName) ? $valueName : $valueCode;
 
         if ($value->create($user) < 0) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Create Product Attribute Value (".$valueCode."@".$attribute->ref.")."
+            return Splash::log()->errTrace(
+                "Unable to Create Product Attribute Value (".$valueCode."@".$attribute->ref.")."
             );
         }
 
@@ -408,11 +389,8 @@ class AttributesManager
         //====================================================================//
         // Delete Attribute Value
         if ($value->delete() < 0) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Delete Product Attribute Value (".$value->ref.")."
+            return Splash::log()->errTrace(
+                "Unable to Delete Product Attribute Value (".$value->ref.")."
             );
         }
 

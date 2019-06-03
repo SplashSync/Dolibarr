@@ -265,7 +265,7 @@ class VariantsManager
         $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
         static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
 
-        return $updated;
+        return (bool) $updated;
     }
 
     /**
