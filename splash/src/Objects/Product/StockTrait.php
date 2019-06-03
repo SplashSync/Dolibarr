@@ -76,7 +76,8 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("fk_default_warehouse")
             ->isReadOnly()
-            ->Name($langs->trans("DefaultWarehouse"));
+            ->Name($langs->trans("DefaultWarehouse"))
+            ->MicroData("http://schema.org/Offer", "inventoryLocation");
     }
 
     /**
@@ -213,14 +214,14 @@ trait StockTrait
         }
         //====================================================================//
         // Check If Field is Empty
-        if (is_int($this->object->fk_default_warehouse)) {
+        if (!is_scalar($this->object->fk_default_warehouse)) {
             return "";
         }
         //====================================================================//
         // Read Location Name from Database
         return (string) $this->object->getValueFrom(
             "entrepot",
-            $this->object->fk_default_warehouse,
+            (int) $this->object->fk_default_warehouse,
             "ref"
         );
     }
