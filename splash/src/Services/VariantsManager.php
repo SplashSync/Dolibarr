@@ -253,7 +253,7 @@ class VariantsManager
         foreach ($attributes as $attributeId => $valueId) {
             //====================================================================//
             // Update Combination Attribute
-            $updated |= self::setProductAttribute(
+            $updated |= (bool) self::setProductAttribute(
                 $combination,
                 array_shift(static::$attr2ValuesCache[$productId]),
                 $attributeId,
