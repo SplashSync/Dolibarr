@@ -108,7 +108,8 @@ trait MainTrait
             case 'height':
                 $this->out[$fieldName] = (float) $this->convertLength(
                     $this->object->{ $fieldName },
-                    $this->object->{ $fieldName."_units" }
+                    $this->object->length_units
+//                    $this->object->{ $fieldName."_units" }
                 );
 
                 break;
