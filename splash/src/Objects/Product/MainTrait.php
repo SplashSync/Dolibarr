@@ -109,7 +109,7 @@ trait MainTrait
                 $this->out[$fieldName] = (float) $this->convertLength(
                     $this->object->{ $fieldName },
                     $this->object->length_units
-//                    $this->object->{ $fieldName."_units" }
+                    // $this->object->{ $fieldName."_units" }
                 );
 
                 break;
