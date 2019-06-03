@@ -152,20 +152,6 @@ trait MainTrait
                 $this->updateProductWeight($fieldData);
 
                 break;
-            case 'width':
-            case 'height':
-            case 'length':
-                if ((string)$fieldData !== (string) $this->convertLength(
-                    $this->object->{ $fieldName },
-                    $this->object->{ $fieldName."_units" }
-                )) {
-                    $nomalized = $this->normalizeLength($fieldData);
-                    $this->object->{ $fieldName } = $nomalized->length;
-                    $this->object->{ $fieldName."_units" } = $nomalized->length_units;
-                    $this->needUpdate();
-                }
-
-                break;
             case 'surface':
                 if ((string)$fieldData !== (string) $this->convertSurface(
                     $this->object->surface,
@@ -186,6 +172,40 @@ trait MainTrait
                     $nomalized = $this->normalizeVolume($fieldData);
                     $this->object->volume = $nomalized->volume;
                     $this->object->volume_units = $nomalized->volume_units;
+                    $this->needUpdate();
+                }
+
+                break;
+            default:
+                return;
+        }
+        unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Write Given Fields
+     *
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
+     */
+    protected function setDimFields($fieldName, $fieldData)
+    {
+        //====================================================================//
+        // WRITE Field
+        switch ($fieldName) {
+            //====================================================================//
+            // PRODUCT SPECIFICATIONS
+            //====================================================================//
+            case 'width':
+            case 'height':
+            case 'length':
+                if ((string)$fieldData !== (string) $this->convertLength(
+                    $this->object->{ $fieldName },
+                    $this->object->{ $fieldName."_units" }
+                )) {
+                    $nomalized = $this->normalizeLength($fieldData);
+                    $this->object->{ $fieldName } = $nomalized->length;
+                    $this->object->{ $fieldName."_units" } = $nomalized->length_units;
                     $this->needUpdate();
                 }
 
