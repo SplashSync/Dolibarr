@@ -249,10 +249,11 @@ class VariantsManager
         }
         //====================================================================//
         // Update Combination Attributes
+        $updated = false;
         foreach ($attributes as $attributeId => $valueId) {
             //====================================================================//
             // Update Combination Attribute
-            self::setProductAttribute(
+            $updated |= self::setProductAttribute(
                 $combination,
                 array_shift(static::$attr2ValuesCache[$productId]),
                 $attributeId,
@@ -264,7 +265,7 @@ class VariantsManager
         $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
         static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
 
-        return true;
+        return $updated;
     }
 
     /**
@@ -338,12 +339,7 @@ class VariantsManager
             $attr2Value->fk_prod_attr = $attributeId;
             $attr2Value->fk_prod_attr_val = $valueId;
             if ($attr2Value->create() < 0) {
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    " Unable to Create Product Combination ValuePair."
-                );
+                return Splash::log()->errTrace("Unable to Create Product Combination ValuePair.");
             }
 
             return true;
@@ -367,15 +363,12 @@ class VariantsManager
             //====================================================================//
             // Re-Create Attribute Value Parameters
             if ($attr2Value->create() < 0) {
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    " Unable to Update Product Combination ValuePair."
-                );
+                return Splash::log()->errTrace("Unable to Update Product Combination ValuePair.");
             }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

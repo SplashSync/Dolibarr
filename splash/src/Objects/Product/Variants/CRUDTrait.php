@@ -105,6 +105,11 @@ trait CRUDTrait
 
                 return Splash::log()->errTrace("Unable to Update Product Combination (".$this->combination->id.")");
             }
+            if ($this->combination->updateProperties($this->baseProduct) <= 0) {
+                $this->catchDolibarrErrors($this->combination);
+
+                return Splash::log()->errTrace("Unable to Update Combination Properties (".$this->combination->id.")");
+            }
         }
 
         return true;

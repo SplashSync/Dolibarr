@@ -168,7 +168,10 @@ trait AttributesTrait
             $attributes[$attribute->id] = $attributeValue->id;
         }
 
-        VariantsManager::setProductAttributes($this->object->id, $attributes);
+        if (VariantsManager::setProductAttributes($this->object->id, $attributes)) {
+            $this->needUpdate();
+            $this->needUpdate("combination");
+        }
 
         unset($this->in[$fieldName]);
     }
