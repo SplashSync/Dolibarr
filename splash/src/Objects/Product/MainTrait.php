@@ -205,7 +205,8 @@ trait MainTrait
                 )) {
                     $nomalized = $this->normalizeLength($fieldData);
                     $this->object->{ $fieldName } = $nomalized->length;
-                    $this->object->{ $fieldName."_units" } = $nomalized->length_units;
+                    $this->object->length_units = $nomalized->length_units;
+                    // $this->object->{ $fieldName."_units" } = $nomalized->length_units;
                     $this->needUpdate();
                 }
 
