@@ -201,7 +201,8 @@ trait MainTrait
             case 'length':
                 if ((string)$fieldData !== (string) $this->convertLength(
                     $this->object->{ $fieldName },
-                    $this->object->{ $fieldName."_units" }
+                    $this->object->length_units
+                    // $this->object->{ $fieldName."_units" }
                 )) {
                     $nomalized = $this->normalizeLength($fieldData);
                     $this->object->{ $fieldName } = $nomalized->length;
