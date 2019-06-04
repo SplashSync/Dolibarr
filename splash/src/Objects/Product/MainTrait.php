@@ -55,7 +55,8 @@ trait MainTrait
             ->Identifier("width")
             ->Name($langs->trans("Width"))
             ->Description($langs->trans("Width")." (".$langs->trans("LengthUnitm").")")
-            ->MicroData("http://schema.org/Product", "width");
+            ->MicroData("http://schema.org/Product", "width")
+            ->isNotTested();
 
         //====================================================================//
         // Height
@@ -63,7 +64,8 @@ trait MainTrait
             ->Identifier("height")
             ->Name($langs->trans("Height"))
             ->Description($langs->trans("Heigth")." (".$langs->trans("LengthUnitm").")")
-            ->MicroData("http://schema.org/Product", "height");
+            ->MicroData("http://schema.org/Product", "height")
+            ->isNotTested();
 
         //====================================================================//
         // Surface
