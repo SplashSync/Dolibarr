@@ -531,7 +531,7 @@ trait BaseItemsTrait
             include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
             //====================================================================//
             // Shorten Item Resume to remove potential spaces
-            $productRef = str_replace(" ", "", $itemData["desc"]);
+            $productRef = str_replace(array(" ", "(", ")", "[", "]"), "", $itemData["desc"]);
             //====================================================================//
             // Try Loading product by SKU
             $product = new Product($db);
