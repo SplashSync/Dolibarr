@@ -147,21 +147,22 @@ trait AttributesTrait
         //====================================================================//
         // Update Products Attributes Ids
         $attributes = array();
-        foreach ($fieldData as $item) {
+        $attrList = empty($fieldData) ? array() : $fieldData;
+        foreach ($attrList as $attrItem) {
             //====================================================================//
             // Check Product Attributes is Valid & Not More than 3 Options!
-            if (!$this->isValidAttributeDefinition($item)) {
+            if (!$this->isValidAttributeDefinition($attrItem)) {
                 continue;
             }
             //====================================================================//
             // Load or Create Attribute by Name
-            $attribute = AttributesManager::touchAttributeGroup($item["code"], $item["name"]);
+            $attribute = AttributesManager::touchAttributeGroup($attrItem["code"], $attrItem["name"]);
             if (!$attribute) {
                 return;
             }
             //====================================================================//
             // Load or Create Attribute Value by Name
-            $attributeValue = AttributesManager::touchAttributeValue($attribute, $item["value"]);
+            $attributeValue = AttributesManager::touchAttributeValue($attribute, $attrItem["value"]);
             if (!$attributeValue) {
                 return;
             }
