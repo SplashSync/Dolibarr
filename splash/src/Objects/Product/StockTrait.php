@@ -42,12 +42,14 @@ trait StockTrait
 
         //====================================================================//
         // Default Stock Location
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("fk_default_warehouse")
-            ->addChoices($this->getStockLocations())
-            ->group($langs->trans("MenuStocks"))
-            ->Name($langs->trans("DefaultWarehouse"))
-            ->MicroData("http://schema.org/Offer", "inventoryLocation");
+        if (Local::dolVersionCmp("8.0.0") >= 0) {
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->Identifier("fk_default_warehouse")
+                ->addChoices($this->getStockLocations())
+                ->group($langs->trans("MenuStocks"))
+                ->Name($langs->trans("DefaultWarehouse"))
+                ->MicroData("http://schema.org/Offer", "inventoryLocation");
+        }
 
         //====================================================================//
         // Stock Reel
