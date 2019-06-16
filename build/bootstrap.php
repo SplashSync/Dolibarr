@@ -41,6 +41,7 @@ dolibarr_set_const($db, "SPLASH_USER", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_LANG", "fr_FR", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_LANGS", 'a:2:{i:0;s:5:"fr_BE";i:1;s:5:"en_US";}', 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_STOCK", "1", 'chaine', 0, '', $conf->entity);
+dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_BANK", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", "CB", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "1", 'chaine', 0, '', $conf->entity);
