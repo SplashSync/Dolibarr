@@ -4,7 +4,7 @@ includes:
     - '../splash/vendor/phpstan/phpstan-phpunit/rules.neon'
 
 parameters:
-    bootstrap: "./.travis/phpstan.php"
+    bootstrap: "./travis/phpstan.php"
 
     universalObjectCratesClasses:
             - ArrayObject
