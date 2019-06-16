@@ -80,7 +80,7 @@ parameters:
         phpcsfixer:     ~ 
         phpcsfixer2:    
             allow_risky:    true
-            config:         "build/php_cs.dist"
+            config:         "travis/php_cs.dist"
             
         phpcs:
             standard:       "PSR2"
@@ -103,7 +103,7 @@ parameters:
         phpstan:
             level: "%level%"
             autoload_file:  "splash/vendor/autoload.php"
-            configuration:  "build/phpstan.neon"           
+            configuration:  "travis/phpstan.neon"           
             ignore_patterns:
                 - LocalizationTrait.php
                 - splash/admin
