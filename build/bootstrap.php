@@ -34,6 +34,10 @@ dolibarr_set_const($db, "MAIN_INFO_SOCIETE_COUNTRY", '1:FR:France', 'chaine', 0,
 dolibarr_set_const($db, "MAIN_MODULE_SYSLOG", '0', 'chaine', 0, '', 0);
 
 //====================================================================//
+// Allow Negative Stocks
+dolibarr_set_const($db, "STOCK_ALLOW_NEGATIVE_TRANSFER", '1', 'chaine', 0, '', 0);
+
+//====================================================================//
 // Setup Splash Module
 dolibarr_set_const($db, "SPLASH_WS_ID", "12345678", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_WS_KEY", "001234567800", 'chaine', 0, '', $conf->entity);
