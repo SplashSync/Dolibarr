@@ -16,6 +16,7 @@
 namespace   Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
  * Dolibarr Products Stock Fields
