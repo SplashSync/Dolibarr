@@ -108,7 +108,16 @@ parameters:
                 - LocalizationTrait.php
                 - splash/admin
                 - L03PaymentBanksTest.php
-
+                
+        build: 
+            source_folder:  "/splash"
+            target_folder:  "/dol_module"
+            build_folder:   "splash/"
+            build_file:     "module_splash-1.5.0"
+        
+    extensions:
+        - Splash\Console\Extension\Loader
+        
     testsuites:
         travis:
             tasks:
@@ -130,3 +139,7 @@ parameters:
         phpstan:
             tasks: 
                 - phpstan 
+                
+        module:
+            tasks:
+                - build                

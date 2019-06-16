@@ -25,12 +25,13 @@
     },
     
     "require-dev": {
+        "splash/console":                   "dev-master",
         "phpunit/phpunit":                  "~5.0|~6.0|~7.0",
         "composer/composer":                "^1.5",
         "j13k/yaml-lint":                   "^1.1",
         "jakub-onderka/php-parallel-lint":  "^1.0",
         "phpmd/phpmd":                      "^2.6",
-        "phpro/grumphp":                    "^0.14.0",
+        "phpro/grumphp":                    "^0.15",
         "sclable/xml-lint":                 "^0.2.4",
         "sebastian/phpcpd":                 ">3.0",
         "seld/jsonlint":                    "^1.7",
