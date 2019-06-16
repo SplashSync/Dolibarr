@@ -75,7 +75,13 @@ require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
 $formproduct = new FormProduct($db);
 echo '  <tr class="pair">';
 echo '      <td>'.$langs->trans("SPL_DfStock").'</td>';
-echo '      <td>'.$formproduct->selectWarehouses($conf->global->SPLASH_STOCK, 'stock', '', 1).'</td>';
+echo '      <td>'.$formproduct->selectWarehouses($conf->global->SPLASH_STOCK, 'stock', '', 0).'</td>';
+echo '  </tr>';
+//====================================================================//
+// Products Default Warehouse Parameter
+echo '  <tr class="pair">';
+echo '      <td>'.$langs->trans("SPL_ProductStock").'</td>';
+echo '      <td>'.$formproduct->selectWarehouses($conf->global->SPLASH_PRODUCT_STOCK, 'product_stock', '', 1).'</td>';
 echo '  </tr>';
 
 //====================================================================//

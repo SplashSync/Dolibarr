@@ -198,7 +198,8 @@ class modSplash extends DolibarrModules
             array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),
             array('SPLASH_LANGS',   'chaine',   serialize(array()), 'Others Languages to use for Splash Server Transactions', 0),
             array('SPLASH_USER',    'chaine',   '',  'Local User to use for Splash Server Transactions', 0),
-            array('SPLASH_STOCK',   'chaine',   '',  'Local Warhouse to use for Splash Server Transactions', 0),
+            array('SPLASH_STOCK',   'chaine',   '',  'Local Warehouse to use for Splash Server Transactions', 0),
+            array('SPLASH_PRODUCT_STOCK','chaine',   '',  'Default Warehouse to setup for New/Updated Products', 0),
             array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),
             //====================================================================//
             // Splash Order & Invoices Parameters

@@ -23,6 +23,13 @@ use Splash\Core\SplashCore      as Splash;
 trait StockTrait
 {
     /**
+     * Cache for Products Stocks Locations Ids
+     *
+     * @var array
+     */
+    private static $locationIds;
+
+    /**
      * Build Fields using FieldFactory
      */
     protected function buildStockFields()
@@ -34,10 +41,20 @@ trait StockTrait
         //====================================================================//
 
         //====================================================================//
+        // Default Stock Location
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("fk_default_warehouse")
+            ->addChoices($this->getStockLocations())
+            ->group($langs->trans("MenuStocks"))
+            ->Name($langs->trans("DefaultWarehouse"))
+            ->MicroData("http://schema.org/Offer", "inventoryLocation");
+
+        //====================================================================//
         // Stock Reel
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("stock_reel")
             ->Name($langs->trans("RealStock"))
+            ->group($langs->trans("MenuStocks"))
             ->MicroData("http://schema.org/Offer", "inventoryLevel")
             ->isListed();
 
@@ -46,6 +63,7 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("seuil_stock_alerte")
             ->Name($langs->trans("StockLimit"))
+            ->group($langs->trans("MenuStocks"))
             ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
 
         //====================================================================//
@@ -53,6 +71,7 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("stock_alert_flag")
             ->Name($langs->trans("StockTooLow"))
+            ->group($langs->trans("MenuStocks"))
             ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
             ->isReadOnly();
 
@@ -61,6 +80,7 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("desiredstock")
             ->Name($langs->trans("DesiredStock"))
+            ->group($langs->trans("MenuStocks"))
             ->MicroData("http://schema.org/Offer", "inventoryTargetLevel");
 
         //====================================================================//
@@ -68,16 +88,9 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("pmp")
             ->Name($langs->trans("EstimatedStockValueShort"))
+            ->group($langs->trans("MenuStocks"))
             ->MicroData("http://schema.org/Offer", "averagePrice")
             ->isReadOnly();
-
-        //====================================================================//
-        // Default Stock Location
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("fk_default_warehouse")
-            ->isReadOnly()
-            ->Name($langs->trans("DefaultWarehouse"))
-            ->MicroData("http://schema.org/Offer", "inventoryLocation");
     }
 
     /**
@@ -146,6 +159,12 @@ trait StockTrait
             case 'desiredstock':
             case 'pmp':
                 $this->setSimple($fieldName, $fieldData);
+
+                break;
+            //====================================================================//
+            // Default Stock Location
+            case 'fk_default_warehouse':
+                $this->setDefaultLocation($fieldData);
 
                 break;
             default:
@@ -253,5 +272,109 @@ trait StockTrait
         }
 
         return (int) $conf->global->SPLASH_STOCK;
+    }
+
+    /**
+     * Write Id of Product Default Stock Location
+     *
+     * @param mixed $fieldData Field Data
+     */
+    private function setDefaultLocation($fieldData)
+    {
+        global $conf;
+
+        $locationId = null;
+        //====================================================================//
+        // Detect Location Id from Given Ref
+        if (!empty($fieldData) && is_scalar($fieldData)) {
+            //====================================================================//
+            // Load Available Locations
+            $locations = $this->getStockLocationsIds();
+            if (isset($locations[$fieldData])) {
+                $locationId = $locations[$fieldData];
+            }
+        }
+        //====================================================================//
+        // Detect Location Id from Default Configuration
+        if (is_null($locationId) && !empty($conf->global->SPLASH_PRODUCT_STOCK)) {
+            if (in_array($conf->global->SPLASH_PRODUCT_STOCK, $this->getStockLocationsIds(), true)) {
+                $locationId = (int) $conf->global->SPLASH_PRODUCT_STOCK;
+            }
+        }
+        $this->setSimple('fk_default_warehouse', $locationId);
+    }
+
+    /**
+     * Build List of Stock Location
+     *
+     * @return array
+     */
+    private function getStockLocations()
+    {
+        global $db;
+
+        $locations = array();
+        //====================================================================//
+        // Prepare SQL Query
+        $sql = "SELECT e.rowid, e.ref, e.lieu, e.description";
+        $sql .= " FROM ".MAIN_DB_PREFIX."entrepot as e";
+        $sql .= " WHERE e.entity IN (".getEntity('stock').")";
+        $sql .= " AND e.statut = 1";
+        //====================================================================//
+        // Execute Query
+        dol_syslog(get_class($this).'::splashLoadWarehouses', LOG_DEBUG);
+        $resql = $db->query($sql);
+        if (!$resql) {
+            return $locations;
+        }
+        //====================================================================//
+        // Parse Results
+        $index = 0;
+        while ($index < $db->num_rows($resql)) {
+            $obj = $db->fetch_object($resql);
+            $locations[$obj->ref] = $obj->ref.": ".$obj->lieu;
+            $index++;
+        }
+
+        return $locations;
+    }
+
+    /**
+     * Build List of Stock Location (RowId Indexed)
+     *
+     * @return array
+     */
+    private function getStockLocationsIds()
+    {
+        global $db;
+
+        //====================================================================//
+        // Load to Cache
+        if (!isset(static::$locationIds)) {
+            static::$locationIds = array();
+            //====================================================================//
+            // Prepare SQL Query
+            $sql = "SELECT e.rowid, e.ref, e.lieu, e.description";
+            $sql .= " FROM ".MAIN_DB_PREFIX."entrepot as e";
+            $sql .= " WHERE e.entity IN (".getEntity('stock').")";
+            $sql .= " AND e.statut = 1";
+            //====================================================================//
+            // Execute Query
+            dol_syslog(get_class($this).'::splashLoadWarehouses', LOG_DEBUG);
+            $resql = $db->query($sql);
+            if (!$resql) {
+                return static::$locationIds;
+            }
+            //====================================================================//
+            // Parse Results
+            $index = 0;
+            while ($index < $db->num_rows($resql)) {
+                $obj = $db->fetch_object($resql);
+                static::$locationIds[$obj->ref] = $obj->rowid;
+                $index++;
+            }
+        }
+
+        return static::$locationIds;
     }
 }

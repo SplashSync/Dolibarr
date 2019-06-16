@@ -52,7 +52,8 @@ SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#set
 SPL_DfLang          =   Default Language used by the module
 SPL_OtherLangs      =   Other Languages used by the module
 SPL_DfUser          =   User to use for all remote operations
-SPL_DfStock         =   Default Whareouse used by the module (if not spécified)
+SPL_DfStock         =   Whareouse used for stocks transactions (if nop default warehouse specified at product level)
+SPL_ProductStock    =   Default warehouse for products setup (if empty value or not specified)
 SPL_DfPayMethod     =   Default Payement Method used by the module (if not spécified)
 SPL_DfMultiPrice    =   Default Price used by the module (MultiPrices mode is enabled)
 

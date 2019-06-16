@@ -64,6 +64,15 @@ if ('UpdateLocal' == $action) {
     }
 
     //====================================================================//
+    // Update Products Default Stock
+    $DfProductStock = GETPOST('product_stock', 'alpha');
+    if ($DfUser) {
+        if (dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", $DfProductStock, 'chaine', 0, '', $conf->entity) <= 0) {
+            $errors++;
+        }
+    }
+
+    //====================================================================//
     // Update Default MultiPrice
     $DfPrice = GETPOST('price_level', 'alpha');
     if ($DfUser) {

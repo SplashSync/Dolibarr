@@ -112,7 +112,7 @@ class Local implements LocalClassInterface
 
         if (!defined("DOL_DOCUMENT_ROOT")) {
             /** @codingStandardsIgnoreStart */
-            global $db,$langs,$conf,$user,$hookmanager, $dolibarr_main_url_root;
+            global $db, $langs, $conf, $user, $hookmanager, $dolibarr_main_url_root, $mysoc;
             /** @codingStandardsIgnoreEnd */
             //====================================================================//
             // Initiate Dolibarr Global Envirement Variables

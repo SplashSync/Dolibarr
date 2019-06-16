@@ -243,6 +243,7 @@ trait CRUDTrait
         $this->setSimple("ref", $ref);
         $this->setSimple("label", $label);
         $this->setSimple("weight", 0);
+        $this->setDefaultLocation(null);
         //====================================================================//
         // Required For Dolibarr Below 3.6
         $this->object->type = 0;
