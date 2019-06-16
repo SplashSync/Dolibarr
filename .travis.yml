@@ -63,7 +63,7 @@ matrix:
 install:
     # Disable Xdebug ...
     - phpenv config-rm xdebug.ini
-    - phpenv config-add .travis/x_memory.ini
+    - phpenv config-add travis/x_memory.ini
     
 before_script:
   
@@ -82,18 +82,18 @@ before_script:
     - git clone --depth=1 --branch="$DOL" https://github.com/Dolibarr/dolibarr.git $DOL_BUILD_DIR
 
     # Init Database
-    - bash $TRAVIS_BUILD_DIR/.travis/install_database.sh
+    - bash $TRAVIS_BUILD_DIR/travis/install_database.sh
     
     # Setup Conf file
     - cd $DOL_BUILD_DIR
-    - bash $TRAVIS_BUILD_DIR/.travis/configure_dolibarr.sh  
-    - bash $TRAVIS_BUILD_DIR/.travis/upgrade_dolibarr.sh  
+    - bash $TRAVIS_BUILD_DIR/travis/configure_dolibarr.sh  
+    - bash $TRAVIS_BUILD_DIR/travis/upgrade_dolibarr.sh  
         
     # Copy Splash Module to Dolibarr folder
     - cp -Rf $TRAVIS_BUILD_DIR/*                    $DOL_BUILD_DIR/htdocs/custom/
     - cp -Rf $TRAVIS_BUILD_DIR/.git/                $DOL_BUILD_DIR/htdocs/custom/.git/
     - cp "$TRAVIS_BUILD_DIR/.travis.yml"            "$DOL_BUILD_DIR/htdocs/custom/.travis.yml"
-    - cp "$TRAVIS_BUILD_DIR/.travis/splash.json"    "$DOL_BUILD_DIR/htdocs/conf/splash.json"
+    - cp "$TRAVIS_BUILD_DIR/travis/splash.json"     "$DOL_BUILD_DIR/htdocs/conf/splash.json"
 
     # Run Composer
     - cd "$DOL_BUILD_DIR/htdocs/custom/"
@@ -117,15 +117,15 @@ script:
     - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=phpstan; fi      
     
     # Execute Bootstrap file    
-    - php .travis/bootstrap.php
+    - php travis/bootstrap.php
     # Show PhpUnit Version
     - splash/vendor/phpunit/phpunit/phpunit --version
     # Run PhpUnit Main Local Testsuite
-    - splash/vendor/phpunit/phpunit/phpunit -c .travis/phpunit.xml.dist --testsuite=Local
+    - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
     # PHP7+     =>  Run PhpUnit Main Sequence
-    - if [[ ${TRAVIS_PHP_VERSION:0:1} > "5" ]]; then phpdbg -qrr -d memory_limit=-1 splash/vendor/phpunit/phpunit/phpunit -c .travis/phpunit.xml.dist; fi  
+    - if [[ ${TRAVIS_PHP_VERSION:0:1} > "5" ]]; then phpdbg -qrr -d memory_limit=-1 splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist; fi  
     # PHP5.6    =>  Without Php Debugger (Coverage x2 Faster)
-    - if [[ ${TRAVIS_PHP_VERSION:0:1} < "7" ]]; then splash/vendor/phpunit/phpunit/phpunit -c .travis/phpunit.xml.dist; fi  
+    - if [[ ${TRAVIS_PHP_VERSION:0:1} < "7" ]]; then splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist; fi  
         
 notifications:
   email:         
