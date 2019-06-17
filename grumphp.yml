@@ -140,6 +140,6 @@ parameters:
             tasks: 
                 - phpstan 
                 
-        module:
-            tasks:
-                - build                
+#        module:
+#            tasks:
+#                - build                
