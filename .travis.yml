@@ -15,7 +15,7 @@ matrix:
     include:
 
         # Dolibarr Develop Branch       
-        - php: 7.9
+        - php: 7.3
           env: DOL=develop DATA=10.0.0    
         - php: 7.2
           env: DOL=develop DATA=10.0.0    
@@ -43,8 +43,7 @@ matrix:
           env: DOL=7.0 DATA=7.0.0    
           
     allow_failures:
-        - env: DOL=develop DATA=9.0.0 
-        - env: DOL=develop DATA=9.0.0    
+        - env: DOL=develop DATA=10.0.0 
           
         
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
