@@ -236,6 +236,8 @@ class VariantsManager
      */
     public static function setProductAttributes($productId, $attributes)
     {
+        global $user;
+
         //====================================================================//
         // Ensure Service Init
         self::init();
@@ -259,6 +261,16 @@ class VariantsManager
                 $attributeId,
                 $valueId
             );
+        }
+        //====================================================================//
+        // Delete Others Combination Attributes
+        if (!empty(static::$attr2ValuesCache[$productId])) {
+            foreach (static::$attr2ValuesCache[$productId] as $index => $attr2Value) {
+                //====================================================================//
+                // Delete Combination Attribute
+                $updated |= (bool) self::deleteProductAttribute($attr2Value);
+                unset(static::$attr2ValuesCache[$productId][$index]);
+            }
         }
         //====================================================================//
         // Reload Load Product Combination Class
@@ -370,5 +382,26 @@ class VariantsManager
         }
 
         return false;
+    }
+
+    /**
+     * Delete Product Combination Attributes 2 Value Pair from Ids Array
+     *
+     * @param ProductCombination2ValuePair $attr2Value Combination Attribute 2 Value Pair if Existing
+     *
+     * @return bool
+     */
+    private static function deleteProductAttribute($attr2Value)
+    {
+        global $db;
+
+        //====================================================================//
+        // Delete Attribute Value from Db
+        $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val WHERE rowid = ".(int) $attr2Value->id;
+        if ($db->query($sql)) {
+            return true;
+        }
+
+        return Splash::log()->errTrace("Unable to Delete Product Combination ValuePair.");
     }
 }
