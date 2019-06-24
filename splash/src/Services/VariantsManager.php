@@ -236,8 +236,6 @@ class VariantsManager
      */
     public static function setProductAttributes($productId, $attributes)
     {
-        global $user;
-
         //====================================================================//
         // Ensure Service Init
         self::init();
