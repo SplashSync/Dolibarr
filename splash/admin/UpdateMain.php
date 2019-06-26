@@ -68,12 +68,19 @@ if ('UpdateMain' == $action) {
     }
 
     //====================================================================//
-    // Update Protocl
+    // Update Protocol
     $WsMethod = GETPOST('WsMethod', 'alpha');
     if ($WsMethod) {
         if (dolibarr_set_const($db, "SPLASH_WS_METHOD", $WsMethod, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
+    }
+    
+    //====================================================================//
+    // Update Smart Notifications
+    $smartNotify = GETPOST('SmartNotify') ? 1 : 0;
+    if (dolibarr_set_const($db, "SPLASH_SMART_NOTIFY", $smartNotify, 'int', 0, '', $conf->entity) <= 0) {
+        $errors++;
     }
 
     //====================================================================//

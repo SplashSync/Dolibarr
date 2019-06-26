@@ -59,6 +59,11 @@ class Local implements LocalClassInterface
             $parameters["WsMethod"] = self::getParameter("SPLASH_WS_METHOD");
         }
         //====================================================================//
+        // Smart Notifications
+        if (!empty(self::getParameter("SPLASH_SMART_NOTIFY"))) {
+            $parameters["SmartNotify"] = true;
+        }
+        //====================================================================//
         // Overide Module Parameters with Local User Selected Lang
         if (self::getParameter("SPLASH_LANG")) {
             $parameters["DefaultLanguage"] = self::getParameter("SPLASH_LANG");

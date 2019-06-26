@@ -193,6 +193,7 @@ class modSplash extends DolibarrModules
             array('SPLASH_WS_EXPERT',  'int',   '',   'Use Expert Mode or Not',  0),
             array('SPLASH_WS_METHOD',  'chaine',   'NuSOAP',  'Communication Method to Use',  0),
             array('SPLASH_WS_HOST', 'chaine',   "https://www.splashsync.com/ws/soap",   'Splash Server Address',0),
+            array('SPLASH_SMART_NOTIFY', 'int',  '',  'Smart Notifications', 0),
             //====================================================================//
             // Splash Locals Parameters
             array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),

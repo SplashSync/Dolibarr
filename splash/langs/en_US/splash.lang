@@ -42,6 +42,8 @@ SPL_WsExpert_Tooltip=   Only use uppon our request! Your serveur may not work no
 SPL_WsHost          =   Url of Splash Server
 SPL_WsHost_Tooltip  =   Only modify uppon our request! Default value : www.splashsync.com/ws/soap 
 SPL_WsMethod        =   WebService Protocol to Use
+SPL_Smart           =   Smart Notifications
+SPL_Smart_Tooltip   =   On changes, display warning & errors only. 
 
 ################################################################################
 # Admin Page Index - Local Parameters

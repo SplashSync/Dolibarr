@@ -89,6 +89,25 @@ if ($conf->global->SPLASH_WS_EXPERT) {
     echo '      </td>';
     echo '  </tr>';
 }
+
+//====================================================================//
+// Smart Notifications
+echo '  <tr class="pair">';
+echo '      <td>'.$form->textwithpicto(
+    $langs->trans("SPL_Smart"),
+    $langs->trans("SPL_Smart_Tooltip")
+).'</td>';
+if ($conf->global->SPLASH_SMART_NOTIFY) {
+    echo '<td><a href="'.filter_input(INPUT_SERVER, "PHP_SELF").'?action=UpdateMain&SmartNotify=0">';
+    echo img_picto($langs->trans("Enabled"), 'switch_on');
+    echo '</a></td>';
+} else {
+    echo '<td><a href="'.filter_input(INPUT_SERVER, "PHP_SELF").'?action=UpdateMain&SmartNotify=1">';
+    echo img_picto($langs->trans("Disabled"), 'switch_off');
+    echo '</a></td>';
+}
+echo '  </tr>';
+
 echo '</tbody></table>';
 
 //====================================================================//

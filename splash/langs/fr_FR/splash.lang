@@ -42,6 +42,8 @@ SPL_WsExpert_Tooltip=   N'activer qu'à notre demande, au risque de voir votre s
 SPL_WsHost          =   Adresse du Server Splash Sync à Utiliser
 SPL_WsHost_Tooltip  =   Ne modifier qu'à notre demande. Valeur par défaut : www.splashsync.com/ws/soap 
 SPL_WsMethod        =   Protocole de WebService à Utiliser
+SPL_Smart           =   Smart Notifications
+SPL_Smart_Tooltip   =   Lors des changements, n'afficher les notifications qu'en cas d'erreurs. 
 
 ################################################################################
 # Admin Page Index - Local Parameters
