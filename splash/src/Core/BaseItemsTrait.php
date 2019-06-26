@@ -412,7 +412,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Clean VAT Code
-        $taxName = preg_replace('/%/', '', preg_replace('/\s/', '', $itemData["vat_src_code"]));
+        $taxName = preg_replace('/%/', '', (string) preg_replace('/\s/', '', $itemData["vat_src_code"]));
         $cleanedTaxName = is_string($taxName) ? substr($taxName, 0, 10) : "0";
         //====================================================================//
         // Update VAT Code if Needed
