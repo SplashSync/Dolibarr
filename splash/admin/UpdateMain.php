@@ -75,7 +75,7 @@ if ('UpdateMain' == $action) {
             $errors++;
         }
     }
-    
+
     //====================================================================//
     // Update Smart Notifications
     $smartNotify = GETPOST('SmartNotify') ? 1 : 0;
