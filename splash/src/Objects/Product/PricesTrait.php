@@ -191,17 +191,14 @@ trait PricesTrait
         }
 
         //====================================================================//
-        // Update Variant Product Weight
+        // Update Variant Product Price
         if ($this->isVariant() && !empty($this->baseProduct)) {
-            return $this->setVariantPrice($price, $priceLevel);
+            return $this->setVariantPrice($price, $newPrice["vat"], $priceBase, $priceLevel);
         }
 
         //====================================================================//
-        // Commit Price Update on Product Object
-        //====================================================================//
-        // For compatibility with previous versions => V3.5.0 or Above
+        // Commit Price Update on Simple Product
         $result = $this->object->updatePrice($price, $priceBase, $user, $newPrice["vat"], 0.0, $priceLevel);
-
         //====================================================================//
         // Check potential Errors
         if ($result < 0) {
@@ -215,16 +212,18 @@ trait PricesTrait
     }
 
     /**
-     * Write New Price
+     * Write New Price for Variant Product
      *
-     * @param float $price      New Variant Price
-     * @param int   $priceLevel MultiPrice Level
+     * @param float  $price      New Variant Price
+     * @param float  $priceVat   New Price Vat Rate
+     * @param string $priceBase  Price Mode (HT/TTC)
+     * @param int    $priceLevel MultiPrice Level
      *
      * @return bool
      */
-    private function setVariantPrice($price, $priceLevel)
+    private function setVariantPrice($price, $priceVat, $priceBase, $priceLevel)
     {
-        global $conf;
+        global $conf, $user;
 
         //====================================================================//
         // If multiprices are enabled
@@ -238,6 +237,19 @@ trait PricesTrait
         $this->setSimple("variation_price_percentage", 0, "combination");
         // Update Combination
         $this->setSimple("variation_price", $price - $parentPrice, "combination");
+
+        //====================================================================//
+        // Commit Price Update on Parent Product (Only To Update Taxes Rates)
+        $result = $this->baseProduct->updatePrice($parentPrice, $priceBase, $user, $priceVat, 0.0, $priceLevel);
+
+        //====================================================================//
+        // Check potential Errors
+        if ($result < 0) {
+            $this->catchDolibarrErrors($this->baseProduct);
+
+            return false;
+        }
+        $this->needUpdate("baseProduct");
 
         return true;
     }
