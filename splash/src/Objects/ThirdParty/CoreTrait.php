@@ -166,7 +166,7 @@ trait CoreTrait
         }
         //====================================================================//
         // No First or Last Name
-        if (empty($this->firstname) && empty($this->lastname)) {
+        if (empty(trim($this->firstname)) && empty(trim($this->lastname))) {
             $this->setSimple("name", $this->name);
 
             return;
@@ -197,7 +197,6 @@ trait CoreTrait
         $fullName = (string) preg_replace('/[-,]/', '', trim($firstname));
         $last = preg_replace('/[-,]/', '', trim($lastname));
         $comp = preg_replace('/[-,]/', '', trim($company));
-
         //====================================================================//
         // Encode Full Name
         if (!empty($last)) {
@@ -237,7 +236,7 @@ trait CoreTrait
             return $result;
         }
         //====================================================================//
-        // Detect Compagny Name
+        // Detect Company Name
         if (false != ($pos = strpos($fullName, ' - '))) {
             $result['name'] = substr($fullName, $pos + 3);
             $fullName = substr($fullName, 0, $pos);
