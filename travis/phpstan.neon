@@ -21,6 +21,7 @@ parameters:
         - '#Access to an undefined property Paiement::\$type_code.#'
         - '#Access to an undefined property object::\$global.#'
         - '#Access to an undefined property object::\$facture.#'
+        - '#Access to an undefined property Product::\$fk_default_warehouse.#'
 
 
         # Wrong Comments in Dolibarr Class
