@@ -253,7 +253,7 @@ trait CoreTrait
 
         //====================================================================//
         // Check System Uses Strict Variants Mode
-        if (empty(Splash::configuration()->StrictVariantsMode) && !empty($this->combination)) {
+        if (empty(Splash::configuration()->StrictVariantsMode) || !empty($this->combination)) {
             return;
         }
         //====================================================================//
