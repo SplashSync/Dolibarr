@@ -237,28 +237,30 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Init Object
-        $this->object = new Product($db);
+        $product = new Product($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
-        $this->setSimple("ref", $ref);
-        $this->setSimple("label", $label);
-        $this->setSimple("weight", 0);
-        $this->setDefaultLocation(null);
+        $product->ref = $ref;
+        $product->label = $label;
+        $product->weight = 0;
+        //====================================================================//
+        // Detect Location Id from Default Configuration
+        $product->fk_default_warehouse = $this->detectDefaultLocation(null);
         //====================================================================//
         // Required For Dolibarr Below 3.6
-        $this->object->type = 0;
+        $product->type = 0;
         //====================================================================//
         // Required For Dolibarr BarCode Module
-        $this->object->barcode = -1;
+        $product->barcode = -1;
         //====================================================================//
         // Create Object In Database
         /** @var User $user */
-        if ($this->object->create($user, $triggers ? 0 : 1) <= 0) {
+        if ($product->create($user, $triggers ? 0 : 1) <= 0) {
             $this->catchDolibarrErrors();
 
             return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
         }
 
-        return $this->object;
+        return $product;
     }
 }

@@ -167,13 +167,46 @@ trait StockTrait
             //====================================================================//
             // Default Stock Location
             case 'fk_default_warehouse':
-                $this->setDefaultLocation($fieldData);
+                $this->setSimple('fk_default_warehouse', $this->detectDefaultLocation($fieldData));
 
                 break;
             default:
                 return;
         }
         unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Write Id of Product Default Stock Location
+     *
+     * @param mixed $fieldData Field Data
+     *
+     * @return null|int Strock Location Id
+     */
+    protected function detectDefaultLocation($fieldData)
+    {
+        global $conf;
+
+        $locationId = null;
+        //====================================================================//
+        // Detect Location Id from Given Ref
+        if (!empty($fieldData) && is_scalar($fieldData)) {
+            //====================================================================//
+            // Load Available Locations
+            $locations = $this->getStockLocationsIds();
+            if (isset($locations[$fieldData])) {
+                $locationId = $locations[$fieldData];
+            }
+        }
+        //====================================================================//
+        // Detect Location Id from Default Configuration
+        if (is_null($locationId) && !empty($conf->global->SPLASH_PRODUCT_STOCK)) {
+            if (in_array($conf->global->SPLASH_PRODUCT_STOCK, $this->getStockLocationsIds(), true)) {
+                $locationId = (int) $conf->global->SPLASH_PRODUCT_STOCK;
+            }
+        }
+
+        return $locationId;
     }
 
     /**
@@ -275,36 +308,6 @@ trait StockTrait
         }
 
         return (int) $conf->global->SPLASH_STOCK;
-    }
-
-    /**
-     * Write Id of Product Default Stock Location
-     *
-     * @param mixed $fieldData Field Data
-     */
-    private function setDefaultLocation($fieldData)
-    {
-        global $conf;
-
-        $locationId = null;
-        //====================================================================//
-        // Detect Location Id from Given Ref
-        if (!empty($fieldData) && is_scalar($fieldData)) {
-            //====================================================================//
-            // Load Available Locations
-            $locations = $this->getStockLocationsIds();
-            if (isset($locations[$fieldData])) {
-                $locationId = $locations[$fieldData];
-            }
-        }
-        //====================================================================//
-        // Detect Location Id from Default Configuration
-        if (is_null($locationId) && !empty($conf->global->SPLASH_PRODUCT_STOCK)) {
-            if (in_array($conf->global->SPLASH_PRODUCT_STOCK, $this->getStockLocationsIds(), true)) {
-                $locationId = (int) $conf->global->SPLASH_PRODUCT_STOCK;
-            }
-        }
-        $this->setSimple('fk_default_warehouse', $locationId);
     }
 
     /**

@@ -50,6 +50,15 @@ trait CoreTrait
             ->isReadOnly();
 
         //====================================================================//
+        // Product Variation Parent Name
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("parent_ref")
+            ->Name("Parent SKU")
+            ->Group("Meta")
+            ->MicroData("http://schema.org/Product", "isVariationOfName")
+            ->isNotTested();
+
+        //====================================================================//
         // CHILD PRODUCTS INFORMATIONS
         //====================================================================//
 
@@ -66,7 +75,7 @@ trait CoreTrait
         // Product Variation List - Product SKU
         $this->fieldsFactory()->Create(SPL_T_VARCHAR)
             ->Identifier("sku")
-            ->Name("SKU")
+            ->Name("Variant SKU")
             ->InList("variants")
             ->MicroData("http://schema.org/Product", "VariationName")
             ->isReadOnly();
@@ -89,6 +98,13 @@ trait CoreTrait
         switch ($fieldName) {
             case 'fk_product_parent':
                 $this->getSimple($fieldName, "combination");
+
+                break;
+            case 'parent_ref':
+                if (!$this->isVariant()) {
+                    $this->out[$fieldName] = "";
+                }
+                $this->out[$fieldName] = $this->baseProduct->ref;
 
                 break;
             default:
@@ -170,6 +186,31 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     */
+    protected function setVariantsCoreFields($fieldName, $fieldData)
+    {
+        //====================================================================//
+        // WRITE Field
+        switch ($fieldName) {
+            //====================================================================//
+            // Direct Writtings
+            case 'parent_ref':
+                if ($this->isVariant() && !empty($fieldData)) {
+                    $this->setSimple("ref", $fieldData, "baseProduct");
+                }
+
+                break;
+            default:
+                return;
+        }
+        unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Write Given Fields
+     *
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -181,5 +222,64 @@ trait CoreTrait
             return;
         }
         unset($this->in[$fieldName]);
+        //====================================================================//
+        // Check Product is a Variant
+        if (empty($this->combination->fk_product_parent)) {
+            return;
+        }
+        //====================================================================//
+        // Check if Product has Additionnal Variants
+        if (!VariantsManager::hasAdditionnalVariants($this->combination->fk_product_parent, $fieldData)) {
+            return;
+        }
+        Splash::log()->war("Additionnal Variants Detected! Ref:".$this->object->ref);
+        //====================================================================//
+        // Check System Uses Strict Variants Mode
+        if (empty(Splash::configuration()->StrictVariantsMode)) {
+            return;
+        }
+
+        $this->updateVariantsParent($fieldData);
+    }
+
+    /**
+     * Create a New Product Parent and Move All Variants to this New One
+     *
+     * @param array $variants Product Variants List
+     */
+    protected function updateVariantsParent($variants)
+    {
+        global $db;
+
+        //====================================================================//
+        // Check System Uses Strict Variants Mode
+        if (empty(Splash::configuration()->StrictVariantsMode)) {
+            return;
+        }
+        //====================================================================//
+        // Create a New Parent Product
+        $newParentProduct = $this->createSimpleProduct($this->object->ref."_base", $this->in["base_label"], false);
+        //====================================================================//
+        // Create New Parent Product Failed
+        if (!$newParentProduct) {
+            return;
+        }
+        //====================================================================//
+        // Update All Product Combinations Parents
+        VariantsManager::moveAdditionnalVariants(
+            $this->combination->fk_product_parent,
+            $variants,
+            $newParentProduct->id
+        );
+        //====================================================================//
+        // Update Current Product Parent
+        $this->setSimple("fk_parent", $newParentProduct->id);
+        //====================================================================//
+        // Reload Product Combinations
+        $this->combination = VariantsManager::getProductCombination((int) $this->object->id);
+        if ($this->combination) {
+            $this->baseProduct = new Product($db);
+            $this->baseProduct->fetch($newParentProduct->id);
+        }
     }
 }

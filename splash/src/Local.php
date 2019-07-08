@@ -62,6 +62,9 @@ class Local implements LocalClassInterface
         // Smart Notifications
         $parameters["SmartNotify"] = (bool) self::getParameter("SPLASH_SMART_NOTIFY");
         //====================================================================//
+        // Strict Variants Mode
+        $parameters["StrictVariantsMode"] = false;
+        //====================================================================//
         // Overide Module Parameters with Local User Selected Lang
         if (self::getParameter("SPLASH_LANG")) {
             $parameters["DefaultLanguage"] = self::getParameter("SPLASH_LANG");

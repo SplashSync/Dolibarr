@@ -19,12 +19,15 @@ use Product;
 use ProductCombination;
 use ProductCombination2ValuePair;
 use Splash\Core\SplashCore as Splash;
+use Splash\Models\Objects\ObjectsTrait;
 
 /**
  * Products Variants Manager
  */
 class VariantsManager
 {
+    use ObjectsTrait;
+
     /**
      * Products Combinations Static Instance
      *
@@ -279,7 +282,7 @@ class VariantsManager
     }
 
     /**
-     * Check if Product is Loacked by Splash
+     * Check if Product is Locked by Splash
      * - If has Combinations
      * - If is Combination & is On Update
      *
@@ -325,6 +328,72 @@ class VariantsManager
         }
 
         return false;
+    }
+
+    /**
+     * Check if All Given Product Variants Exists on this System
+     *
+     * @param int   $parentId Rowid of Parent Product
+     * @param array $variants Array of Variants Ids
+     *
+     * @return bool
+     */
+    public static function hasAdditionnalVariants($parentId, $variants)
+    {
+        //====================================================================//
+        // Extract All Variants Product Ids from Given Inputs
+        $productIds = self::extractVariantsProductIds($variants);
+        if (null == $productIds) {
+            return false;
+        }
+        //====================================================================//
+        // Load Parent Product Variants
+        $parentVariants = VariantsManager::getProductVariants($parentId);
+        //====================================================================//
+        // Compare Variants Lists
+        return (count($productIds) < count($parentVariants));
+    }
+
+    /**
+     * Check if All Given Product Variants Exists on this System
+     *
+     * @param int   $parentId    Rowid of Current Parent Product
+     * @param array $variants    Array of Variants Ids
+     * @param int   $newParentId Rowid of New Parent Product
+     *
+     * @return bool
+     */
+    public static function moveAdditionnalVariants($parentId, $variants, $newParentId)
+    {
+        //====================================================================//
+        // Extract All Variants Product Ids from Given Inputs
+        $productIds = self::extractVariantsProductIds($variants);
+        if (null == $productIds) {
+            return false;
+        }
+        //====================================================================//
+        // Load Parent Product Variants
+        $parentVariants = VariantsManager::getProductVariants($parentId);
+        foreach ($parentVariants as $combination) {
+            //====================================================================//
+            // Check if Variants Need to Be Moved
+            if (!in_array($combination->fk_product_child, $productIds, true)) {
+                continue;
+            }
+            //====================================================================//
+            // Delete Potential Caches
+            if (isset(static::$combinationsCache[$combination->fk_product_parent])) {
+                unset(static::$combinationsCache[$combination->fk_product_parent]);
+            }
+            if (isset(static::$attr2ValuesCache[$combination->fk_product_child])) {
+                unset(static::$attr2ValuesCache[$combination->fk_product_child]);
+            }
+            //====================================================================//
+            // Update Product Parent
+            self::updateCombinationParent($combination, $newParentId);
+        }
+
+        return true;
     }
 
     /**
@@ -401,5 +470,63 @@ class VariantsManager
         }
 
         return Splash::log()->errTrace("Unable to Delete Product Combination ValuePair.");
+    }
+
+    /**
+     * Check if All Given Product Variants Exists on this System
+     *
+     * @param array $variants Array of Variants Ids
+     *
+     * @return null|array
+     */
+    private static function extractVariantsProductIds($variants)
+    {
+        $productIds = array();
+        //====================================================================//
+        // Walk on All Given Variants Items
+        foreach ($variants as $index => $variant) {
+            //====================================================================//
+            // Check if Variant Item has Variant Product Id
+            if (!isset($variant["id"]) || empty($variant["id"])) {
+                return null;
+            }
+            //====================================================================//
+            // Extract Product Id
+            $productId = self::objects()->id($variant["id"]);
+            if (empty($productId) || !is_scalar($productId)) {
+                return null;
+            }
+            $productIds[$index] = $productId;
+        }
+        //====================================================================//
+        // Check if Product Ids Identified
+        if (empty($productIds)) {
+            return null;
+        }
+
+        return $productIds;
+    }
+
+    /**
+     * Update Product Combination Parent Product Id
+     *
+     * @param ProductCombination $combination Product Combination
+     * @param int                $parentId    New Parent Product
+     *
+     * @return bool
+     */
+    private static function updateCombinationParent($combination, $parentId)
+    {
+        global $db;
+
+        //====================================================================//
+        // Update Combination Product Id
+        $sql = "UPDATE ".MAIN_DB_PREFIX."product_attribute_combination "
+            ." SET fk_product_parent = ".(int) $parentId." WHERE rowid = ".(int) $combination->id;
+        if (!$db->query($sql)) {
+            return false;
+        }
+
+        return true;
     }
 }
