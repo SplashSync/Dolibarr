@@ -96,7 +96,7 @@ trait StatusTrait
 
         //====================================================================//
         // Safety Check
-        if (empty($this->object->id)) {
+        if (empty($this->object->id) || empty($fieldData)) {
             return false;
         }
         //====================================================================//

@@ -250,7 +250,6 @@ trait CoreTrait
     protected function updateVariantsParent($variants)
     {
         global $db;
-
         //====================================================================//
         // Check System Uses Strict Variants Mode
         if (empty(Splash::configuration()->StrictVariantsMode) || empty($this->combination)) {
