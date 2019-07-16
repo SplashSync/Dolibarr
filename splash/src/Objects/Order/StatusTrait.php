@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Order;
 
 use Splash\Core\SplashCore      as Splash;
+use Splash\Models\Objects\Order\Status;
 
 /**
  * Dolibarr Customer Order Status Field
@@ -36,11 +37,11 @@ trait StatusTrait
             ->Name($langs->trans("Status"))
             ->Group(html_entity_decode($langs->trans("Status")))
             ->MicroData("http://schema.org/Order", "orderStatus")
-            ->AddChoice("OrderCanceled", $langs->trans("StatusOrderCanceled"))
-            ->AddChoice("OrderDraft", $langs->trans("StatusOrderDraftShort"))
-            ->AddChoice("OrderInTransit", $langs->trans("StatusOrderSent"))
-            ->AddChoice("OrderProcessing", $langs->trans("StatusOrderSentShort"))
-            ->AddChoice("OrderDelivered", $langs->trans("StatusOrderProcessed"))
+            ->AddChoice(Status::CANCELED, $langs->trans("StatusOrderCanceled"))
+            ->AddChoice(Status::DRAFT, $langs->trans("StatusOrderDraftShort"))
+            ->AddChoice(Status::IN_TRANSIT, $langs->trans("StatusOrderSent"))
+            ->AddChoice(Status::PROCESSING, $langs->trans("StatusOrderSentShort"))
+            ->AddChoice(Status::DELIVERED, $langs->trans("StatusOrderProcessed"))
             ->isNotTested()
                 ;
     }
@@ -58,17 +59,17 @@ trait StatusTrait
         }
 
         if (-1 == $this->object->statut) {
-            $this->out[$fieldName] = "OrderCanceled";
+            $this->out[$fieldName] = Status::CANCELED;
         } elseif (0 == $this->object->statut) {
-            $this->out[$fieldName] = "OrderDraft";
+            $this->out[$fieldName] = Status::DRAFT;
         } elseif (1 == $this->object->statut) {
-            $this->out[$fieldName] = "OrderProcessing";
+            $this->out[$fieldName] = Status::PROCESSING;
         } elseif (2 == $this->object->statut) {
-            $this->out[$fieldName] = "OrderInTransit";
+            $this->out[$fieldName] = Status::IN_TRANSIT;
         } elseif (3 == $this->object->statut) {
-            $this->out[$fieldName] = "OrderDelivered";
+            $this->out[$fieldName] = Status::DELIVERED;
         } else {
-            $this->out[$fieldName] = "Unknown";
+            $this->out[$fieldName] = Status::UNKNOWN;
         }
 
         unset($this->in[$key]);
@@ -85,9 +86,9 @@ trait StatusTrait
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    private function setStatusFields($fieldName, $fieldData)
+    protected function setStatusFields($fieldName, $fieldData)
     {
-        global $conf, $langs, $user;
+        global $conf, $langs;
 
         if ('status' != $fieldName) {
             return true;
@@ -104,82 +105,179 @@ trait StatusTrait
         // If stock is incremented on validate order, we must increment it
         if (!empty($conf->stock->enabled) && (1 == $conf->global->STOCK_CALCULATE_ON_VALIDATE_ORDER)) {
             if (empty($conf->global->SPLASH_STOCK)) {
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    $langs->trans("WarehouseSourceNotDefined")
-                );
+                return Splash::log()->errTrace($langs->trans("WarehouseSourceNotDefined"));
             }
         }
+
         //====================================================================//
         // Statut Canceled
-        if (("OrderCanceled" == $fieldData) && (-1 != $this->object->statut)) {
-            //====================================================================//
-            // If Previously Closed => Set Draft
-            if ((3 == $this->object->statut)
-                    && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
-                return $this->catchDolibarrErrors();
-            }
-            //====================================================================//
-            // If Previously Draft => Valid
-            if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
-                return $this->catchDolibarrErrors();
-            }
-            //====================================================================//
-            // Set Canceled
-            if (1 != $this->object->cancel($conf->global->SPLASH_STOCK)) {
-                return $this->catchDolibarrErrors();
-            }
-            $this->object->statut = \Commande::STATUS_CANCELED;
-
-            return true;
+        if (Status::isCanceled($fieldData) && (-1 != $this->object->statut)) {
+            return $this->setStatusCancel();
         }
         //====================================================================//
         // If Previously Canceled => Re-Validate
-        if ((-1 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
-            return $this->catchDolibarrErrors();
+        if (!$this->setStatusReValidate()) {
+            return false;
         }
         //====================================================================//
         // Statut Draft
-        if ("OrderDraft" == $fieldData) {
-            //====================================================================//
-            // If Not Draft (Validated or Closed)
-            if ((0 != $this->object->statut) && 1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK)) {
-                return $this->catchDolibarrErrors();
-            }
-            $this->object->statut = \Commande::STATUS_DRAFT;
-
-            return true;
+        if (Status::isDraft($fieldData)) {
+            return $this->setStatusDraft();
         }
         //====================================================================//
         // Statut Validated || Closed => Go Valid if Draft
-        if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, "Set Validated", $langs->trans($this->object->error));
+        if (!$this->setStatusValidated()) {
+            return false;
         }
         //====================================================================//
         // Statut Not Closed but Validated Only => ReOpen
-        if ("OrderDelivered" != $fieldData) {
+        if (!Status::isDelivered($fieldData)) {
             //====================================================================//
             // If Previously Closed => Re-Open
-            if ((3 == $this->object->statut) && (1 != $this->object->set_reopen($user))) {
-                return Splash::log()->err("ErrLocalTpl", __CLASS__, "Re-Open", $langs->trans($this->object->error));
+            if (!$this->setStatusReOpen()) {
+                return false;
             }
-            $this->object->statut = \Commande::STATUS_VALIDATED;
         }
         //====================================================================//
         // Statut Closed => Go Closed
-        if (("OrderDelivered" == $fieldData) && (3 != $this->object->statut)) {
+        if (Status::isDelivered($fieldData) && (3 != $this->object->statut)) {
             //====================================================================//
             // If Previously Validated => Close
-            if ((1 == $this->object->statut) && (1 != $this->object->cloture($user))) {
-                return Splash::log()->err("ErrLocalTpl", __CLASS__, "Set Closed", $langs->trans($this->object->error));
+            if (!$this->setStatusClosed()) {
+                return false;
             }
-            $this->object->statut = \Commande::STATUS_CLOSED;
         }
         //====================================================================//
         // Redo Billed flag Update if Impacted by Status Change
         $this->updateBilledFlag();
+
+        return true;
+    }
+
+    /**
+     * Set Order State as Canceled
+     *
+     * @return bool
+     */
+    private function setStatusCancel()
+    {
+        global $conf, $user;
+
+        //====================================================================//
+        // If Previously Closed => Set Draft
+        if (3 == $this->object->statut) {
+            if (method_exists($this->object, "set_draft") && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
+                return $this->catchDolibarrErrors();
+            }
+            if (method_exists($this->object, "setDraft") && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+                return $this->catchDolibarrErrors();
+            }
+        }
+        //====================================================================//
+        // If Previously Draft => Valid
+        if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
+            return $this->catchDolibarrErrors();
+        }
+        //====================================================================//
+        // Set Canceled
+        if (1 != $this->object->cancel($conf->global->SPLASH_STOCK)) {
+            return $this->catchDolibarrErrors();
+        }
+        $this->object->statut = \Commande::STATUS_CANCELED;
+
+        return true;
+    }
+
+    /**
+     * If Previously Canceled => Re-Validate
+     *
+     * @return bool
+     */
+    private function setStatusReValidate()
+    {
+        global $conf, $user;
+
+        if ((-1 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
+            return $this->catchDolibarrErrors();
+        }
+
+        return true;
+    }
+
+    /**
+     * Set Order State as Draft
+     *
+     * @return bool
+     */
+    private function setStatusDraft()
+    {
+        global $conf, $user;
+
+        //====================================================================//
+        // If Not Draft (Validated or Closed)
+        if (0 != $this->object->statut) {
+            if (method_exists($this->object, "set_draft") && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
+                return $this->catchDolibarrErrors();
+            }
+            if (method_exists($this->object, "setDraft") && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+                return $this->catchDolibarrErrors();
+            }
+        }
+        $this->object->statut = \Commande::STATUS_DRAFT;
+
+        return true;
+    }
+
+    /**
+     * Set Order State as Validated
+     *
+     * @return bool
+     */
+    private function setStatusValidated()
+    {
+        global $conf, $user, $langs;
+
+        if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
+            return Splash::log()->errTrace("Set Validated", $langs->trans($this->object->error));
+        }
+
+        return true;
+    }
+
+    /**
+     * Set Order State as ReOpen
+     *
+     * @return bool
+     */
+    private function setStatusReOpen()
+    {
+        global $user, $langs;
+
+        //====================================================================//
+        // If Previously Closed => Re-Open
+        if ((3 == $this->object->statut) && (1 != $this->object->set_reopen($user))) {
+            return Splash::log()->errTrace("Re-Open", $langs->trans($this->object->error));
+        }
+        $this->object->statut = \Commande::STATUS_VALIDATED;
+
+        return true;
+    }
+
+    /**
+     * Set Order State as Closed
+     *
+     * @return bool
+     */
+    private function setStatusClosed()
+    {
+        global $user, $langs;
+
+        //====================================================================//
+        // If Previously Validated => Close
+        if ((1 == $this->object->statut) && (1 != $this->object->cloture($user))) {
+            return Splash::log()->errTrace("Set Closed", $langs->trans($this->object->error));
+        }
+        $this->object->statut = \Commande::STATUS_CLOSED;
 
         return true;
     }
