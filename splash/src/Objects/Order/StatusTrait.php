@@ -166,10 +166,12 @@ trait StatusTrait
         //====================================================================//
         // If Previously Closed => Set Draft
         if (3 == $this->object->statut) {
-            if (method_exists($this->object, "set_draft") && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
+            if (method_exists($this->object, "set_draft")
+                    && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
             }
-            if (method_exists($this->object, "setDraft") && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+            if (method_exists($this->object, "setDraft")
+                    && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
             }
         }
@@ -216,10 +218,12 @@ trait StatusTrait
         //====================================================================//
         // If Not Draft (Validated or Closed)
         if (0 != $this->object->statut) {
-            if (method_exists($this->object, "set_draft") && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
+            if (method_exists($this->object, "set_draft")
+                    && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
             }
-            if (method_exists($this->object, "setDraft") && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+            if (method_exists($this->object, "setDraft")
+                    && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
             }
         }
