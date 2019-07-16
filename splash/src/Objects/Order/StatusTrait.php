@@ -242,7 +242,7 @@ trait StatusTrait
         global $conf, $user, $langs;
 
         if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
-            return Splash::log()->errTrace("Set Validated", $langs->trans($this->object->error));
+            return Splash::log()->errTrace($langs->trans($this->object->error));
         }
 
         return true;
@@ -260,7 +260,7 @@ trait StatusTrait
         //====================================================================//
         // If Previously Closed => Re-Open
         if ((3 == $this->object->statut) && (1 != $this->object->set_reopen($user))) {
-            return Splash::log()->errTrace("Re-Open", $langs->trans($this->object->error));
+            return Splash::log()->errTrace($langs->trans($this->object->error));
         }
         $this->object->statut = \Commande::STATUS_VALIDATED;
 
@@ -279,7 +279,7 @@ trait StatusTrait
         //====================================================================//
         // If Previously Validated => Close
         if ((1 == $this->object->statut) && (1 != $this->object->cloture($user))) {
-            return Splash::log()->errTrace("Set Closed", $langs->trans($this->object->error));
+            return Splash::log()->errTrace($langs->trans($this->object->error));
         }
         $this->object->statut = \Commande::STATUS_CLOSED;
 
