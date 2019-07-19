@@ -244,9 +244,6 @@ trait UnitConverterTrait
      * @param int   $unit   Volume Unit
      *
      * @return float Volume Value in m3
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public static function convertVolume($volume, $unit)
     {
@@ -297,9 +294,9 @@ trait UnitConverterTrait
     /**
      * Detect Unit from Object or Database Dictionary.
      *
-     * @param int   $unit     Raw Unit Code or Database Id
-     * @param sting $type     Unit Type
-     * @param sting $fallBack FallBack Splash Unit Code
+     * @param int    $unit     Raw Unit Code or Database Id
+     * @param string $type     Unit Type
+     * @param string $fallBack FallBack Splash Unit Code
      *
      * @return float Splash Unit Factor
      */
