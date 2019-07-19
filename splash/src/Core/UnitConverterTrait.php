@@ -102,7 +102,7 @@ trait UnitConverterTrait
     public static function normalizeWeight($weight)
     {
         $result = new ArrayObject();
-        
+
         //====================================================================//
         // Weight - Tonne
         if ($weight >= 1e3) {
@@ -211,7 +211,6 @@ trait UnitConverterTrait
     public static function normalizeSurface($surface)
     {
         $result = new ArrayObject();
-        
         //====================================================================//
         // Surface - Meter 2
         if ($surface >= 1) {
@@ -268,11 +267,7 @@ trait UnitConverterTrait
      */
     public static function normalizeVolume($volume)
     {
-        // Include Needed Dolibarr Functions Libraries
-        require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
-
         $result = new ArrayObject();
-        
         //====================================================================//
         // Volume - Meter 3
         if ($volume >= 1) {
@@ -379,7 +374,7 @@ trait UnitConverterTrait
      *
      * @param string $type
      * @param string $scale
-     * 
+     *
      * @return int|string
      */
     private static function getDolUnitId(string $type, string $scale)
@@ -403,6 +398,7 @@ trait UnitConverterTrait
             if ($cUnit->scale != $scale) {
                 continue;
             }
+
             return $cUnit->id;
         }
 
