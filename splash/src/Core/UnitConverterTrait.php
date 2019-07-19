@@ -336,7 +336,7 @@ trait UnitConverterTrait
         global $db;
         //====================================================================//
         // BEFORE V10 => Dolibarr Unit Code Stored in Object
-        if (Local::dolVersionCmp("10.0.0") > 0) {
+        if (Local::dolVersionCmp("10.0.0") < 0) {
             return true;
         }
         //====================================================================//
