@@ -101,12 +101,7 @@ trait StatusTrait
         // If stock is incremented on validate invoice, we must provide warhouse id
         if (!empty($conf->stock->enabled) && 1 == $conf->global->STOCK_CALCULATE_ON_BILL) {
             if (empty($conf->global->SPLASH_STOCK)) {
-                return Splash::log()->err(
-                    "ErrLocalTpl",
-                    __CLASS__,
-                    __FUNCTION__,
-                    $langs->trans("WarehouseSourceNotDefined")
-                );
+                return Splash::log()->errTrace($langs->trans("WarehouseSourceNotDefined"));
             }
         }
         $initialStatut = $this->object->statut;
@@ -118,14 +113,8 @@ trait StatusTrait
             case "PaymentDraft":
                 //====================================================================//
                 // Whatever => Set Draft
-                if ((0 != $this->object->statut)
-                        && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
-                    return Splash::log()->err(
-                        "ErrLocalTpl",
-                        __CLASS__,
-                        "Set Draft",
-                        $langs->trans($this->object->error)
-                    );
+                if ((0 != $this->object->statut) && (!$this->setStatusDraft())) {
+                    return false;
                 }
                 $this->object->statut = \Facture::STATUS_DRAFT;
 
@@ -138,15 +127,9 @@ trait StatusTrait
             case "PaymentPastDue":
                 //====================================================================//
                 // If Already Paid => Set Draft
-                if ((2 == $this->object->statut)
-                        && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
-                    return $this->catchDolibarrErrors();
-                }
-                //====================================================================//
                 // If Already Canceled => Set Draft
-                if ((3 == $this->object->statut)
-                        && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
-                    return $this->catchDolibarrErrors();
+                if (in_array($this->object->statut, array(2,3), true) && (!$this->setStatusDraft())) {
+                    return false;
                 }
                 //====================================================================//
                 // If Not Valdidated => Set Validated
@@ -193,6 +176,27 @@ trait StatusTrait
         }
         if ($initialStatut != $this->object->statut) {
             $this->needUpdate();
+        }
+
+        return true;
+    }
+
+    /**
+     * Set Invoice State as Draft
+     *
+     * @return bool
+     */
+    private function setStatusDraft()
+    {
+        global $conf, $user;
+
+        if (method_exists($this->object, "set_draft")
+                && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
+            return $this->catchDolibarrErrors();
+        }
+        if (method_exists($this->object, "setDraft")
+                && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+            return $this->catchDolibarrErrors();
         }
 
         return true;
