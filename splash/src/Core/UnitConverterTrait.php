@@ -351,7 +351,8 @@ trait UnitConverterTrait
         // Load Dictionnary Already Loaded
         dol_syslog(__METHOD__, LOG_DEBUG);
         static::$dico = array();
-        $sql = "SELECT t.rowid as id, t.code, t.label, t.short_label, t.unit_type, t.scale, t.active FROM llx_c_units as t WHERE t.active=1";
+        $sql = "SELECT t.rowid as id, t.code, t.label, t.short_label, t.unit_type, t.scale, t.active";
+        $sql .= " FROM llx_c_units as t WHERE t.active=1";
         $resql = $db->query($sql);
         if (!$resql) {
             return Splash::log()->errTrace($db->lasterror());
