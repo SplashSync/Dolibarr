@@ -95,7 +95,7 @@ trait UnitConverterTrait
     /**
      * Return Normalized Weight form raw kg value.
      *
-     * @param float $weight Weight Raw Value
+     * @param null|float $weight Weight Raw Value
      *
      * @return arrayobject $r->weight , $r->weight_units , $r->print, $r->raw
      */
@@ -106,22 +106,22 @@ trait UnitConverterTrait
         //====================================================================//
         // Weight - Tonne
         if ($weight >= 1e3) {
-            $result->weight = Converter::convertWeight($weight, Converter::MASS_TONNE);
+            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_TONNE);
             $result->weight_units = static::getDolUnitId("weight", "3");
         //====================================================================//
         // Weight - KiloGram
         } elseif ($weight >= 1) {
-            $result->weight = Converter::convertWeight($weight, Converter::MASS_KILOGRAM);
+            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_KILOGRAM);
             $result->weight_units = static::getDolUnitId("weight", "0");
         //====================================================================//
         // Weight - Gram
         } elseif ($weight >= 1e-3) {
-            $result->weight = Converter::convertWeight($weight, Converter::MASS_GRAM);
+            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_GRAM);
             $result->weight_units = static::getDolUnitId("weight", "-3");
         //====================================================================//
         // Weight - MilliGram
         } elseif ($weight >= 1e-6) {
-            $result->weight = Converter::convertWeight($weight, Converter::MASS_MILLIGRAM);
+            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_MILLIGRAM);
             $result->weight_units = static::getDolUnitId("weight", "-6");
         }
         $result->raw = $weight;
@@ -150,7 +150,7 @@ trait UnitConverterTrait
     /**
      * Return Normalized Length form raw m value.
      *
-     * @param float $length Length Raw Value
+     * @param null|float $length Length Raw Value
      *
      * @return arrayobject $r->length , $r->length_units , $r->print, $r->raw
      */
@@ -160,22 +160,22 @@ trait UnitConverterTrait
         //====================================================================//
         // Length - Meter
         if ($length >= 1) {
-            $result->length = Converter::convertLength($length, Converter::LENGTH_M);
+            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_M);
             $result->length_units = static::getDolUnitId("length", "0");
         //====================================================================//
         // Length - DecaMeter
         } elseif ($length >= 1e-1) {
-            $result->length = Converter::convertLength($length, Converter::LENGTH_DM);
+            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_DM);
             $result->length_units = static::getDolUnitId("length", "-1");
         //====================================================================//
         // Length - CentiMeter
         } elseif ($length >= 1e-2) {
-            $result->length = Converter::convertLength($length, Converter::LENGTH_CM);
+            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_CM);
             $result->length_units = static::getDolUnitId("length", "-2");
         //====================================================================//
         // Length - MilliMeter
         } elseif ($length >= 1e-3) {
-            $result->length = Converter::convertLength($length, Converter::LENGTH_MM);
+            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_MM);
             $result->length_units = static::getDolUnitId("length", "-3");
         }
         $result->raw = $length;
@@ -204,7 +204,7 @@ trait UnitConverterTrait
     /**
      * Return Normalized Surface form raw m2 value.
      *
-     * @param float $surface Surface Raw Value
+     * @param null|float $surface Surface Raw Value
      *
      * @return arrayobject $r->surface , $r->surface_units , $r->print, $r->raw
      */
@@ -214,22 +214,22 @@ trait UnitConverterTrait
         //====================================================================//
         // Surface - Meter 2
         if ($surface >= 1) {
-            $result->surface = Converter::convertSurface($surface, Converter::AREA_M2);
+            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_M2);
             $result->surface_units = static::getDolUnitId("surface", "0");
         //====================================================================//
         // Surface - DecaMeter 2
         } elseif ($surface >= 1e-2) {
-            $result->surface = Converter::convertSurface($surface, Converter::AREA_DM2);
+            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_DM2);
             $result->surface_units = static::getDolUnitId("surface", "-2");
         //====================================================================//
         // Surface - CentiMeter 2
         } elseif ($surface >= 1e-4) {
-            $result->surface = Converter::convertSurface($surface, Converter::AREA_CM2);
+            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_CM2);
             $result->surface_units = static::getDolUnitId("surface", "-4");
         //====================================================================//
         // Surface - MilliMeter 2
         } elseif ($surface >= 1e-6) {
-            $result->surface = Converter::convertSurface($surface, Converter::AREA_MM2);
+            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_MM2);
             $result->surface_units = static::getDolUnitId("surface", "-6");
         }
         $result->raw = $surface;
@@ -258,7 +258,7 @@ trait UnitConverterTrait
     /**
      * Return Normalized Volume form raw m3 value.
      *
-     * @param float $volume Volume Raw Value
+     * @param null|float $volume Volume Raw Value
      *
      * @return arrayobject $r->volume , $r->volume_units , $r->print, $r->raw
      */
@@ -268,22 +268,22 @@ trait UnitConverterTrait
         //====================================================================//
         // Volume - Meter 3
         if ($volume >= 1) {
-            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_M3);
+            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_M3);
             $result->volume_units = static::getDolUnitId("volume", "0");
         //====================================================================//
         // Volume - DecaMeter 3
         } elseif ($volume >= 1e-3) {
-            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_DM3);
+            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_DM3);
             $result->volume_units = static::getDolUnitId("volume", "-3");
         //====================================================================//
         // Volume - CentiMeter 3
         } elseif ($volume >= 1e-6) {
-            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_CM3);
+            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_CM3);
             $result->volume_units = static::getDolUnitId("volume", "-6");
         //====================================================================//
         // Volume - MilliMeter 3
         } elseif ($volume >= 1e-9) {
-            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_MM3);
+            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_MM3);
             $result->volume_units = static::getDolUnitId("volume", "-9");
         }
         $result->raw = $volume;
