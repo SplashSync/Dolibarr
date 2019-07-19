@@ -77,8 +77,8 @@ trait UnitConverterTrait
     /**
      * Convert Weight form all units to kg.
      *
-     * @param float $weight Weight Value
-     * @param int   $unit   Weight Unit
+     * @param float      $weight Weight Value
+     * @param int|string $unit   Weight Unit
      *
      * @return float Weight Value in kg
      */
@@ -86,7 +86,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = static::detectSplashUnit($unit, "weight", Converter::MASS_KG);
+        $splFactor = static::detectSplashUnit((string) $unit, "weight", Converter::MASS_KG);
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeWeight($weight, $splFactor);
@@ -132,8 +132,8 @@ trait UnitConverterTrait
     /**
      * Convert Lenght form all units to m.
      *
-     * @param float $length Length Value
-     * @param int   $unit   Length Unit
+     * @param float      $length Length Value
+     * @param int|string $unit   Length Unit
      *
      * @return float Length Value in m
      */
@@ -141,7 +141,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = static::detectSplashUnit($unit, "length", Converter::LENGTH_M);
+        $splFactor = static::detectSplashUnit((string) $unit, "length", Converter::LENGTH_M);
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeLength($length, $splFactor);
@@ -186,8 +186,8 @@ trait UnitConverterTrait
     /**
      * Convert Surface form all units to m².
      *
-     * @param float $surface Surface Value
-     * @param int   $unit    Surface Unit
+     * @param float      $surface Surface Value
+     * @param int|string $unit    Surface Unit
      *
      * @return float Surface Value in m²
      */
@@ -195,7 +195,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = static::detectSplashUnit($unit, "surface", Converter::AREA_M2);
+        $splFactor = static::detectSplashUnit((string) $unit, "surface", Converter::AREA_M2);
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeLength($surface, $splFactor);
@@ -240,8 +240,8 @@ trait UnitConverterTrait
     /**
      * Convert Volume form all units to m3.
      *
-     * @param float $volume Volume Value
-     * @param int   $unit   Volume Unit
+     * @param float      $volume Volume Value
+     * @param int|string $unit   Volume Unit
      *
      * @return float Volume Value in m3
      */
@@ -249,7 +249,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = static::detectSplashUnit($unit, "volume", Converter::VOLUME_M3);
+        $splFactor = static::detectSplashUnit((string) $unit, "volume", Converter::VOLUME_M3);
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeLength($volume, $splFactor);
