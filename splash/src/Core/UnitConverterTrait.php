@@ -16,12 +16,64 @@
 namespace   Splash\Local\Core;
 
 use ArrayObject;
+use Splash\Components\UnitConverter as Converter;
+use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
- * @abstract    Dolibarr Unit Converter
+ * Dolibarr Unit Converter
+ * Now Uses Splash Core Unit Converter to Detcet & Convert Units Values
  */
 trait UnitConverterTrait
 {
+    private static $knowUnits = array(
+        "weight" => array(
+            "-9" => Converter::MASS_MICROGRAM,
+            "-6" => Converter::MASS_MILLIGRAM,
+            "-3" => Converter::MASS_GRAM,
+            "0" => Converter::MASS_KILOGRAM,
+            "3" => Converter::MASS_TONNE,
+            "98" => Converter::MASS_OUNCE,
+            "99" => Converter::MASS_LIVRE,
+        ),
+        "length" => array(
+            "-3" => Converter::LENGTH_MILIMETER,
+            "-2" => Converter::LENGTH_CENTIMETER,
+            "-1" => Converter::LENGTH_DECIMETER,
+            "0" => Converter::LENGTH_METER,
+            "3" => Converter::LENGTH_KM,
+            "98" => Converter::LENGTH_FOOT,
+            "99" => Converter::LENGTH_INCH,
+        ),
+        "surface" => array(
+            "-6" => Converter::AREA_MM2,
+            "-4" => Converter::AREA_CM2,
+            "-2" => Converter::AREA_DM2,
+            "0" => Converter::AREA_M2,
+            "3" => Converter::AREA_KM2,
+            "98" => Converter::AREA_FOOT2,
+            "99" => Converter::AREA_INCH2,
+        ),
+        "volume" => array(
+            "-9" => Converter::VOLUME_MM3,
+            "-6" => Converter::VOLUME_CM3,
+            "-3" => Converter::VOLUME_DM3,
+            "0" => Converter::VOLUME_M3,
+            "88" => Converter::VOLUME_FOOT3,
+            "89" => Converter::VOLUME_INCH3,
+            "97" => Converter::VOLUME_OUNCE3,
+            "98" => Converter::VOLUME_LITER,
+            "99" => Converter::VOLUME_GALON,
+        ),
+    );
+
+    /**
+     * Current Install Units Dictionnary
+     *
+     * @var array
+     */
+    private static $dico;
+
     /**
      * Convert Weight form all units to kg.
      *
@@ -32,28 +84,12 @@ trait UnitConverterTrait
      */
     public static function convertWeight($weight, $unit)
     {
-        // mg
-        if ("-6" == $unit) {
-            return $weight * 1e-6;
-            // g
-        }
-        if ("-3" == $unit) {
-            return $weight * 1e-3;
-            // kg
-        }
-        if ("0" == $unit) {
-            return $weight;
-            // Tonne
-        }
-        if ("3" == $unit) {
-            return $weight * 1e3;
-            // livre
-        }
-        if ("99" == $unit) {
-            return $weight * 0.45359237;
-        }
-
-        return 0;
+        //====================================================================//
+        // Detect Splash Generic Unit Factor
+        $splFactor = static::detectSplashUnit($unit, "weight", Converter::MASS_KG);
+        //====================================================================//
+        // Convert Value to Generic Factor
+        return Converter::normalizeWeight($weight, $splFactor);
     }
 
     /**
@@ -65,24 +101,29 @@ trait UnitConverterTrait
      */
     public static function normalizeWeight($weight)
     {
-        // Include Needed Dolibarr Functions Libraries
-        require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
-
         $result = new ArrayObject();
+        
+        //====================================================================//
+        // Weight - Tonne
         if ($weight >= 1e3) {
-            $result->weight = $weight * 1e-3;                 // Tonne
-            $result->weight_units = "3";                            // Tonne
+            $result->weight = Converter::convertWeight($weight, Converter::MASS_TONNE);
+            $result->weight_units = static::getDolUnitId("weight", "3");
+        //====================================================================//
+        // Weight - KiloGram
         } elseif ($weight >= 1) {
-            $result->weight = $weight;                        // kg
-            $result->weight_units = "0";                            // kg
+            $result->weight = Converter::convertWeight($weight, Converter::MASS_KILOGRAM);
+            $result->weight_units = static::getDolUnitId("weight", "0");
+        //====================================================================//
+        // Weight - Gram
         } elseif ($weight >= 1e-3) {
-            $result->weight = $weight * 1e3;                  // g
-            $result->weight_units = "-3";                           // g
+            $result->weight = Converter::convertWeight($weight, Converter::MASS_GRAM);
+            $result->weight_units = static::getDolUnitId("weight", "-3");
+        //====================================================================//
+        // Weight - MilliGram
         } elseif ($weight >= 1e-6) {
-            $result->weight = $weight * 1e6;                  // mg
-            $result->weight_units = "-6";                           // mg
+            $result->weight = Converter::convertWeight($weight, Converter::MASS_MILLIGRAM);
+            $result->weight_units = static::getDolUnitId("weight", "-6");
         }
-        $result->print = $result->weight." ".measuring_units_string($result->weight_units, "weight");
         $result->raw = $weight;
 
         return $result;
@@ -98,32 +139,12 @@ trait UnitConverterTrait
      */
     public static function convertLength($length, $unit)
     {
-        // mm
-        if ("-3" == $unit) {
-            return $length / 1e3;
-            // cm
-        }
-        if ("-2" == $unit) {
-            return $length / 1e2;
-            // dm
-        }
-        if ("-1" == $unit) {
-            return $length / 10;
-            // m
-        }
-        if ("0" == $unit) {
-            return $length;
-            // foot
-        }
-        if ("98" == $unit) {
-            return $length * 0.3048;
-            // inch
-        }
-        if ("99" == $unit) {
-            return $length * 0.0254;
-        }
-
-        return 0;
+        //====================================================================//
+        // Detect Splash Generic Unit Factor
+        $splFactor = static::detectSplashUnit($unit, "length", Converter::LENGTH_M);
+        //====================================================================//
+        // Convert Value to Generic Factor
+        return Converter::normalizeLength($length, $splFactor);
     }
 
     /**
@@ -135,24 +156,28 @@ trait UnitConverterTrait
      */
     public static function normalizeLength($length)
     {
-        // Include Needed Dolibarr Functions Libraries
-        require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
-
         $result = new ArrayObject();
+        //====================================================================//
+        // Length - Meter
         if ($length >= 1) {
-            $result->length = $length;                        // m
-            $result->length_units = "0";                            // m
+            $result->length = Converter::convertLength($length, Converter::LENGTH_M);
+            $result->length_units = static::getDolUnitId("length", "0");
+        //====================================================================//
+        // Length - DecaMeter
         } elseif ($length >= 1e-1) {
-            $result->length = $length * 1e1;                  // dm
-            $result->length_units = "-1";                            // dm
+            $result->length = Converter::convertLength($length, Converter::LENGTH_DM);
+            $result->length_units = static::getDolUnitId("length", "-1");
+        //====================================================================//
+        // Length - CentiMeter
         } elseif ($length >= 1e-2) {
-            $result->length = $length * 1e2;                  // g
-            $result->length_units = "-2";                           // g
+            $result->length = Converter::convertLength($length, Converter::LENGTH_CM);
+            $result->length_units = static::getDolUnitId("length", "-2");
+        //====================================================================//
+        // Length - MilliMeter
         } elseif ($length >= 1e-3) {
-            $result->length = $length * 1e3;                  // mg
-            $result->length_units = "-3";                           // mg
+            $result->length = Converter::convertLength($length, Converter::LENGTH_MM);
+            $result->length_units = static::getDolUnitId("length", "-3");
         }
-        $result->print = $result->length." ".measuring_units_string($result->length_units, "size");
         $result->raw = $length;
 
         return $result;
@@ -168,32 +193,12 @@ trait UnitConverterTrait
      */
     public static function convertSurface($surface, $unit)
     {
-        // mm²
-        if ("-6" == $unit) {
-            return $surface / 1e6;
-            // cm²
-        }
-        if ("-4" == $unit) {
-            return $surface / 1e4;
-            // dm²
-        }
-        if ("-2" == $unit) {
-            return $surface / 1e2;
-            // m²
-        }
-        if ("0" == $unit) {
-            return $surface;
-            // foot²
-        }
-        if ("98" == $unit) {
-            return $surface * 0.092903;
-            // inch²
-        }
-        if ("99" == $unit) {
-            return $surface * 0.00064516;
-        }
-
-        return 0;
+        //====================================================================//
+        // Detect Splash Generic Unit Factor
+        $splFactor = static::detectSplashUnit($unit, "surface", Converter::AREA_M2);
+        //====================================================================//
+        // Convert Value to Generic Factor
+        return Converter::normalizeLength($surface, $splFactor);
     }
 
     /**
@@ -205,24 +210,29 @@ trait UnitConverterTrait
      */
     public static function normalizeSurface($surface)
     {
-        // Include Needed Dolibarr Functions Libraries
-        require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
-
         $result = new ArrayObject();
+        
+        //====================================================================//
+        // Surface - Meter 2
         if ($surface >= 1) {
-            $result->surface = $surface;                      // m2
-            $result->surface_units = "0";                           // m2
+            $result->surface = Converter::convertSurface($surface, Converter::AREA_M2);
+            $result->surface_units = static::getDolUnitId("surface", "0");
+        //====================================================================//
+        // Surface - DecaMeter 2
         } elseif ($surface >= 1e-2) {
-            $result->surface = $surface * 1e2;                // dm2
-            $result->surface_units = "-2";                          // dm2
+            $result->surface = Converter::convertSurface($surface, Converter::AREA_DM2);
+            $result->surface_units = static::getDolUnitId("surface", "-2");
+        //====================================================================//
+        // Surface - CentiMeter 2
         } elseif ($surface >= 1e-4) {
-            $result->surface = $surface * 1e4;                // cm2
-            $result->surface_units = "-4";                          // cm2
+            $result->surface = Converter::convertSurface($surface, Converter::AREA_CM2);
+            $result->surface_units = static::getDolUnitId("surface", "-4");
+        //====================================================================//
+        // Surface - MilliMeter 2
         } elseif ($surface >= 1e-6) {
-            $result->surface = $surface * 1e6;                // mm2
-            $result->surface_units = "-6";                          // mm2
+            $result->surface = Converter::convertSurface($surface, Converter::AREA_MM2);
+            $result->surface_units = static::getDolUnitId("surface", "-6");
         }
-        $result->print = $result->surface." ".measuring_units_string($result->surface_units, "surface");
         $result->raw = $surface;
 
         return $result;
@@ -241,44 +251,12 @@ trait UnitConverterTrait
      */
     public static function convertVolume($volume, $unit)
     {
-        // mm²
-        if ("-9" == $unit) {
-            return $volume * 1e-9;
-        }
-        // cm²
-        if ("-6" == $unit) {
-            return $volume * 1e-6;
-        }
-        // dm²
-        if ("-3" == $unit) {
-            return $volume * 1e-3;
-        }
-        // m²
-        if ("0" == $unit) {
-            return $volume;
-        }
-        // foot²
-        if ("88" == $unit) {
-            return $volume * 0.0283168;
-        }
-        // inch²
-        if ("89" == $unit) {
-            return $volume * 1.6387e-5;
-        }
-        // ounce
-        if ("97" == $unit) {
-            return $volume * 2.9574e-5;
-        }
-        // litre
-        if ("98" == $unit) {
-            return $volume * 1e-3;
-        }
-        // gallon
-        if ("99" == $unit) {
-            return $volume * 0.00378541;
-        }
-
-        return 0;
+        //====================================================================//
+        // Detect Splash Generic Unit Factor
+        $splFactor = static::detectSplashUnit($unit, "volume", Converter::VOLUME_M3);
+        //====================================================================//
+        // Convert Value to Generic Factor
+        return Converter::normalizeLength($volume, $splFactor);
     }
 
     /**
@@ -294,22 +272,140 @@ trait UnitConverterTrait
         require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
 
         $result = new ArrayObject();
+        
+        //====================================================================//
+        // Volume - Meter 3
         if ($volume >= 1) {
-            $result->volume = $volume;                        // m3
-            $result->volume_units = "0";                            // m3
+            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_M3);
+            $result->volume_units = static::getDolUnitId("volume", "0");
+        //====================================================================//
+        // Volume - DecaMeter 3
         } elseif ($volume >= 1e-3) {
-            $result->volume = $volume * 1e3;                  // dm3
-            $result->volume_units = "-3";                           // dm3
+            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_DM3);
+            $result->volume_units = static::getDolUnitId("volume", "-3");
+        //====================================================================//
+        // Volume - CentiMeter 3
         } elseif ($volume >= 1e-6) {
-            $result->volume = $volume * 1e6;                  // cm2
-            $result->volume_units = "-6";                           // cm2
+            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_CM3);
+            $result->volume_units = static::getDolUnitId("volume", "-6");
+        //====================================================================//
+        // Volume - MilliMeter 3
         } elseif ($volume >= 1e-9) {
-            $result->volume = $volume * 1e9;                  // mm2
-            $result->volume_units = "-9";                           // mm2
+            $result->volume = Converter::convertVolume($volume, Converter::VOLUME_MM3);
+            $result->volume_units = static::getDolUnitId("volume", "-9");
         }
-        $result->print = $result->volume." ".measuring_units_string($result->volume_units, "volume");
         $result->raw = $volume;
 
         return $result;
+    }
+
+    /**
+     * Detect Unit from Object or Database Dictionary.
+     *
+     * @param int   $unit     Raw Unit Code or Database Id
+     * @param sting $type     Unit Type
+     * @param sting $fallBack FallBack Splash Unit Code
+     *
+     * @return float Splash Unit Factor
+     */
+    private static function detectSplashUnit($unit, $type, $fallBack)
+    {
+        //====================================================================//
+        // BEFORE V10 => Dolibarr Unit Code Stored in Object
+        if (Local::dolVersionCmp("10.0.0") < 0) {
+            if (isset(static::$knowUnits[$type][$unit])) {
+                return static::$knowUnits[$type][$unit];
+            }
+
+            return $fallBack;
+        }
+
+        //====================================================================//
+        // SINCE V10 => Dolibarr Unit Code Stored in Dictionnary
+        if (!static::loadDolUnits() || !isset(static::$dico[$unit])) {
+            return $fallBack;
+        }
+        if (isset(static::$knowUnits[$type][static::$dico[$unit]->scale])) {
+            return static::$knowUnits[$type][static::$dico[$unit]->scale];
+        }
+
+        return $fallBack;
+    }
+
+    /**
+     * Load Units Scales from Dictionary in Database.
+     *
+     * @param int $unit Raw Unit Code or Database Id
+     *
+     * @return bool
+     */
+    private static function loadDolUnits(): bool
+    {
+        global $db;
+        //====================================================================//
+        // BEFORE V10 => Dolibarr Unit Code Stored in Object
+        if (Local::dolVersionCmp("10.0.0") > 0) {
+            return true;
+        }
+        //====================================================================//
+        // Dictionnary Already Loaded
+        if (isset(static::$dico)) {
+            return true;
+        }
+        //====================================================================//
+        // Load Dictionnary Already Loaded
+        dol_syslog(__METHOD__, LOG_DEBUG);
+        static::$dico = array();
+        $sql = "SELECT t.rowid as id, t.code, t.label, t.short_label, t.unit_type, t.scale, t.active FROM llx_c_units as t WHERE t.active=1";
+        $resql = $db->query($sql);
+        if (!$resql) {
+            return Splash::log()->errTrace($db->lasterror());
+        }
+        //====================================================================//
+        // Parse Dictionnary to Cache
+        $num = $db->num_rows($resql);
+        if ($num > 0) {
+            while ($obj = $db->fetch_object($resql)) {
+                static::$dico[$obj->id] = $obj;
+            }
+        }
+        $db->free($resql);
+
+        return true;
+    }
+
+    /**
+     * Identify Dolibarr Unit from Scale.
+     *
+     * @param string $type
+     * @param string $scale
+     * 
+     * @return int|string
+     */
+    private static function getDolUnitId(string $type, string $scale)
+    {
+        //====================================================================//
+        // BEFORE V10 => Dolibarr Unit Code Stored in Object
+        if (Local::dolVersionCmp("10.0.0") < 0) {
+            return $scale;
+        }
+        //====================================================================//
+        // SINCE V10 => Dolibarr Unit Code Stored in Dictionnary
+        if (!static::loadDolUnits()) {
+            return 0;
+        }
+        //====================================================================//
+        // Search for Unit in Dictionnary
+        foreach (static::$dico as $cUnit) {
+            if ($cUnit->unit_type != $type) {
+                continue;
+            }
+            if ($cUnit->scale != $scale) {
+                continue;
+            }
+            return $cUnit->id;
+        }
+
+        return 0;
     }
 }
