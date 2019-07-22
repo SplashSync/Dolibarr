@@ -161,22 +161,22 @@ trait UnitConverterTrait
         // Length - Meter
         if ($length >= 1) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_M);
-            $result->length_units = static::getDolUnitId("length", "0");
+            $result->length_units = static::getDolUnitId("size", "0");
         //====================================================================//
         // Length - DecaMeter
         } elseif ($length >= 1e-1) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_DM);
-            $result->length_units = static::getDolUnitId("length", "-1");
+            $result->length_units = static::getDolUnitId("size", "-1");
         //====================================================================//
         // Length - CentiMeter
         } elseif ($length >= 1e-2) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_CM);
-            $result->length_units = static::getDolUnitId("length", "-2");
+            $result->length_units = static::getDolUnitId("size", "-2");
         //====================================================================//
         // Length - MilliMeter
         } elseif ($length >= 1e-3) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_MM);
-            $result->length_units = static::getDolUnitId("length", "-3");
+            $result->length_units = static::getDolUnitId("size", "-3");
         }
         $result->raw = $length;
 
