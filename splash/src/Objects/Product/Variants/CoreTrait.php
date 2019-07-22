@@ -229,7 +229,7 @@ trait CoreTrait
         }
         //====================================================================//
         // Ensure Variants Field data is Iterable
-        if (!is_iterrable($fieldData)) {
+        if (!is_iterable($fieldData)) {
             $fieldData = array();
         }
         //====================================================================//

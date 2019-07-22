@@ -333,7 +333,7 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param int   $parentId Rowid of Parent Product
+     * @param int      $parentId Rowid of Parent Product
      * @param iterable $variants Array of Variants Ids
      *
      * @return bool
@@ -357,13 +357,13 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param int   $parentId    Rowid of Current Parent Product
-     * @param array $variants    Array of Variants Ids
-     * @param int   $newParentId Rowid of New Parent Product
+     * @param int      $parentId    Rowid of Current Parent Product
+     * @param iterable $variants    Array of Variants Ids
+     * @param int      $newParentId Rowid of New Parent Product
      *
      * @return bool
      */
-    public static function moveAdditionnalVariants($parentId, $variants, $newParentId)
+    public static function moveAdditionnalVariants($parentId, iterable $variants, $newParentId)
     {
         //====================================================================//
         // Extract All Variants Product Ids from Given Inputs
