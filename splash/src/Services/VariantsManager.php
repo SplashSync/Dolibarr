@@ -334,11 +334,11 @@ class VariantsManager
      * Check if All Given Product Variants Exists on this System
      *
      * @param int   $parentId Rowid of Parent Product
-     * @param array $variants Array of Variants Ids
+     * @param iterable $variants Array of Variants Ids
      *
      * @return bool
      */
-    public static function hasAdditionnalVariants($parentId, $variants)
+    public static function hasAdditionnalVariants($parentId, iterable $variants)
     {
         //====================================================================//
         // Extract All Variants Product Ids from Given Inputs
@@ -475,11 +475,11 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param array $variants Array of Variants Ids
+     * @param iterable $variants Array of Variants Ids
      *
      * @return null|array
      */
-    private static function extractVariantsProductIds($variants)
+    private static function extractVariantsProductIds(iterable $variants)
     {
         $productIds = array();
         //====================================================================//

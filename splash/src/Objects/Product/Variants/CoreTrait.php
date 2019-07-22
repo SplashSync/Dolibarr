@@ -229,7 +229,7 @@ trait CoreTrait
         }
         //====================================================================//
         // Ensure Variants Field data is Iterable
-        if (!is_iterable($fieldData)) {
+        if (!is_iterrable($fieldData)) {
             $fieldData = array();
         }
         //====================================================================//
@@ -250,7 +250,7 @@ trait CoreTrait
     /**
      * Create a New Product Parent and Move All Variants to this New One
      *
-     * @param array $variants Product Variants List
+     * @param iterable $variants Product Variants List
      */
     protected function updateVariantsParent($variants)
     {
