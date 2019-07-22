@@ -327,8 +327,6 @@ trait UnitConverterTrait
     /**
      * Load Units Scales from Dictionary in Database.
      *
-     * @param int $unit Raw Unit Code or Database Id
-     *
      * @return bool
      */
     private static function loadDolUnits(): bool
