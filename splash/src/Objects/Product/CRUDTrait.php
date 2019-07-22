@@ -251,7 +251,7 @@ trait CRUDTrait
         $product->type = 0;
         //====================================================================//
         // Required For Dolibarr BarCode Module
-        $product->barcode = -1;
+        $product->barcode = "-1";
         //====================================================================//
         // Create Object In Database
         /** @var User $user */
