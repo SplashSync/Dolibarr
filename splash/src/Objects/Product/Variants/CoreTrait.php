@@ -228,6 +228,11 @@ trait CoreTrait
             return;
         }
         //====================================================================//
+        // Ensure Variants Field data is Iterable
+        if (!is_iterable($fieldData)) {
+            $fieldData = array();
+        }
+        //====================================================================//
         // Check if Product has Additionnal Variants
         if (!VariantsManager::hasAdditionnalVariants($this->combination->fk_product_parent, $fieldData)) {
             return;
