@@ -47,11 +47,11 @@ fi
 if [ "${DATA:0:2}" = "10" ];  
 then 
     echo "BugFix Update for Dolibarr 10.0.0"
-    mysql -D travis -e "UPDATE `llx_c_units` SET `scale` = '0'  WHERE `llx_c_units`.`code` = 'KG';"
-    mysql -D travis -e "UPDATE `llx_c_units` SET `scale` = '-3' WHERE `llx_c_units`.`code` = 'G';"
-    mysql -D travis -e "UPDATE `llx_c_units` SET `scale` = '0' WHERE `llx_c_units`.`code` = 'M';"
-    mysql -D travis -e "UPDATE `llx_c_units` SET `scale` = '0' WHERE `llx_c_units`.`code` = 'M2';"
-    mysql -D travis -e "UPDATE `llx_c_units` SET `scale` = '0' WHERE `llx_c_units`.`code` = 'M3';"
+    mysql -D travis -e "UPDATE llx_c_units SET scale = '0'  WHERE llx_c_units.code = 'KG';"
+    mysql -D travis -e "UPDATE llx_c_units SET scale = '-3' WHERE llx_c_units.code = 'G';"
+    mysql -D travis -e "UPDATE llx_c_units SET scale = '0' WHERE llx_c_units.code = 'M';"
+    mysql -D travis -e "UPDATE llx_c_units SET scale = '0' WHERE llx_c_units.code = 'M2';"
+    mysql -D travis -e "UPDATE llx_c_units SET scale = '0' WHERE llx_c_units.code = 'M3';"
 fi 
 
 if [ "$DOL" = "develop" ];  
