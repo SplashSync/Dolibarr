@@ -104,8 +104,13 @@ trait UnitConverterTrait
         $result = new ArrayObject();
 
         //====================================================================//
+        // Variable Prodcut Weight - Always KiloGram
+        if ($this->isVariant()) {
+            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_KILOGRAM);
+            $result->weight_units = static::getDolUnitId("weight", "0");
+        //====================================================================//
         // Weight - Tonne
-        if ($weight >= 1e3) {
+        } elseif ($weight >= 1e3) {
             $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_TONNE);
             $result->weight_units = static::getDolUnitId("weight", "3");
         //====================================================================//
