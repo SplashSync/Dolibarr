@@ -3,6 +3,10 @@
 # Tell Travis CI we're using PHP
 language: php
 
+# Tell Travis CI we're using MySQL
+services:
+  - mysql
+  
 # Tell Travis CI we're using Cache
 cache:
   directories:
