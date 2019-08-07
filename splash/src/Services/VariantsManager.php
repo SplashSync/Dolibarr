@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Services;
 
+use ArrayObject;
 use Product;
 use ProductCombination;
 use ProductCombination2ValuePair;
@@ -333,12 +334,12 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param int      $parentId Rowid of Parent Product
-     * @param iterable $variants Array of Variants Ids
+     * @param int               $parentId Rowid of Parent Product
+     * @param array|ArrayObject $variants Array of Variants Ids
      *
      * @return bool
      */
-    public static function hasAdditionnalVariants($parentId, iterable $variants)
+    public static function hasAdditionnalVariants($parentId, $variants)
     {
         //====================================================================//
         // Extract All Variants Product Ids from Given Inputs
@@ -357,13 +358,13 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param int      $parentId    Rowid of Current Parent Product
-     * @param iterable $variants    Array of Variants Ids
-     * @param int      $newParentId Rowid of New Parent Product
+     * @param int               $parentId    Rowid of Current Parent Product
+     * @param array|ArrayObject $variants    Array of Variants Ids
+     * @param int               $newParentId Rowid of New Parent Product
      *
      * @return bool
      */
-    public static function moveAdditionnalVariants($parentId, iterable $variants, $newParentId)
+    public static function moveAdditionnalVariants($parentId, $variants, $newParentId)
     {
         //====================================================================//
         // Extract All Variants Product Ids from Given Inputs
@@ -475,11 +476,11 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param iterable $variants Array of Variants Ids
+     * @param array|ArrayObject $variants Array of Variants Ids
      *
      * @return null|array
      */
-    private static function extractVariantsProductIds(iterable $variants)
+    private static function extractVariantsProductIds($variants)
     {
         $productIds = array();
         //====================================================================//
