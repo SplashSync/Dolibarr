@@ -251,7 +251,7 @@ trait CoreTrait
     /**
      * Create a New Product Parent and Move All Variants to this New One
      *
-     * @param iterable $variants Product Variants List
+     * @param array|ArrayObject $variants Product Variants List
      */
     protected function updateVariantsParent($variants)
     {
