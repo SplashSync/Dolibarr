@@ -99,7 +99,7 @@ trait UnitConverterTrait
      *
      * @return arrayobject $r->weight , $r->weight_units , $r->print, $r->raw
      */
-    public static function normalizeWeight($weight)
+    public function normalizeWeight($weight)
     {
         $result = new ArrayObject();
 
