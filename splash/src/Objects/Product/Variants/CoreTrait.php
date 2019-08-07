@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects\Product\Variants;
 
+use ArrayObject;
 use Product;
 use ProductCombination;
 use Splash\Core\SplashCore      as Splash;
@@ -229,7 +230,7 @@ trait CoreTrait
         }
         //====================================================================//
         // Ensure Variants Field data is Iterable
-        if (!is_iterable($fieldData)) {
+        if (!is_array($fieldData) && !is_a($fieldData, ArrayObject::class)) {
             $fieldData = array();
         }
         //====================================================================//
