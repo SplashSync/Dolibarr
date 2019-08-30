@@ -145,5 +145,38 @@ trait TriggersTrait
             $this->action = SPL_A_DELETE;
             $this->comment = "Product Deleted on Dolibarr";
         }
+        //====================================================================//
+        // Commit Delete for Base Product if Required
+        $this->onProductVariantChanges($action);
+    }
+
+    /**
+     * Commit Delete for Base Product
+     *
+     * @param string $action Code de l'evenement
+     */
+    private function onProductVariantChanges($action)
+    {
+        //====================================================================//
+        // Only When a New Variant is Created
+        if (!in_array($action, array('PRODUCT_CREATE', 'PRODUCT_MODIFY'), true)) {
+            return;
+        }
+        //====================================================================//
+        // Load Product Combinations
+        $combination = VariantsManager::getProductCombination((int) $this->objectId);
+        //====================================================================//
+        // Only if Product is a Variant
+        if ($combination) {
+            //====================================================================//
+            // Commit Change to Splash
+            Splash::commit(
+                $this->objectType,                  // Object Type
+                $combination->fk_product_parent,    // Parent Product Id
+                SPL_A_DELETE,                       // Splash Action Type
+                $this->login,                       // Current User Login
+                "Variant Created on Dolibarr"       // Action Comment
+            );
+        }
     }
 }
