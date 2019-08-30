@@ -104,10 +104,14 @@ trait UnitConverterTrait
         $result = new ArrayObject();
 
         //====================================================================//
-        // Variable Prodcut Weight - Always KiloGram
-        if ($this->isVariant()) {
-            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_KILOGRAM);
-            $result->weight_units = static::getDolUnitId("weight", "0");
+        // Variable Prodcut Weight - Always Parent Weight Unit
+        if ($this->isVariant() && !empty($this->baseProduct)) {
+            // Detect Splash Generic Unit Factor from Parent
+            $splFactor = static::detectSplashUnit((string) $this->baseProduct->weight_units, "weight", Converter::MASS_KG);
+            // Convert Generic Weight to Parent Unit
+            $result->weight = Converter::convertWeight((float) $weight, $splFactor);
+            // Force Variant Weight Unit to Parent Unit
+            $result->weight_units = $this->baseProduct->weight_units;
         //====================================================================//
         // Weight - Tonne
         } elseif ($weight >= 1e3) {

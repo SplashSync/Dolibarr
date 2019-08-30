@@ -222,19 +222,24 @@ trait MainTrait
 
     /**
      * Update Product Weight with Variants Management
-     *
+     * 
+     * Concepts:
+     *  - Standards Products: Weight is Normalized to best Unit
+     *  - Variants: Weight is Stored using Parent Unit
+     *  - Variants Impact: Computed & Stored Using Parent Unit
+     *  
      * @param float $fieldData
      */
     private function updateProductWeight($fieldData)
     {
         //====================================================================//
-        // Check if Product Weight Updated
+        // Check if Product Weight Updated => NO CHANGES
         $weightStr = $this->convertWeight($this->object->weight, $this->object->weight_units);
         if ((string) $fieldData == (string) $weightStr) {
             return;
         }
         //====================================================================//
-        // Update Current Product Weight
+        // Update Current Product Weight (With Variant Detection)
         $nomalized = $this->normalizeWeight($fieldData);
         $this->object->weight = $nomalized->weight;
         $this->object->weight_units = $nomalized->weight_units;
@@ -242,9 +247,7 @@ trait MainTrait
         //====================================================================//
         // Update Current Product Weight
         if ($this->isVariant() && !empty($this->baseProduct)) {
-            // Update Unit on Base Product
-            $this->setSimple("weight_units", $nomalized->weight_units, "baseProduct");
-            // Update Combination
+            // Update Combination Weight Impact
             $this->setSimple(
                 "variation_weight",
                 $nomalized->weight - $this->baseProduct->weight,
