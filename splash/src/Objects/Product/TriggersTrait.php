@@ -163,6 +163,11 @@ trait TriggersTrait
             return;
         }
         //====================================================================//
+        // SKIP When in PhpUnit/Travis Mode
+        if (!empty(Splash::input('SPLASH_TRAVIS')) || !is_scalar($this->objectId)) {
+            return;
+        }
+        //====================================================================//
         // Load Product Combinations
         $combination = VariantsManager::getProductCombination((int) $this->objectId);
         //====================================================================//
@@ -171,7 +176,7 @@ trait TriggersTrait
             //====================================================================//
             // Commit Change to Splash
             Splash::commit(
-                $this->objectType,                  // Object Type
+                (string) $this->objectType,         // Object Type
                 $combination->fk_product_parent,    // Parent Product Id
                 SPL_A_DELETE,                       // Splash Action Type
                 $this->login,                       // Current User Login
