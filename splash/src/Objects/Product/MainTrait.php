@@ -222,12 +222,12 @@ trait MainTrait
 
     /**
      * Update Product Weight with Variants Management
-     * 
+     *
      * Concepts:
      *  - Standards Products: Weight is Normalized to best Unit
      *  - Variants: Weight is Stored using Parent Unit
      *  - Variants Impact: Computed & Stored Using Parent Unit
-     *  
+     *
      * @param float $fieldData
      */
     private function updateProductWeight($fieldData)

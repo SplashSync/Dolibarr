@@ -107,7 +107,11 @@ trait UnitConverterTrait
         // Variable Prodcut Weight - Always Parent Weight Unit
         if ($this->isVariant() && !empty($this->baseProduct)) {
             // Detect Splash Generic Unit Factor from Parent
-            $splFactor = static::detectSplashUnit((string) $this->baseProduct->weight_units, "weight", Converter::MASS_KG);
+            $splFactor = static::detectSplashUnit(
+                (string) $this->baseProduct->weight_units,
+                "weight",
+                Converter::MASS_KG
+            );
             // Convert Generic Weight to Parent Unit
             $result->weight = Converter::convertWeight((float) $weight, $splFactor);
             // Force Variant Weight Unit to Parent Unit
