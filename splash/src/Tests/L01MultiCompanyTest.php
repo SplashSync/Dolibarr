@@ -199,7 +199,7 @@ class L01MultiCompanyTest extends ObjectsCase
         if (Local::dolVersionCmp("9.0.0") < 0) {
             $conf->blockedlog->enabled = 0;
         }
-        
+
         return $conf->entity;
     }
 
