@@ -227,6 +227,12 @@ class Local implements LocalClassInterface
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
         $ent = $conf->entity;
 
+        //====================================================================//
+        // Disable BackLog for Dolibarr Version below 9.0
+        if (Local::dolVersionCmp("9.0.0") < 0) {
+            $conf->blockedlog->enabled = 0;
+        }
+
         switch ($name) {
             case "Monolangual":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
