@@ -30,19 +30,19 @@ then
     mysql -D travis -e "ALTER TABLE llx_socpeople CHANGE zip zip varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;"
 fi 
 
-if [ "$VERSION" = "8" ];  
-then 
-    echo "BugFix Update for Dolibarr 8.0.0"
-    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN fk_user_create;"
-    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN fk_user_modif;"
-    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN type_container;"
+#if [ "$VERSION" = "8" ];  
+#then 
+#    echo "BugFix Update for Dolibarr 8.0.0"
+#    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN fk_user_create;"
+#    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN fk_user_modif;"
+#    mysql -D travis -e "ALTER TABLE llx_website_page DROP COLUMN type_container;"
 
-    echo "Database Migrations for Dolibarr 8.0"
+#    echo "Database Migrations for Dolibarr 8.0"
 #    sed -i '53d;60d;' $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
 #    cat -n $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql
 
-    mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql --force
-fi 
+#    mysql -D travis < $DOL_BUILD_DIR/htdocs/install/mysql/migration/7.0.0-8.0.0.sql --force
+#fi 
 
 if [ "${DATA:0:2}" = "10" ];  
 then 
