@@ -52,6 +52,11 @@ trait TriggersTrait
         // Store Global Action Parameters
         $this->setInvoiceObjectId($object);
         $this->setInvoiceObjectType($object);
+        //====================================================================//
+        // Safety Check => ObjectType is Active
+        if (!in_array($this->objectType, Splash::objects(), true)) {
+            return false;
+        }
         $this->setInvoiceParameters($action);
 
         if (empty($this->objectId)) {
