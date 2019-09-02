@@ -166,7 +166,7 @@ class L01MultiCompanyTest extends ObjectsCase
             $this->markTestSkipped('This Feature is Not Implemented on Current Dolibarr Release.');
         }
 
-        dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity);
+        Splash::log()->www("Set Const", dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity));
     }
 
     /**
