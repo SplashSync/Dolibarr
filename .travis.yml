@@ -38,9 +38,9 @@ matrix:
 #        - php: 7.0
 #          env: DOL=9.0 DATA=9.0.0     
 
-#        # Dolibarr V8.0 Branch       
-#        - php: 7.1
-#          env: DOL=8.0 DATA=8.0.0     
+        # Dolibarr V8.0 Branch       
+        - php: 7.1
+          env: DOL=8.0 DATA=7.0.0     
         
         # Dolibarr V7.0 Branch       
         - php: 7.1
