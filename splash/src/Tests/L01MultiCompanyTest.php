@@ -167,10 +167,10 @@ class L01MultiCompanyTest extends ObjectsCase
         }
 
 //        Splash::log()->www("Set Const", dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity));
-        $this->assertEqual(
-            1, 
-            dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity)
-            , $db->lasterror()
+        $this->assertEquals(
+            1,
+            dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity),
+            $db->lasterror()
         );
     }
 
