@@ -227,11 +227,15 @@ class InterfaceSplash
     protected function doSplashCommit()
     {
         //====================================================================//
-        // Safety Check
+        // Safety Check => Required Infos Provided
         if ((null === $this->objectId) || (null === $this->objectType)) {
             return;
         }
-
+        //====================================================================//
+        // Safety Check => ObjectType is Active
+        if (!in_array($this->objectType, Splash::objects(), true)) {
+            return;
+        }
         //====================================================================//
         // Prevent Repeated Commit if Needed
         if ((SPL_A_UPDATE == $this->action) && Splash::object($this->objectType)->isLocked()) {
