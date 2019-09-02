@@ -167,12 +167,6 @@ class L01MultiCompanyTest extends ObjectsCase
         }
 
         //====================================================================//
-        // Disable BackLog for Dolibarr Version below 9.0
-        if (Local::dolVersionCmp("9.0.0") < 0) {
-            $conf->blockedlog->enabled = 0;
-        }
-
-        //====================================================================//
         // Force Enable MultiCompany Module
         $this->assertEquals(
             1,
@@ -200,6 +194,12 @@ class L01MultiCompanyTest extends ObjectsCase
         $conf->setValues($db);
         $user->entity = $conf->entity;
 
+        //====================================================================//
+        // Disable BackLog for Dolibarr Version below 9.0
+        if (Local::dolVersionCmp("9.0.0") < 0) {
+            $conf->blockedlog->enabled = 0;
+        }
+        
         return $conf->entity;
     }
 
