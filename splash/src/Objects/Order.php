@@ -48,6 +48,7 @@ class Order extends AbstractObject
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\ImagesTrait;
     use \Splash\Local\Core\CustomerTrait;
+    use \Splash\Local\Core\ContactsTrait;
     use \Splash\Local\Core\MultiCompanyTrait;
 
     // Dolibarr Orders Traits
@@ -57,7 +58,6 @@ class Order extends AbstractObject
     use \Splash\Local\Objects\Order\MainTrait;
     use \Splash\Local\Objects\Order\ItemsTrait;
     use \Splash\Local\Objects\Order\StatusTrait;
-    use \Splash\Local\Objects\Order\ContactsTrait;
 
     //====================================================================//
     // ExtraFields Type

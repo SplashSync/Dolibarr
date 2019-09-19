@@ -13,12 +13,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Local\Objects\Order;
+namespace Splash\Local\Core;
 
 use Splash\Core\SplashCore      as Splash;
 
 /**
- * Dolibarr Customer Orders Address Fields
+ * Dolibarr Customer Orders/Invoices Address Fields
  */
 trait ContactsTrait
 {

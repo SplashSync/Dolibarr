@@ -45,6 +45,7 @@ class Invoice extends AbstractObject
     use \Splash\Local\Core\ExtraFieldsTrait;
     use \Splash\Local\Core\ObjectsListTrait;
     use \Splash\Local\Core\CustomerTrait;
+    use \Splash\Local\Core\ContactsTrait;
     use \Splash\Local\Core\MultiCompanyTrait;
 
     // Dolibarr Invoices Traits
