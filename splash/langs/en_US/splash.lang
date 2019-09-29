@@ -40,7 +40,7 @@ SPL_WsKey_Tooltip   =   This parameter is provided when you create a new Server 
 SPL_WsExpert        =   Enable Advanced Configuration for this Server
 SPL_WsExpert_Tooltip=   Only use uppon our request! Your serveur may not work normally. 
 SPL_WsHost          =   Url of Splash Server
-SPL_WsHost_Tooltip  =   Only modify uppon our request! Default value : www.splashsync.com/ws/soap 
+SPL_WsHost_Tooltip  =   Only modify upon our request! Default value : www.splashsync.com/ws/soap 
 SPL_WsMethod        =   WebService Protocol to Use
 SPL_Smart           =   Smart Notifications
 SPL_Smart_Tooltip   =   On changes, display warning & errors only. 
@@ -54,10 +54,10 @@ SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#set
 SPL_DfLang          =   Default Language used by the module
 SPL_OtherLangs      =   Other Languages used by the module
 SPL_DfUser          =   User to use for all remote operations
-SPL_DfStock         =   Whareouse used for stocks transactions (if nop default warehouse specified at product level)
+SPL_DfStock         =   Whareouse used for stocks transactions (if no default warehouse specified at product level)
 SPL_ProductStock    =   Default warehouse for products setup (if empty value or not specified)
-SPL_DfPayMethod     =   Default Payement Method used by the module (if not spécified)
-SPL_DfMultiPrice    =   Default Price used by the module (MultiPrices mode is enabled)
+SPL_DfPayMethod     =   Default payment method used by the module (if not specified)
+SPL_DfMultiPrice    =   Default price used by the module (MultiPrices mode is enabled)
 
 ################################################################################
 # Admin Page Index - Orders & Invoices
@@ -72,7 +72,7 @@ SPL_DetectBySku_T   =   When importing orders and invoices, if no Product ID is 
 SPL_Orders_Guest    =   Allow Import of Guests Orders & Invoices
 SPL_Orders_Guest_T  =   This mode allow import of Orders & Invoices passed using Guest Mode on moderns E-Commerce platforms.
 SPL_Orders_Guest_U  =   Select the default Customer all Guest invoices will be attached to.
-SPL_Orders_Email    =   Try to detect Exiting Customer using it's Email
+SPL_Orders_Email    =   Try to detect Exiting Customer using its Email
 
 ################################################################################
 # Admin Page Index - Payments
@@ -80,7 +80,7 @@ SPL_Orders_Email    =   Try to detect Exiting Customer using it's Email
 
 SPL_Payment_Config  =   Payments Import
 SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/payments
-SPL_DfBankAccount   =   Default Bank Account used by the module (if not spécified)
+SPL_DfBankAccount   =   Default Bank Account used by the module (if not specified)
 SPL_BankAccountFor  =   Bank Account used for <b>%s</b> payments (%s)
 
 ################################################################################
@@ -99,11 +99,11 @@ SPL_SelfTest            = Splash Module Self-Test and Setup Verification
 SPL_WsTestPing          = Splash Server Ping Test (No Encryption)
 SPL_WsTestConnect       = Splash Server Connection Test (With Encryption)
 
-SPL_SelfTestOk          = Self-Test & Vérifications Passed
-SPL_SelfTestKo          = Self-Test or Vérifications Failled
+SPL_SelfTestOk          = Self-Test & Verifications Passed
+SPL_SelfTestKo          = Self-Test or Verifications Failed
 SPL_WsPingOk            = Splash Server Ping Test Passed
-SPL_WsPingKo            = Splash Server Ping Test Failled
+SPL_WsPingKo            = Splash Server Ping Test Failed
 SPL_WsConnectOk         = Splash Server Connection Test Passed
-SPL_WsConnectKo         = Splash Server Connection Test Failled
+SPL_WsConnectKo         = Splash Server Connection Test Failed
 
 
