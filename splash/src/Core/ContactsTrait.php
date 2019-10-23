@@ -112,5 +112,6 @@ trait ContactsTrait
         //====================================================================//
         // Add New Contact
         $this->object->add_contact((int) $expected, $fieldName, 'external');
+        $this->needUpdate();
     }
 }
