@@ -234,10 +234,7 @@ trait CustomerTrait
         }
 
         if (!isset($conf->global->SPLASH_GUEST_ORDERS_CUSTOMER) || empty($conf->global->SPLASH_GUEST_ORDERS_CUSTOMER)) {
-            Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
+            Splash::log()->errTrace(
                 "To use Guest Orders/Invoices mode, you must select a default Customer."
             );
 
