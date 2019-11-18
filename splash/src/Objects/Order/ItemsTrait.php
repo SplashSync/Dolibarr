@@ -17,7 +17,6 @@ namespace Splash\Local\Objects\Order;
 
 use FactureLigne;
 use OrderLine;
-use Splash\Core\SplashCore      as Splash;
 
 /**
  * Dolibarr Customer Orders Items Fields

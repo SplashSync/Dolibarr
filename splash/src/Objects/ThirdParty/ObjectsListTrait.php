@@ -15,7 +15,6 @@
 
 namespace   Splash\Local\Objects\ThirdParty;
 
-use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 
 /**

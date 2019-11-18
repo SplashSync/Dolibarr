@@ -15,9 +15,6 @@
 
 namespace Splash\Local\Objects\Product\Variants;
 
-use Product;
-use Splash\Core\SplashCore      as Splash;
-
 /**
  * Product Variant Label Function & Data Access
  */

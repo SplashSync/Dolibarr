@@ -15,7 +15,6 @@
 
 namespace   Splash\Local\Objects\Address;
 
-use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 
 /**

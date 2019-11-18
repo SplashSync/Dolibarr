@@ -15,8 +15,6 @@
 
 namespace Splash\Local\Objects\ThirdParty;
 
-use Splash\Core\SplashCore      as Splash;
-
 /**
  * Dolibarr ThirdParty Address Fields
  */
