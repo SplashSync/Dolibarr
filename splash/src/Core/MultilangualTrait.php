@@ -15,8 +15,6 @@
 
 namespace   Splash\Local\Core;
 
-use Splash\Core\SplashCore      as Splash;
-
 /**
  * Access to Dolibarr Multilang Fields
  */

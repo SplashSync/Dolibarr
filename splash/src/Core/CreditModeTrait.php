@@ -15,8 +15,6 @@
 
 namespace Splash\Local\Core;
 
-use Splash\Core\SplashCore      as Splash;
-
 /**
  * Dolibarr Orders & Invoices Price Converter for Debits or Credits
  */
