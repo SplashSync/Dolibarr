@@ -55,7 +55,7 @@ trait ItemsTrait
     {
         //====================================================================//
         // Debug Mode => Force Allow Delete
-        if (defined("SPLASH_DEBUG") && !empty(SPLASH_DEBUG)) {
+        if (Splash::isDebugMode()) {
             //====================================================================//
             // Force Invoice Status To Draft
             $this->object->statut = 0;

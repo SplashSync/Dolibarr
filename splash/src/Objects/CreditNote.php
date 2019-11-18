@@ -147,7 +147,7 @@ class CreditNote extends AbstractObject
      */
     public static function getIsDisabled()
     {
-        if (!empty(SPLASH_DEBUG)) {
+        if (Splash::isDebugMode()) {
             return false;
         }
 

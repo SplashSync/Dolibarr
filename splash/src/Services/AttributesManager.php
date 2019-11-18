@@ -216,7 +216,7 @@ class AttributesManager
         }
         //====================================================================//
         // DEBUG MODE => Update Attributes Names
-        if (defined("SPLASH_DEBUG") && !empty(SPLASH_DEBUG)) {
+        if (Splash::isDebugMode()) {
             self::updateAttribute($attribute, $name);
         }
 
