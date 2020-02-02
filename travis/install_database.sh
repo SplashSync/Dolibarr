@@ -54,6 +54,12 @@ then
     mysql -D travis -e "UPDATE llx_c_units SET scale = '0' WHERE llx_c_units.code = 'M3';"
 fi 
 
+if [ "${DATA:0:2}" = "11" ];  
+then 
+    echo "BugFix Update for Dolibarr 11.0.0"
+    mysql -D travis -e "ALTER TABLE llx_commande_extrafields DROP custom1;"
+fi 
+
 if [ "$DOL" = "develop" ];  
 then 
     echo "Database Migrations for Dolibarr Develop"
