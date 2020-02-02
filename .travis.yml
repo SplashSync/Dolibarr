@@ -19,20 +19,26 @@ matrix:
     include:
 
         # Dolibarr Develop Branch       
-        - php: 7.3
-          env: DOL=develop DATA=10.0.0    
+#        - php: 7.3
+#          env: DOL=develop DATA=11.0.0    
+#        - php: 7.1
+#          env: DOL=develop DATA=11.0.0    
+
+        # Dolibarr V11.0 Branch       
+#        - php: 7.3
+#          env: DOL=11.0 DATA=11.0.0    
         - php: 7.1
-          env: DOL=develop DATA=10.0.0    
+          env: DOL=11.0 DATA=11.0.0  
           
         # Dolibarr V10.0 Branch       
-        - php: 7.3
-          env: DOL=10.0 DATA=10.0.0    
-        - php: 7.2
+#        - php: 7.3
+#          env: DOL=10.0 DATA=10.0.0    
+        - php: 7.1
           env: DOL=10.0 DATA=10.0.0    
 
         # Dolibarr V9.0 Branch       
-        - php: 7.2
-          env: DOL=9.0 DATA=9.0.0
+#        - php: 7.2
+#          env: DOL=9.0 DATA=9.0.0
         - php: 7.1
           env: DOL=9.0 DATA=9.0.0     
 
@@ -114,11 +120,6 @@ script:
     # Run PhpUnit Main Local Testsuite
     - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
     - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
-    
-    # PHP7+     =>  Run PhpUnit Main Sequence
-#    - if [[ ${TRAVIS_PHP_VERSION:0:1} > "5" ]]; then travis_wait 30 phpdbg -qrr -d memory_limit=-1 splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist; fi  
-    # PHP5.6    =>  Without Php Debugger (Coverage x2 Faster)
-#    - if [[ ${TRAVIS_PHP_VERSION:0:1} < "7" ]]; then splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist; fi  
         
 notifications:
   email:         
