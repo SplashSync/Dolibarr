@@ -57,7 +57,7 @@ fi
 if [ "${DATA:0:2}" = "11" ];  
 then 
     echo "BugFix Update for Dolibarr 11.0.0"
-    mysql -D travis -e "ALTER TABLE llx_commande_extrafields DROP 'custom1';"
+    mysql -D travis -e "ALTER TABLE llx_commande_extrafields DROP llx_commande_extrafields.custom1;"
 fi 
 
 if [ "$DOL" = "develop" ];  
