@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -61,6 +61,12 @@ trait CRUDTrait
                 __FUNCTION__,
                 " Unable to load Contact Address (".$objectId.")."
             );
+        }
+
+        //====================================================================//
+        // Fix V11
+        if (is_null($object->socid)) {
+            $object->socid = 0;
         }
 
         return $object;
