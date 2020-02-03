@@ -1,8 +1,14 @@
+---
+lang: fr
+permalink: docs/payments
+title:  Gestion des Paiements
+---
+
 ### Ventilation Bancaire (NEW)
 
 Depuis la version 1.4 du module Splash pour Dolibarr, il est possible de sélectionner, pour chaque mode de paiement actif, le compte bancaire que vous souhaitez utiliser. 
 
-![](https://splashsync.github.io/Dolibarr/img/screenshot_7.png)
+![]({{ "/assets/img/screenshot_7.png"|relative_url}})
 
 **Méthode de paiement par défaut**
 

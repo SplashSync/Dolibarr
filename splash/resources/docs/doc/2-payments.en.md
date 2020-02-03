@@ -1,8 +1,13 @@
+---
+lang: en
+permalink: docs/payments
+title: User Payments
+---
 ### Select Bank Account (NEW)
 
 Since v1.4 of Splash Module for Dolibarr, it is possible to select, for each active Payment Method, the bank account you want to use. 
 
-![](https://splashsync.github.io/Dolibarr/img/screenshot_7.png)
+![]({{ "/assets/img/screenshot_7.png"|relative_url}})
 
 
 **Default Payment Method**

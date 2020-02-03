@@ -1,9 +1,15 @@
+---
+lang: fr
+permalink: docs/orders
+title:  Commandes & Factures
+---
+
 
 ### Configurer les d'imports
 
 Depuis la version 1.4 de Splash Module pour Dolibarr, un blocs de configuration regroupe tous les paramètres d'import des Commandes & Factures.
 
-![](https://splashsync.github.io/Dolibarr/img/screenshot_6.png)
+![]({{ "/assets/img/screenshot_6.png"|relative_url}})
 
 ### Détection des taux de TVA (NEW) 
 
@@ -17,13 +23,13 @@ Tout d'abord, vous devez créer, sur chaque serveur, les mêmes codes pour les t
 
 Avec Dolibarr, le nom du taux de TVA est "Code", cette valeur est vide par défaut. Généralement, vous pouvez utiliser les codes utilisés par votre E-Commerce.
 
-![](https://splashsync.github.io/Dolibarr/img/screenshot_8.png)
+![]({{ "/assets/img/screenshot_8.png"|relative_url}})
 
 **Comment ça marche ?**
 
 Si vous regardez les données qui sont maintenant disponibles pour les objets Commandes & Factures, vous verrez un nouveau champ appelé "Taux de TVA".
 
-![](https://splashsync.github.io/Dolibarr/img/screenshot_9.png)
+![]({{ "/assets/img/screenshot_9.png"|relative_url}})
 
 Lorsque Splash importe une Commande ou une Facture, si le code indiqué se trouve dans votre Dictionnaire Dolibarr, Splash configurera ce Taux de TVA pour créer cette ligne de produits.
 

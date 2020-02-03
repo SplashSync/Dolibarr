@@ -1,6 +1,11 @@
-## Key features & benefits
+---
+lang: en
+permalink: docs/features
+title: Key features & benefits
+---
 
-Dolibarr is one of the major Open-Source ERP project you could find on the web. It's now working for more than 10 years and its very simple approach make it suitable for small and medium business.  
+Dolibarr is one of the major Open-Source ERP project you could find on the web. 
+It's now working for more than 10 years and its very simple approach make it suitable for small and medium business.  
 
 This module will give Splash access to Third Party, Products, Customer Orders & Invoice.
 
@@ -21,4 +26,3 @@ This way, all similar informations will be shared and synchronized anywhere, fro
 Orders and invoices will be automatically imported from your E-Commerce, point-of-sale, or any other applications you may connect! 
 
 Your financial analytics is easier... and with no efforts.
-
