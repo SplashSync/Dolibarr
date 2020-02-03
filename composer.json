@@ -9,6 +9,7 @@
     
     "config": {
         "vendor-dir":                       "splash/vendor",
+        "bin-dir":                          "splash/vendor/bin",
         "preferred-install":                "dist"
     },
     
@@ -31,7 +32,7 @@
         "j13k/yaml-lint":                   "^1.1",
         "jakub-onderka/php-parallel-lint":  "^1.0",
         "phpmd/phpmd":                      "~2.7",
-        "phpro/grumphp":                    "^0.16",
+        "phpro/grumphp":                    "^0.17",
         "sclable/xml-lint":                 "^0.2.4",
         "sebastian/phpcpd":                 ">3.0",
         "seld/jsonlint":                    "^1.7",
