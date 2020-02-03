@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -47,22 +47,30 @@ class Demo extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
+     * Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
+     *
+     * {@inheritdoc}
      */
     protected static $DISABLED = true;
 
     /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "Demo Widget";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "TEST & DEMONSTRATION WIDGET";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-magic";
 
@@ -146,6 +154,8 @@ class Demo extends AbstractWidget
 
     /**
      * Block Building - Text Intro
+     *
+     * @return void
      */
     private function buildIntroBlock()
     {
@@ -159,6 +169,8 @@ class Demo extends AbstractWidget
      * Block Building - Inputs Parameters
      *
      * @param mixed $inputs
+     *
+     * @return void
      */
     private function buildParametersBlock($inputs = array())
     {
@@ -183,6 +195,8 @@ class Demo extends AbstractWidget
 
     /**
      * Block Building - Notifications Parameters
+     *
+     * @return void
      */
     private function buildNotificationsBlock()
     {

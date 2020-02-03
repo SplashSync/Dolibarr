@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Widgets;
 
+use CommandeStats;
+use FactureStats;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
@@ -43,17 +45,23 @@ class StatGraphs extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "Statistics";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "Statistics";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-line-chart";
 
@@ -61,18 +69,26 @@ class StatGraphs extends AbstractWidget
     // General Class Variables
     //====================================================================//
 
+    /** @var CommandeStats|FactureStats */
     private $stats;
+
+    /** @var string */
     private $select;
+
+    /** @var string */
     private $where;
+
+    /** @var string */
     private $title;
+
+    /** @var array */
     private $labels;
 
+    /** @var string */
     private $mode = "CustomerInvoices";
-    private $chartType = "Line";
 
-    //====================================================================//
-    // General Class Variables
-    //====================================================================//
+    /** @var string */
+    private $chartType = "Line";
 
     //====================================================================//
     // Class Main Functions
@@ -101,24 +117,24 @@ class StatGraphs extends AbstractWidget
         //====================================================================//
         // Select Data Type Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->Identifier("mode")
-            ->Name($langs->trans("Model"))
+            ->identifier("mode")
+            ->name($langs->trans("Model"))
             ->isRequired()
-            ->AddChoice("CustomerInvoices", $langs->trans("ReportTurnover"))
-            ->AddChoice("CustomerOrders", $langs->trans("OrderStats"))
-            ->AddChoice("SupplierInvoices", $langs->trans("BillsSuppliers"))
-                ;
+            ->addChoice("CustomerInvoices", $langs->trans("ReportTurnover"))
+            ->addChoice("CustomerOrders", $langs->trans("OrderStats"))
+            ->addChoice("SupplierInvoices", $langs->trans("BillsSuppliers"))
+        ;
 
         //====================================================================//
         // Select Chart Rendering Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->Identifier("chart_type")
-            ->Name($langs->trans("Type"))
+            ->identifier("chart_type")
+            ->name($langs->trans("Type"))
             ->isRequired()
-            ->AddChoice("Line", "Line Chart")
-            ->AddChoice("Bar", "Bar Chart")
-            ->AddChoice("Area", "Area Chart")
-                ;
+            ->addChoice("Line", "Line Chart")
+            ->addChoice("Bar", "Bar Chart")
+            ->addChoice("Area", "Area Chart")
+        ;
 
         //====================================================================//
         // Publish Fields
@@ -158,7 +174,7 @@ class StatGraphs extends AbstractWidget
             $this->chartType = $parameters["chart_type"];
         }
 
-        $this->importDates($parameters);
+        $this->importDates(empty($parameters) ? array() : $parameters);
         $this->setupMode();
 
         $this->buildMorrisBarBlock();
@@ -205,6 +221,9 @@ class StatGraphs extends AbstractWidget
     // Blocks Generation Functions
     //====================================================================//
 
+    /**
+     * @return void
+     */
     private function setupMode()
     {
         global $db, $langs;
@@ -258,7 +277,9 @@ class StatGraphs extends AbstractWidget
     }
 
     /**
-     * @abstract    Read Widget Datas
+     * Read Widget Datas
+     *
+     * @return array
      */
     private function getData()
     {
@@ -290,7 +311,9 @@ class StatGraphs extends AbstractWidget
     }
 
     /**
-     *   @abstract     Block Building - Morris Bar Graph
+     * Block Building - Morris Bar Graph
+     *
+     * @return void
      */
     private function buildMorrisBarBlock()
     {

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,6 +26,9 @@ use Splash\Tests\Tools\ObjectsCase;
  */
 class L02TaxesByCodesTest extends ObjectsCase
 {
+    /**
+     * @return void
+     */
     public function testEnableFeature()
     {
         global $db, $conf;
@@ -56,6 +59,8 @@ class L02TaxesByCodesTest extends ObjectsCase
      * @param string $vatRate1
      * @param string $vatRate2
      *
+     * @return void
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
@@ -63,8 +68,6 @@ class L02TaxesByCodesTest extends ObjectsCase
     {
         if (Local::dolVersionCmp("5.0.0") < 0) {
             $this->markTestSkipped('Feature Not Available in This Version.');
-
-            return;
         }
 
         //====================================================================//
@@ -83,7 +86,7 @@ class L02TaxesByCodesTest extends ObjectsCase
         Splash::object($objectType)->lock();
         $objectId = Splash::object($objectType)->set(null, $fakeData);
         $this->assertNotEmpty($objectId);
-        $this->assertInternalType('string', $objectId);
+        $this->assertIsString($objectId);
 
         //====================================================================//
         //   Add Object Id to Created List
@@ -93,6 +96,8 @@ class L02TaxesByCodesTest extends ObjectsCase
         //   Read Order Data
         $objectData = Splash::object($objectType)
             ->get($objectId, array("desc@lines", "price@lines", "vat_src_code@lines"));
+        $this->assertNotEmpty($objectData);
+        $this->assertIsArray($objectData);
 
         //====================================================================//
         //   verify Tax Values
@@ -135,7 +140,9 @@ class L02TaxesByCodesTest extends ObjectsCase
         //   Read Order Data
         $objectData2 = Splash::object($objectType)
             ->get($objectId, array("desc@lines", "price@lines", "vat_src_code@lines"));
-
+        $this->assertNotEmpty($objectData2);
+        $this->assertIsArray($objectData2);
+        
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData2["lines"] as $data) {
@@ -144,6 +151,9 @@ class L02TaxesByCodesTest extends ObjectsCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testDisableFeature()
     {
         global $db, $conf;
@@ -156,6 +166,9 @@ class L02TaxesByCodesTest extends ObjectsCase
         dolibarr_set_const($db, "FACTURE_LOCAL_TAX1_OPTION", '', 'chaine', 0, '', $conf->entity);
     }
 
+    /**
+     * @return array
+     */
     public function taxTypesProvider()
     {
         return array(
@@ -174,6 +187,13 @@ class L02TaxesByCodesTest extends ObjectsCase
         );
     }
 
+    /**
+     * @param int    $countryId
+     * @param float  $vatRate
+     * @param string $code
+     *
+     * @return void
+     */
     private function setTaxeCode($countryId, $vatRate, $code)
     {
         global $db;
@@ -195,6 +215,13 @@ class L02TaxesByCodesTest extends ObjectsCase
         $db->free($resql);
     }
 
+    /**
+     * @param int    $countryId
+     * @param float  $vatRate
+     * @param string $code
+     *
+     * @return bool
+     */
     private function isTaxeCode($countryId, $vatRate, $code)
     {
         global $db;

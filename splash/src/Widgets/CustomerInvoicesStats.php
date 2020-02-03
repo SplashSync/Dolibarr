@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,22 +48,30 @@ class CustomerInvoicesStats extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
+     * Widget Disable Flag. Uncomment this line to Override this flag and disable Object.
+     *
+     * {@inheritdoc}
      */
     protected static $DISABLED = true;
 
     /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "CustomersInvoices";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "CustomersInvoices";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-line-chart";
 
@@ -84,7 +92,7 @@ class CustomerInvoicesStats extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = null)
+    public function get($parameters = array())
     {
         //====================================================================//
         // Stack Trace
@@ -154,6 +162,8 @@ class CustomerInvoicesStats extends AbstractWidget
 
     /**
      * Read Widget Datas
+     *
+     * @return array
      */
     private function getData()
     {
@@ -186,7 +196,9 @@ class CustomerInvoicesStats extends AbstractWidget
     }
 
     /**
-     *   @abstract     Block Building - Morris Bar Graph
+     * Block Building - Morris Bar Graph
+     *
+     * @return void
      */
     private function buildMorrisBarBlock()
     {
@@ -214,8 +226,4 @@ class CustomerInvoicesStats extends AbstractWidget
         // Add Table Block
         $this->blocksFactory()->addMorrisGraphBlock($data, "Bar", $chartOptions, $options);
     }
-
-    //====================================================================//
-    // Class Tooling Functions
-    //====================================================================//
 }

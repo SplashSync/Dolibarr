@@ -33,6 +33,8 @@ class L06AttributesManagerTest extends ObjectsCase
      * @param string $attrCode
      * @param string $attrName
      * @param array  $attrValues
+     *
+     * @return void
      */
     public function testAttributesManager($attrCode, $attrName, $attrValues)
     {

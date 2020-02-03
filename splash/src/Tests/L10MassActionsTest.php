@@ -24,6 +24,9 @@ class L10MassActionsTest extends ObjectsCase
 {
     use \Splash\Tests\Tools\Traits\ObjectsMassActionsTrait;
 
+    /**
+     * @var array
+     */
     const CONFIG = array(
         "Address" => array(
             'max' => 50,
@@ -91,6 +94,8 @@ class L10MassActionsTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testMassCrudActionsFromModule($sequence, $objectType)
     {
@@ -109,6 +114,8 @@ class L10MassActionsTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testMassCrudActionsFromService($sequence, $objectType)
     {
@@ -127,6 +134,8 @@ class L10MassActionsTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testBatchCrudActions($sequence, $objectType)
     {
@@ -179,6 +188,8 @@ class L10MassActionsTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     private function baseMassCrudActions($sequence, $objectType)
     {

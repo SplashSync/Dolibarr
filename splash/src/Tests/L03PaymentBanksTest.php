@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,8 +29,13 @@ class L03PaymentBanksTest extends ObjectsCase
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
 
+    /** @var array */
     protected $in;
+
+    /** @var array */
     protected $out;
+
+    /** @var array */
     protected $object;
 
     /**
@@ -39,6 +44,8 @@ class L03PaymentBanksTest extends ObjectsCase
      * @param string $objectType
      * @param string $paymentType
      * @param string $splashMethod
+     *
+     * @return void
      */
     public function testSetupBankAccount($objectType, $paymentType, $splashMethod)
     {
@@ -73,7 +80,9 @@ class L03PaymentBanksTest extends ObjectsCase
         //   Read Order Data
         $objectData = Splash::object($objectType)
             ->get($objectId, array("mode@payments", "number@payments", "amount@payments"));
-
+        $this->assertNotEmpty($objectData);
+        $this->assertIsArray($objectData);
+        
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData["payments"] as $data) {
@@ -142,7 +151,7 @@ class L03PaymentBanksTest extends ObjectsCase
      * @param string  $paymentType
      * @param Account $account
      *
-     * @return Account
+     * @return void
      */
     public function setupBankAccount($paymentType, $account)
     {
@@ -178,6 +187,9 @@ class L03PaymentBanksTest extends ObjectsCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function paymentsTypesProvider()
     {
         return array(

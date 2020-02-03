@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,6 +43,8 @@ class L01MultiCompanyTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testLoadAcces($sequence, $objectType)
     {
@@ -60,6 +62,7 @@ class L01MultiCompanyTest extends ObjectsCase
         //   Get next Available Object ID from Module
         $objectId = $this->getNextObjectId($objectType);
         $this->assertNotEmpty($objectId);
+        $this->assertIsString($objectId);
 
         //====================================================================//
         //   Get Readable Object Fields List
@@ -97,6 +100,8 @@ class L01MultiCompanyTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testDeleteAccess($sequence, $objectType)
     {
@@ -114,7 +119,7 @@ class L01MultiCompanyTest extends ObjectsCase
         //   Generate Dummy Object Data (Required Fields Only)
         $dummyData = $this->prepareForTesting($objectType);
         if (false == $dummyData) {
-            return true;
+            return;
         }
 
         //====================================================================//
@@ -155,6 +160,8 @@ class L01MultiCompanyTest extends ObjectsCase
      * Simulate MultiCompany Mode
      *
      * @param bool $state
+     *
+     * @return void
      */
     public function changeMultiCompanyMode($state = false)
     {
@@ -179,6 +186,8 @@ class L01MultiCompanyTest extends ObjectsCase
      * Simulate Change of MultiCompany Entity
      *
      * @param int $entityId
+     *
+     * @return int
      */
     public function changeEntityId($entityId = 10)
     {
@@ -203,6 +212,11 @@ class L01MultiCompanyTest extends ObjectsCase
         return $conf->entity;
     }
 
+    /**
+     * @param string $objectType
+     *
+     * @return bool| string
+     */
     public function getNextObjectId($objectType)
     {
         //====================================================================//
@@ -229,8 +243,6 @@ class L01MultiCompanyTest extends ObjectsCase
         //   Verify Objects List is Not Empty
         if ($this->objectCount[$objectType] <= 0) {
             $this->markTestSkipped('No Objects in Database.');
-
-            return false;
         }
 
         //====================================================================//
@@ -240,6 +252,11 @@ class L01MultiCompanyTest extends ObjectsCase
         return $nextObject["id"];
     }
 
+    /**
+     * @param string $objectType
+     *
+     * @return bool
+     */
     public function verifyTestIsAllowed($objectType)
     {
         $definition = Splash::object($objectType)->Description();
@@ -259,6 +276,11 @@ class L01MultiCompanyTest extends ObjectsCase
         return true;
     }
 
+    /**
+     * @param string $objectType
+     *
+     * @return array|false
+     */
     public function prepareForTesting($objectType)
     {
         //====================================================================//

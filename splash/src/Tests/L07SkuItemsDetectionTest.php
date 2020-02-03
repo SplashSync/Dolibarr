@@ -34,6 +34,8 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testDetectionWithoutTheOption($sequence, $objectType)
     {
@@ -72,6 +74,8 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testDetectionWithTheOption($sequence, $objectType)
     {
@@ -108,6 +112,8 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return bool
      */
     public function isAllowedTestSequence($sequence, $objectType)
     {
@@ -159,6 +165,8 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      * @param string      $itemDesc
      * @param null|string $itemFkProduct
      * @param int         $result
+     *
+     * @return void
      */
     private function verifyProductDetection($objectType, $itemDesc, $itemFkProduct, $result)
     {

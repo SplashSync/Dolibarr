@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,8 +27,14 @@ use Splash\Tests\Tools\ObjectsCase;
  */
 class L05OrderInvoicesStatusTest extends ObjectsCase
 {
+    /**
+     * @var array
+     */
     private static $objectsIds = array();
 
+    /**
+     * @return void
+     */
     public function testCreateObjects()
     {
         $this->loadLocalTestSequence("Monolangual");
@@ -46,6 +52,8 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
      * @param string      $splashStatus
      * @param string      $dolibarrStatus
      * @param null|string $expectedRef
+     *
+     * @return void
      */
     public function testStatusChanges($objectType, $splashStatus, $dolibarrStatus, $expectedRef = null)
     {
@@ -75,6 +83,9 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function statusProvider()
     {
         //====================================================================//
@@ -113,6 +124,8 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
      * @param string      $splashStatus
      * @param string      $dolibarrStatus
      * @param null|string $expectedRef
+     *
+     * @return void
      */
     public function testStatusOnCreate($objectType, $splashStatus, $dolibarrStatus, $expectedRef = null)
     {
@@ -153,6 +166,9 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function statusOnCreateProvider()
     {
         //====================================================================//
@@ -181,6 +197,12 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         );
     }
 
+    /**
+     * @param string $objectType
+     * @param string $status
+     *
+     * @return Commande|Facture
+     */
     private function createObject($objectType, $status)
     {
         //====================================================================//

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Widgets;
 
+use CommandeStats;
+use FactureStats;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
@@ -43,17 +45,23 @@ class ProductDistribution extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "BoxProductDistribution";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "BoxProductDistribution";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-pie-chart";
 
@@ -61,14 +69,28 @@ class ProductDistribution extends AbstractWidget
     // General Class Variables
     //====================================================================//
 
+    /** @var CommandeStats|FactureStats */
     private $stats;
+
+    /** @var string */
     private $select;
+
+    /** @var string */
     private $where;
+
+    /** @var string */
     private $from;
+
+    /** @var string */
     private $title;
+
+    /** @var array */
     private $labels;
 
+    /** @var string */
     private $mode = "Invoices";
+
+    /** @var string */
     private $chartType = "Line";
 
     //====================================================================//
@@ -113,27 +135,27 @@ class ProductDistribution extends AbstractWidget
         //====================================================================//
         // Select Data Type Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->Identifier("mode")
-            ->Name($langs->trans("Model"))
+            ->identifier("mode")
+            ->name($langs->trans("Model"))
             ->isRequired()
-            ->AddChoice("Invoices", html_entity_decode($titleInvoices))
-            ->AddChoice(
+            ->addChoice("Invoices", html_entity_decode($titleInvoices))
+            ->addChoice(
                 "InvoicesCount",
                 html_entity_decode($titleInvoices." (".$langs->trans("NbOfLines").")")
             )
-            ->AddChoice("Orders", html_entity_decode($titleOrders))
-            ->AddChoice("OrdersCount", html_entity_decode($titleOrders." (".$langs->trans("NbOfLines").")"))
-                ;
+            ->addChoice("Orders", html_entity_decode($titleOrders))
+            ->addChoice("OrdersCount", html_entity_decode($titleOrders." (".$langs->trans("NbOfLines").")"))
+        ;
 
         //====================================================================//
         // Select Chart Rendering Mode
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->Identifier("chart_type")
-            ->Name($langs->trans("Type"))
+            ->identifier("chart_type")
+            ->name($langs->trans("Type"))
             ->isRequired()
-            ->AddChoice("Pie", "Pie Chart")
-            ->AddChoice("Bar", "Bar Chart")
-                ;
+            ->addChoice("Pie", "Pie Chart")
+            ->addChoice("Bar", "Bar Chart")
+        ;
 
         //====================================================================//
         // Publish Fields
@@ -143,7 +165,7 @@ class ProductDistribution extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = null)
+    public function get($parameters = array())
     {
         //====================================================================//
         // Stack Trace
@@ -225,6 +247,9 @@ class ProductDistribution extends AbstractWidget
     // Blocks Generation Functions
     //====================================================================//
 
+    /**
+     * @return void
+     */
     private function setupMode()
     {
         global $db, $langs;
@@ -326,6 +351,8 @@ class ProductDistribution extends AbstractWidget
      * Read Widget Datas
      *
      * @param null|int $limit
+     *
+     * @return array
      */
     private function getData($limit = null)
     {
@@ -357,6 +384,8 @@ class ProductDistribution extends AbstractWidget
 
     /**
      * Block Building - Morris Donut Graph
+     *
+     * @return void
      */
     private function buildMorrisDonutBlock()
     {
@@ -396,6 +425,8 @@ class ProductDistribution extends AbstractWidget
 
     /**
      * Block Building - Morris Bar Graph
+     *
+     * @return void
      */
     private function buildMorrisBarBlock()
     {

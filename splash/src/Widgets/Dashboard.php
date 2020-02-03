@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -53,17 +53,23 @@ class Dashboard extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "DolibarrWorkBoard";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "DolibarrWorkBoard";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-briefcase";
 
@@ -165,6 +171,8 @@ class Dashboard extends AbstractWidget
 
     /**
      * Read Widget Datas
+     *
+     * @return array
      */
     private function getData()
     {
@@ -192,6 +200,8 @@ class Dashboard extends AbstractWidget
      * Read Late Actions Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getLateActions(&$dashboardlines)
     {
@@ -210,6 +220,8 @@ class Dashboard extends AbstractWidget
      * Read Customers Orders Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getCustomerOrders(&$dashboardlines)
     {
@@ -228,6 +240,8 @@ class Dashboard extends AbstractWidget
      * Read Suppliers Orders Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getSupplierOrders(&$dashboardlines)
     {
@@ -246,6 +260,8 @@ class Dashboard extends AbstractWidget
      * Read Suppliers Orders Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getOpenPropals(&$dashboardlines)
     {
@@ -266,6 +282,8 @@ class Dashboard extends AbstractWidget
      * Read Suppliers Orders Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getDelayedServices(&$dashboardlines)
     {
@@ -286,6 +304,8 @@ class Dashboard extends AbstractWidget
      * Read Customers Invoices Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getCustomersInvoices(&$dashboardlines)
     {
@@ -303,6 +323,8 @@ class Dashboard extends AbstractWidget
      * Read Supplier Invoices Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getSupplierInvoices(&$dashboardlines)
     {
@@ -320,6 +342,8 @@ class Dashboard extends AbstractWidget
      * Read Transactions Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getTransactionsDashboard(&$dashboardlines)
     {
@@ -340,6 +364,8 @@ class Dashboard extends AbstractWidget
      * Read Bank Wire Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getBankWire(&$dashboardlines)
     {
@@ -357,6 +383,8 @@ class Dashboard extends AbstractWidget
      * Read Bank Wire Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getMembers(&$dashboardlines)
     {
@@ -374,6 +402,8 @@ class Dashboard extends AbstractWidget
      * Read Expenses Dashboard
      *
      * @param array $dashboardlines
+     *
+     * @return void
      */
     private function getExpenesDashboard(&$dashboardlines)
     {
@@ -390,6 +420,8 @@ class Dashboard extends AbstractWidget
 
     /**
      * Block Building - Text Intro
+     *
+     * @return void
      */
     private function buildTableBlock()
     {

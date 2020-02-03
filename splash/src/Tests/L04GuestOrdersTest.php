@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,6 +42,8 @@ class L04GuestOrdersTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testFieldsDefinitions($sequence, $objectType)
     {
@@ -106,6 +108,8 @@ class L04GuestOrdersTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testGuestWithoutEmailDetection($sequence, $objectType)
     {
@@ -158,6 +162,8 @@ class L04GuestOrdersTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return void
      */
     public function testGuestWithEmailDetection($sequence, $objectType)
     {
@@ -219,6 +225,8 @@ class L04GuestOrdersTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @return bool
      */
     public function isAllowedGuestSequence($sequence, $objectType)
     {
@@ -245,6 +253,15 @@ class L04GuestOrdersTest extends ObjectsCase
         return true;
     }
 
+    /**
+     * Verify Creation of a Guest Order/Invoice
+     *
+     * @param string $objectType
+     * @param array  $givenData
+     * @param array  $expectedData
+     *
+     * @return string
+     */
     private function verifyCreate($objectType, $givenData, $expectedData)
     {
         //====================================================================//
@@ -275,6 +292,16 @@ class L04GuestOrdersTest extends ObjectsCase
         return $objectId;
     }
 
+    /**
+     * Verify Creation of a Guest Order/Invoice
+     *
+     * @param string $objectType
+     * @param string $objectId
+     * @param array  $givenData
+     * @param array  $expectedData
+     *
+     * @return string
+     */
     private function verifyUpdate($objectType, $objectId, $givenData, $expectedData)
     {
         //====================================================================//
@@ -286,6 +313,7 @@ class L04GuestOrdersTest extends ObjectsCase
         //====================================================================//
         //   Verify Object Id Is Not Empty
         $this->assertNotEmpty($writeObjectId, "Returned New Object Id is Empty");
+        $this->assertIsString($writeObjectId);
 
         //====================================================================//
         //   Add Object Id to Created List
@@ -304,6 +332,9 @@ class L04GuestOrdersTest extends ObjectsCase
         return $writeObjectId;
     }
 
+    /**
+     * @return array
+     */
     private function createThirdPartyWithEmail()
     {
         //====================================================================//

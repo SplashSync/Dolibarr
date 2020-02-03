@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
 namespace   Splash\Local\Widgets;
 
+use ArrayObject;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
@@ -40,17 +41,23 @@ class BankAccounts extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "BoxCurrentAccounts";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "BoxTitleCurrentAccounts";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-money";
 
@@ -58,6 +65,9 @@ class BankAccounts extends AbstractWidget
     // General Class Variables
     //====================================================================//
 
+    /**
+     * @var int
+     */
     private $maxItems = 10;
 
     //====================================================================//
@@ -76,6 +86,8 @@ class BankAccounts extends AbstractWidget
 
     /**
      * Return Widget Customs Parameters
+     *
+     * @return array|false
      */
     public function getParameters()
     {
@@ -96,7 +108,7 @@ class BankAccounts extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = null)
+    public function get($parameters = array())
     {
         //====================================================================//
         // Stack Trace
@@ -171,6 +183,8 @@ class BankAccounts extends AbstractWidget
 
     /**
      * Block Building - Box is Disabled
+     *
+     * @return void
      */
     private function buildDisabledBlock()
     {
@@ -187,6 +201,8 @@ class BankAccounts extends AbstractWidget
 
     /**
      * Read Widget Datas
+     *
+     * @return array
      */
     private function getData()
     {
@@ -233,6 +249,8 @@ class BankAccounts extends AbstractWidget
 
     /**
      * Block Building - Text Intro
+     *
+     * @return void
      */
     private function buildTableBlock()
     {
@@ -291,6 +309,8 @@ class BankAccounts extends AbstractWidget
 
     /**
      * Block Building - Text Intro
+     *
+     * @return void
      */
     private function buildSparkBlock()
     {

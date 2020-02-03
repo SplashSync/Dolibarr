@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,22 +41,23 @@ class UpdatedCustomers extends AbstractWidget
     //====================================================================//
 
     /**
-     *  Widget Disable Flag. Uncomment thius line to Override this flag and disable Object.
-     */
-//    protected static    $DISABLED        =  True;
-
-    /**
-     *  Widget Name (Translated by Module)
+     * Widget Name (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $NAME = "BoxLastCustomers";
 
     /**
-     *  Widget Description (Translated by Module)
+     * Widget Description (Translated by Module)
+     *
+     * {@inheritdoc}
      */
     protected static $DESCRIPTION = "BoxTitleLastModifiedCustomers";
 
     /**
-     *  Widget Icon (FontAwesome or Glyph ico tag)
+     * Widget Icon (FontAwesome or Glyph ico tag)
+     *
+     * {@inheritdoc}
      */
     protected static $ICO = "fa fa-users";
 
@@ -64,6 +65,9 @@ class UpdatedCustomers extends AbstractWidget
     // General Class Variables
     //====================================================================//
 
+    /**
+     * @var int
+     */
     private $maxItems = 10;
 
     //====================================================================//
@@ -173,6 +177,8 @@ class UpdatedCustomers extends AbstractWidget
 
     /**
      * Block Building - Box is Disabled
+     *
+     * @return void
      */
     private function buildDisabledBlock()
     {
@@ -189,6 +195,8 @@ class UpdatedCustomers extends AbstractWidget
 
     /**
      * Block Building - Text Intro
+     *
+     * @return void
      */
     private function buildTableBlock()
     {
