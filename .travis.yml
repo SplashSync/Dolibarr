@@ -21,8 +21,8 @@ matrix:
         # Dolibarr Develop Branch       
 #        - php: 7.3
 #          env: DOL=develop DATA=11.0.0    
-        - php: 7.1
-          env: DOL=develop DATA=11.0.0    
+#        - php: 7.1
+#          env: DOL=develop DATA=11.0.0    
 
         # Dolibarr V11.0 Branch       
         - php: 7.3
@@ -30,25 +30,25 @@ matrix:
         - php: 7.1
           env: DOL=11.0 DATA=11.0.0  
           
-        # Dolibarr V10.0 Branch       
-        - php: 7.3
-          env: DOL=10.0 DATA=10.0.0    
-        - php: 7.1
-          env: DOL=10.0 DATA=10.0.0    
-
-        # Dolibarr V9.0 Branch       
-        - php: 7.2
-          env: DOL=9.0 DATA=9.0.0
-        - php: 7.1
-          env: DOL=9.0 DATA=9.0.0     
-
-        # Dolibarr V8.0 Branch       
-        - php: 7.1
-          env: DOL=8.0 DATA=7.0.0     
-        
-        # Dolibarr V7.0 Branch       
-        - php: 7.1
-          env: DOL=7.0 DATA=7.0.0      
+#        # Dolibarr V10.0 Branch       
+#        - php: 7.3
+#          env: DOL=10.0 DATA=10.0.0    
+#        - php: 7.1
+#          env: DOL=10.0 DATA=10.0.0    
+#
+#        # Dolibarr V9.0 Branch       
+#        - php: 7.2
+#          env: DOL=9.0 DATA=9.0.0
+#        - php: 7.1
+#          env: DOL=9.0 DATA=9.0.0     
+#
+#        # Dolibarr V8.0 Branch       
+#        - php: 7.1
+#          env: DOL=8.0 DATA=7.0.0     
+#        
+#        # Dolibarr V7.0 Branch       
+#        - php: 7.1
+#          env: DOL=7.0 DATA=7.0.0      
           
     allow_failures:
         - env: DOL=develop DATA=11.0.0 
@@ -97,21 +97,24 @@ before_script:
     # With PHP 7 => Load Phpstan   
     - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.1" ]]; then composer remove splash/console --no-update --dev; fi
     - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove friendsofphp/php-cs-fixer --no-update --dev; fi
-    - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove phpstan/phpstan-shim --no-update --dev; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove phpstan/phpstan --no-update --dev; fi
     - if [[ ${TRAVIS_PHP_VERSION:0:3} < "7.2" ]]; then composer remove phpstan/phpstan-phpunit --no-update --dev; fi    
     - composer update 
     
 script: 
     
-    # Move to Dolibarr Root Dir
-    - cd "$DOL_BUILD_DIR/htdocs/custom"    
+    # Move to Dolibarr Sources Dir
+    - cd "$DOL_BUILD_DIR/htdocs/custom/splash"    
     
     # Run Grump Main Test Sequence
-    - php ./splash/vendor/bin/grumphp run --testsuite=travis
+    - php vendor/bin/grumphp run --testsuite=travis
     # With PHP > 7.1 => Execute CsFixer
-    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=csfixer; fi    
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then php vendor/bin/grumphp run --testsuite=csfixer; fi    
     # With PHP > 7.1 => Execute Phpstan 
-    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=phpstan; fi      
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then php vendor/bin/grumphp run --testsuite=phpstan; fi      
+
+    # Move to Dolibarr Root Dir
+    - cd "$DOL_BUILD_DIR/htdocs/custom"
     
     # Execute Bootstrap file    
     - php travis/bootstrap.php
