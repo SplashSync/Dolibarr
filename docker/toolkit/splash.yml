@@ -1,0 +1,62 @@
+
+splash:
+
+################################################################################    
+# Configure Splash Bundle Parameters Cache    
+# Cache is Enabled by Default to Store Custom Connectors Configuration
+# If disabled, configuration must be store in Static, on connections section
+################################################################################    
+#    cache: 
+#        enabled: false    
+#        lifetime: 10
+
+    # Allow Notifications for Generic Users   
+    notify: ["ROLE_USER"]
+    
+################################################################################    
+# List of Availables Connector Connections
+################################################################################    
+
+    connections:
+        
+        ########################################################################
+        # Dolibarr Latest (develop)
+        latest:
+            id:                 ThisIsDolLatestKey
+            key:                ThisTokenIsNotSoSecretChangeIt
+            name:               Dolibarr Develop
+            host:               false
+            connector:          soap
+            config:  
+                WsIdentifier:       ThisIsDolLatestKey
+                WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt                
+                WsHost:             http://latest.dolibarr.local
+                WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
+        
+#        ########################################################################
+#        # Dolibarr V11
+#        dol-11:
+#            id:                 ThisIsDol11Key
+#            key:                ThisTokenIsNotSoSecretChangeIt
+#            name:               Dolibarr 11
+#            host:               false
+#            connector:          soap
+#            config:  
+#                WsIdentifier:       ThisIsDol11Key
+#                WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt                
+#                WsHost:             http://v11.dolibarr.local
+#                WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
+        
+        ########################################################################
+        # Dolibarr V10
+        dol-10:
+            id:                 ThisIsDol10Key
+            key:                ThisTokenIsNotSoSecretChangeIt
+            name:               Dolibarr 10
+            host:               false
+            connector:          soap
+            config:  
+                WsIdentifier:       ThisIsDol10Key
+                WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt                
+                WsHost:             http://v10.dolibarr.local
+                WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
