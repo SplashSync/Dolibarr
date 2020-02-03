@@ -19,7 +19,7 @@
 
 parameters:
     
-    
+
     #############################################        
     #   Local Config 
     #############################################        
@@ -27,7 +27,7 @@ parameters:
     core_dir:       "./splash/vendor/splash/phpcore/Resources/grumphp"     
     #   Testing Mode (core|module)
     mode:           "module"
-    level:          7
+    level:          8
     
     #############################################        
     #   Base Configs 
@@ -109,14 +109,24 @@ parameters:
                 - splash/admin
                 - L03PaymentBanksTest.php
                 
-#        build: 
-#            source_folder:  "/splash"
-#            target_folder:  "/dol_module"
-#            build_folder:   "splash/"
-#            build_file:     "module_splash-1.5.0"
-#        
-#    extensions:
-#        - Splash\Console\Extension\Loader
+        build-module: 
+            enabled:        true            
+            source_folder:  "/splash"
+            target_folder:  "/dol_module"
+            build_folder:   "splash/"
+            build_file:     "module_splash-1.6.0"
+            
+        build-docs: 
+            enabled:            true
+            local_folder:       '/splash/resources/docs'
+            generic_contents:   ["splash"]
+        
+        build-manifest: 
+            enabled:        true  
+            console:        "splash/vendor/bin/splash"
+            
+    extensions:
+        - Splash\Console\Extension\Loader
         
     testsuites:
         travis:
@@ -140,6 +150,11 @@ parameters:
             tasks: 
                 - phpstan 
                 
-#        module:
-#            tasks:
-#                - build                
+        splash:
+            tasks:
+                - build-module                
+                - build-docs  
+                
+        manifest:
+            tasks:
+                - build-manifest

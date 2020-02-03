@@ -12,3 +12,4 @@
 /.php_cs.cache
 /coverage/
 /build/
+/reboot.sh
