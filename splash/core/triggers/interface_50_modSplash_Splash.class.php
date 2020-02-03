@@ -64,7 +64,7 @@ class InterfaceSplash
         //====================================================================//
         // Class Init
         $this->db = $db ;
-        $this->name = preg_replace('/^Interface/i', '', get_class($this));
+        $this->name = (string) preg_replace('/^Interface/i', '', get_class($this));
         $this->family = "Modules";
         $this->description = "Triggers of Splash module.";
         $this->version = 'dolibarr';
