@@ -45,22 +45,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Contact Address (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load Contact Address (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Contact Address (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load Contact Address (".$objectId.").");
         }
 
         //====================================================================//
