@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+    <!-- Meta -->
+  	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="/Dolibarr/fr/assets/img/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Documentation | Dolibarr Module</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Documentation" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
+<meta property="og:description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
+<link rel="canonical" href="splashsync.github.io/Dolibarr/fr/documentation" />
+<meta property="og:url" content="splashsync.github.io/Dolibarr/documentation" />
+<meta property="og:site_name" content="Dolibarr Module" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"splashsync.github.io/Dolibarr/documentation","headline":"Documentation","description":"Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- MAIN STYLESHEETS -->
+
+<!-- Google Fonts -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+<!-- Bootstrap 5 CSS -->
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/bootstrap/dist/css/bootstrap.min.css" />   
+<!-- PrismJs CSS (Syntax Highlighter) -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/prismjs/themes/prism-okaidia.css" />
+<!-- Plugins CSS -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/plugins/elegant_font/css/style.css" />  
+<!-- FontAwesome 5 Free -->
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/@fortawesome/fontawesome-free/css/all.css" /> 
+<!-- Ekko LightBox -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/ekko-lightbox/dist/ekko-lightbox.css" />  
+<!-- Datatables -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />  
+<!-- Theme CSS -->
+<link id="theme-style" rel="stylesheet" href="/Dolibarr/fr/assets/css/main.css" />
+
+<!-- END MAIN STYLESHEETS -->
+<link type="application/atom+xml" rel="alternate" href="splashsync.github.io/Dolibarr/fr/feed.xml" title="Dolibarr Module" /><!-- Google Analytics --></head>
+
+
+
+<body class="body-orange">
+    <div class="page-wrapper"><!-- Page Header -->
+<header id="header" class="header">
+	<div class="container">
+		<div class="branding">
+	  		<h1 class="logo">
+			    <a href="index.html">
+			    	<img src="/Dolibarr/assets/img/apple-touch-icon.png" height="30px" class="d-none d-md-inline-block">
+					<span class="text-highlight">Dolibarr Module</span>
+					<span class="text-bold">DOC</span>
+			    </a>
+			</h1>
+    	</div>
+
+
+<ol class="breadcrumb">
+	<li class="breadcrumb-item">
+		<a href="index.html">Accueil</a>
+	</li>
+
+	
+		&nbsp;/&nbsp;
+		
+			Documentation
+		
+	
+
+</ol>
+
+<div class="top-search-box">
+
+			<a class="btn btn-md btn-link text-white github-button" href="https://github.com/SplashSync/Dolibarr" 
+				data-size="large" aria-label="Voir sur Github"
+                                target="_blank"
+				title="Voir sur Github"
+				>
+		        <i class="fab fa-github"></i>
+		        
+			</a>
+<!-- Languages Selector -->
+
+<div class="dropdown d-inline-block">
+	<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLangSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		
+			<span class="flag-icon flag-icon-fr"></span>
+		
+
+		Français
+	</button>
+
+	<div class="dropdown-menu " aria-labelledby="dropdownLangSelect">
+		
+			<a 
+				 class="dropdown-item text-primary"
+				 
+				href=" /Dolibarr/documentation "
+				>
+				
+					<span class="flag-icon flag-icon-us flag-icon-squared"></span>
+				
+
+				English
+
+			</a>
+		
+			<a 
+				 class="dropdown-item text-primary"
+				style="font-weight: bold;" 
+				href=" /Dolibarr/fr/documentation "
+				>
+				
+					<span class="flag-icon flag-icon-fr"></span>
+				
+
+				Français
+
+			</a>
+		
+	</div>
+</div>
+
+
+
+<!-- End Languages Selector -->
+</div>
+        
+	</div>
+</header>
+<!-- End Page Header -->
+        
+
+
+<!-- 
+        <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/Dolibarr/fr/">Dolibarr Module</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/Dolibarr/fr/start/install">Installation du Module Splash</a><a class="page-link" href="/Dolibarr/fr/docs/intro">Module Splash Sync pour Dolibarr</a><a class="page-link" href="/Dolibarr/fr/start/configure">Configuration du Module</a><a class="page-link" href="/Dolibarr/fr/docs/features">Fonctionnalités &amp; avantages</a><a class="page-link" href="/Dolibarr/fr/docs/orders">Commandes &amp; Factures</a><a class="page-link" href="/Dolibarr/fr/docs/payments">Gestion des Paiements</a><a class="page-link" href="/Dolibarr/fr/faq/splash">Questions à propos de Splash Sync</a><a class="page-link" href="/Dolibarr/fr/about.html">About</a><a class="page-link" href="/Dolibarr/fr/documentation">Documentation</a><a class="page-link" href="/Dolibarr/fr/faq">Faq</a><a class="page-link" href="/Dolibarr/fr/manifest">Manifest</a><a class="page-link" href="/Dolibarr/fr/objects">Objects</a><a class="page-link" href="/Dolibarr/fr/start">Quick Start</a></div>
+      </nav></div>
+</header>
+ --><div class="doc-wrapper">
+        <div class="container">
+          <div id="doc-header" class="doc-header text-center">
+    <h1 class="doc-title"><i class="icon fa fa-book"></i>&nbsp;Documentations</h1>
+    <div class="meta">Tout ce que vous devez savoir pour utiliser ce module</div>
+</div>
+
+
+<div class="doc-body row">
+
+	<!-- Doc Content -->    
+    <div class="doc-content col-md-9 col-12 order-1">
+        <div class="content-inner">
+
+
+
+
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="module-splash-sync-pour-dolibarr" class="doc-section">
+
+			    <h2 class="section-title">Module Splash Sync pour Dolibarr</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<p>Bienvenue sur la documentation française du Module Dolibarr!</p>
+
+<p>Ce module implémente le connecteur Splash Sync pour l’ERP Dolibarr. Il donne accès à de multiples objets pour permettre leur synchronisation automatique via le protocole Splash Sync.</p>
+
+<h3 id="en-savoir-plus-sur-splash">En savoir plus sur Splash</h3>
+
+<p>Ce module fait parti du projet <a href="http://www.splashsync.com">SplashSync</a>.</p>
+
+<p>Pour plus d’informations sur Splash Sync, la façon dont fonctionne la synchronisation et comment y connecter toutes vos applications, rendez-vous sur la <a href="http://www.splashsync.com/fr">documentation en ligne</a>.</p>
+
+<h3 id="contribuez">Contribuez!</h3>
+
+<p>Toutes les Pull Requests sont les bienvenues!</p>
+
+<p>Ce module fait partie du projet <a href="http://www.splashsync.com">SplashSync</a></p>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="fonctionnalités-avantages" class="doc-section">
+
+			    <h2 class="section-title">Fonctionnalités & avantages</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<p>Dolibarr est l’un des principaux projets ERP Open Source que vous pouvez trouver sur le Web. 
+Il travaille maintenant depuis plus de 10 ans et son approche très simple le rend adapté aux petites et moyennes entreprises.</p>
+
+<p>Ce module donnera l’accès Splash aux tiers, aux produits, aux commandes clients et aux facture clients. 
+Toutes les données nécéssaires pour synchroniser votre ERP avec vos autres applications.</p>
+
+<h4 id="centralisez-votre-workflow-de-vente">Centralisez votre workflow de vente</h4>
+
+<p>Ce module a été conçu pour mettre Dolibarr au cœur de votre gestion commerciale. 
+En important et en synchronisant toutes vos informations de vente, vous pouvez accéder à toutes vos ventes dans un seul endroit, 
+quels que soient les canaux de vente. 
+Point de vente, site de E-Commerce, toutes les applications que vous connecterez pourront rapatrier leurs ventes sur Dolibarr.</p>
+
+<h4 id="synchronisation-des-stocks-de-produits">Synchronisation des Stocks de Produits</h4>
+<p>Centralisez la gestion des stocks de vos produits entre Dolibarr et toutes vos autres applications.</p>
+
+<h4 id="fusionnez-vos-données-clients">Fusionnez vos données clients</h4>
+<p>Une fois tous les modules connectés, utilisez le Linker (outil de fusion) pour identifier et 
+fusionner tous les profils de vos clients dans une seule entité Splash.
+De cette façon, toutes les informations similaires seront partagées et synchronisées partout, 
+de la CRM au E-Commerce, vos données sont toujours à jour!</p>
+
+<h4 id="consolidez-et-simplifiez-votre-gestion-financière">Consolidez et Simplifiez votre gestion financière!</h4>
+
+<p>Les commandes et les factures seront automatiquement importées à partir de votre E-Commerce, 
+du point de vente ou de toute autre application que vous pouvez connecter!</p>
+
+<p>Votre analyse financière est plus facile … et sans effort.</p>
+
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="commandes-factures" class="doc-section">
+
+			    <h2 class="section-title">Commandes & Factures</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<h3 id="configurer-les-dimports">Configurer les d’imports</h3>
+
+<p>Depuis la version 1.4 de Splash Module pour Dolibarr, un blocs de configuration regroupe tous les paramètres d’import des Commandes &amp; Factures.</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_6.png" alt="" /></p>
+
+<h3 id="détection-des-taux-de-tva-new">Détection des taux de TVA (NEW)</h3>
+
+<p>Lors de l’importation de lignes de commandes et de factures, le module Spalsh peut désormais identifier le taux de taxe de la ligne à l’aide d’un code de taxe partagé.</p>
+
+<p>Cette fonctionnalité est utile pour les pays qui ont des taux de TVA multiples ou complexes (Canada).</p>
+
+<p><strong>Comment le configurer ?</strong></p>
+
+<p>Tout d’abord, vous devez créer, sur chaque serveur, les mêmes codes pour les taux de TVA. Pour Dolibarr, cette configuration est disponible dans <strong>Paramètres » Dictionnaire » Taux de TVA</strong></p>
+
+<p>Avec Dolibarr, le nom du taux de TVA est “Code”, cette valeur est vide par défaut. Généralement, vous pouvez utiliser les codes utilisés par votre E-Commerce.</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_8.png" alt="" /></p>
+
+<p><strong>Comment ça marche ?</strong></p>
+
+<p>Si vous regardez les données qui sont maintenant disponibles pour les objets Commandes &amp; Factures, vous verrez un nouveau champ appelé “Taux de TVA”.</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_9.png" alt="" /></p>
+
+<p>Lorsque Splash importe une Commande ou une Facture, si le code indiqué se trouve dans votre Dictionnaire Dolibarr, Splash configurera ce Taux de TVA pour créer cette ligne de produits.</p>
+
+<p><strong>Limites</strong></p>
+
+<p>Jusqu’à présent, seule une partie de nos modules est compatible avec cette fonctionnalité.</p>
+
+<p>Pour utiliser cette fonctionnalité, vous devez vous assurer que les codes de TVA sont <strong>strictement</strong> similaires sur toutes les applications connectées.</p>
+
+<h3 id="import-des-commandes-invités-new">Import des commandes invités (NEW)</h3>
+
+<p><strong>Pourquoi ?</strong></p>
+
+<p>La plupart des plateformes E-Commerce modernes offrent désormais aux clients la possibilité de passer une commande sans créer de compte client.
+Du côté de l’ERP, il n’est pas possible de créer une commande (ou une facture) sans pointer vers un client.
+Pour résoudre ce problème, nous avons développé une fonctionnalité spécifique.</p>
+
+<p><strong>Qu’est-ce l’on fait ?</strong></p>
+
+<p>Lorsque vous activez <strong>Import de Commandes et de Factures en mode Invité</strong>, Splash supprime le drapeau <strong>Requis</strong> pour les clients. 
+Ainsi, le server transmettra toutes les nouvelles commandes et factures à Dolibarr.
+Peu importe si un client est défini ou non.</p>
+
+<p>Dans ce mode, toute Commande (ou Facture) qui n’a pas de client défini sera attachée à un client prédéfini.</p>
+
+<p><strong>Configuration</strong></p>
+
+<p>Pour utiliser ce mode, activez simplement la fonction et sélectionnez le client par défaut à utiliser. Nous recommandons fortement la création d’un client dédié.</p>
+
+<p><strong>Détection d’email</strong></p>
+
+<p>Cette fonctionnalité supplémentaire peut être utilisée pour détecter des clients déjà connus en utilisant leur Email si fourni par le serveur.
+Si l’email donné appartient à un tier existant, la commande sera attachée à ce client et non au client par défaut.</p>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="gestion-des-paiements" class="doc-section">
+
+			    <h2 class="section-title">Gestion des Paiements</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<h3 id="ventilation-bancaire-new">Ventilation Bancaire (NEW)</h3>
+
+<p>Depuis la version 1.4 du module Splash pour Dolibarr, il est possible de sélectionner, pour chaque mode de paiement actif, le compte bancaire que vous souhaitez utiliser.</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_7.png" alt="" /></p>
+
+<p><strong>Méthode de paiement par défaut</strong></p>
+
+<p>Lorsqu’un paiement Facture est importé, si aucune méthode de paiement valide n’est demandée, Splash utilisera cette méthode de paiement par défaut pour la création de paiement Facture.</p>
+
+<p><strong>Compte bancaire par défaut</strong></p>
+
+<p>Lorsqu’un paiement Facture est importé, si aucun compte bancaire spécifique n’est donné, Splash utilisera cette valeur par défaut.</p>
+
+<p><strong>Compte bancaire par méthode</strong></p>
+
+<p>Pour chaque méthode de paiement <strong>active</strong>, sélectionnez le compte bancaire cible à utiliser.</p>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+</div>
+    </div>
+	<!-- End Doc Content -->    
+
+	<!-- Doc Sidebar -->    
+    <div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+        <div id="doc-nav" class="doc-nav">
+
+<!-- Documentations Menu -->
+<nav id="doc-menu" class="nav doc-menu flex-column sticky">
+
+<div class="h5 block-title mt-5 text-orange">Documentations</div>
+
+      
+      
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#module-splash-sync-pour-dolibarr">
+              Module Splash Sync pour Dolibarr
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#fonctionnalités-avantages">
+              Fonctionnalités & avantages
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#commandes-factures">
+              Commandes & Factures
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#gestion-des-paiements">
+              Gestion des Paiements
+            </a>
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+      
+      
+
+</nav>
+<!--End Documentations Menu -->
+
+</div>
+    </div>
+    <!-- End Doc Sidebar -->    
+
+</div>
+        </div>
+      </div>
+
+    </div>
+<!--Main Footer-->
+<footer id="footer" class="footer text-center">
+    <div class="container">
+
+        <!--/* 
+          This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. 
+          Thank you for your support. :) 
+          If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com 
+          */-->
+          
+        <small class="copyright">
+          © Splash Sync 2017-2020
+          |
+          Designed with <i class="fas fa-heart"></i> by <a href="https://themes.3rdwavemedia.com/" target="_blank">Xiaoying Riley</a>
+        </small>
+        
+    </div>
+</footer>
+<!--End Main Footer-->
+<!-- MAIN JAVASCRIPTS -->  
+
+<!-- jQuery -->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap 5 JS -->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery ScrollTo Plugin-->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/jquery-scrollTo/dist/jquery-scrollTo.min.js"></script>      
+
+<!-- Ekko LightBox -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/ekko-lightbox/dist/ekko-lightbox.min.js"></script>      
+
+<!-- Datatables -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>      
+<script type="text/javascript" src="/Dolibarr/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>      
+
+<!-- Theme JS -->
+<script type="text/javascript" src="/Dolibarr/assets/js/main.js"></script>
+
+<!-- PrismJs JS (Syntax Highlighter) -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/prismjs/components/prism-core.min.js"></script>    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/prismjs/plugins/autoloader/prism-autoloader.min.js"></script>    
+
+<!-- End MAIN JAVASCRIPTS --> 
+</body>
+  
+</html>

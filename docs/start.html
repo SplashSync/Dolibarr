@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+    <!-- Meta -->
+  	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="/Dolibarr/assets/img/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Quick Start | Dolibarr Module</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Quick Start" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
+<meta property="og:description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
+<link rel="canonical" href="splashsync.github.io/Dolibarr/start" />
+<meta property="og:url" content="splashsync.github.io/Dolibarr/start" />
+<meta property="og:site_name" content="Dolibarr Module" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"splashsync.github.io/Dolibarr/start","headline":"Quick Start","description":"Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- MAIN STYLESHEETS -->
+
+<!-- Google Fonts -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+<!-- Bootstrap 5 CSS -->
+<link rel="stylesheet" href="/Dolibarr/assets/vendor/bootstrap/dist/css/bootstrap.min.css" />   
+<!-- PrismJs CSS (Syntax Highlighter) -->    
+<link rel="stylesheet" href="/Dolibarr/assets/vendor/prismjs/themes/prism-okaidia.css" />
+<!-- Plugins CSS -->    
+<link rel="stylesheet" href="/Dolibarr/assets/plugins/elegant_font/css/style.css" />  
+<!-- FontAwesome 5 Free -->
+<link rel="stylesheet" href="/Dolibarr/assets/vendor/@fortawesome/fontawesome-free/css/all.css" /> 
+<!-- Ekko LightBox -->    
+<link rel="stylesheet" href="/Dolibarr/assets/vendor/ekko-lightbox/dist/ekko-lightbox.css" />  
+<!-- Datatables -->    
+<link rel="stylesheet" href="/Dolibarr/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />  
+<!-- Theme CSS -->
+<link id="theme-style" rel="stylesheet" href="/Dolibarr/assets/css/main.css" />
+
+<!-- END MAIN STYLESHEETS -->
+<link type="application/atom+xml" rel="alternate" href="splashsync.github.io/Dolibarr/feed.xml" title="Dolibarr Module" /><!-- Google Analytics --></head>
+
+
+
+<body class="body-green">
+    <div class="page-wrapper"><!-- Page Header -->
+<header id="header" class="header">
+	<div class="container">
+		<div class="branding">
+	  		<h1 class="logo">
+			    <a href="index.html">
+			    	<img src="/Dolibarr/assets/img/apple-touch-icon.png" height="30px" class="d-none d-md-inline-block">
+					<span class="text-highlight">Dolibarr Module</span>
+					<span class="text-bold">DOC</span>
+			    </a>
+			</h1>
+    	</div>
+
+
+<ol class="breadcrumb">
+	<li class="breadcrumb-item">
+		<a href="index.html">Home</a>
+	</li>
+
+	
+		&nbsp;/&nbsp;
+		
+			Start
+		
+	
+
+</ol>
+
+<div class="top-search-box">
+
+			<a class="btn btn-md btn-link text-white github-button" href="https://github.com/SplashSync/Dolibarr" 
+				data-size="large" aria-label="View on Github"
+                                target="_blank"
+				title="View on Github"
+				>
+		        <i class="fab fa-github"></i>
+		        
+			</a>
+<!-- Languages Selector -->
+
+<div class="dropdown d-inline-block">
+	<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLangSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		
+			<span class="flag-icon flag-icon-us flag-icon-squared"></span>
+		
+
+		English
+	</button>
+
+	<div class="dropdown-menu " aria-labelledby="dropdownLangSelect">
+		
+			<a 
+				 class="dropdown-item text-primary"
+				style="font-weight: bold;" 
+				href=" /Dolibarr/start "
+				>
+				
+					<span class="flag-icon flag-icon-us flag-icon-squared"></span>
+				
+
+				English
+
+			</a>
+		
+			<a 
+				 class="dropdown-item text-primary"
+				 
+				href=" /Dolibarr/fr/start "
+				>
+				
+					<span class="flag-icon flag-icon-fr"></span>
+				
+
+				Français
+
+			</a>
+		
+	</div>
+</div>
+
+
+
+<!-- End Languages Selector -->
+</div>
+        
+	</div>
+</header>
+<!-- End Page Header -->
+        
+
+
+<!-- 
+        <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/Dolibarr/">Dolibarr Module</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/Dolibarr/start/install">Install Splash Module</a><a class="page-link" href="/Dolibarr/docs/intro">Splash Sync Module for Dolibarr</a><a class="page-link" href="/Dolibarr/start/configure">Configure Splash Module</a><a class="page-link" href="/Dolibarr/docs/features">Key features &amp; benefits</a><a class="page-link" href="/Dolibarr/docs/orders">Orders &amp; Invoices</a><a class="page-link" href="/Dolibarr/docs/payments">User Payments</a><a class="page-link" href="/Dolibarr/faq/splash">Questions about Splash Sync</a><a class="page-link" href="/Dolibarr/about.html">About</a><a class="page-link" href="/Dolibarr/documentation">Documentation</a><a class="page-link" href="/Dolibarr/faq">Faq</a><a class="page-link" href="/Dolibarr/manifest">Manifest</a><a class="page-link" href="/Dolibarr/objects">Objects</a><a class="page-link" href="/Dolibarr/start">Quick Start</a></div>
+      </nav></div>
+</header>
+ --><div class="doc-wrapper">
+        <div class="container">
+          <div id="doc-header" class="doc-header text-center">
+    <h1 class="doc-title"><i class="icon fa fa-paper-plane"></i>&nbsp;Quick Start</h1>
+    <div class="meta">How to install this module</div>
+</div>
+
+
+<div class="doc-body row">
+
+	<!-- Doc Content -->    
+    <div class="doc-content col-md-9 col-12 order-1">
+        <div class="content-inner">
+
+
+
+
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="install-splash-module" class="doc-section">
+
+			    <h2 class="section-title">Install Splash Module</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<h3 id="manual-installation">Manual Installation</h3>
+
+<ul>
+  <li>Download latest stable version here : <a href="http://www.splashsync.com/en/">Splash Modules</a></li>
+  <li>Copy module contents on Dolibarr htdocs folder (htdocs/custom/splash)</li>
+  <li>Enable &amp; Configure the module</li>
+</ul>
+
+<h3 id="requirements">Requirements</h3>
+
+<ul>
+  <li>PHP 7.1+</li>
+  <li>Dolibarr 9.0 or later</li>
+  <li>An active Splash Sync User Account</li>
+</ul>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="configure-splash-module" class="doc-section">
+
+			    <h2 class="section-title">Configure Splash Module</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<h3 id="enable-the-module">Enable the Module</h3>
+<p>Configuration of you module is available in <strong>Settings » Modules » Interfaces » Splash</strong></p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_1.png" alt="" /></p>
+
+<h3 id="connect-to-your-splash-account">Connect to your Splash Account</h3>
+
+<p>First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to <strong>Servers</strong> » <strong>Add a Server</strong> and note your id &amp; encryption keys.</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_2.png" alt="" /></p>
+
+<p>Then, enter the keys on Module’s configuration (take care not to forget any character).</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_3.png" alt="" /></p>
+
+<h3 id="setup-default-parameters">Setup default Parameters</h3>
+
+<p>To work correctly, this module need few parameters to be selected. These defaults values will be used upon objects creation/modification.</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_4.png" alt="" /></p>
+
+<h5 id="default-language">Default Language</h5>
+
+<p>Select which language package module should use for communication with Splash Server.</p>
+
+<h5 id="default-user">Default User</h5>
+
+<p>Select which user will be used for all actions executed by Splash Module.</p>
+
+<p>We highly recommend creation of a dedicated user for Splash.</p>
+
+<p>Be aware Splash Module will take care of Users rights policy, this user must have appropriated right on Dolibarr.</p>
+
+<h5 id="default-warehouse--bank-account--payment-method">Default Warehouse / Bank Account / Payment Method</h5>
+<p>Define these values to be used if no value is specified.</p>
+
+<h3 id="check-results-of-self-tests">Check results of Self-Tests</h3>
+
+<p>Each time you update your configuration, module will verify your parameters and ensure communication with Splash is working fine. 
+Ensure all tests are passed… this is critical!</p>
+
+<p><img src="/Dolibarr/assets/img/screenshot_5.png" alt="" /></p>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+</div>
+    </div>
+	<!-- End Doc Content -->    
+
+	<!-- Doc Sidebar -->    
+    <div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+        <div id="doc-nav" class="doc-nav">
+
+<!-- Documentations Menu -->
+<nav id="doc-menu" class="nav doc-menu flex-column sticky">
+
+<div class="h5 block-title mt-5 text-green">Quick Start</div>
+
+      
+      
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#install-splash-module">
+              Install Splash Module
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#configure-splash-module">
+              Configure Splash Module
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+      
+      
+
+</nav>
+<!--End Documentations Menu -->
+
+</div>
+    </div>
+    <!-- End Doc Sidebar -->    
+
+</div>
+        </div>
+      </div>
+
+    </div>
+<!--Main Footer-->
+<footer id="footer" class="footer text-center">
+    <div class="container">
+
+        <!--/* 
+          This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. 
+          Thank you for your support. :) 
+          If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com 
+          */-->
+          
+        <small class="copyright">
+          © Splash Sync 2017-2020
+          |
+          Designed with <i class="fas fa-heart"></i> by <a href="https://themes.3rdwavemedia.com/" target="_blank">Xiaoying Riley</a>
+        </small>
+        
+    </div>
+</footer>
+<!--End Main Footer-->
+<!-- MAIN JAVASCRIPTS -->  
+
+<!-- jQuery -->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap 5 JS -->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery ScrollTo Plugin-->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/jquery-scrollTo/dist/jquery-scrollTo.min.js"></script>      
+
+<!-- Ekko LightBox -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/ekko-lightbox/dist/ekko-lightbox.min.js"></script>      
+
+<!-- Datatables -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>      
+<script type="text/javascript" src="/Dolibarr/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>      
+
+<!-- Theme JS -->
+<script type="text/javascript" src="/Dolibarr/assets/js/main.js"></script>
+
+<!-- PrismJs JS (Syntax Highlighter) -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/prismjs/components/prism-core.min.js"></script>    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/prismjs/plugins/autoloader/prism-autoloader.min.js"></script>    
+
+<!-- End MAIN JAVASCRIPTS --> 
+</body>
+  
+</html>

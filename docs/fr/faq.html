@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+    <!-- Meta -->
+  	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="/Dolibarr/fr/assets/img/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Faq | Dolibarr Module</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Faq" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
+<meta property="og:description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
+<link rel="canonical" href="splashsync.github.io/Dolibarr/fr/faq" />
+<meta property="og:url" content="splashsync.github.io/Dolibarr/faq" />
+<meta property="og:site_name" content="Dolibarr Module" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"splashsync.github.io/Dolibarr/faq","headline":"Faq","description":"Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- MAIN STYLESHEETS -->
+
+<!-- Google Fonts -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+<!-- Bootstrap 5 CSS -->
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/bootstrap/dist/css/bootstrap.min.css" />   
+<!-- PrismJs CSS (Syntax Highlighter) -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/prismjs/themes/prism-okaidia.css" />
+<!-- Plugins CSS -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/plugins/elegant_font/css/style.css" />  
+<!-- FontAwesome 5 Free -->
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/@fortawesome/fontawesome-free/css/all.css" /> 
+<!-- Ekko LightBox -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/ekko-lightbox/dist/ekko-lightbox.css" />  
+<!-- Datatables -->    
+<link rel="stylesheet" href="/Dolibarr/fr/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />  
+<!-- Theme CSS -->
+<link id="theme-style" rel="stylesheet" href="/Dolibarr/fr/assets/css/main.css" />
+
+<!-- END MAIN STYLESHEETS -->
+<link type="application/atom+xml" rel="alternate" href="splashsync.github.io/Dolibarr/fr/feed.xml" title="Dolibarr Module" /><!-- Google Analytics --></head>
+
+
+
+<body class="body-purple">
+    <div class="page-wrapper"><!-- Page Header -->
+<header id="header" class="header">
+	<div class="container">
+		<div class="branding">
+	  		<h1 class="logo">
+			    <a href="index.html">
+			    	<img src="/Dolibarr/assets/img/apple-touch-icon.png" height="30px" class="d-none d-md-inline-block">
+					<span class="text-highlight">Dolibarr Module</span>
+					<span class="text-bold">DOC</span>
+			    </a>
+			</h1>
+    	</div>
+
+
+<ol class="breadcrumb">
+	<li class="breadcrumb-item">
+		<a href="index.html">Accueil</a>
+	</li>
+
+	
+		&nbsp;/&nbsp;
+		
+			Faq
+		
+	
+
+</ol>
+
+<div class="top-search-box">
+
+			<a class="btn btn-md btn-link text-white github-button" href="https://github.com/SplashSync/Dolibarr" 
+				data-size="large" aria-label="Voir sur Github"
+                                target="_blank"
+				title="Voir sur Github"
+				>
+		        <i class="fab fa-github"></i>
+		        
+			</a>
+<!-- Languages Selector -->
+
+<div class="dropdown d-inline-block">
+	<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLangSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		
+			<span class="flag-icon flag-icon-fr"></span>
+		
+
+		Français
+	</button>
+
+	<div class="dropdown-menu " aria-labelledby="dropdownLangSelect">
+		
+			<a 
+				 class="dropdown-item text-primary"
+				 
+				href=" /Dolibarr/faq "
+				>
+				
+					<span class="flag-icon flag-icon-us flag-icon-squared"></span>
+				
+
+				English
+
+			</a>
+		
+			<a 
+				 class="dropdown-item text-primary"
+				style="font-weight: bold;" 
+				href=" /Dolibarr/fr/faq "
+				>
+				
+					<span class="flag-icon flag-icon-fr"></span>
+				
+
+				Français
+
+			</a>
+		
+	</div>
+</div>
+
+
+
+<!-- End Languages Selector -->
+</div>
+        
+	</div>
+</header>
+<!-- End Page Header -->
+        
+
+
+<!-- 
+        <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/Dolibarr/fr/">Dolibarr Module</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/Dolibarr/fr/start/install">Installation du Module Splash</a><a class="page-link" href="/Dolibarr/fr/docs/intro">Module Splash Sync pour Dolibarr</a><a class="page-link" href="/Dolibarr/fr/start/configure">Configuration du Module</a><a class="page-link" href="/Dolibarr/fr/docs/features">Fonctionnalités &amp; avantages</a><a class="page-link" href="/Dolibarr/fr/docs/orders">Commandes &amp; Factures</a><a class="page-link" href="/Dolibarr/fr/docs/payments">Gestion des Paiements</a><a class="page-link" href="/Dolibarr/fr/faq/splash">Questions à propos de Splash Sync</a><a class="page-link" href="/Dolibarr/fr/about.html">About</a><a class="page-link" href="/Dolibarr/fr/documentation">Documentation</a><a class="page-link" href="/Dolibarr/fr/faq">Faq</a><a class="page-link" href="/Dolibarr/fr/manifest">Manifest</a><a class="page-link" href="/Dolibarr/fr/objects">Objects</a><a class="page-link" href="/Dolibarr/fr/start">Quick Start</a></div>
+      </nav></div>
+</header>
+ --><div class="doc-wrapper">
+        <div class="container">
+          <div id="doc-header" class="doc-header text-center">
+    <h1 class="doc-title"><i class="icon icon_lifesaver"></i>&nbsp;FAQs</h1>
+    <div class="meta">Toutes les réponses à vos Questions Fréquentes</div>
+</div>
+
+<div class="doc-body row">
+
+	<!-- Doc Content -->    
+    <div class="doc-content col-md-9 col-12 order-1">
+        <div class="content-inner faq-content">
+
+
+
+
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
+			<section id="questions-à-propos-de-splash-sync" class="doc-section">
+
+			    <h2 class="section-title">Questions à propos de Splash Sync</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<h3 id="quest-ce-que-splash-">Qu’est-ce que Splash ?</h3>
+
+<p>Splash Sync est le système de synchronisation des entreprises innovantes!</p>
+
+<h4 id="synchroniser-tous-types-de-données">Synchroniser tous types de données</h4>
+<p>Notre objectif est très simple, connecter et synchroniser vos données entre toutes les applications que vous utilisez, où qu’elles soient, quelle qu’elles soient.
+Notre approche est déclarative, c’est-à-dire que ce sont les serveurs que vous connectez qui définissent les données à synchroniser.</p>
+
+<h4 id="totalement-universel">Totalement Universel</h4>
+<p>Changez votre façon de gérer vos applications dans le cloud! Splash est un connecteur de données pas comme les autres. Pourquoi? Il est totalement universel!!
+Le système Splash n’a pas été conçu pour un type de données en particulier. Tous les types de données sont traités de la même manière!</p>
+
+<h4 id="synchroniser-votre-catalogue">Synchroniser votre catalogue</h4>
+<p>Synchroniser votre catalogue produits et leurs stocks entre plusieurs sites marchands?
+Avec Splash, c’est natif. Selon les applications, nous synchronisons même les attributs et les photos de produits!</p>
+
+<h4 id="optimisez-votre-gestion-du-e-commerce">Optimisez votre gestion du E-Commerce</h4>
+<p>Partager vos données client, vos commandes et factures entres tous vos services?
+Splash vous permets de rapatrier vos données comptables sur vos outils de gestion, c’est simple, fiable, et rapide.</p>
+
+<h3 id="en-quoi-le-système-splash-est-il-different-">En quoi le système Splash est-il different ?</h3>
+
+<h4 id="synchronisation-participative">Synchronisation Participative</h4>
+<p>En connectant vos applications à Splash, vous ne créez pas de connections directe entre serveurs, 
+vous leurs donnez la possibilité de partager leurs données avec l’ensemble de votre réseau.</p>
+
+<h4 id="routage-automatique">Routage Automatique</h4>
+<p>Grâce au tags d’identification des champs, vos données métiers sont automatiquement configurées 
+pour être synchroinizées avec tous les serveurs où elles sont disponibles. Pas de configuration complexe, on le fait pour vous!</p>
+
+<h4 id="plus-puissant-que-les-webservices-natifs">Plus puissant que les webservices natifs</h4>
+<p>Le module Splash n’est pas destiné à une seule application et peut accéder à des formats de données structurées et complexes. 
+Il permet d’accéder facilement à tous types de données.</p>
+
+<h4 id="plus-efficace">Plus efficace</h4>
+<p>En favorisant une approche “module”, Splash ne supplante pas le reste de l’application. 
+Cela permet de tenir compte des règles métier spécifiques à chaque application.</p>
+
+<h3 id="vos-modules-sont-ils-complètement-open-sources">Vos modules sont-ils complètement Open-Sources?</h3>
+
+<div class="callout-block callout-success">
+    <div class="icon-holder">
+        <i class="fas fa-thumbs-up"></i>
+    </div>
+    <div class="content">
+        <h4 class="callout-title">OUI</h4>
+        <p>Vous pouvez télécharger, utiliser et modifier nos modules GRATUITEMENT dès que vous conservez leur licence et leurs droits d'auteur.</p>
+    </div>
+</div>
+
+<h3 id="can-i-test-splash-sync-for-free-">Can I test Splash Sync for FREE ?</h3>
+
+<p>Oui, vous pouvez créer votre propre compte d’essai à tout moment, gratuitement et sans aucune limite de temps.
+Les comptes d’essai sont limités à deux serveurs et à 50 objets synchronisés.
+Pour aller plus loin, un abonnement payant est requis.</p>
+
+<p>Plus d’informations sur notre site web <a href="https://www.splashsync.com">www.splashsync.com</a></p>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+		
+
+	
+
+	
+
+    
+
+	
+
+    
+
+</div>
+    </div>
+	<!-- End Doc Content -->    
+
+	<!-- Doc Sidebar -->    
+    <div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+        <div id="doc-nav" class="doc-nav">
+<!-- Documentations Menu -->
+<nav id="doc-menu" class="nav doc-menu flex-column sticky">
+
+<div class="h5 block-title mt-5 text-purple">FAQs</div>
+
+      
+      
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
+              href="#questions-à-propos-de-splash-sync">
+              Questions à propos de Splash Sync
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+
+          
+
+          
+        
+      
+        
+        
+      
+        
+        
+      
+      
+
+</nav>
+<!--End Documentations Menu -->
+
+</div>
+    </div>
+    <!-- End Doc Sidebar -->    
+
+</div>
+        </div>
+      </div>
+
+    </div>
+<!--Main Footer-->
+<footer id="footer" class="footer text-center">
+    <div class="container">
+
+        <!--/* 
+          This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. 
+          Thank you for your support. :) 
+          If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com 
+          */-->
+          
+        <small class="copyright">
+          © Splash Sync 2017-2020
+          |
+          Designed with <i class="fas fa-heart"></i> by <a href="https://themes.3rdwavemedia.com/" target="_blank">Xiaoying Riley</a>
+        </small>
+        
+    </div>
+</footer>
+<!--End Main Footer-->
+<!-- MAIN JAVASCRIPTS -->  
+
+<!-- jQuery -->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap 5 JS -->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery ScrollTo Plugin-->
+<script type="text/javascript" src="/Dolibarr/assets/vendor/jquery-scrollTo/dist/jquery-scrollTo.min.js"></script>      
+
+<!-- Ekko LightBox -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/ekko-lightbox/dist/ekko-lightbox.min.js"></script>      
+
+<!-- Datatables -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>      
+<script type="text/javascript" src="/Dolibarr/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>      
+
+<!-- Theme JS -->
+<script type="text/javascript" src="/Dolibarr/assets/js/main.js"></script>
+
+<!-- PrismJs JS (Syntax Highlighter) -->    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/prismjs/components/prism-core.min.js"></script>    
+<script type="text/javascript" src="/Dolibarr/assets/vendor/prismjs/plugins/autoloader/prism-autoloader.min.js"></script>    
+
+<!-- End MAIN JAVASCRIPTS --> 
+</body>
+  
+</html>
