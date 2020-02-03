@@ -16,6 +16,7 @@
 namespace Splash\Local\Tests;
 
 use Account;
+use Facture;
 use Splash\Client\Splash;
 use Splash\Components\FieldsFactory;
 use Splash\Tests\Tools\ObjectsCase;
@@ -27,6 +28,7 @@ class L03PaymentBanksTest extends ObjectsCase
 {
     use \Splash\Models\Objects\ListsTrait;
     use \Splash\Local\Core\ErrorParserTrait;
+    use \Splash\Local\Core\CreditModeTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
 
     /** @var array */
@@ -35,7 +37,7 @@ class L03PaymentBanksTest extends ObjectsCase
     /** @var array */
     protected $out;
 
-    /** @var array */
+    /** @var Facture */
     protected $object;
 
     /**
@@ -82,7 +84,7 @@ class L03PaymentBanksTest extends ObjectsCase
             ->get($objectId, array("mode@payments", "number@payments", "amount@payments"));
         $this->assertNotEmpty($objectData);
         $this->assertIsArray($objectData);
-        
+
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData["payments"] as $data) {
@@ -209,6 +211,5 @@ class L03PaymentBanksTest extends ObjectsCase
     protected static function fieldsFactory()
     {
         return new FieldsFactory();
-        ;
     }
 }

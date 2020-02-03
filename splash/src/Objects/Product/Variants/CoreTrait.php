@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,6 +32,8 @@ trait CoreTrait
 
     /**
      * Build Fields using FieldFactory
+     *
+     * @return void
      */
     protected function buildVariantsCoreFields()
     {
@@ -91,6 +93,8 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     protected function getVariantsCoreFields($key, $fieldName)
     {
@@ -120,6 +124,8 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     protected function getVariantsListFields($key, $fieldName)
     {
@@ -140,7 +146,7 @@ trait CoreTrait
         // Load Product Variants
         $variants = VariantsManager::getProductVariants($this->combination->fk_product_parent);
 
-        /** @var ProductCombination $combinaition */
+        /** @var ProductCombination $combination */
         foreach ($variants as $index => $combination) {
             //====================================================================//
             // SKIP Current Variant When in PhpUnit/Travis Mode
@@ -187,6 +193,8 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @return void
      */
     protected function setVariantsCoreFields($fieldName, $fieldData)
     {
@@ -212,6 +220,8 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -252,6 +262,8 @@ trait CoreTrait
      * Create a New Product Parent and Move All Variants to this New One
      *
      * @param array|ArrayObject $variants Product Variants List
+     *
+     * @return void
      */
     protected function updateVariantsParent($variants)
     {

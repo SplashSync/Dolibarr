@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -103,6 +103,8 @@ trait TriggersTrait
      * Identify Order Id from Given Object
      *
      * @param object $object Objet concerne
+     *
+     * @return void
      */
     private function setInvoiceObjectId($object)
     {
@@ -140,6 +142,8 @@ trait TriggersTrait
      * Identify Splash Object type from Given Object
      *
      * @param object $object Objet concerne
+     *
+     * @return void
      */
     private function setInvoiceObjectType($object)
     {
@@ -168,6 +172,8 @@ trait TriggersTrait
      * Prepare Object Commit for Product
      *
      * @param string $action Code de l'evenement
+     *
+     * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */

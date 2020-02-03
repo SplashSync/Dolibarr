@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,22 +46,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load ThirdParty (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load ThirdParty (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load ThirdParty (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to load ThirdParty (".$objectId.").");
         }
 
         return $object;
@@ -94,7 +84,7 @@ trait CRUDTrait
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new ThirdParty. ");
+            return Splash::log()->errTrace("Unable to create new ThirdParty.");
         }
 
         return $this->object;
@@ -129,12 +119,8 @@ trait CRUDTrait
         if ($this->object->update($this->object->id, $user, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Update ThirdParty (".$this->object->id.")"
-            );
+            return Splash::log()
+                ->errTrace("Unable to Update ThirdParty (".$this->object->id.")");
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -176,12 +162,7 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
         if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Delete ThirdParty (".$objectId.")."
-            );
+            return Splash::log()->errTrace("Unable to Delete ThirdParty (".$objectId.").");
         }
         //====================================================================//
         // Delete Object
@@ -245,6 +226,8 @@ trait CRUDTrait
 
     /**
      * Setup Required Fields Before ThirdParty Creation
+     *
+     * @return void
      */
     private function setupBeforeCreate()
     {

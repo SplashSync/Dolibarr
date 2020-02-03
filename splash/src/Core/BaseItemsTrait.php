@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,6 +42,8 @@ trait BaseItemsTrait
 
     /**
      * Build Address Fields using FieldFactory
+     *
+     * @return void
      */
     protected function buildItemsFields()
     {
@@ -125,6 +127,8 @@ trait BaseItemsTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     protected function getItemsFields($key, $fieldName)
     {
@@ -241,6 +245,8 @@ trait BaseItemsTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @return void
      */
     private function setItemsFields($fieldName, $fieldData)
     {
@@ -281,6 +287,8 @@ trait BaseItemsTrait
      * Write Data to Current Item
      *
      * @param array $itemData Input Item Data Array
+     *
+     * @return void
      */
     private function setItem($itemData)
     {
@@ -327,6 +335,11 @@ trait BaseItemsTrait
         if (!$this->itemUpdate) {
             return;
         }
+        //====================================================================//
+        // Safety Check
+        if (null == $this->currentItem) {
+            return;
+        }
 
         //====================================================================//
         // Prepare Args
@@ -349,6 +362,8 @@ trait BaseItemsTrait
      *
      * @param array  $itemData  Input Item Data Array
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     private function setItemSimpleData($itemData, $fieldName)
     {
@@ -365,6 +380,8 @@ trait BaseItemsTrait
      * Write Given Price to Line Item
      *
      * @param array $itemData Input Item Data Array
+     *
+     * @return void
      */
     private function setItemPrice($itemData)
     {
@@ -402,6 +419,8 @@ trait BaseItemsTrait
      * Write Given Vat Source Code to Line Item
      *
      * @param array $itemData Input Item Data Array
+     *
+     * @return void
      */
     private function setItemVatSrcCode($itemData)
     {
@@ -482,6 +501,8 @@ trait BaseItemsTrait
      * Write Given Product to Line Item
      *
      * @param array $itemData Input Item Data Array
+     *
+     * @return void
      */
     private function setItemProductLink($itemData)
     {
@@ -545,6 +566,8 @@ trait BaseItemsTrait
 
     /**
      * Update Item Totals
+     *
+     * @return void
      */
     private function updateItemTotals()
     {

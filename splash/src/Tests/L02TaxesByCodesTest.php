@@ -142,7 +142,7 @@ class L02TaxesByCodesTest extends ObjectsCase
             ->get($objectId, array("desc@lines", "price@lines", "vat_src_code@lines"));
         $this->assertNotEmpty($objectData2);
         $this->assertIsArray($objectData2);
-        
+
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData2["lines"] as $data) {

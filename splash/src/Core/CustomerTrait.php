@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -33,6 +33,8 @@ trait CustomerTrait
 
     /**
      * Build Fields using FieldFactory
+     *
+     * @return void
      */
     protected function buildCustomerFields()
     {
@@ -76,6 +78,8 @@ trait CustomerTrait
 
     /**
      * Init Customer SocId Detection
+     *
+     * @return void
      */
     protected function initCustomerDetection()
     {
@@ -88,6 +92,8 @@ trait CustomerTrait
      * Init Customer SocId with Guste Mode Management
      *
      * @param Array|ArrayObject $receivedData Received Data
+     *
+     * @return void
      */
     protected function doCustomerDetection($receivedData)
     {
@@ -121,6 +127,8 @@ trait CustomerTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     protected function getCustomerFields($key, $fieldName)
     {
@@ -145,6 +153,8 @@ trait CustomerTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @return void
      */
     protected function setCustomerFields($fieldName, $fieldData)
     {

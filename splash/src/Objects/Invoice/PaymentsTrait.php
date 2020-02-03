@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -71,6 +71,8 @@ trait PaymentsTrait
 
     /**
      * Build Address Fields using FieldFactory
+     *
+     * @return void
      */
     protected function buildPaymentsFields()
     {
@@ -180,6 +182,8 @@ trait PaymentsTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     protected function getPaymentsFields($key, $fieldName)
     {
@@ -234,6 +238,8 @@ trait PaymentsTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @return void
      */
     protected function setPaymentLineFields($fieldName, $fieldData)
     {
@@ -279,7 +285,7 @@ trait PaymentsTrait
      *
      * @param int $invoiceId Invoice Object Id
      *
-     * @return array List Of Paiment Object Amounts
+     * @return void
      */
     protected function clearPayments($invoiceId)
     {
@@ -395,6 +401,8 @@ trait PaymentsTrait
      *
      * @param Paiement $payment  Payment Item Id
      * @param array    $lineData Line Data Array
+     *
+     * @return void
      */
     private function updatePaymentItemDatas($payment, $lineData)
     {

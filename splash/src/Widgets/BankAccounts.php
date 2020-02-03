@@ -15,7 +15,6 @@
 
 namespace   Splash\Local\Widgets;
 
-use ArrayObject;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;

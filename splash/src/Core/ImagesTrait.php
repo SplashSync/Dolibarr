@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,19 +27,43 @@ use Splash\Local\Local;
  */
 trait ImagesTrait
 {
+    /**
+     * @var string
+     */
     private $minVersion = "6.0.0";
+
+    /**
+     * @var array
+     */
     private $elementPath = array(
         "product" => "produit",
         "commande" => "commande"
     );
+
+    /**
+     * @var array
+     */
     private $extensions = array( "gif", "jpg", "jpeg", "png", "bmp" );
 
+    /**
+     * @var string
+     */
     private $dolFilesDir;
+
+    /**
+     * @var string
+     */
     private $relFilesDir;
+
+    /**
+     * @var bool
+     */
     private $imgUpdated;
 
     /**
      * Build Images FieldFactory
+     *
+     * @return void
      */
     protected function buildImagesFields()
     {
@@ -108,6 +132,8 @@ trait ImagesTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
      */
     protected function getImagesFields($key, $fieldName)
     {
@@ -150,6 +176,11 @@ trait ImagesTrait
         }
     }
 
+    /**
+     * @param string $fieldName
+     *
+     * @return void
+     */
     protected function getImagesArrayFromEcm($fieldName)
     {
         global $db;
@@ -205,6 +236,8 @@ trait ImagesTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @return void
      */
     protected function setImagesFields($fieldName, $fieldData)
     {
@@ -252,6 +285,11 @@ trait ImagesTrait
         unset($this->in[$fieldName]);
     }
 
+    /**
+     * @param string $fieldName
+     *
+     * @return void
+     */
     private function getImagesArrayFromDir($fieldName)
     {
         require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
@@ -313,6 +351,8 @@ trait ImagesTrait
      * Detect if List has Cover Image or Force First Image as Cover
      *
      * @param array $fileArray
+     *
+     * @return void
      */
     private function detectCoverImage(&$fileArray)
     {
@@ -428,6 +468,8 @@ trait ImagesTrait
 
     /**
      * Delete Unexpected Images
+     *
+     * @return void
      */
     private function deleteRemainingImages()
     {
@@ -454,6 +496,8 @@ trait ImagesTrait
      *
      * @param EcmFiles $ecmImage  Dolibarr File Object
      * @param array    $imageData Input Image Data Array
+     *
+     * @return void
      */
     private function identifyImage(&$ecmImage, $imageData)
     {
@@ -475,6 +519,8 @@ trait ImagesTrait
      * @param int      $position  Input Image Position on List
      * @param array    $imageData Input Image Data Array
      * @param bool     $isCover   Input Image is Cover
+     *
+     * @return void
      */
     private function setEcmFileData($ecmImage, $position, $imageData, $isCover)
     {
@@ -556,6 +602,8 @@ trait ImagesTrait
      * @param string $element
      * @param string $oldRef
      * @param string $newRef
+     *
+     * @return void
      */
     private function updateFilesPath($element, $oldRef, $newRef)
     {
@@ -625,6 +673,5 @@ trait ImagesTrait
         }
 
         return true;
-//        return (bool) $EcmFile->fetch(null, null, $FullPath);
     }
 }

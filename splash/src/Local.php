@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -334,6 +334,7 @@ class Local implements LocalClassInterface
                 ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
 
                 return array();
+            default:
             case "List":
                 return array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
         }
@@ -347,7 +348,6 @@ class Local implements LocalClassInterface
         //====================================================================//
         // Init Parameters Array
         return array();
-        // CHANGE SOMETHING
     }
 
     //====================================================================//
@@ -398,6 +398,8 @@ class Local implements LocalClassInterface
 
     /**
      * Initiate Local Request User if not already defined
+     *
+     * @return void
      */
     public static function loadDefaultLanguage()
     {
@@ -546,6 +548,8 @@ class Local implements LocalClassInterface
         if (!$user->all_permissions_are_loaded) {
             $user->getrights();
         }
+
+        return true;
     }
 
     /**

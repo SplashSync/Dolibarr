@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -124,6 +124,8 @@ class InterfaceSplash
      * Read all log messages posted by OsWs and post it on dolibarr
      *
      * @param Logger $log Input Log Class
+     *
+     * @return void
      */
     public function postMessages(Logger $log)
     {
@@ -156,6 +158,8 @@ class InterfaceSplash
      * @param string $action Code de l'evenement
      * @param object $object Objet concerne
      * @param User   $user   Objet user
+     *
+     * @return void
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -223,6 +227,8 @@ class InterfaceSplash
 
     /**
      * Publish Object Change to Splash Sync Server
+     *
+     * @return void
      */
     protected function doSplashCommit()
     {

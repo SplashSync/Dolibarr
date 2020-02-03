@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,6 +36,12 @@ trait ErrorParserTrait
         // Use Current Parser Object
         if (is_null($subject)) {
             $subject = isset($this->object) ? $this->object : null;
+        }
+
+        //====================================================================//
+        // Safety Check
+        if (!is_object($subject)) {
+            return true;
         }
 
         //====================================================================//
@@ -109,6 +115,8 @@ trait ErrorParserTrait
      * Catch Dolibarr Common Objects Simple Errors
      *
      * @param object $subject Focus on a specific object
+     *
+     * @return void
      */
     private function catchDatabaseErrors($subject = null)
     {

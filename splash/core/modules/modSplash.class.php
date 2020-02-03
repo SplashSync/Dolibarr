@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -11,16 +11,6 @@
  *
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
- */
-
-/**
- *  \Id     $Id: main.lib.php 243 2013-06-02 16:05:41Z u58905340 $
- *  \version    $Revision: 243 $
- *  \date       $LastChangedDate$
- *  \ingroup    Splash Server - Online Shop Connector for Dolibarr
- *              Webservice Module for ERP to Online Shop synchronisation
- *  \brief      Module Definitions
- *  \remarks
  */
 
 include_once(DOL_DOCUMENT_ROOT."/core/modules/DolibarrModules.class.php");
@@ -181,6 +171,11 @@ class modSplash extends DolibarrModules
         return 1;
     }
 
+    /**
+     * Get Splash Module Configuration Contants
+     *
+     * @return array
+     */
     private function getConstants()
     {
         //====================================================================//
@@ -214,12 +209,17 @@ class modSplash extends DolibarrModules
         );
     }
 
+    /**
+     * Get Splash Module Rights Array
+     *
+     * @return array
+     */
     private function getRights()
     {
         //====================================================================//
-            // Permissions
-            $rights = array();      // Permission array used by this module
-            $index = 0;
+        // Permissions
+        $rights = array();      // Permission array used by this module
+        $index = 0;
 
         $rights[$index][0] = 9201; // id de la permission
             $rights[$index][1] = 'Lire les Données'; // libelle de la permission
