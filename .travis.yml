@@ -108,7 +108,7 @@ script:
     - ls -l $DOL_BUILD_DIR/htdocs/custom/splash/vendor/bin
     
     # Run Grump Main Test Sequence
-    - php ./splashvendor/bin/grumphp run --testsuite=travis
+    - php ./splash/vendor/bin/grumphp run --testsuite=travis
     # With PHP > 7.1 => Execute CsFixer
     - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then php ./splash/vendor/bin/grumphp run --testsuite=csfixer; fi    
     # With PHP > 7.1 => Execute Phpstan 
