@@ -4,7 +4,10 @@ includes:
     - '../splash/vendor/phpstan/phpstan-phpunit/rules.neon'
 
 parameters:
-    bootstrap: "./travis/phpstan.php"
+    bootstrap: "./phpstan.php"
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    inferPrivatePropertyTypeFromConstructor: true 
 
     universalObjectCratesClasses:
             - ArrayObject
@@ -27,3 +30,6 @@ parameters:
         # Wrong Comments in Dolibarr Class
         - '#Parameter \#2 \$type_contact of method CommonObject\:\:add_contact\(\) expects int\, string given.#'
         - '#Parameter \#2 \$mode of method Propal\:\:load_board\(\) expects int\, string given.#'
+
+        # Fix for Dolibar V11
+        - '#Method ProductCombination::updateProperties\(\) invoked with 2 parameters, 1 required#'
