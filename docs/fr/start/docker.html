@@ -1,0 +1,90 @@
+<p>Vous voulez essayer ce module? Ajustez-vous à vos besoins? Ou développer de nouvelles fonctionnalités? D’accord! Construisons un environnement DEV !!</p>
+
+<p>En utilisant Docker &amp; Docker Compose, vous pouvez démarrer un projet de développement complet.</p>
+
+<p>Pour chaque mordule, nous avons prédéfini les installations les plus courantes possibles.</p>
+
+<h3 id="exigences-sur-le-système-local">Exigences sur le système local</h3>
+
+<ul>
+  <li>Git <a href="https://git-scm.com">git-scm.com</a></li>
+  <li>Php Composer <a href="https://getcomposer.org/">getcomposer.org/</a></li>
+  <li>Docker &amp; Docker-Compose <a href="https://www.docker.com/">www.docker.com/</a></li>
+  <li>Aucun compte d’utilisateur Splash Sync actif n’est nécessaire!</li>
+</ul>
+
+<h3 id="cloner-les-sources-du-module">Cloner les sources du module</h3>
+
+<p>Tout d’abord, vous devez télécharger les sources et compiler le module localement.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/SplashSync/Dolibarr myModule
+<span class="nv">$ </span><span class="nb">cd </span>myModule
+<span class="nv">$ </span>composer <span class="nb">install</span> <span class="nt">--no-dev</span>
+</code></pre></div></div>
+
+<h3 id="construire-tout-lenvironnement-docker-compose">Construire tout l’environnement Docker Compose</h3>
+
+<p>Ensuite, construisez simplement l’environnement Docker.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up
+</code></pre></div></div>
+
+<p>Cela peut prendre un certain temps, mais au final, tout votre environnement devrait fonctionner!</p>
+
+<h3 id="accéder-à-votre-environnement">Accéder à votre environnement</h3>
+
+<p>Pour faciliter l’accès à vos instances, nous avons figé toutes les adresses IP de conteneurs sur le fichier <code>docker-compose.yml</code>.</p>
+
+<p>Dans ce fichier, vous devriez trouver un commentaire avec les adresses IP cibles de vos conteneurs d’environnement.</p>
+
+<p>Par exemple, pour Prestashop:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">################################################################################</span>
+<span class="c1"># Docker Compose File</span>
+<span class="c1">#</span>
+<span class="c1"># This Docker File intend to Create a Complete Dev Environment </span>
+<span class="c1"># for Splash Modules on Prestashop</span>
+<span class="c1">#</span>
+<span class="c1"># To us different PS Version coinfigured, you need to add hosts to /etc/hosts</span>
+<span class="c1"># </span>
+<span class="c1"># 172.102.0.10        latest.prestashop.local</span>
+<span class="c1"># 172.102.0.16        ps1-6.prestashop.local</span>
+<span class="c1"># 172.102.0.17        ps1-7.prestashop.local</span>
+<span class="c1"># 172.102.0.100       toolkit.prestashop.local</span>
+<span class="c1">#</span>
+<span class="c1">################################################################################</span>
+</code></pre></div></div>
+
+<p>Donc, si vous naviguez sur IP 172.102.0.10, vous devriez trouver votre application qui fonctionne!</p>
+
+<p>Tous les détails utiles de l’installation sont visibles dans le fichier <code>docker-compose.yml</code>.</p>
+
+<p>Pour une utilisation plus facile, vous pouvez couper / coller toutes les adresses IP dans votre /etc/hosts. Cela rendra l’application disponible à partir de l’URL, pas seulement IP.</p>
+
+<h3 id="test-develop--debug-en-utilisant-notre-boîte-à-outils">Test, Develop &amp; Debug en utilisant notre boîte à outils</h3>
+
+<p>Avez-vous vu le dernier conteneur disponible? C’est Splash ToolKit !!</p>
+
+<p>C’est fait pour les développeurs et devrait déjà être pré-configuré pour vous Apps!</p>
+
+<p>Il suffit de parcourir l’URL et de vous connecter avec l’utilisateur “admin” et le mot de passe “admin”!</p>
+
+<p><img src="/Dolibarr/assets/img/splash-toolkit.png" alt="" /></p>
+
+<h3 id="vider-le-cache">Vider le cache?</h3>
+
+<p>Si votre configuration a changéz, vous risquez d’avoir une jolie erreur … vous devez vider le cache!</p>
+
+<p>Comment? Il suffit de lancer cette commande docker:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nb">exec </span>toolkit <span class="nb">rm</span> <span class="nt">-Rf</span> var/cache/<span class="k">*</span>
+</code></pre></div></div>
+
+<h3 id="testez-votre-connecteur-localement-">Testez votre connecteur localement ??</h3>
+
+<p>Oui, vous pouvez! Tout ce dont vous avez besoin pour exécuter notre séquence complète de tests de base est déjà fournie par Splash Toolkit.</p>
+
+<p>Comment? Il suffit de lancer phpunit en utilisant cette commande docker:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nb">exec </span>toolkit vendor/bin/phpunit
+</code></pre></div></div>
