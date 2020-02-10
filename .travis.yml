@@ -2,6 +2,7 @@
 
 # Tell Travis CI we're using PHP
 language: php
+os: linux
 
 # Tell Travis CI we're using MySQL
 services:
@@ -37,8 +38,6 @@ matrix:
           env: DOL=10.0 DATA=10.0.0    
 
         # Dolibarr V9.0 Branch       
-#        - php: 7.2
-#          env: DOL=9.0 DATA=9.0.0
         - php: 7.1
           env: DOL=9.0 DATA=9.0.0     
 

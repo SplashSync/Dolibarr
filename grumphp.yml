@@ -119,7 +119,7 @@ parameters:
         build-docs: 
             enabled:            true
             local_folder:       '/splash/resources/docs'
-            generic_contents:   ["splash"]
+            generic_contents:   ["splash", "php-docker"]
         
         build-manifest: 
             enabled:        true  
