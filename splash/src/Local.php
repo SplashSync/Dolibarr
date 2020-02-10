@@ -30,6 +30,11 @@ class Local implements LocalClassInterface
 {
     use MultiCompanyTrait;
 
+    /**
+     * @var string
+     */
+    const ROOT_INC = "master.inc.php";
+
     //====================================================================//
     // *******************************************************************//
     //  MANDATORY CORE MODULE LOCAL FUNCTIONS
@@ -122,7 +127,7 @@ class Local implements LocalClassInterface
             /** @codingStandardsIgnoreEnd */
             //====================================================================//
             // Initiate Dolibarr Global Envirement Variables
-            require_once($this->getDolibarrRoot()."/master.inc.php");
+            require_once($this->getDolibarrRoot()."/".self::ROOT_INC);
 
             //====================================================================//
             // Splash Modules Constant Definition
