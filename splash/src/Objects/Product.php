@@ -118,6 +118,7 @@ class Product extends AbstractObject
         //====================================================================//
         // Include Object Dolibarr Class
         require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
+        require_once DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php';
 
         //====================================================================//
         // Load Required Dolibarr Translation Files
