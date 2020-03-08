@@ -19,6 +19,10 @@
             "/Tests/"
         ]
     },
+    
+    "autoload-dev": {
+        "psr-4": { "Splash\\Tests\\": "Tests/" }
+    },
 
     "require": {
         "php":                              "^7.1",
@@ -43,7 +47,12 @@
         "phpstan/phpstan-phpunit":          "~0.12"        
     },
     
-    "autoload-dev": {
-        "psr-4": { "Splash\\Tests\\": "Tests/" }
+    "scripts": {
+        "post-install-cmd": [
+            "php splash/vendor/bin/grumphp git:deinit"            
+        ],
+        "post-update-cmd": [
+            "php splash/vendor/bin/grumphp git:deinit"            
+        ]
     }
 }

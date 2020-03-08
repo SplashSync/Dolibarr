@@ -22,6 +22,7 @@ use Splash\Local\Local;
 
 /**
  * Dolibarr Unit Converter
+ *
  * Now Uses Splash Core Unit Converter to Detcet & Convert Units Values
  */
 trait UnitConverterTrait
@@ -319,8 +320,8 @@ trait UnitConverterTrait
     private static function detectSplashUnit($unit, $type, $fallBack)
     {
         //====================================================================//
-        // BEFORE V10 => Dolibarr Unit Code Stored in Object
-        if (Local::dolVersionCmp("10.0.0") < 0) {
+        // STANDARD => Dolibarr Unit Scale Factored Stored in Objects
+        if (!self::useDatabaseUnitsIds()) {
             if (isset(static::$knowUnits[$type][$unit])) {
                 return static::$knowUnits[$type][$unit];
             }
@@ -349,8 +350,8 @@ trait UnitConverterTrait
     {
         global $db;
         //====================================================================//
-        // BEFORE V10 => Dolibarr Unit Code Stored in Object
-        if (Local::dolVersionCmp("10.0.0") < 0) {
+        // STANDARD => Dolibarr Unit Scale Factored Stored in Objects
+        if (!self::useDatabaseUnitsIds()) {
             return true;
         }
         //====================================================================//
@@ -392,12 +393,12 @@ trait UnitConverterTrait
     private static function getDolUnitId(string $type, string $scale)
     {
         //====================================================================//
-        // BEFORE V10 => Dolibarr Unit Code Stored in Object
-        if (Local::dolVersionCmp("10.0.0") < 0) {
+        // STANDARD => Dolibarr Unit Scale Factored Stored in Objects
+        if (!self::useDatabaseUnitsIds()) {
             return $scale;
         }
         //====================================================================//
-        // SINCE V10 => Dolibarr Unit Code Stored in Dictionnary
+        // V10.0.0 to V10.0.2 => Dolibarr Unit IDs Stored in Object
         if (!static::loadDolUnits()) {
             return 0;
         }
@@ -415,5 +416,24 @@ trait UnitConverterTrait
         }
 
         return 0;
+    }
+
+    /**
+     * Detect if Stored Units are Scales or Database Dictionary IDs.
+     *
+     * V10.0.0 to V10.0.2 => Dolibarr Unit IDs Stored in Objects
+     *
+     * @return bool TRUE if Database
+     */
+    private static function useDatabaseUnitsIds(): bool
+    {
+        if (Local::dolVersionCmp("10.0.0") < 0) {
+            return false;
+        }
+        if (Local::dolVersionCmp("10.0.2") > 0) {
+            return false;
+        }
+
+        return true;
     }
 }
