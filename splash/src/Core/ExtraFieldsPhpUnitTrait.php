@@ -21,7 +21,23 @@ use ExtraFields;
  * Access to Dolibarr Extra Fields for PhpUnit
  */
 trait ExtraFieldsPhpUnitTrait
-{
+{    
+    /**
+     * @var array
+     */
+    private static $testedExtraTypes = array(
+        "varchar" => "phpunit_varchar",
+        "text" => "phpunit_text",
+        "int" => "phpunit_int",
+        "bool" => "phpunit_bool",
+        "double" => "phpunit_double",
+        "price" => "phpunit_price",
+        "mail" => "phpunit_mail",
+        "phone" => "phpunit_phone",
+        "url" => "phpunit_url",
+        "date" => "phpunit_date",
+    );
+    
     /**
      * Create & Enable All Possible Extra Fields on Object Type
      *
