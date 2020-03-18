@@ -21,7 +21,7 @@ use ExtraFields;
  * Access to Dolibarr Extra Fields for PhpUnit
  */
 trait ExtraFieldsPhpUnitTrait
-{    
+{
     /**
      * @var array
      */
@@ -37,7 +37,7 @@ trait ExtraFieldsPhpUnitTrait
         "url" => "phpunit_url",
         "date" => "phpunit_date",
     );
-    
+
     /**
      * Create & Enable All Possible Extra Fields on Object Type
      *
