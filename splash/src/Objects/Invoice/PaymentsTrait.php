@@ -388,6 +388,8 @@ trait PaymentsTrait
         //====================================================================//
         // Try to delete Payment
         if ($payment->delete() <= 0) {
+            $this->catchDolibarrErrors($payment);
+
             // Unable to Delete Payment => No Recreate
             return false;
         }
