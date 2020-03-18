@@ -28,6 +28,7 @@ use User;
  */
 class Local implements LocalClassInterface
 {
+    use ExtraFieldsTrait;
     use MultiCompanyTrait;
 
     /**
@@ -254,11 +255,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
 
-                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
+                self::configurePhpUnitExtraFields("societe", false);
+                self::configurePhpUnitExtraFields("socpeople", false);
+                self::configurePhpUnitExtraFields("product", false);
+                self::configurePhpUnitExtraFields("commande", false);
+                self::configurePhpUnitExtraFields("facture", false);
 
                 return array();
             case "Multilangual":
@@ -288,11 +289,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '1', 'chaine', 0, '', $ent);
 
-                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
+                self::configurePhpUnitExtraFields("societe", false);
+                self::configurePhpUnitExtraFields("socpeople", false);
+                self::configurePhpUnitExtraFields("product", false);
+                self::configurePhpUnitExtraFields("commande", false);
+                self::configurePhpUnitExtraFields("facture", false);
 
                 return array();
             case "ExtraFields":
@@ -302,11 +303,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
 
-                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", true);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", true);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("product", true);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", true);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", true);
+                self::configurePhpUnitExtraFields("societe", true);
+                self::configurePhpUnitExtraFields("socpeople", true);
+                self::configurePhpUnitExtraFields("product", true);
+                self::configurePhpUnitExtraFields("commande", true);
+                self::configurePhpUnitExtraFields("facture", true);
 
                 return array();
             case "Variants":
@@ -316,11 +317,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
 
-                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
+                self::configurePhpUnitExtraFields("societe", false);
+                self::configurePhpUnitExtraFields("socpeople", false);
+                self::configurePhpUnitExtraFields("product", false);
+                self::configurePhpUnitExtraFields("commande", false);
+                self::configurePhpUnitExtraFields("facture", false);
 
                 return array();
             case "GuestOrders":
@@ -332,11 +333,11 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
 
-                ExtraFieldsTrait::configurePhpUnitExtraFields("societe", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("socpeople", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("product", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("commande", false);
-                ExtraFieldsTrait::configurePhpUnitExtraFields("facture", false);
+                self::configurePhpUnitExtraFields("societe", false);
+                self::configurePhpUnitExtraFields("socpeople", false);
+                self::configurePhpUnitExtraFields("product", false);
+                self::configurePhpUnitExtraFields("commande", false);
+                self::configurePhpUnitExtraFields("facture", false);
 
                 return array();
             default:

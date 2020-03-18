@@ -15,10 +15,10 @@
 
 namespace   Splash\Local\Objects;
 
-use Splash\Core\SplashCore      as Splash;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ObjectsTrait;
+use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
@@ -30,6 +30,7 @@ class Address extends AbstractObject
     use IntelParserTrait;
     use SimpleFieldsTrait;
     use ObjectsTrait;
+    use PricesTrait;
 
     // Dolibarr Core Traits
     use \Splash\Local\Core\ErrorParserTrait;

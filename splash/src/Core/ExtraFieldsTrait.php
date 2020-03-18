@@ -16,8 +16,6 @@
 namespace   Splash\Local\Core;
 
 use ExtraFields;
-use Splash\Core\SplashCore      as Splash;
-use Splash\Models\Objects\PricesTrait;
 
 /**
  * Access to Dolibarr Extra Fields
@@ -224,7 +222,7 @@ trait ExtraFieldsTrait
 
                 break;
             case SPL_T_PRICE:
-                $this->out[$fieldName] = PricesTrait::prices()->Encode(
+                $this->out[$fieldName] = self::prices()->Encode(
                     (double) $fieldData,
                     (double) 0,
                     null,
@@ -291,7 +289,7 @@ trait ExtraFieldsTrait
 
                 break;
             case SPL_T_PRICE:
-                $priceHT = PricesTrait::prices()->TaxExcluded($fieldData);
+                $priceHT = self::prices()->TaxExcluded($fieldData);
                 if ($currentData != $priceHT) {
                     $this->object->array_options[$fieldName] = $priceHT;
                     $this->needUpdate();

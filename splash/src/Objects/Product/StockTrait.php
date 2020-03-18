@@ -246,9 +246,8 @@ trait StockTrait
             $user,                                      // Current User Object
             $locationId,                                // Impacted Stock Id
             abs($delta),                                // Quantity to Move
-            ($delta > 0)?1:0,                           // Direnction 0 = add, 1 = remove
-            $langs->trans("Updated by Splash Module"),  // Operation Comment
-            $this->object->price                        // Product Price for PMP
+            ($delta > 0)?1:0,                           // Direction 0 = add, 1 = remove
+            $langs->trans("Updated by Splash Module")   // Operation Comment
         );
         //====================================================================//
         // Check potential Errors
