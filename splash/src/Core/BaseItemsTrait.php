@@ -438,18 +438,13 @@ trait BaseItemsTrait
         if ($this->currentItem->vat_src_code !== $cleanedTaxName) {
             $this->currentItem->vat_src_code = $cleanedTaxName;
             $this->itemUpdate = true;
+        }
         //====================================================================//
-        // No Changes? => Exit
-        } else {
+        // No Changes On Item? => Exit
+        // Feature is Disabled? => Exit
+        if (!$this->itemUpdate || !$conf->global->SPLASH_DETECT_TAX_NAME) {
             return;
         }
-
-        //====================================================================//
-        // Safety Check => Feature is Active
-        if (!$conf->global->SPLASH_DETECT_TAX_NAME) {
-            return;
-        }
-
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
         $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
