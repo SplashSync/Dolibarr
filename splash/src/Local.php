@@ -16,7 +16,7 @@
 namespace Splash\Local;
 
 use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Core\ExtraFieldsTrait;
+use Splash\Local\Core\ExtraFieldsPhpUnitTrait;
 use Splash\Local\Core\MultiCompanyTrait;
 use Splash\Models\LocalClassInterface;
 use User;
@@ -28,7 +28,7 @@ use User;
  */
 class Local implements LocalClassInterface
 {
-    use ExtraFieldsTrait;
+    use ExtraFieldsPhpUnitTrait;
     use MultiCompanyTrait;
 
     /**
