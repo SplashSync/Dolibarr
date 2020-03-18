@@ -56,7 +56,7 @@ trait MainTrait
             ->Name($langs->trans("Width"))
             ->Description($langs->trans("Width")." (".$langs->trans("LengthUnitm").")")
             ->MicroData("http://schema.org/Product", "width")
-//            ->isNotTested()
+            ->isNotTested()
         ;
 
         //====================================================================//
@@ -66,7 +66,7 @@ trait MainTrait
             ->Name($langs->trans("Height"))
             ->Description($langs->trans("Heigth")." (".$langs->trans("LengthUnitm").")")
             ->MicroData("http://schema.org/Product", "height")
-//            ->isNotTested()
+            ->isNotTested()
         ;
 
         //====================================================================//
