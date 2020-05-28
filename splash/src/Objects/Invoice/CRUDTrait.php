@@ -186,6 +186,10 @@ trait CRUDTrait
         //====================================================================//
         // Debug Mode => Force Allow Delete
         if (Splash::isDebugMode()) {
+            $this->object = $this->load($objectId);
+            if ($this->object->statut > 1) {
+                $this->setStatusDraft();
+            }
             $conf->global->INVOICE_CAN_ALWAYS_BE_REMOVED = 1;
             $this->clearPayments((int) $objectId);
         }

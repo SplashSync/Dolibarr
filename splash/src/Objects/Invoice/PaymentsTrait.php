@@ -291,6 +291,10 @@ trait PaymentsTrait
     {
         global $db;
         //====================================================================//
+        // Include Object Dolibarr Class
+        require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
+        require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+        //====================================================================//
         // Load Invoice Payments
         $this->loadPayments($invoiceId);
         //====================================================================//
@@ -308,7 +312,11 @@ trait PaymentsTrait
             }
             //====================================================================//
             // Try to delete Payment Line
-            $payment->delete();
+            if ($payment->delete() <= 0) {
+                $this->catchDolibarrErrors($payment);
+
+                return Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
+            }
         }
     }
 

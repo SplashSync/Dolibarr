@@ -202,7 +202,7 @@ class Local implements LocalClassInterface
         //====================================================================//
         // Server Logo & Images
         $response->icoraw = Splash::file()->readFileContents(DOL_DOCUMENT_ROOT."/favicon.ico");
-        $response->logourl = "http://www.dolibarr.org/images/stories/dolibarr_256x256.png";
+        $response->logourl = "https://www.dolibarr.org/medias/image/www.dolibarr.org/images/stories/dolibarr_256x256.png";
 
         //====================================================================//
         // Server Informations
