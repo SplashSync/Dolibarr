@@ -186,7 +186,7 @@ trait CRUDTrait
         //====================================================================//
         // Debug Mode => Force Allow Delete
         if (Splash::isDebugMode()) {
-            $this->object = $this->load($objectId);
+            $this->object = $this->load((string) $objectId);
             if ($this->object->statut > 1) {
                 $this->setStatusDraft();
             }
