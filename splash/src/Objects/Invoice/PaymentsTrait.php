@@ -315,7 +315,7 @@ trait PaymentsTrait
             if ($payment->delete() <= 0) {
                 $this->catchDolibarrErrors($payment);
 
-                return Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
+                Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
             }
         }
     }
