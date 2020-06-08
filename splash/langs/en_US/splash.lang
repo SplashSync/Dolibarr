@@ -2,7 +2,7 @@
 # Dolibarr language file - en_US
 ################################################################################
 #
-# * Copyright (C) 2017 Splash Sync       <contact@splashsync.com>
+# * Copyright (C) 2020 Splash Sync       <contact@splashsync.com>
 # * This program is Copyright (C) Protected.
 # *  \Id 	 $Id: splash.lang 527 2016-05-25 10:18:55Z Nanard33 $
 # *  \version    $Revision: 527 $
@@ -31,14 +31,14 @@ SPL_Help_Msg        =   I Need Help
 ################################################################################
 
 SPL_Main_Config     =   Main Parameters
-SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/configuration
-SPL_SiteId          =   Unique Identifier for this website on Splash Servers (8 Char Max). 
+SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/start.html
+SPL_SiteId          =   Unique Identifier for this website on Splash Servers. 
 SPL_SiteId_Tooltip  =   This parameter is provided when you create a new Server on our website. 
 SPL_WsKey           =   Unique Encryption Key
 SPL_WsKey_Tooltip   =   This parameter is provided when you create a new Server on our website. 
 
 SPL_WsExpert        =   Enable Advanced Configuration for this Server
-SPL_WsExpert_Tooltip=   Only use uppon our request! Your serveur may not work normally. 
+SPL_WsExpert_Tooltip=   Only use upon our request! Your server may not work normally. 
 SPL_WsHost          =   Url of Splash Server
 SPL_WsHost_Tooltip  =   Only modify upon our request! Default value : www.splashsync.com/ws/soap 
 SPL_WsMethod        =   WebService Protocol to Use
@@ -50,13 +50,20 @@ SPL_Smart_Tooltip   =   On changes, display warning & errors only.
 ################################################################################
 
 SPL_Local_Config    =   Local Parameters 
-SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#setup-default-parameters
+SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/start.html#configure-splash-module
 SPL_DfLang          =   Default Language used by the module
 SPL_OtherLangs      =   Other Languages used by the module
 SPL_DfUser          =   User to use for all remote operations
-SPL_DfStock         =   Whareouse used for stocks transactions (if no default warehouse specified at product level)
-SPL_ProductStock    =   Default warehouse for products setup (if empty value or not specified)
 SPL_DfPayMethod     =   Default payment method used by the module (if not specified)
+
+################################################################################
+# Admin Page Index - Products
+################################################################################
+
+SPL_Products_Help   =   https://splashsync.github.io/Dolibarr/documentation#products-catalog
+SPL_MultiStock      =   Manage Independent Stocks for Each Warehouse
+SPL_DfStock         =   Warehouse used for stocks transactions (if no default warehouse specified at product level)
+SPL_ProductStock    =   Default warehouse for products setup (if empty value or not specified)
 SPL_DfMultiPrice    =   Default price used by the module (MultiPrices mode is enabled)
 
 ################################################################################
@@ -64,22 +71,22 @@ SPL_DfMultiPrice    =   Default price used by the module (MultiPrices mode is en
 ################################################################################
 
 SPL_Orders_Config   =   Orders & Invoices
-SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/orders
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/documentation#orders-invoices
 SPL_DetectTaxName   =   Detect tax rates using taxes codes dictionary
 SPL_DetectTaxName_T =   When importing orders and invoices, if a tax rate code is given and can be identified in your dictionary, it will be used by the module instead of the VAT rate provided in the price.
 SPL_DetectBySku     =   Detect Products by Reference (Ref. / SKU)
 SPL_DetectBySku_T   =   When importing orders and invoices, if no Product ID is given, try to identify the product by Reference. 
 SPL_Orders_Guest    =   Allow Import of Guests Orders & Invoices
-SPL_Orders_Guest_T  =   This mode allow import of Orders & Invoices passed using Guest Mode on moderns E-Commerce platforms.
+SPL_Orders_Guest_T  =   This mode allow import of Orders & Invoices passed using Guest Mode on modern E-Commerce platforms.
 SPL_Orders_Guest_U  =   Select the default Customer all Guest invoices will be attached to.
-SPL_Orders_Email    =   Try to detect Exiting Customer using its Email
+SPL_Orders_Email    =   Try to detect Existing Customer using its Email
 
 ################################################################################
 # Admin Page Index - Payments
 ################################################################################
 
 SPL_Payment_Config  =   Payments Import
-SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/payments
+SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/documentation#user-payments
 SPL_DfBankAccount   =   Default Bank Account used by the module (if not specified)
 SPL_BankAccountFor  =   Bank Account used for <b>%s</b> payments (%s)
 
@@ -87,7 +94,7 @@ SPL_BankAccountFor  =   Bank Account used for <b>%s</b> payments (%s)
 # Admin Page Self Tests Results
 ################################################################################
 
-SPL_ObjectsList     = List of Available Objets 
+SPL_ObjectsList     = List of Available Objects 
 SPL_WidgetsList     = List of Available Widgets
 
 ################################################################################

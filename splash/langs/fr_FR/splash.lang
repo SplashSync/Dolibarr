@@ -2,7 +2,7 @@
 # Dolibarr language file - fr_FR
 ################################################################################
 #
-# * Copyright (C) 2017 Splash Sync       <contact@splashsync.com>
+# * Copyright (C) 2020 Splash Sync       <contact@splashsync.com>
 # * This program is Copyright (C) Protected.
 # *  \Id 	 $Id: splash.lang 527 2016-05-25 10:18:55Z Nanard33 $
 # *  \version    $Revision: 527 $
@@ -31,8 +31,8 @@ SPL_Help_Msg        =   I Need Help
 ################################################################################
 
 SPL_Main_Config     =   Paramètres généraux
-SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/fr/configuration
-SPL_SiteId          =   Identifiant unique pour ce site sur le server Splash (8 Char Max). 
+SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/fr/start.html
+SPL_SiteId          =   Identifiant unique pour ce site sur le server Splash. 
 SPL_SiteId_Tooltip  =   Ce parametre est fourni lors de la création d'un serveur sur le site. 
 SPL_WsKey           =   Clef Unique de Cryptage
 SPL_WsKey_Tooltip   =   Ce parametre est fourni lors de la création d'un serveur sur le site.
@@ -50,13 +50,21 @@ SPL_Smart_Tooltip   =   Lors des changements, n'afficher les notifications qu'en
 ################################################################################
 
 SPL_Local_Config    =   Paramètres Locaux
-SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/fr/configuration/#setup-default-parameters
+SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/fr/start.html#configuration-du-module
 SPL_DfLang          =   Langue par défaut utilisée par le module
 SPL_OtherLangs      =   Autres Langues utilisées par le module
 SPL_DfUser          =   Utilisateur utilisée par le module lors des opération réalisée à distance
-SPL_DfStock         =   Entrepot utilisée pour les mouvements de stocks (si aucun stock par défaut spécifié pour le produit).
-SPL_ProductStock    =   Entrepot par défaut pour les configurations produits (si vide ou non spécifié)
 SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifié)
+
+
+################################################################################
+# Admin Page Index - Products
+################################################################################
+
+SPL_Products_Help   =   https://splashsync.github.io/Dolibarr/fr/documentation.html#products-catalog
+SPL_MultiStock      =   Gérer les Stocks de chaque Entrepôt Indépendamment
+SPL_DfStock         =   Entrepôt utilisée pour les mouvements de stocks (si aucun stock par défaut spécifié pour le produit).
+SPL_ProductStock    =   Entrepôt par défaut pour les configurations produits (si vide ou non spécifié)
 SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-prix est actif)
 
 ################################################################################
@@ -64,7 +72,7 @@ SPL_DfMultiPrice    =   Prix par défaut utilisée par le module (le mode Multi-
 ################################################################################
 
 SPL_Orders_Config   =   Commandes & Factures
-SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/fr/orders
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/fr/documentation.html#commandes-factures
 SPL_DetectTaxName   =   Détécter les taux de taxation selon leurs codes
 SPL_DetectTaxName_T =   Lors de l'import de commandes et de factures, si un code de taux de taxation est donné et peut être identifier dans votre dictionnaire, il sera utilisé par le module à la place du taux de TVA fourni dans le prix.
 SPL_DetectBySku     =   Détécter les produits par Référence (Ref. / SKU)
@@ -79,7 +87,7 @@ SPL_Orders_Email    =   Essayez de détecter le client en utilisant son adresse 
 ################################################################################
 
 SPL_Payment_Config  =   Import ds Paiements
-SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/fr/payments
+SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/fr/documentation.html#gestion-des-paiements
 SPL_DfBankAccount   =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
 SPL_BankAccountFor  =   Compte Bancaire pour les paiements par <b>%s</b> (%s)
 

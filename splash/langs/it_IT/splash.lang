@@ -1,0 +1,116 @@
+################################################################################
+# Dolibarr language file - it_IT
+################################################################################
+#
+# * Copyright (C) 2020 Splash Sync       <contact@splashsync.com>
+# * This program is Copyright (C) Protected.
+# *  \Id 	 $Id: splash.lang 527 2016-05-25 10:18:55Z Nanard33 $
+# *  \version    $Revision: 527 $
+# *  \brief      Main Translations file for Splash Module
+#
+################################################################################
+
+CHARSET=UTF-8
+
+################################################################################
+# General
+################################################################################
+
+SPL_Welcome         =   Splash Module è ora attivato
+
+################################################################################
+# Admin Page Index
+################################################################################
+SPL_Name            = Splash Sync Module
+SPL_Short_Desc      = Connettore Splash Sync per Dolibarr.
+SPL_Full_Desc       = Connettore Splash Sync per Dolibarr. Sistema di sincronizzazione open source per Dolibarr. Ulteriori informazioni su <a href="https://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Help_Msg        = Ho bisogno di aiuto
+
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
+
+SPL_Main_Config     = Parametri principali
+SPL_Main_Help       = https://splashsync.github.io/Dolibarr/start.html
+SPL_SiteId          = Identificatore univoco per questo sito Web sui server Splash.
+SPL_SiteId_Tooltip  = Questo parametro viene fornito quando si crea un nuovo server sul nostro sito Web.
+SPL_WsKey           = Chiave di crittografia univoca
+SPL_WsKey_Tooltip   = Questo parametro viene fornito quando si crea un nuovo server sul nostro sito Web.
+
+SPL_WsExpert        = Abilita la configurazione avanzata per questo server
+SPL_WsExpert_Tooltip= Utilizzare solo su nostra richiesta! Il tuo server potrebbe non funzionare normalmente.
+SPL_WsHost          = Url di Splash Server
+SPL_WsHost_Tooltip  = Modifica solo su nostra richiesta! Valore predefinito: www.splashsync.com/ws/soap
+SPL_WsMethod        = Protocollo WebService da utilizzare
+SPL_Smart           = Notifiche intelligenti
+SPL_Smart_Tooltip   = In caso di modifiche, visualizzare solo avvisi ed errori.
+
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
+
+SPL_Local_Config    = Parametri locali
+SPL_Local_Help      = https://splashsync.github.io/Dolibarr/start.html#configure-splash-module
+SPL_DfLang          = Lingua predefinita utilizzata dal modulo
+SPL_OtherLangs      = Altre lingue utilizzate dal modulo
+SPL_DfUser          = Utente da utilizzare per tutte le operazioni remote
+SPL_DfPayMethod     = Metodo di pagamento predefinito utilizzato dal modulo (se non specificato)
+
+################################################################################
+# Admin Page Index - Products
+################################################################################
+
+SPL_Products_Help   = https://splashsync.github.io/Dolibarr/documentation#products-catalog
+SPL_MultiStock      = Gestisci scorte indipendenti per ciascun magazzino
+SPL_DfStock         = Magazzino utilizzato per le transazioni di magazzino (se non è stato specificato un magazzino predefinito a livello di prodotto)
+SPL_ProductStock    = Magazzino predefinito per impostazione prodotti (se valore vuoto o non specificato)
+SPL_DfMultiPrice    = Prezzo predefinito utilizzato dal modulo (la modalità MultiPrices è abilitata)
+
+################################################################################
+# Admin Page Index - Orders & Invoices
+################################################################################
+
+SPL_Orders_Config   = Ordini e fatture
+SPL_Orders_Help     = https://splashsync.github.io/Dolibarr/documentation#orders-invoices
+SPL_DetectTaxName   = Rileva aliquote fiscali utilizzando il dizionario dei codici delle tasse
+SPL_DetectTaxName_T = Quando si importano ordini e fatture, se viene fornito un codice di aliquota fiscale che può essere identificato nel dizionario, verrà utilizzato dal modulo anziché dall'aliquota IVA fornita nel prezzo.
+SPL_DetectBySku     = Rileva prodotti per riferimento (Rif. / SKU)
+SPL_DetectBySku_T   = Quando si importano ordini e fatture, se non viene fornito alcun ID prodotto, provare a identificare il prodotto per riferimento.
+SPL_Orders_Guest    = Consenti importazione di ordini e fatture ospiti
+SPL_Orders_Guest_T  = Questa modalità consente l'importazione di ordini e fatture trasmesse utilizzando la modalità ospite sulle moderne piattaforme di e-commerce.
+SPL_Orders_Guest_U  = Seleziona il cliente predefinito a cui verranno allegate tutte le fatture dell'ospite.
+SPL_Orders_Email    = Prova a rilevare il cliente esistente usando la sua email
+
+################################################################################
+# Admin Page Index - Payments
+################################################################################
+
+SPL_Payment_Config  = Importazione pagamenti
+SPL_Payment_Help    = https://splashsync.github.io/Dolibarr/documentation#user-payments
+SPL_DfBankAccount   = Conto bancario predefinito utilizzato dal modulo (se non specificato)
+SPL_BankAccountFor  = Conto bancario utilizzato per <b>%s</b> pagamenti (%s)
+
+################################################################################
+# Admin Page Self Tests Results
+################################################################################
+
+SPL_ObjectsList     = Elenco di oggetti disponibili
+SPL_WidgetsList     = Elenco dei widget disponibili
+
+################################################################################
+# Admin Page Connect Tests Results
+################################################################################
+
+SPL_WsTest          = Test connessione modulo
+SPL_SelfTest        = Autotest del modulo Splash e verifica dell'installazione
+SPL_WsTestPing      = Test ping Splash Server (nessuna crittografia)
+SPL_WsTestConnect   = Test connessione Splash Server (con crittografia)
+
+SPL_SelfTestOk      = Autotest e verifiche superate
+SPL_SelfTestKo      = Autotest o verifiche non riuscite
+SPL_WsPingOk        = Test ping del server Splash superato
+SPL_WsPingKo        = Test ping Splash Server non riuscito
+SPL_WsConnectOk     = Test connessione Splash Server superato
+SPL_WsConnectKo     = Test connessione Splash Server non riuscito
+
+
