@@ -114,7 +114,7 @@ parameters:
             source_folder:  "/splash"
             target_folder:  "/dol_module"
             build_folder:   "splash/"
-            build_file:     "module_splash-1.6.0"
+            build_file:     "module_splash-1.7.0-alpha"
             
         build-docs: 
             enabled:            true
@@ -154,7 +154,7 @@ parameters:
             tasks:
                 - build-module                
                 - build-docs  
-                
+
         manifest:
             tasks:
                 - build-manifest
