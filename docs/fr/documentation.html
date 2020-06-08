@@ -8,7 +8,7 @@
 
     <link rel="shortcut icon" href="/Dolibarr/fr/assets/img/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Documentation | Dolibarr Module</title>
-<meta name="generator" content="Jekyll v3.8.6" />
+<meta name="generator" content="Jekyll v3.8.7" />
 <meta property="og:title" content="Documentation" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol." />
@@ -17,7 +17,7 @@
 <meta property="og:url" content="splashsync.github.io/Dolibarr/documentation" />
 <meta property="og:site_name" content="Dolibarr Module" />
 <script type="application/ld+json">
-{"@type":"WebPage","url":"splashsync.github.io/Dolibarr/documentation","headline":"Documentation","description":"Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.","@context":"https://schema.org"}</script>
+{"description":"Welcome to the Dolibarr Module’s Documentation This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol.","@type":"WebPage","headline":"Documentation","url":"splashsync.github.io/Dolibarr/documentation","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <!-- MAIN STYLESHEETS -->
 
@@ -148,7 +148,7 @@
           </span>
         </label>
 
-        <div class="trigger"><a class="page-link" href="/Dolibarr/fr/start/install">Installation du Module Splash</a><a class="page-link" href="/Dolibarr/fr/docs/intro">Module Splash Sync pour Dolibarr</a><a class="page-link" href="/Dolibarr/fr/start/configure">Configuration du Module</a><a class="page-link" href="/Dolibarr/fr/docs/features">Fonctionnalités &amp; avantages</a><a class="page-link" href="/Dolibarr/fr/docs/orders">Commandes &amp; Factures</a><a class="page-link" href="/Dolibarr/fr/docs/payments">Gestion des Paiements</a><a class="page-link" href="/Dolibarr/fr/start/docker">Environnement de test (Docker)</a><a class="page-link" href="/Dolibarr/fr/faq/splash">Questions à propos de Splash Sync</a><a class="page-link" href="/Dolibarr/fr/about.html">About</a><a class="page-link" href="/Dolibarr/fr/documentation">Documentation</a><a class="page-link" href="/Dolibarr/fr/faq">Faq</a><a class="page-link" href="/Dolibarr/fr/manifest">Manifest</a><a class="page-link" href="/Dolibarr/fr/objects">Objects</a><a class="page-link" href="/Dolibarr/fr/start">Quick Start</a></div>
+        <div class="trigger"><a class="page-link" href="/Dolibarr/fr/start/install">Installation du Module Splash</a><a class="page-link" href="/Dolibarr/fr/docs/intro">Module Splash Sync pour Dolibarr</a><a class="page-link" href="/Dolibarr/fr/start/configure">Configuration du Module</a><a class="page-link" href="/Dolibarr/fr/docs/features">Fonctionnalités &amp; avantages</a><a class="page-link" href="/Dolibarr/fr/docs/products">Catalogue Produits</a><a class="page-link" href="/Dolibarr/fr/docs/orders">Commandes &amp; Factures</a><a class="page-link" href="/Dolibarr/fr/docs/payments">Gestion des Paiements</a><a class="page-link" href="/Dolibarr/fr/start/docker">Environnement de test (Docker)</a><a class="page-link" href="/Dolibarr/fr/faq/splash">Questions à propos de Splash Sync</a><a class="page-link" href="/Dolibarr/fr/about.html">About</a><a class="page-link" href="/Dolibarr/fr/documentation">Documentation</a><a class="page-link" href="/Dolibarr/fr/faq">Faq</a><a class="page-link" href="/Dolibarr/fr/manifest">Manifest</a><a class="page-link" href="/Dolibarr/fr/objects">Objects</a><a class="page-link" href="/Dolibarr/fr/start">Quick Start</a></div>
       </nav></div>
 </header>
  --><div class="doc-wrapper">
@@ -291,6 +291,83 @@ du point de vente ou de toute autre application que vous pouvez connecter!</p>
 
 
 			<!--Doc Section-->
+			<section id="catalogue-produits" class="doc-section">
+
+			    <h2 class="section-title">Catalogue Produits</h2>
+			    
+			    <div class="section-block lightbox-content">
+			    	<h3 id="gestion-du-catalogue-produits">Gestion du Catalogue Produits</h3>
+
+<p>Splash dispose de beaucoup de fonctionnalités dédiées à la gestion du catlogue produit.</p>
+
+<p>La gestion des stocks et des prix de vente sont des point très sensibles.
+Prennez le temps de bien comprendre à quoi servent les différents paramètres afin de les configurer correctement.</p>
+
+<h4 id="entrepôt-utilisé-pour-les-mouvements-de-stocks">Entrepôt utilisé pour les mouvements de stocks</h4>
+
+<p>Afin de gérer correctement vos stocks, vous devez indiquer à Splash quel entrepôt utiliser pour les corrections de stocks.</p>
+
+<div class="callout-block callout-warning">
+    <div class="icon-holder">
+        <i class="fas fa-exclamation-circle"></i>
+    </div>
+    <div class="content">
+        <h4 class="callout-title">Attention</h4>
+        <p>A minima, vous devez créer un entrepôt, même si vous n'avez qu'un seul lieu de stockage.</p>
+    </div>
+</div>
+
+<h4 id="entrepôt-par-défaut-pour-les-configurations-produits">Entrepôt par défaut pour les configurations produits</h4>
+
+<p>Lors de la création de produits, Splash peu les configurer afin qu’ils soient associés l’entrepôt de votre choix.</p>
+
+<h4 id="multi-prix-prix-par-défaut-utilisée-par-le-module">Multi-Prix: Prix par défaut utilisée par le module</h4>
+
+<p>Si vous utilisés la fonction multiprix de Dolibarr, vous devez indiquer à Splash quel niveau de prix utiliser comme prix par défaut.</p>
+
+<p>Les autres niveaux de prix seront eux aussi accéssibles, mais dans des champs supplémentaires 
+qu’il vous faudra connecter manuellement depuis votre compte Splash.</p>
+
+<h4 id="expert-gérez-vos-stocks-entrepôt-par-entrepôt">[Expert] Gérez vos Stocks Entrepôt par Entrepôt</h4>
+
+<p><strong>Cette fonction requiert l’activation du mode “Expert”</strong></p>
+
+<p>Si vous travaillez avec plusieurs Entrepôts, ce mode vous permettra d’accéder indépendamment aux stocks de chaque entrepôts.</p>
+
+<p>Un champ sera créé pour chaque entrepôt, il faudra ensuite le configurer sur votre compte Splash.</p>
+
+<div class="callout-block callout-success">
+    <div class="icon-holder">
+        <i class="fas fa-thumbs-up"></i>
+    </div>
+    <div class="content">
+        <h4 class="callout-title">Gestion Multi-sites</h4>
+        <p>Il est désormais possible de gérér séparement les stocks de vos sites de E-Commerce et de vos points de vente.</p>
+    </div>
+</div>
+
+<p>Le stock réel de vos produits, champs générique et connecté automatiquement, sera désormais en lécture seule. 
+Vous pourrez le lire, mais pas le modifier.</p>
+
+			    </div>
+
+			</section>
+			<!--End Doc Section-->
+
+		
+
+		
+
+	
+
+	
+
+    
+
+      	
+
+
+			<!--Doc Section-->
 			<section id="commandes-factures" class="doc-section">
 
 			    <h2 class="section-title">Commandes & Factures</h2>
@@ -370,6 +447,10 @@ Si l’email donné appartient à un tier existant, la commande sera attachée �
 
     
 
+	
+
+    
+
       	
 
 
@@ -407,10 +488,6 @@ Si l’email donné appartient à un tier existant, la commande sera attachée �
 		
 
 	
-
-	
-
-    
 
 	
 
@@ -575,12 +652,28 @@ Si l’email donné appartient à un tier existant, la commande sera attachée �
 
           
             <a class="nav-link scrollto" 
+              href="#catalogue-produits">
+              Catalogue Produits
+            </a>
+          
+
+          
+        
+      
+        
+        
+
+          
+            <a class="nav-link scrollto" 
               href="#commandes-factures">
               Commandes & Factures
             </a>
           
 
           
+        
+      
+        
         
       
         
@@ -594,9 +687,6 @@ Si l’email donné appartient à un tier existant, la commande sera attachée �
           
 
           
-        
-      
-        
         
       
         
