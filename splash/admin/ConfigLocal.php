@@ -69,48 +69,6 @@ echo '      <td>';
 echo $form->select_dolusers($conf->global->SPLASH_USER, 'user', 1, null, 0, '', '', $conf->entity);
 echo '      </td>';
 echo '  </tr>';
-//====================================================================//
-// Default Warehouse Parameter
-require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
-$formproduct = new FormProduct($db);
-echo '  <tr class="pair">';
-echo '      <td>'.$langs->trans("SPL_DfStock").'</td>';
-echo '      <td>'.$formproduct->selectWarehouses($conf->global->SPLASH_STOCK, 'stock', '', 0).'</td>';
-echo '  </tr>';
-//====================================================================//
-// Products Default Warehouse Parameter
-echo '  <tr class="pair">';
-echo '      <td>'.$langs->trans("SPL_ProductStock").'</td>';
-echo '      <td>'.$formproduct->selectWarehouses($conf->global->SPLASH_PRODUCT_STOCK, 'product_stock', '', 1).'</td>';
-echo '  </tr>';
-
-//====================================================================//
-// If multiprices are enabled
-if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-    //====================================================================//
-    // Default Synchronized Product Price
-    echo '  <tr class="pair">';
-    echo '      <td>'.$langs->trans("SPL_DfMultiPrice").'</td>';
-    echo '      <td>';
-
-    print '<select name="price_level" class="flat">';
-    for ($i = 1; $i <= $conf->global->PRODUIT_MULTIPRICES_LIMIT; $i++) {
-        print '<option value="'.$i.'"' ;
-        if ($i == $conf->global->SPLASH_MULTIPRICE_LEVEL) {
-            print 'selected';
-        }
-        print '>'.$langs->trans('SellingPrice')." ".$i;
-        $keyforlabel = 'PRODUIT_MULTIPRICES_LABEL'.$i;
-        if (! empty($conf->global->{$keyforlabel})) {
-            print ' - '.$langs->trans($conf->global->{$keyforlabel});
-        }
-        print '</option>';
-    }
-    print '</select>';
-
-    echo '      </td>';
-    echo '  </tr>';
-}
 
 echo '</tbody></table>';
 

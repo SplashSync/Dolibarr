@@ -18,6 +18,7 @@ namespace Splash\Local;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Core\ExtraFieldsPhpUnitTrait;
 use Splash\Local\Core\MultiCompanyTrait;
+use Splash\Local\Services\ConfigManager;
 use Splash\Models\LocalClassInterface;
 use User;
 
@@ -488,8 +489,10 @@ class Local implements LocalClassInterface
 
         //====================================================================//
         //  Verify - Stock Selected
-        if (!isset($conf->global->SPLASH_STOCK) || ($conf->global->SPLASH_STOCK <= 0)) {
-            return Splash::log()->err("ErrSelfTestNoStock");
+        if (!ConfigManager::isMultiStocksMode()) {
+            if (!isset($conf->global->SPLASH_STOCK) || ($conf->global->SPLASH_STOCK <= 0)) {
+                return Splash::log()->err("ErrSelfTestNoStock");
+            }
         }
 
         //====================================================================//

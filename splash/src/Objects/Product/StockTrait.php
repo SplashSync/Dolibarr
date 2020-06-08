@@ -17,6 +17,7 @@ namespace   Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\ConfigManager;
 
 /**
  * Dolibarr Products Stock Fields
@@ -49,7 +50,7 @@ trait StockTrait
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->Identifier("fk_default_warehouse")
                 ->addChoices($this->getStockLocations())
-                ->group($langs->trans("MenuStocks"))
+                ->group($langs->trans("Stock"))
                 ->Name($langs->trans("DefaultWarehouse"))
                 ->MicroData("http://schema.org/Offer", "inventoryLocation");
         }
@@ -59,8 +60,9 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("stock_reel")
             ->Name($langs->trans("RealStock"))
-            ->group($langs->trans("MenuStocks"))
+            ->group($langs->trans("Stock"))
             ->MicroData("http://schema.org/Offer", "inventoryLevel")
+            ->isReadOnly(ConfigManager::isMultiStocksMode())
             ->isListed();
 
         //====================================================================//
@@ -68,7 +70,7 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("seuil_stock_alerte")
             ->Name($langs->trans("StockLimit"))
-            ->group($langs->trans("MenuStocks"))
+            ->group($langs->trans("Stock"))
             ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
 
         //====================================================================//
@@ -76,7 +78,7 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->Identifier("stock_alert_flag")
             ->Name($langs->trans("StockTooLow"))
-            ->group($langs->trans("MenuStocks"))
+            ->group($langs->trans("Stock"))
             ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
             ->isReadOnly();
 
@@ -85,7 +87,7 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_INT)
             ->Identifier("desiredstock")
             ->Name($langs->trans("DesiredStock"))
-            ->group($langs->trans("MenuStocks"))
+            ->group($langs->trans("Stock"))
             ->MicroData("http://schema.org/Offer", "inventoryTargetLevel");
 
         //====================================================================//
@@ -93,9 +95,41 @@ trait StockTrait
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->Identifier("pmp")
             ->Name($langs->trans("EstimatedStockValueShort"))
-            ->group($langs->trans("MenuStocks"))
+            ->group($langs->trans("Stock"))
             ->MicroData("http://schema.org/Offer", "averagePrice")
             ->isReadOnly();
+    }
+
+    /**
+     * Build Fields using FieldFactory
+     *
+     * @return void
+     */
+    protected function buildMultiStockFields()
+    {
+        global $langs;
+
+        //====================================================================//
+        // MULTI-LOCATIONS STOCKS
+        //====================================================================//
+
+        if (!ConfigManager::isMultiStocksMode()) {
+            return;
+        }
+
+        foreach ($this->getStockLocationsIds() as $locationName => $locationId) {
+            //====================================================================//
+            // Warehouse Stock
+            $this->fieldsFactory()->create(SPL_T_INT)
+                ->identifier("stock_level_".$locationId)
+                ->name("[".$locationName."] ".$langs->trans("Stock"))
+                ->group($langs->trans("Stock"))
+                ->microData(
+                    "http://schema.org/Offer",
+                    "inventoryLevel".ucfirst($locationName)
+                )
+            ;
+        }
     }
 
     /**
@@ -144,6 +178,44 @@ trait StockTrait
     }
 
     /**
+     * Read requested Field
+     *
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
+     */
+    protected function getMultiStockFields($key, $fieldName)
+    {
+        //====================================================================//
+        // MULTI-LOCATIONS STOCKS
+        //====================================================================//
+
+        if (!ConfigManager::isMultiStocksMode()) {
+            return;
+        }
+
+        foreach ($this->getStockLocationsIds() as $locationId) {
+            //====================================================================//
+            // Detect is Requested Location
+            if ($fieldName != "stock_level_".$locationId) {
+                continue;
+            }
+            //====================================================================//
+            // Load Locations Stocks
+            if (empty($this->object->stock_warehouse)) {
+                $this->object->load_stock();
+            }
+            //====================================================================//
+            // Read Real Stock for Location
+            $this->out[$fieldName] = isset($this->object->stock_warehouse[$locationId]->real)
+                ? $this->object->stock_warehouse[$locationId]->real
+                : 0;
+            unset($this->in[$key]);
+        }
+    }
+
+    /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
@@ -183,6 +255,68 @@ trait StockTrait
     }
 
     /**
+     * Write Given Fields
+     *
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
+     *
+     * @return void
+     */
+    protected function setMultiStockFields($fieldName, $fieldData)
+    {
+        global $langs, $user;
+
+        //====================================================================//
+        // MULTI-LOCATIONS STOCKS
+        //====================================================================//
+
+        if (!ConfigManager::isMultiStocksMode()) {
+            return;
+        }
+
+        foreach ($this->getStockLocationsIds() as $locationId) {
+            //====================================================================//
+            // Detect is Requested Location
+            if ($fieldName != "stock_level_".$locationId) {
+                continue;
+            }
+            unset($this->in[$fieldName]);
+            //====================================================================//
+            // Load Locations Stocks
+            if (empty($this->object->stock_warehouse)) {
+                $this->object->load_stock();
+            }
+            //====================================================================//
+            // Read Real Stock for Location
+            $currentStock = isset($this->object->stock_warehouse[$locationId]->real)
+                ? $this->object->stock_warehouse[$locationId]->real
+                : 0;
+            //====================================================================//
+            // Compare Current Product Stock with new Value
+            if ($currentStock == $fieldData) {
+                return;
+            }
+            //====================================================================//
+            // Update Product Stock
+            $delta = $currentStock - $fieldData;
+            //====================================================================//
+            // Update Product Stock
+            $result = $this->object->correct_stock(
+                $user,                                      // Current User Object
+                $locationId,                                // Impacted Stock Id
+                abs($delta),                                // Quantity to Move
+                ($delta > 0)?1:0,                           // Direction 0 = add, 1 = remove
+                $langs->trans("Updated by Splash Module")   // Operation Comment
+            );
+            //====================================================================//
+            // Check potential Errors
+            if ($result < 0) {
+                $this->catchDolibarrErrors();
+            }
+        }
+    }
+
+    /**
      * Write Id of Product Default Stock Location
      *
      * @param mixed $fieldData Field Data
@@ -191,8 +325,6 @@ trait StockTrait
      */
     protected function detectDefaultLocation($fieldData)
     {
-        global $conf;
-
         $locationId = null;
         //====================================================================//
         // Detect Location Id from Given Ref
@@ -206,9 +338,10 @@ trait StockTrait
         }
         //====================================================================//
         // Detect Location Id from Default Configuration
-        if (is_null($locationId) && !empty($conf->global->SPLASH_PRODUCT_STOCK)) {
-            if (in_array($conf->global->SPLASH_PRODUCT_STOCK, $this->getStockLocationsIds(), true)) {
-                $locationId = (int) $conf->global->SPLASH_PRODUCT_STOCK;
+        $defaultLocation = ConfigManager::getProductsDefaultWarehouse();
+        if (is_null($locationId) && !empty($defaultLocation)) {
+            if (in_array($defaultLocation, $this->getStockLocationsIds(), true)) {
+                $locationId = (int) $defaultLocation;
             }
         }
 
@@ -230,6 +363,11 @@ trait StockTrait
         // Compare Current Product Stock with new Value
         if ($this->object->stock_reel == $newStock) {
             return true;
+        }
+        //====================================================================//
+        // Verify Multi-Stock feature is Disabled
+        if (ConfigManager::isMultiStocksMode()) {
+            return Splash::log()->war("Multi-Stocks Feature is Enabled... Stock update Skipped.");
         }
         //====================================================================//
         // Update Product Stock
@@ -289,12 +427,10 @@ trait StockTrait
     /**
      * Read Id of Product Stock Location to Impact
      *
-     * @return false|int
+     * @return int
      */
     private function getStockLocationId()
     {
-        global $conf;
-
         //====================================================================//
         // Check If Location Field Exists (Dolibarr > 7)
         if (isset($this->object->fk_default_warehouse)) {
@@ -306,13 +442,7 @@ trait StockTrait
             }
         }
 
-        //====================================================================//
-        // Verify Default Product Stock is defined
-        if (empty($conf->global->SPLASH_STOCK) || !is_scalar($conf->global->SPLASH_STOCK)) {
-            return Splash::log()->errTrace("Product : No Local WareHouse Defined.");
-        }
-
-        return (int) $conf->global->SPLASH_STOCK;
+        return (int) ConfigManager::getSplashWarehouse();
     }
 
     /**

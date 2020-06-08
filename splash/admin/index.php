@@ -105,6 +105,9 @@ include("UpdateMain.php");
 // Update of Local Module Parameters
 include("UpdateLocal.php");
 //====================================================================//
+// Update of Products Parameters
+include("UpdateProducts.php");
+//====================================================================//
 // Update of Orders & Invoices Parameters
 include("UpdateOrders.php");
 //====================================================================//
@@ -137,6 +140,7 @@ include("ConfigMain.php");
 //====================================================================//
 // Display Module Local Configuration Block
 include("ConfigLocal.php");
+include("ConfigProducts.php");
 include("ConfigOrders.php");
 include("ConfigPayments.php");
 //====================================================================//

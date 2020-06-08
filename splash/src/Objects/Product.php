@@ -56,6 +56,7 @@ class Product extends AbstractObject
     use Product\MainTrait;                          // Access to Dimensions, Weights & more...
     use Product\BarcodeTrait;                       // Access to Product Barcodes
     use Product\PricesTrait;                        // Access to Product Sell & Wholsale Prices
+    use Product\MultiPricesTrait;                   // Access to Product Sell Multi-Prices
     use Product\StockTrait;                         // Access to Product Stocks
     use Product\MetaTrait;                          // Access to Products Metadatas
     use Product\VariantsTrait;                      // Access to Variants Fileds & Management Functions

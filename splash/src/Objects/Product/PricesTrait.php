@@ -16,6 +16,7 @@
 namespace   Splash\Local\Objects\Product;
 
 use Splash\Local\Local;
+use Splash\Local\Services\ConfigManager;
 
 /**
  * Dolibarr Products Prices Fields
@@ -160,7 +161,7 @@ trait PricesTrait
      */
     private function setProductPrice($newPrice)
     {
-        global $user, $conf;
+        global $user;
 
         //====================================================================//
         // Read Current Product Price (Via Out Buffer)
@@ -189,11 +190,7 @@ trait PricesTrait
 
         //====================================================================//
         // If multiprices are enabled
-        if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $priceLevel = !empty($conf->global->SPLASH_MULTIPRICE_LEVEL) ? $conf->global->SPLASH_MULTIPRICE_LEVEL : 1;
-        } else {
-            $priceLevel = 0;
-        }
+        $priceLevel = ConfigManager::getDefaultPriceLevel();
 
         //====================================================================//
         // Update Variant Product Price
