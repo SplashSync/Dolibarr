@@ -281,7 +281,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", (string) rand(1, 3), 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);

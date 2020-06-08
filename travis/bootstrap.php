@@ -48,7 +48,7 @@ dolibarr_set_const($db, "SPLASH_STOCK", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_BANK", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", "CB", 'chaine', 0, '', $conf->entity);
-dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "1", 'chaine', 0, '', $conf->entity);
+dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $conf->entity);
 
 //====================================================================//
 // Activate Splash Module
