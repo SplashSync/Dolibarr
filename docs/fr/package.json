@@ -11,7 +11,7 @@
         "jquery": "^3.4.1",
         "jquery-scrollTo": "^0.2.2",
         "popper.js": "^1.14.7",
-        "prismjs": "^1.17.1"
+        "prismjs": "^1.21.0"
     },
     "directories": {
         "dist": "assets/vendor/"
