@@ -36,4 +36,4 @@ parameters:
 
         # Fix for Dolibar V12
         - '#Method ProductAttributeValue::delete\(\) invoked with 1 parameter, 0 required#'
-        - '#Method ProductAttributeValue::delete\(\) invoked with 2 parameters, 1 required#'
+        - '#Method Adherent::load_board\(\) invoked with 2 parameters, 1 required#'
