@@ -394,7 +394,7 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->adherent->enabled) && $user->rights->adherent->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/adherents/class/adherent.class.php';
             $board = new \Adherent($db);
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardlines[] = $board->load_board($user, "expired");
         }
     }
 
