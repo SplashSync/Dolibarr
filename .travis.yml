@@ -123,7 +123,3 @@ notifications:
 after_success:
     # Display Full List of Executed Tests    
     - cat coverage/executed.txt
-    
-after_failure:
-
-    
