@@ -35,4 +35,4 @@ parameters:
         - '#Method ProductCombination::updateProperties\(\) invoked with 2 parameters, 1 required#'
 
         # Fix for Dolibar V12
-        - '#Method ProductAttributeValue::delete\(\) invoked with 1 parameters, 0 required#'
+        - '#Method ProductAttributeValue::delete\(\) invoked with 1 parameter, 0 required#'
