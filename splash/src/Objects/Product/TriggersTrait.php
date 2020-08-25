@@ -108,7 +108,7 @@ trait TriggersTrait
         if ($object instanceof  Product) {
             $this->objectId = (string) $object->id;
         } elseif ($object instanceof MouvementStock) {
-            $this->objectId = $object->product_id;
+            $this->objectId = (string) $object->product_id;
         }
     }
 

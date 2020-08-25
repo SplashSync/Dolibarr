@@ -198,7 +198,7 @@ trait PricesTrait
         // Since DOL V13 => Update Variant Prices levels
         $combPriceLevel = $this->combination->combination_price_levels[$priceLevel];
         if (0 != $combPriceLevel->variation_price_percentage) {
-            $combPriceLevel->variation_price_percentage = 0;
+            $combPriceLevel->variation_price_percentage = false;
             $this->needUpdate("combination");
         }
         if (abs($combPriceLevel->variation_price - $priceVariation) > 1E-4) {

@@ -236,6 +236,7 @@ class AttributesManager
      */
     public static function removeAttribute($attribute)
     {
+        global $user;
         //====================================================================//
         // Ensure Service Init
         self::init();
@@ -248,7 +249,7 @@ class AttributesManager
         }
         //====================================================================//
         // Delete Attribute
-        if ($attribute->delete() < 0) {
+        if ($attribute->delete($user) < 0) {
             return Splash::log()->errTrace(
                 " Unable to Delete Product Attribute (".$attribute->ref.")."
             );
@@ -386,18 +387,17 @@ class AttributesManager
      */
     public static function removeAttributeValue($value)
     {
+        global $user;
         //====================================================================//
         // Ensure Service Init
         self::init();
-
         //====================================================================//
         // Delete Attribute Value
-        if ($value->delete() < 0) {
+        if ($value->delete($user) < 0) {
             return Splash::log()->errTrace(
                 "Unable to Delete Product Attribute Value (".$value->ref.")."
             );
         }
-
         //====================================================================//
         // Reload Load Attributes Values Cache
         self::loadAttributeValues($value->fk_product_attribute);
