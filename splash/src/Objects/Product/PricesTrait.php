@@ -185,7 +185,7 @@ trait PricesTrait
         }
         //====================================================================//
         // Before DOL V13 => No Variant Prices levels
-        if (!isset($this->combination->combination_price_levels[$priceLevel])) {
+        if (!isset($this->combination) || !isset($this->combination->combination_price_levels[$priceLevel])) {
             return;
         }
         //====================================================================//

@@ -173,7 +173,9 @@ trait MultiPricesTrait
             }
             //====================================================================//
             // Update Price on Product Combination
-            $this->setVariantVariationPrice($price, $level);
+            if ($this->isVariant() && !empty($this->baseProduct)) {
+                $this->setVariantVariationPrice($price, $level);
+            }
             //====================================================================//
             // Commit Price Update on Simple Product
             $result = $this->object->updatePrice($price, $priceBase, $user, $fieldData["vat"], 0.0, $level);
