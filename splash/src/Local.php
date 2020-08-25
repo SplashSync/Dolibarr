@@ -369,6 +369,7 @@ class Local implements LocalClassInterface
                 if (property_exists("ProductCombination", "combination_price_levels")) {
                     $list[] = "VariantsMultiPrices";
                 };
+
                 return $list;
         }
     }
