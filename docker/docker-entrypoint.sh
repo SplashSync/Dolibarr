@@ -58,5 +58,10 @@ mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET valu
 mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = 'fr_FR' WHERE name = 'SPLASH_LANG';"
 mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = '1' WHERE name = 'SPLASH_STOCK';"
 
+if [ -d /var/overrides ]; then
+  echo "Import Code Overrides"
+  cp -Rf /var/overrides/* /var/www/html
+fi
+
 echo "Serving Dolibarr..."
 exec "apache2-foreground"

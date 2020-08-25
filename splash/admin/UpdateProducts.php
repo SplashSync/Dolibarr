@@ -57,7 +57,7 @@ if ('UpdateProducts' == $action) {
     //====================================================================//
     // Update Default MultiPrice
     $DfPrice = GETPOST('price_level', 'alpha');
-    if ($DfUser) {
+    if ($DfPrice) {
         if (dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", $DfPrice, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }

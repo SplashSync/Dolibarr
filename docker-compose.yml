@@ -29,6 +29,7 @@
 # 172.100.0.11        v11.dolibarr.local
 # 172.100.0.99        latest.dolibarr.local
 # 172.100.0.100       toolkit.dolibarr.local
+# 172.100.0.200       phpmyadmin.dolibarr.local
 #
 ################################################################################
 
@@ -41,6 +42,7 @@ services:
     mysql:
         image: mysql:5.7
         container_name: dolibarr-mysql
+        logging: { driver: "none" }
         environment:
             - "MYSQL_ROOT_PASSWORD=dolibarr"
             - "MYSQL_DATABASE=dolibarr"
@@ -57,25 +59,54 @@ services:
         depends_on:
             - mysql
         environment:
-            - "DOLI_DB_TYPE=mysqli"
-            - "DOLI_DB_HOST=mysql"
-            - "DOLI_DB_NAME=dolibarr"
-            - "DOLI_DB_USER=root"
-            - "DOLI_DB_PASSWORD=dolibarr"
-            - "DOLI_ADMIN_LOGIN=Admin"
-            - "DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture"
-            - "PHP_MEMORY_LIMIT=-1"
+            - DOLI_DB_TYPE=mysqli
+            - DOLI_DB_HOST=mysql
+            - DOLI_DB_NAME=dolibarr
+            - DOLI_DB_USER=root
+            - DOLI_DB_PASSWORD=dolibarr
+            - DOLI_ADMIN_LOGIN=Admin
+            - DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture
+            - DOLI_URL_ROOT=http://latest.dolibarr.local
+            - PHP_MEMORY_LIMIT=-1
             - SPLASH_WS_ID=ThisIsDolLatestKey
             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap            
         volumes:
             - "./:/var/www/html/custom/"
+            - "./docker/overrides:/var/overrides/"
         command: sh /var/www/html/custom/docker/docker-entrypoint.sh
         hostname: latest.dolibarr.local
         networks:
             dolibarr:      { ipv4_address: 172.100.0.99 }
             splashsync:    { aliases: [ latest.dolibarr.local ] }
-           
+
+#    ################################################################################
+#    # Dolibarr V12
+#    dol-10:
+#        image: monogramm/docker-dolibarr:12.0
+#        container_name: dolibarr-v12
+#        depends_on:
+#            - mysql
+#        environment:
+#            - "DOLI_DB_TYPE=mysqli"
+#            - "DOLI_DB_HOST=mysql"
+#            - "DOLI_DB_NAME=dolibarr12"
+#            - "DOLI_DB_USER=root"
+#            - "DOLI_DB_PASSWORD=dolibarr"
+#            - "DOLI_ADMIN_LOGIN=Admin"
+#            - "DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture"
+#            - "PHP_MEMORY_LIMIT=-1"
+#            - SPLASH_WS_ID=ThisIsDol12Key
+#            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
+#            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
+#        volumes:
+#            - "./:/var/www/html/custom/"
+#        command: sh /var/www/html/custom/docker/docker-entrypoint.sh
+#        hostname: v12.dolibarr.local
+#        networks:
+#            dolibarr:      { ipv4_address: 172.100.0.12 }
+#            splashsync:    { aliases: [ v10.dolibarr.local ] }
+
 #    ################################################################################
 #    # Dolibarr V11     
 #    dol-11:
@@ -122,20 +153,21 @@ services:
             - "PHP_MEMORY_LIMIT=-1"
             - SPLASH_WS_ID=ThisIsDol10Key
             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap            
+            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
         volumes:
             - "./:/var/www/html/custom/"
         command: sh /var/www/html/custom/docker/docker-entrypoint.sh
         hostname: v10.dolibarr.local
         networks:
             dolibarr:      { ipv4_address: 172.100.0.10 }
-            splashsync:    { aliases: [ v10.dolibarr.local ] }           
+            splashsync:    { aliases: [ v10.dolibarr.local ] }
            
     ################################################################################
     # Splash Toolkit Container   
     toolkit:
         image: 'splashsync/toolkit'
         container_name: dolibarr-toolkit
+        logging: { driver: "none" }
         volumes:
             # Specify Local Configuration File
             - './docker/toolkit/splash.yml:/app/config/packages/splash.yml:ro'
@@ -144,7 +176,23 @@ services:
         networks:
             dolibarr:      { ipv4_address: 172.100.0.100, aliases: [ toolkit.dolibarr.local ] }
             splashsync:     { aliases: [ toolkit.dolibarr.local ] }            
-            
+
+    ################################################################################
+    # PhpMyAdmin Container
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:5
+        container_name: dolibarr-phpmyadmin
+        logging: { driver: "none" }
+        depends_on:
+            - mysql
+        environment:
+            - PMA_HOST=mysql
+            - MYSQL_USER=dolibarr
+            - MYSQL_ROOT_PASSWORD=dolibarr
+            - MYSQL_PASSWORD=dolibarr
+        networks:
+            dolibarr:      { ipv4_address: 172.100.0.200, aliases: [ phpmyadmin.dolibarr.local ] }
+
 networks:
     ################################################################################
     # Default Private Network

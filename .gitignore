@@ -14,3 +14,4 @@
 /build/
 /reboot.sh
 /.gh-pages/
+/docker/overrides/

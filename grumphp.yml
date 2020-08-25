@@ -98,7 +98,8 @@ parameters:
         phpcpd:
             exclude:        
                 - "docs"
-                - "splash/vendor" 
+                - "docker"
+                - "splash/vendor"
                 
         phpstan:
             level: "%level%"

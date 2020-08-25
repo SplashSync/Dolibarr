@@ -93,6 +93,10 @@ trait MultiPricesTrait
             $priceHT = (double) $this->object->multiprices[$level];
             $priceTTC = (double) $this->object->multiprices_ttc[$level];
             $priceVAT = (double) $this->object->multiprices_tva_tx[$level];
+            if ($this->isVariant() && !empty($this->baseProduct)) {
+                $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$level];
+            }
+
             //====================================================================//
             // Encode Price for this Level
             if ('TTC' === $priceType) {
@@ -143,13 +147,12 @@ trait MultiPricesTrait
                 continue;
             }
             unset($this->in[$fieldName]);
-
             //====================================================================//
             // Read Current Product Price (Via Out Buffer)
             $this->getMultiPricesFields(null, $fieldName);
             //====================================================================//
             // Compare Prices
-            if (self::prices()->Compare($this->out[$fieldName], $fieldData)) {
+            if (self::prices()->Compare($this->out[$fieldName], $fieldData, $conf->global->MAIN_MAX_DECIMALS_UNIT)) {
                 return;
             }
 
@@ -168,7 +171,9 @@ trait MultiPricesTrait
                 $price = $fieldData["ht"];
                 $priceBase = "HT";
             }
-
+            //====================================================================//
+            // Update Price on Product Combination
+            $this->setVariantVariationPrice($price, $level);
             //====================================================================//
             // Commit Price Update on Simple Product
             $result = $this->object->updatePrice($price, $priceBase, $user, $fieldData["vat"], 0.0, $level);

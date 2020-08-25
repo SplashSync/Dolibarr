@@ -17,8 +17,8 @@ This module implement Splash Sync connector for Dolibarr ERP. It provide access 
 
 ## Requirements
 
-* PHP 5.6+ | PHP 7.0+
-* Dolibarr 4.0+
+* PHP 7.1+
+* Dolibarr 7.0+
 * An active Splash Sync User Account
 
 ## Documentation

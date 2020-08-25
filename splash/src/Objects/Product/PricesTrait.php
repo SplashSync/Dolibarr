@@ -153,6 +153,55 @@ trait PricesTrait
     }
 
     /**
+     * Write New Price Variations for Variant Product
+     *
+     * @param float $price      New Variant Price
+     * @param int   $priceLevel MultiPrice Level
+     *
+     * @return void
+     */
+    protected function setVariantVariationPrice($price, $priceLevel)
+    {
+        global $conf;
+
+        //====================================================================//
+        // If multiprices are enabled
+        if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
+            $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
+        } else {
+            $parentPrice = (double) $this->baseProduct->price;
+        }
+        $priceVariation = $price - $parentPrice;
+        //====================================================================//
+        // Whatever, if Main Price Update
+        if (1 == $priceLevel) {
+            $this->setSimple("variation_price_percentage", 0, "combination");
+            $this->setSimple("variation_price", $priceVariation, "combination");
+        }
+        //====================================================================//
+        // No Multiprices => Nothing else to Do
+        if (empty($conf->global->PRODUIT_MULTIPRICES)) {
+            return;
+        }
+        //====================================================================//
+        // Before DOL V13 => No Variant Prices levels
+        if (!isset($this->combination->combination_price_levels[$priceLevel])) {
+            return;
+        }
+        //====================================================================//
+        // Since DOL V13 => Update Variant Prices levels
+        $combPriceLevel = $this->combination->combination_price_levels[$priceLevel];
+        if (0 != $combPriceLevel->variation_price_percentage) {
+            $combPriceLevel->variation_price_percentage = 0;
+            $this->needUpdate("combination");
+        }
+        if (abs($combPriceLevel->variation_price - $priceVariation) > 1E-4) {
+            $combPriceLevel->variation_price = $priceVariation;
+            $this->needUpdate("combination");
+        }
+    }
+
+    /**
      * Write New Price
      *
      * @param array $newPrice
@@ -161,14 +210,14 @@ trait PricesTrait
      */
     private function setProductPrice($newPrice)
     {
-        global $user;
+        global $conf, $user;
 
         //====================================================================//
         // Read Current Product Price (Via Out Buffer)
         $this->getPricesFields(null, "price");
         //====================================================================//
         // Compare Prices
-        if (self::prices()->Compare($this->out["price"], $newPrice)) {
+        if (self::prices()->Compare($this->out["price"], $newPrice, $conf->global->MAIN_MAX_DECIMALS_UNIT)) {
             return true;
         }
 
@@ -236,14 +285,10 @@ trait PricesTrait
         }
         //====================================================================//
         // Update Price on Product Combination
-        $this->setSimple("variation_price_percentage", 0, "combination");
-        // Update Combination
-        $this->setSimple("variation_price", $price - $parentPrice, "combination");
-
+        $this->setVariantVariationPrice($price, $priceLevel);
         //====================================================================//
         // Commit Price Update on Parent Product (Only To Update Taxes Rates)
         $result = $this->baseProduct->updatePrice($parentPrice, $priceBase, $user, $priceVat, 0.0, $priceLevel);
-
         //====================================================================//
         // Check potential Errors
         if ($result < 0) {
