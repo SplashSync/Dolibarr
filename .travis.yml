@@ -20,10 +20,16 @@ matrix:
     include:
 
         # Dolibarr Develop Branch       
-#        - php: 7.3
-#          env: DOL=develop DATA=11.0.0    
+        - php: 7.3
+          env: DOL=develop DATA=12.0.0
 #        - php: 7.1
 #          env: DOL=develop DATA=11.0.0    
+
+      # Dolibarr V12.0 Branch
+        - php: 7.3
+          env: DOL=12.0 DATA=12.0.0
+        - php: 7.1
+          env: DOL=12.0 DATA=12.0.0
 
         # Dolibarr V11.0 Branch       
         - php: 7.3
@@ -34,8 +40,8 @@ matrix:
         # Dolibarr V10.0 Branch       
         - php: 7.3
           env: DOL=10.0 DATA=10.0.0    
-        - php: 7.1
-          env: DOL=10.0 DATA=10.0.0    
+#        - php: 7.1
+#          env: DOL=10.0 DATA=10.0.0
 
         # Dolibarr V9.0 Branch       
         - php: 7.1
