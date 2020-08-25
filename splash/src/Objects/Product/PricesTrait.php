@@ -173,15 +173,18 @@ trait PricesTrait
         }
         $priceVariation = $price - $parentPrice;
         //====================================================================//
-        // Whatever, if Main Price Update
+        // No Multiprices => Variant Main Price Update
+        if (empty($conf->global->PRODUIT_MULTIPRICES)) {
+            $this->setSimple("variation_price_percentage", 0, "combination");
+            $this->setSimple("variation_price", $priceVariation, "combination");
+
+            return;
+        }
+        //====================================================================//
+        // First Price => Variant Main Price Update for BC
         if (1 == $priceLevel) {
             $this->setSimple("variation_price_percentage", 0, "combination");
             $this->setSimple("variation_price", $priceVariation, "combination");
-        }
-        //====================================================================//
-        // No Multiprices => Nothing else to Do
-        if (empty($conf->global->PRODUIT_MULTIPRICES)) {
-            return;
         }
         //====================================================================//
         // Before DOL V13 => No Variant Prices levels
