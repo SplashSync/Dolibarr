@@ -228,11 +228,13 @@ class Local implements LocalClassInterface
      * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function testSequences($name = null)
     {
         global $db, $conf;
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
+        require_once(DOL_DOCUMENT_ROOT."/variants/class/ProductCombination.class.php");
         $ent = $conf->entity;
 
         //====================================================================//
@@ -342,9 +344,32 @@ class Local implements LocalClassInterface
                 self::configurePhpUnitExtraFields("facture", false);
 
                 return array();
+            case "VariantsMultiPrices":
+                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
+
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $ent);
+
+                self::configurePhpUnitExtraFields("societe", false);
+                self::configurePhpUnitExtraFields("socpeople", false);
+                self::configurePhpUnitExtraFields("product", false);
+                self::configurePhpUnitExtraFields("commande", false);
+                self::configurePhpUnitExtraFields("facture", false);
+
+                return array();
             default:
             case "List":
-                return array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
+                $list = array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
+                //====================================================================//
+                // Enable Variant Multi-prices for Dolibarr Version above 13.0
+                if (property_exists("ProductCombination", "combination_price_levels")) {
+                    $list[] = "VariantsMultiPrices";
+                };
+                return $list;
         }
     }
 
