@@ -12,7 +12,7 @@
     stopOnFailure               = "true"
     bootstrap                   = "splash/vendor/autoload.php" 
     verbose                     = "true"
-    timeoutForLargeTests        = "120"  
+    timeoutForLargeTests        = "200"
 >
 
     <testsuites>
@@ -51,6 +51,7 @@
         
         <!-- Only Test Specified Sequence -->
         <!--<const  name="SPLASH_SEQUENCE"  value="Monolangual" />-->           
-        <!--<const  name="SPLASH_SEQUENCE"  value="Variants" />-->           
+        <!--<const  name="SPLASH_SEQUENCE"  value="Variants" />-->
+        <!--<const  name="SPLASH_SEQUENCE"  value="VariantsMultiPrices" />-->
     </php>
 </phpunit>
