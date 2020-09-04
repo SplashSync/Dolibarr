@@ -73,7 +73,7 @@ trait PricesTrait
             //====================================================================//
             case 'price':
                 //====================================================================//
-                // If multiprices are enabled
+                // If multi-prices are enabled
                 if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
                     $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
                             ? $conf->global->SPLASH_MULTIPRICE_LEVEL
@@ -83,6 +83,9 @@ trait PricesTrait
                     $priceHT = (double) $this->object->multiprices[$priceLevel];
                     $priceTTC = (double) $this->object->multiprices_ttc[$priceLevel];
                     $priceVAT = (double) $this->object->multiprices_tva_tx[$priceLevel];
+                    if ($this->isVariant() && !empty($this->baseProduct)) {
+                        $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$priceLevel];
+                    }
                 } else {
                     $priceType = $this->object->price_base_type;
                     $priceHT = (double) $this->object->price;
@@ -283,7 +286,7 @@ trait PricesTrait
         global $conf, $user;
 
         //====================================================================//
-        // If multiprices are enabled
+        // If multi-prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
             $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
         } else {

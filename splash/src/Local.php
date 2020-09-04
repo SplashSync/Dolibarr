@@ -367,6 +367,7 @@ class Local implements LocalClassInterface
                 //====================================================================//
                 // Enable Variant Multi-prices for Dolibarr Version above 13.0
                 if (property_exists("ProductCombination", "combination_price_levels")) {
+                    unset($list[2]);
                     $list[] = "VariantsMultiPrices";
                 };
 

@@ -152,7 +152,7 @@ trait MultiPricesTrait
             $this->getMultiPricesFields(null, $fieldName);
             //====================================================================//
             // Compare Prices
-            if (self::prices()->Compare($this->out[$fieldName], $fieldData, $conf->global->MAIN_MAX_DECIMALS_UNIT)) {
+            if (self::prices()->compare($this->out[$fieldName], $fieldData, $conf->global->MAIN_MAX_DECIMALS_UNIT)) {
                 return;
             }
 
@@ -174,7 +174,7 @@ trait MultiPricesTrait
             //====================================================================//
             // Update Price on Product Combination
             if ($this->isVariant() && !empty($this->baseProduct)) {
-                $this->setVariantVariationPrice($price, $level);
+                $this->setVariantPrice($price, $fieldData["vat"], $priceBase, $level);
             }
             //====================================================================//
             // Commit Price Update on Simple Product
