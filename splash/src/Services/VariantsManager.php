@@ -158,7 +158,7 @@ class VariantsManager
      */
     public static function addProductCombination(Product $parentProduct, Product $childProduct)
     {
-        global $db, $user;
+        global $db, $user, $conf;
 
         //====================================================================//
         // Ensure Service Init
@@ -173,6 +173,15 @@ class VariantsManager
         $combination->variation_weight = 0;
         if ($combination->create($user) < 0) {
             return null;
+        }
+
+        //====================================================================//
+        // Since DOL V13 => Populate Variant Prices levels
+        if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
+            if (property_exists($combination, "combination_price_levels")
+                && method_exists($combination, "fetchCombinationPriceLevels")) {
+                $combination->fetchCombinationPriceLevels();
+            }
         }
 
         //====================================================================//

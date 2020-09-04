@@ -165,7 +165,7 @@ trait PricesTrait
         global $conf;
 
         //====================================================================//
-        // If multiprices are enabled
+        // If multi-prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
             $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
         } else {
@@ -173,7 +173,7 @@ trait PricesTrait
         }
         $priceVariation = $price - $parentPrice;
         //====================================================================//
-        // No Multiprices => Variant Main Price Update
+        // No Multi-prices => Variant Main Price Update
         if (empty($conf->global->PRODUIT_MULTIPRICES)) {
             $this->setSimple("variation_price_percentage", 0, "combination");
             $this->setSimple("variation_price", $priceVariation, "combination");
