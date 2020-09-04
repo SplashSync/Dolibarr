@@ -72,48 +72,13 @@ trait PricesTrait
             // PRICE INFORMATIONS
             //====================================================================//
             case 'price':
-                //====================================================================//
-                // If multi-prices are enabled
-                if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-                    $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
-                            ? $conf->global->SPLASH_MULTIPRICE_LEVEL
-                            : null;
-                    $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
-                    $priceType = $this->object->multiprices_base_type[$priceLevel];
-                    $priceHT = (double) $this->object->multiprices[$priceLevel];
-                    $priceTTC = (double) $this->object->multiprices_ttc[$priceLevel];
-                    $priceVAT = (double) $this->object->multiprices_tva_tx[$priceLevel];
-                    if ($this->isVariant() && !empty($this->baseProduct)) {
-                        $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$priceLevel];
-                    }
-                } else {
-                    $priceType = $this->object->price_base_type;
-                    $priceHT = (double) $this->object->price;
-                    $priceTTC = (double) $this->object->price_ttc;
-                    $priceVAT = (double) $this->object->tva_tx;
-                }
-
-                if ('TTC' === $priceType) {
-                    $this->out[$fieldName] = self::prices()->Encode(
-                        null,
-                        $priceVAT,
-                        $priceTTC,
-                        $conf->global->MAIN_MONNAIE
-                    );
-                } else {
-                    $this->out[$fieldName] = self::prices()->Encode(
-                        $priceHT,
-                        $priceVAT,
-                        null,
-                        $conf->global->MAIN_MONNAIE
-                    );
-                }
+                $this->out[$fieldName] = $this->getProductPrice();
 
                 break;
             case 'cost_price':
                     $priceHT = (double) $this->object->cost_price;
                     $this->out[$fieldName] = self::prices()
-                        ->Encode($priceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
+                        ->encode($priceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
 
                 break;
             default:
@@ -208,6 +173,44 @@ trait PricesTrait
             $combPriceLevel->variation_price = $priceVariation;
             $this->needUpdate("combination");
         }
+    }
+
+    /**
+     * Read Product Price
+     *
+     * @return array|string
+     */
+    protected function getProductPrice()
+    {
+        global $conf;
+
+        //====================================================================//
+        // If multi-prices are enabled
+        if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
+            $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
+                ? $conf->global->SPLASH_MULTIPRICE_LEVEL
+                : null;
+            $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
+            $priceType = $this->object->multiprices_base_type[$priceLevel];
+            $priceHT = (double) $this->object->multiprices[$priceLevel];
+            $priceTTC = (double) $this->object->multiprices_ttc[$priceLevel];
+            $priceVAT = (double) $this->object->multiprices_tva_tx[$priceLevel];
+            if ($this->isVariant() && !empty($this->baseProduct)) {
+                $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$priceLevel];
+            }
+        } else {
+            $priceType = $this->object->price_base_type;
+            $priceHT = (double) $this->object->price;
+            $priceTTC = (double) $this->object->price_ttc;
+            $priceVAT = (double) $this->object->tva_tx;
+        }
+
+        return self::prices()->encode(
+            ('TTC' === $priceType) ? null : $priceHT,
+            $priceVAT,
+            ('TTC' === $priceType) ? $priceTTC : null,
+            $conf->global->MAIN_MONNAIE
+        );
     }
 
     /**
