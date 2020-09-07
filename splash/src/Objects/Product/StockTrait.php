@@ -524,13 +524,13 @@ trait StockTrait
     /**
      * Get product Price Used for Pmp Calculation
      *
-     * @return int|float
+     * @return float|int
      */
     private function getStockPriceForPmp()
     {
         //====================================================================//
         // USE Product Cost price for Pmp Calculation
-        if (isset(Splash::configuration()->DolUseCostPriceForPmp) && !empty(Splash::configuration()->DolUseCostPriceForPmp)) {
+        if (isset(Splash::configuration()->DolUseCostPriceForPmp) && Splash::configuration()->DolUseCostPriceForPmp) {
             return (double) $this->object->cost_price;
         }
 

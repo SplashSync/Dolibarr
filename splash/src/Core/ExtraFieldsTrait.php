@@ -16,7 +16,6 @@
 namespace   Splash\Local\Core;
 
 use ExtraFields;
-use Splash\Core\SplashCore as Splash;
 
 /**
  * Access to Dolibarr Extra Fields
@@ -391,8 +390,9 @@ trait ExtraFieldsTrait
 
         //====================================================================//
         // Load ExtraField Label with Translation
-        if(!empty($this->extraFields->attribute_langfile[$fieldType])) {
+        if (!empty($this->extraFields->attribute_langfile[$fieldType])) {
             $langs->load($this->extraFields->attribute_langfile[$fieldType]);
+
             return $langs->trans($this->extraFields->attribute_label[$fieldType]);
         }
 
