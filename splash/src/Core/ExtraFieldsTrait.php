@@ -16,6 +16,7 @@
 namespace   Splash\Local\Core;
 
 use ExtraFields;
+use Splash\Core\SplashCore as Splash;
 
 /**
  * Access to Dolibarr Extra Fields
@@ -327,6 +328,7 @@ trait ExtraFieldsTrait
             case "varchar":
             case "password":
             case "select":
+            case "link":
                 return SPL_T_VARCHAR;
             case "text":
                 return SPL_T_TEXT;
@@ -350,8 +352,6 @@ trait ExtraFieldsTrait
                 return SPL_T_EMAIL;
             case "url":
                 return SPL_T_URL;
-            case "link":
-            case "select":
             case "sellist":
             case "chkbxlst":
             case "separate":
