@@ -385,7 +385,16 @@ trait ExtraFieldsTrait
      */
     private function getLabel($fieldType)
     {
+        global $langs;
+
         $this->loadExtraFields();
+
+        //====================================================================//
+        // Load ExtraField Label with Translation
+        if(!empty($this->extraFields->attribute_langfile[$fieldType])) {
+            $langs->load($this->extraFields->attribute_langfile[$fieldType]);
+            return $langs->trans($this->extraFields->attribute_label[$fieldType]);
+        }
 
         return $this->extraFields->attribute_label[$fieldType];
     }
