@@ -306,7 +306,8 @@ trait StockTrait
                 $locationId,                                // Impacted Stock Id
                 abs($delta),                                // Quantity to Move
                 ($delta > 0)?1:0,                           // Direction 0 = add, 1 = remove
-                $langs->trans("Updated by Splash Module")   // Operation Comment
+                $langs->trans("Updated by Splash Module"),  // Operation Comment
+                $this->getStockPriceForPmp()                // Price Used for Pmp Calculation
             );
             //====================================================================//
             // Check potential Errors
@@ -385,7 +386,8 @@ trait StockTrait
             $locationId,                                // Impacted Stock Id
             abs($delta),                                // Quantity to Move
             ($delta > 0)?1:0,                           // Direction 0 = add, 1 = remove
-            $langs->trans("Updated by Splash Module")   // Operation Comment
+            $langs->trans("Updated by Splash Module"),  // Operation Comment
+            $this->getStockPriceForPmp()                // Price Used for Pmp Calculation
         );
         //====================================================================//
         // Check potential Errors
@@ -517,5 +519,21 @@ trait StockTrait
         }
 
         return static::$locationIds;
+    }
+
+    /**
+     * Get product Price Used for Pmp Calculation
+     *
+     * @return int|float
+     */
+    private function getStockPriceForPmp()
+    {
+        //====================================================================//
+        // USE Product Cost price for Pmp Calculation
+        if (isset(Splash::configuration()->DolUseCostPriceForPmp) && !empty(Splash::configuration()->DolUseCostPriceForPmp)) {
+            return (double) $this->object->cost_price;
+        }
+
+        return 0;
     }
 }
