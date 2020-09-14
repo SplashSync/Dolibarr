@@ -49,7 +49,7 @@ if ('UpdateProducts' == $action) {
     //====================================================================//
     // Update Products Default Stock
     $DfProductStock = GETPOST('product_stock', 'alpha');
-    if ($DfUser) {
+    if ($DfProductStock) {
         if (dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", $DfProductStock, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }

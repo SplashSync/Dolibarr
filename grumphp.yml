@@ -115,7 +115,7 @@ parameters:
             source_folder:  "/splash"
             target_folder:  "/dol_module"
             build_folder:   "splash/"
-            build_file:     "module_splash-1.7.0"
+            build_file:     "module_splash-1.7.1"
             
         build-docs: 
             enabled:            true

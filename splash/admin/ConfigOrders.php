@@ -18,7 +18,7 @@ use Splash\Local\Local;
 
 //====================================================================//
 // Create Setup Form
-echo    '<form name="MainSetup" action="'.filter_input(INPUT_SERVER, "php_self").'" method="POST">';
+echo    '<form name="MainSetup" action="'.filter_input(INPUT_SERVER, "PHP_SELF").'" method="POST">';
 echo    '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 echo    '<input type="hidden" name="action" value="UpdateOrder">';
 
