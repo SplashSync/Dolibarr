@@ -204,8 +204,7 @@ trait CRUDTrait
         if (0 == $combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent)) {
             //====================================================================//
             // Also Delete Parent Product
-            $object->id = $combination->fk_product_parent;
-            if ($object->delete($user) <= 0) {
+            if (($object->fetch($combination->fk_product_parent) <= 0) || ($object->delete($user) <= 0)) {
                 return $this->catchDolibarrErrors($object);
             }
         }
