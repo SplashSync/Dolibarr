@@ -134,7 +134,7 @@ class VariantsManager
         //====================================================================//
         // Load Product Combination Class
         $combination = new ProductCombination($db);
-        if ($combination->fetchByFkProductChild($productId) < 0) {
+        if ($combination->fetchByFkProductChild($productId) <= 0) {
             return null;
         }
 

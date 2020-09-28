@@ -201,7 +201,6 @@ trait CRUDTrait
             // Also Delete Parent Product
             $object->id = $combination->fk_product_parent;
             if ($object->delete($user) <= 0) {
-                Splash::log()->errTrace("Unable to Delete Parent (".$object->id.").");
                 return $this->catchDolibarrErrors($object);
             }
         }
