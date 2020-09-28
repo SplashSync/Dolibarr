@@ -353,10 +353,7 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
             $board = new \Account($db);
-            $count = $board::countAccountToReconcile();
-            if ($count > 0) {
-                $dashboardlines[] = $board->load_board($user);
-            }
+            $dashboardlines[] = $board->load_board($user);
         }
     }
 

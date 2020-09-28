@@ -1,32 +1,22 @@
-[![N|Solid](https://github.com/SplashSync/Php-Core/blob/master/Resources/img/fake-image2.jpg)](http://www.splashsync.com)
-# Splash Sync Module for Dolibarr
-Splash Php Module for Dolibarr ERP Platforms.
+# DOLIBARR ERP & CRM custom directory for external modules.
 
-This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonisation though Splash Sync dedicated protocol.
+This directory is dedicated to store external modules.
+To use it, just copy here the directory of the module into this directory.
 
-[![Build Status](https://travis-ci.org/SplashSync/Dolibarr.svg?branch=master)](https://travis-ci.org/SplashSync/Dolibarr)
-[![Latest Stable Version](https://poser.pugx.org/splash/dolibarr/v/stable)](https://packagist.org/packages/splash/dolibarr)
-[![Latest Unstable Version](https://poser.pugx.org/splash/dolibarr/v/unstable)](https://packagist.org/packages/splash/dolibarr)
-[![License](https://poser.pugx.org/splash/dolibarr/license)](https://packagist.org/packages/splash/dolibarr)
+Note: On linux or MAC systems, it is better to unzip/store the external module directory into 
+a different place than this directory and just adding a symbolic link here to the htdocs directory
+of the module.
 
-## Installation
+For example on Linux OS: Get the module from the command 
+mkdir ~/git; cd ~/git
+git clone https://git.framasoft.org/p/newmodule/newmodule.git
+Then create the symbolic link
+ln -fs ~/git/newmodule/htdocs /path_to_dolibarr/htdocs/custom/newmodule 
 
-* Download latest stable version here : [Splash Modules](http://www.splashsync.com/en/modules/)
-* Copy module contents on Dolibarr htdocs folder (htdocs/splash) 
-* Enable & Configure the module
+WARNING !!!
+Check also that the /custom directory is active by adding into dolibarr conf/conf.php file the following 
+two lines, so dolibarr will also scan /custom directory to find external external modules:
 
-## Requirements
+$dolibarr_main_url_root_alt='/custom';
+$dolibarr_main_document_root_alt='/path_to_dolibarr/htdocs/custom/';
 
-* PHP 7.1+
-* Dolibarr 7.0+
-* An active Splash Sync User Account
-
-## Documentation
-
-For the configuration guide and reference, see: [Dolibarr Module Doc](https://splashsync.github.io/Dolibarr)
-
-## Contributing
-
-Any Pull requests are welcome! 
-
-This module is part of [SplashSync](http://www.splashsync.com) project.
