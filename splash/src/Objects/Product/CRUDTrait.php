@@ -187,6 +187,11 @@ trait CRUDTrait
         // Load Product Combination
         $combination = VariantsManager::getProductCombination((int) $objectId);
         //====================================================================//
+        // Fetch Object
+        if ($object->fetch((int) $objectId) <= 0) {
+            return $this->catchDolibarrErrors($object);
+        }
+        //====================================================================//
         // Delete Object
         if ($object->delete($user) <= 0) {
             return $this->catchDolibarrErrors($object);
