@@ -187,11 +187,6 @@ trait CRUDTrait
         // Load Product Combination
         $combination = VariantsManager::getProductCombination((int) $objectId);
         //====================================================================//
-        // Fetch Object
-        if ($object->fetch((int) $objectId) <= 0) {
-            return $this->catchDolibarrErrors($object);
-        }
-        //====================================================================//
         // Delete Object
         if ($object->delete($user) <= 0) {
             return $this->catchDolibarrErrors($object);
@@ -204,7 +199,9 @@ trait CRUDTrait
         if (0 == $combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent)) {
             //====================================================================//
             // Also Delete Parent Product
-            if (($object->fetch($combination->fk_product_parent) <= 0) || ($object->delete($user) <= 0)) {
+            $object->id = $combination->fk_product_parent;
+            if ($object->delete($user) <= 0) {
+                Splash::log()->errTrace("Unable to Delete Parent (".$object->id.").");
                 return $this->catchDolibarrErrors($object);
             }
         }
