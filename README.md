@@ -2,7 +2,8 @@
 # Splash Sync Module for Dolibarr
 Splash Php Module for Dolibarr ERP Platforms.
 
-This module implement Splash Sync connector for Dolibarr ERP. It provide access to multiples Objects for automated synchonisation though Splash Sync dedicated protocol.
+This module implement Splash Sync connector for Dolibarr ERP. 
+It provides access to multiples Objects for automated synchronization though Splash Sync dedicated protocol.
 
 [![Build Status](https://travis-ci.org/SplashSync/Dolibarr.svg?branch=master)](https://travis-ci.org/SplashSync/Dolibarr)
 [![Latest Stable Version](https://poser.pugx.org/splash/dolibarr/v/stable)](https://packagist.org/packages/splash/dolibarr)
