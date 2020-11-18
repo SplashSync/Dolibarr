@@ -78,7 +78,7 @@ functionnal:
         # Show PhpUnit Version
         - splash/vendor/phpunit/phpunit/phpunit --version
         # Run PhpUnit Main Local Testsuite
-#        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
+        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
         
 ################################################################
