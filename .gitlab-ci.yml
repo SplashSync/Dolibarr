@@ -19,6 +19,9 @@
 # Select image from https://hub.docker.com/_/php/
 image:  monogramm/docker-dolibarr
 ################################################################
+# Allow Retry if Fail
+retry: 2
+################################################################
 # Set any variables we need
 variables:
     # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)
