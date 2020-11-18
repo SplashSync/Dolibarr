@@ -51,9 +51,10 @@ before_script:
 ################################################################
 functionnal:
     when:       manual
+    stage:      tests
+    tags:       ['Dedicated']
     services:
         - mysql:5.7
-    tags:       ['Dedicated']
     script:
         - pwd
         ################################################################
