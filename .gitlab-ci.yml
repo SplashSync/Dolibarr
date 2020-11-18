@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  monogramm/docker-dolibarr:10
+image:  monogramm/docker-dolibarr:10.0
 ################################################################
 # Set any variables we need
 variables:
@@ -80,12 +80,6 @@ functionnal:
         # Run PhpUnit Main Local Testsuite
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
-#        ################################################################
-#        # Execute BlueSyndic Module Tests
-#        - cd /var/www/html
-#        - custom/bluesyndic/vendor/bin/phpunit -c custom/build/phpunit.xml.dist --testsuite=Install
-#        - custom/bluesyndic/vendor/bin/phpunit -c custom/build/phpunit.xml.dist
-#        - custom/bluesyndic/vendor/bin/phpunit -c custom/build/phpunit.xml.dist --testdox
         
 ################################################################
 # Code Quality Verifications 
