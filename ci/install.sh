@@ -30,3 +30,4 @@ cp $CI_PROJECT_DIR/travis/splash.json       /var/www/html/conf/splash.json
 
 echo "Move to Custom Path"
 cd  /var/www/html/custom
+pwd

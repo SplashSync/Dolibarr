@@ -88,6 +88,7 @@ code_quality:
         ################################################################
         # Install Module
         - cat ci/install.sh | bash
+        - cd  /var/www/html/custom
         ################################################################################
         # Build Module (Composer)
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
