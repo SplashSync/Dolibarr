@@ -92,7 +92,7 @@ code_quality:
         - cat ci/install.sh | bash
         ################################################################################
         # Build Module (Composer)
-        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/travis/composer.sh | sh
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/travis/composer.sh | bash
 
 #        ################################################################
 #        # Execute Code Quality Analyze
