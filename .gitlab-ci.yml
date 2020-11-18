@@ -92,11 +92,11 @@ code_quality:
         # Build Module (Composer)
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
 
-#        ################################################################
-#        # Execute Code Quality Analyze
-#        - ls -a -s bluesyndic/vendor/bin
-#        - php bluesyndic/vendor/bin/grumphp run --testsuite=travis   | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/grumphp.txt"
-#        - php bluesyndic/vendor/bin/grumphp run --testsuite=phpstan  | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/grumphp.txt"
+        ################################################################
+        # Execute Code Quality Analyze
+        - php splash/vendor/bin/grumphp run --testsuite=travis
+        - php splash/vendor/bin/grumphp run --testsuite=csfixer
+        - php splash/vendor/bin/grumphp run --testsuite=phpstan
 #        ################################################################
 #        # Display Code Counters Analyze
 #        - cloc ./bluesyndic        --exclude-ext=js --exclude-dir=vendor   --quiet  --3   | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/cloc.txt"

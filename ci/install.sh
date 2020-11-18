@@ -21,7 +21,7 @@ echo "----------------------------------------------------"
 echo "Copy Splash Module to Dolibarr folder"
 cp -Rf $CI_PROJECT_DIR/*                    /var/www/html/custom/
 cp -Rf $CI_PROJECT_DIR/.git/                /var/www/html/custom/.git/
-ls -l     /var/www/html/custom/
+ls -l -a /var/www/html/custom/
 
 ################################################################
 # Install Splash Configuration File
