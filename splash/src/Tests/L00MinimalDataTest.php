@@ -16,8 +16,8 @@
 namespace Splash\Local\Tests;
 
 use Splash\Client\Splash;
-use Splash\Tests\Tools\ObjectsCase;
 use Splash\Local\Core\ErrorParserTrait;
+use Splash\Tests\Tools\ObjectsCase;
 
 /**
  * Local Test Suite - Ensure Presence of Minimal Objects in Db
@@ -52,7 +52,7 @@ class L00MinimalDataTest extends ObjectsCase
         $this->assertNotEmpty($result);
         //====================================================================//
         // Create Missing Warehouses
-        for($i=$db->num_rows($result); $i<2; $i++) {
+        for ($i = $db->num_rows($result); $i < 2; $i++) {
             $warehouse = new \Entrepot($db);
             $warehouse->statut = 1;
             $warehouse->ref = "WH-".$i;
@@ -74,12 +74,9 @@ class L00MinimalDataTest extends ObjectsCase
      *
      * @return void
      */
-    public function testAtLeastFiveObjects(string $sequence, $objectType)
+    public function testAtLeastFiveObjects(string $sequence, string $objectType)
     {
-        global $db, $user;
-
         $this->loadLocalTestSequence($sequence);
-
         //====================================================================//
         //   Get Object List from Module
         $list = Splash::object($objectType)->objectsList();
@@ -89,7 +86,7 @@ class L00MinimalDataTest extends ObjectsCase
         $objectCount = $list["meta"]["current"];
         //====================================================================//
         // Create Missing Objects
-        for($i=$objectCount; $i<1; $i++) {
+        for ($i = $objectCount; $i < 1; $i++) {
             //====================================================================//
             //   Generate Dummy Object Data (Required Fields Only)
             $dummyData = $this->prepareForTesting($objectType);
