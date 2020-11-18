@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  monogramm/docker-dolibarr
+image:  monogramm/docker-dolibarr:10
 ################################################################
 # Set any variables we need
 variables:
@@ -50,7 +50,7 @@ before_script:
 # Functional Tests
 ################################################################
 functionnal:
-    when:       manual
+#    when:       manual
     stage:      tests
     tags:       ['Dedicated']
     services:
@@ -110,6 +110,11 @@ code_quality:
         - php splash/vendor/bin/grumphp run --testsuite=travis
         - php splash/vendor/bin/grumphp run --testsuite=csfixer
         - php splash/vendor/bin/grumphp run --testsuite=phpstan
+    ################################################################################
+    # Run After Script
+    after_script:
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+
           
 ################################################################
 # Buil Bluesyndic Module 
