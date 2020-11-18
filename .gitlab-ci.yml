@@ -38,6 +38,7 @@ variables:
 # Defined Pipeline Stages
 stages:
     - quality
+    - tests
 
 ################################################################
 # Before Script
@@ -48,26 +49,36 @@ before_script:
 ################################################################
 # Functional Tests
 ################################################################
-#functionnal:
-##    when: manual
-#    services:
-#    - name: mysql:5.7
-#    tags:
-#        - dedicated
-#    script:
-#        - pwd
-#        ################################################################
-#        # Start Web Server
-#        - service apache2 restart && service apache2 status
-#        ################################################################
-#        # Complete Dolibarr Install
-#        - curl http://localhost/install/step2.php -d "action=set" > /dev/null
-#        - curl http://localhost/install/step5.php -d "action=set&pass=PhpUnitPwd&pass_verif=PhpUnitPwd" > /dev/null
-#        - curl http://localhost/
-#        ################################################################
-#        # Install Module
-#        - cp -Rf    /builds/BlueMangoSoft/BlueSyndic/*  /var/www/html/custom
-#        - ls -l     /var/www/html/custom/
+functionnal:
+    when:       manual
+    services:
+        - mysql:5.7
+    tags:       ['Dedicated']
+    script:
+        - pwd
+        ################################################################
+        # Start Web Server
+        - service apache2 restart && service apache2 status
+        ################################################################
+        # Complete Dolibarr Install
+        - curl http://localhost/install/step2.php -d "action=set" > /dev/null
+        - curl http://localhost/install/step5.php -d "action=set&pass=PhpUnitPwd&pass_verif=PhpUnitPwd" > /dev/null
+        - curl http://localhost/
+        ################################################################
+        # Install Module
+        - cat ci/install.sh | bash
+        - cd  /var/www/html/custom
+        ################################################################################
+        # Build Module (Composer)
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
+        ################################################################################
+        # Execute Bootstrap file
+        - php travis/bootstrap.php
+        # Show PhpUnit Version
+        - splash/vendor/phpunit/phpunit/phpunit --version
+        # Run PhpUnit Main Local Testsuite
+        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
+        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
 #        ################################################################
 #        # Execute BlueSyndic Module Tests
 #        - cd /var/www/html
@@ -79,7 +90,7 @@ before_script:
 # Code Quality Verifications 
 ################################################################
 code_quality:
-#    when: manual
+    when:       manual
     image:      monogramm/docker-dolibarr
     stage:      quality
     tags:       ['Dedicated']
@@ -98,14 +109,6 @@ code_quality:
         - php splash/vendor/bin/grumphp run --testsuite=travis
         - php splash/vendor/bin/grumphp run --testsuite=csfixer
         - php splash/vendor/bin/grumphp run --testsuite=phpstan
-#        ################################################################
-#        # Display Code Counters Analyze
-#        - cloc ./bluesyndic        --exclude-ext=js --exclude-dir=vendor   --quiet  --3   | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/cloc.txt"
-        
-#    artifacts:
-#        paths:
-#          - /builds/BlueMangoSoft/BlueSyndic/results/grumphp.txt
-#          - /builds/BlueMangoSoft/BlueSyndic/results/cloc.txt
           
 ################################################################
 # Buil Bluesyndic Module 
