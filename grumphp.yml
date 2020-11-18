@@ -16,146 +16,178 @@
 #
 ################################################################################
 
-
+#############################################
+# Override Config. for Prestashop Module
 parameters:
-    
 
-    #############################################        
-    #   Local Config 
-    #############################################        
-    #   Path to Php Core Module
-    core_dir:       "./splash/vendor/splash/phpcore/Resources/grumphp"     
-    #   Testing Mode (core|module)
-    mode:           "module"
-    level:          8
-    
-    #############################################        
-    #   Base Configs 
-    git_dir: .
-    bin_dir:        "splash/vendor/bin"
-    ascii:
-        failed:     "%core_dir%/grumphp-grumpy.txt"
-        succeeded:  "%core_dir%/grumphp-happy.txt"
-    process_timeout: 180
-    
-    #############################################        
-    #   Tasks Configs     
-    tasks:
-        
-        #############################################        
-        #   Composer Verifs           
-        composer:
-            file:           "./composer.json"
-            
-        #############################################        
-        #   Syntax Errors Detection             
-        phplint:
-            exclude:        ['splash/vendor']
-            triggered_by:   ['php']
-            
-        jsonlint:
-            detect_key_conflicts: true
-            
-        xmllint: ~
-        
-        yamllint: ~
+    core_dir:           "./splash/vendor/badpixxel/php-sdk"
+    mode:               "splashsync"
+    exclude:            ['splash/vendor', 'docs', 'docker', 'build']
 
-        #############################################        
-        #   Blacklist Codes Detection
-        git_blacklist:
-            keywords:
-                - "var_dump"
-                - "dump("
-                - "console.log"
-                - "print_r"
-                - "die("
-            triggered_by: [php, js, twig]
-        
-        #############################################        
-        #   Security Checks 
-        securitychecker: ~
+    # Php Cs Fixer
+    csfixer-config:     "./grumphp/cs.%mode%.php"
 
-        #############################################        
-        #   Code Quality   
-        phpcsfixer:     ~ 
-        phpcsfixer2:    
-            allow_risky:    true
-            config:         "travis/php_cs.dist"
-            
-        phpcs:
-            standard:       "PSR2"
-            triggered_by:   [php]
-            ignore_patterns:
-                - phpstan.php
-                - defines.inc.php
-                - modSplash.class.php
-                - interface_50_modSplash_Splash.class.php
-                
-            
-        phpmd:
-            ruleset:        ["%core_dir%/phpmd.xml"]
-            
-        phpcpd:
-            exclude:        
-                - "docs"
-                - "docker"
-                - "splash/vendor"
-                
-        phpstan:
-            level: "%level%"
-            autoload_file:  "splash/vendor/autoload.php"
-            configuration:  "travis/phpstan.neon"           
-            ignore_patterns:
-                - LocalizationTrait.php
-                - splash/admin
-                - L03PaymentBanksTest.php
-                
-        build-module: 
-            enabled:        true            
-            source_folder:  "/splash"
-            target_folder:  "/dol_module"
-            build_folder:   "splash/"
-            build_file:     "module_splash-1.7.1"
-            
-        build-docs: 
-            enabled:            true
-            local_folder:       '/splash/resources/docs'
-            generic_contents:   ["splash", "php-docker"]
-        
-        build-manifest: 
-            enabled:        true  
-            console:        "splash/vendor/bin/splash"
-            
-    extensions:
-        - Splash\Console\Extension\Loader
-        
-    testsuites:
-        travis:
-            tasks:
-                - composer
-                - phplint
-                - phpcs 
-                - git_blacklist
-                - jsonlint
-                - phpmd
-                - phpcpd
-                - xmllint
-                - yamllint
-              
-        csfixer:
-            tasks: 
-                - phpcsfixer
-                - phpcsfixer2
-                
-        phpstan:
-            tasks: 
-                - phpstan 
-                
-        splash:
-            tasks:
-                - build-module                
-                - build-docs  
+    # Php Stan
+    stan-config:        "./grumphp/phpstan.neon"
 
-        manifest:
-            tasks:
-                - build-manifest
+    # For Building Splash Documentation
+    doc-src:            '/splash/resources/docs'
+    doc-contents:       ["splash", "php-docker"]
+
+    # For Building Splash Module
+    mod-src:            '/splash'
+    mod-file:           "module_splash-1.7.2"
+
+    # For Building Splash Manifest
+    yml-enable:         false
+
+#############################################
+# Import Generic + Splash Console Configs
+imports:
+    - { resource: "./splash/vendor/badpixxel/php-sdk/grumphp/generic.yml" }
+    - { resource: "./splash/vendor/splash/console/src/Resources/grumphp/*.yml" }
+
+
+
+#parameters:
+#
+#
+#    #############################################
+#    #   Local Config
+#    #############################################
+#    #   Path to Php Core Module
+#    core_dir:       "./splash/vendor/splash/phpcore/Resources/grumphp"
+#    #   Testing Mode (core|module)
+#    mode:           "module"
+#    level:          8
+#
+#    #############################################
+#    #   Base Configs
+#    git_dir: .
+#    bin_dir:        "splash/vendor/bin"
+#    ascii:
+#        failed:     "%core_dir%/grumphp-grumpy.txt"
+#        succeeded:  "%core_dir%/grumphp-happy.txt"
+#    process_timeout: 180
+#
+#    #############################################
+#    #   Tasks Configs
+#    tasks:
+#
+#        #############################################
+#        #   Composer Verifs
+#        composer:
+#            file:           "./composer.json"
+#
+#        #############################################
+#        #   Syntax Errors Detection
+#        phplint:
+#            exclude:        ['splash/vendor']
+#            triggered_by:   ['php']
+#
+#        jsonlint:
+#            detect_key_conflicts: true
+#
+#        xmllint: ~
+#
+#        yamllint: ~
+#
+#        #############################################
+#        #   Blacklist Codes Detection
+#        git_blacklist:
+#            keywords:
+#                - "var_dump"
+#                - "dump("
+#                - "console.log"
+#                - "print_r"
+#                - "die("
+#            triggered_by: [php, js, twig]
+#
+#        #############################################
+#        #   Security Checks
+#        securitychecker: ~
+#
+#        #############################################
+#        #   Code Quality
+#        phpcsfixer:     ~
+#        phpcsfixer2:
+#            allow_risky:    true
+#            config:         "travis/php_cs.dist"
+#
+#        phpcs:
+#            standard:       "PSR2"
+#            triggered_by:   [php]
+#            ignore_patterns:
+#                - phpstan.php
+#                - defines.inc.php
+#                - modSplash.class.php
+#                - interface_50_modSplash_Splash.class.php
+#
+#
+#        phpmd:
+#            ruleset:        ["%core_dir%/phpmd.xml"]
+#
+#        phpcpd:
+#            exclude:
+#                - "docs"
+#                - "docker"
+#                - "splash/vendor"
+#
+#        phpstan:
+#            level: "%level%"
+#            autoload_file:  "splash/vendor/autoload.php"
+#            configuration:  "travis/phpstan.neon"
+#            ignore_patterns:
+#                - LocalizationTrait.php
+#                - splash/admin
+#                - L03PaymentBanksTest.php
+#
+#        build-module:
+#            enabled:        true
+#            source_folder:  "/splash"
+#            target_folder:  "/dol_module"
+#            build_folder:   "splash/"
+#            build_file:     "module_splash-1.7.1"
+#
+#        build-docs:
+#            enabled:            true
+#            local_folder:       '/splash/resources/docs'
+#            generic_contents:   ["splash", "php-docker"]
+#
+#        build-manifest:
+#            enabled:        true
+#            console:        "splash/vendor/bin/splash"
+#
+#    extensions:
+#        - Splash\Console\Extension\Loader
+#
+#    testsuites:
+#        travis:
+#            tasks:
+#                - composer
+#                - phplint
+#                - phpcs
+#                - git_blacklist
+#                - jsonlint
+#                - phpmd
+#                - phpcpd
+#                - xmllint
+#                - yamllint
+#
+#        csfixer:
+#            tasks:
+#                - phpcsfixer
+#                - phpcsfixer2
+#
+#        phpstan:
+#            tasks:
+#                - phpstan
+#
+#        splash:
+#            tasks:
+#                - build-module
+#                - build-docs
+#
+#        manifest:
+#            tasks:
+#                - build-manifest

@@ -14,6 +14,12 @@
  */
 
 //====================================================================//
+// PHP CS Overrides
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Methods.CamelCapsMethodName
+
+//====================================================================//
 // Splash Module Definitions
 include_once(dirname(dirname(dirname(__FILE__)))."/_conf/defines.inc.php");
 
@@ -204,7 +210,9 @@ class InterfaceSplash
 
         //====================================================================//
         // Log Trigger Action
-        Splash::log()->deb("Trigger for action '${action}' launched by '".$this->login."' for Object id=".$this->objectId);
+        Splash::log()->deb(
+            "Trigger for action '${action}' launched by '".$this->login."' for Object id=".$this->objectId
+        );
 
         //====================================================================//
         // No Action To Perform

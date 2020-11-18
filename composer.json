@@ -3,10 +3,20 @@
     "description": "Splash Module for Dolibarr ERP",
 
     "license": "MIT",
-
     "minimum-stability": "dev",
     "prefer-stable": true,
-    
+
+    "authors": [
+        {
+            "name":"Splash Sync",
+            "email":"contact@splashsync.com"
+        },
+        {
+            "name": "Bernard Paquier",
+            "email": "eshop.bpaquier@gmail.com"
+        }
+    ],
+
     "config": {
         "vendor-dir":                       "splash/vendor",
         "bin-dir":                          "splash/vendor/bin",
@@ -31,28 +41,11 @@
     
     "require-dev": {
         "splash/console":                   "dev-master",
-        "phpunit/phpunit":                  "~5.0|~6.0|~7.0",
-        "composer/composer":                "^1.5",
-        "j13k/yaml-lint":                   "^1.1",
-        "jakub-onderka/php-parallel-lint":  "^1.0",
-        "phpmd/phpmd":                      "~2.7",
-        "phpro/grumphp":                    "^0.16",
-        "sclable/xml-lint":                 "^0.2.4",
-        "sebastian/phpcpd":                 ">3.0",
-        "seld/jsonlint":                    "^1.7",
-        "sensiolabs/security-checker":      "^4.1",
-        "squizlabs/php_codesniffer":        "^3.2",
-        "friendsofphp/php-cs-fixer":        ">2.10",         
-        "phpstan/phpstan":                  "~0.12",
-        "phpstan/phpstan-phpunit":          "~0.12"        
+        "badpixxel/php-sdk":                "dev-main"
     },
-    
-    "scripts": {
-        "post-install-cmd": [
-            "php splash/vendor/bin/grumphp git:deinit"            
-        ],
-        "post-update-cmd": [
-            "php splash/vendor/bin/grumphp git:deinit"            
-        ]
+
+    "archive": {
+        "exclude": ["/app", "/bin", "/docs", "/tests"]
     }
+
 }

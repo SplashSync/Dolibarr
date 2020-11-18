@@ -14,6 +14,10 @@
  */
 
 //====================================================================//
+// PHP CS Overrides
+// phpcs:disable PSR1.Files.SideEffects
+
+//====================================================================//
 // Splash Module & Dependecies Autoloader
 dol_include_once("/splash/vendor/autoload.php");
 
@@ -28,7 +32,7 @@ define("SPL_SHOW_DEV", 0);
 
 //====================================================================//
 // Module Version
-define("SPL_MOD_VERSION", '1.7.1');
+define("SPL_MOD_VERSION", '1.7.2');
 define("SPL_MOD_ID", 9200);
 define("SPL_MOD_NAME", 'splash');
 define("SPL_MOD_CATEGORIE", 'technic');

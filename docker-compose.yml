@@ -19,10 +19,10 @@
 ################################################################################
 # Docker Compose File
 #
-# This Docker File intend to Create a Complete Dev Envirenement 
+# This Docker File intend to Create a Complete Dev Environment
 # for Splash Modules on Prestashop
 #
-# To us different PS Version coinfigured, you need to add hosts to /etc/hosts
+# To us different PS Version configured, you need to add hosts to /etc/hosts
 # 
 # 172.100.0.09        v09.dolibarr.local
 # 172.100.0.10        v10.dolibarr.local
@@ -175,7 +175,7 @@ services:
         command:            ["php", "/app/bin/console", "server:run", "172.100.0.100:80"]
         networks:
             dolibarr:      { ipv4_address: 172.100.0.100, aliases: [ toolkit.dolibarr.local ] }
-            splashsync:     { aliases: [ toolkit.dolibarr.local ] }            
+            splashsync:    { aliases: [ toolkit.dolibarr.local ] }
 
     ################################################################################
     # PhpMyAdmin Container

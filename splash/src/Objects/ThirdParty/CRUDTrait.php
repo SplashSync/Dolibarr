@@ -134,7 +134,7 @@ trait CRUDTrait
     /**
      * Delete requested Object
      *
-     * @param int $objectId Object Id.  If NULL, Object needs to be created.
+     * @param null|string $objectId Object Id.  If NULL, Object needs to be created.
      *
      * @return bool
      */
@@ -157,7 +157,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Set Object Id, fetch not needed
-        $object->id = $objectId;
+        $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
@@ -166,7 +166,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Delete Object
-        if ($object->delete($objectId) <= 0) {
+        if ($object->delete((int) $objectId) <= 0) {
             return $this->catchDolibarrErrors($object);
         }
 

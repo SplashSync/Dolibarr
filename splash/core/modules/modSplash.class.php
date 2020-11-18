@@ -13,6 +13,13 @@
  *  file that was distributed with this source code.
  */
 
+//====================================================================//
+// PHP CS Overrides
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Methods.CamelCapsMethodName
+// phpcs:disable Squiz.Classes.ValidClassName
+
 include_once(DOL_DOCUMENT_ROOT."/core/modules/DolibarrModules.class.php");
 
 //====================================================================//
@@ -190,9 +197,21 @@ class modSplash extends DolibarrModules
             //====================================================================//
             // Splash Locals Parameters
             array('SPLASH_LANG',    'chaine',   '',  'Local Language to use for Splash Server Transactions', 0),
-            array('SPLASH_LANGS',   'chaine',   serialize(array()), 'Others Languages to use for Splash Server Transactions', 0),
+            array(
+                'SPLASH_LANGS',
+                'chaine',
+                serialize(array()),
+                'Others Languages to use for Splash Server Transactions',
+                0
+            ),
             array('SPLASH_USER',    'chaine',   '',  'Local User to use for Splash Server Transactions', 0),
-            array('SPLASH_STOCK',           'chaine',   '',  'Local Warehouse to use for Splash Server Transactions', 0),
+            array(
+                'SPLASH_STOCK',
+                'chaine',
+                '',
+                'Local Warehouse to use for Splash Server Transactions',
+                0
+            ),
             array('SPLASH_MULTISTOCK',   'chaine',   '',  'Manage Independant Stocks for Each Warehouse', 0),
             array('SPLASH_PRODUCT_STOCK','chaine',   '',  'Default Warehouse to setup for New/Updated Products', 0),
             array('SPLASH_MULTIPRICE_LEVEL','chaine', '1', 'Local Default Multiprice Level to Use', 0),

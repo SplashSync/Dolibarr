@@ -1,4 +1,4 @@
-
+#!/bin/sh
 ################################################################################
 #
 #  This file is part of SplashSync Project.
@@ -15,7 +15,6 @@
 #  @author Bernard Paquier <contact@splashsync.com>
 #
 ################################################################################
-#!/bin/sh
 
 echo "Create Database if No Exists" 
 mysql -h $DOLI_DB_HOST -pdolibarr -e "CREATE DATABASE IF NOT EXISTS $DOLI_DB_NAME;"

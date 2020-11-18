@@ -1,0 +1,151 @@
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################
+# Select image from https://hub.docker.com/_/php/
+image:  monogramm/docker-dolibarr
+################################################################
+# Set any variables we need
+variables:
+    # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)
+    MYSQL_DATABASE:         dolibarr
+    MYSQL_ROOT_PASSWORD:    dolibarr
+    DOCKER_DRIVER:          overlay2
+    COMPOSER_MEMORY_LIMIT:  -1
+    # Configure Dolibarr environment variables (https://github.com/Monogramm/docker-dolibarr)
+    DOLI_DB_TYPE:           mysqli
+    DOLI_DB_HOST:           mysql
+    DOLI_DB_NAME:           dolibarr
+    DOLI_DB_USER:           root
+    DOLI_DB_PASSWORD:       dolibarr
+    DOLI_ADMIN_LOGIN:       PhpUnit
+
+################################################################
+# Defined Pipeline Stages
+stages:
+    - quality
+
+################################################################
+# Before Script
+################################################################
+before_script:
+    - cat ci/before.sh | bash
+
+################################################################
+# Functional Tests
+################################################################
+#functionnal:
+##    when: manual
+#    services:
+#    - name: mysql:5.7
+#    tags:
+#        - dedicated
+#    script:
+#        - pwd
+#        ################################################################
+#        # Start Web Server
+#        - service apache2 restart && service apache2 status
+#        ################################################################
+#        # Complete Dolibarr Install
+#        - curl http://localhost/install/step2.php -d "action=set" > /dev/null
+#        - curl http://localhost/install/step5.php -d "action=set&pass=PhpUnitPwd&pass_verif=PhpUnitPwd" > /dev/null
+#        - curl http://localhost/
+#        ################################################################
+#        # Install Module
+#        - cp -Rf    /builds/BlueMangoSoft/BlueSyndic/*  /var/www/html/custom
+#        - ls -l     /var/www/html/custom/
+#        ################################################################
+#        # Execute BlueSyndic Module Tests
+#        - cd /var/www/html
+#        - custom/bluesyndic/vendor/bin/phpunit -c custom/build/phpunit.xml.dist --testsuite=Install
+#        - custom/bluesyndic/vendor/bin/phpunit -c custom/build/phpunit.xml.dist
+#        - custom/bluesyndic/vendor/bin/phpunit -c custom/build/phpunit.xml.dist --testdox
+        
+################################################################
+# Code Quality Verifications 
+################################################################
+code_quality:
+#    when: manual
+    image:      monogramm/docker-dolibarr
+    stage:      quality
+    tags:       ['Dedicated']
+    script:
+        ################################################################
+        # Install Module
+        - cat ci/install.sh | bash
+        ################################################################################
+        # Build Module (Composer)
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/travis/composer.sh | sh
+
+#        ################################################################
+#        # Execute Code Quality Analyze
+#        - ls -a -s bluesyndic/vendor/bin
+#        - php bluesyndic/vendor/bin/grumphp run --testsuite=travis   | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/grumphp.txt"
+#        - php bluesyndic/vendor/bin/grumphp run --testsuite=phpstan  | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/grumphp.txt"
+#        ################################################################
+#        # Display Code Counters Analyze
+#        - cloc ./bluesyndic        --exclude-ext=js --exclude-dir=vendor   --quiet  --3   | tee -a "/builds/BlueMangoSoft/BlueSyndic/results/cloc.txt"
+        
+#    artifacts:
+#        paths:
+#          - /builds/BlueMangoSoft/BlueSyndic/results/grumphp.txt
+#          - /builds/BlueMangoSoft/BlueSyndic/results/cloc.txt
+          
+################################################################
+# Buil Bluesyndic Module 
+################################################################
+#build:
+##    when: manual
+#    before_script:
+#        ################################################################
+#        # Install Composer
+#        - curl --silent --show-error https://getcomposer.org/installer | php
+#    script:
+#        ################################################################
+#        # Composer Update --no-dev
+#        - rm -Rf /builds/BlueMangoSoft/BlueSyndic/bluesyndic/vendor/*
+#        - php composer.phar update --no-dev
+#
+#    artifacts:
+#        name: module_bluesyndic-0.0.dev
+#        paths:
+#          - /builds/BlueMangoSoft/BlueSyndic/bluesyndic
+          
+################################################################
+# Build Docker Image for Testing 
+################################################################
+# DISBALED => WE USE MONOGRAMM DOLIBARR IMAGE
+#docker:
+#    when: manual
+#    image: docker:stable
+#    tags:
+#        - docker
+#    services:
+#        - docker:dind    
+#    before_script:
+#        - docker info
+#    script:
+#        ########################################################
+#        # Connect Docker to GitLab
+#        - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+#        ########################################################
+#        # Build Splash Docker Image
+#        - docker build -t registry.gitlab.com/bluemangosoft/bluesyndic /builds/BlueMangoSoft/BlueSyndic/docker 
+#        ########################################################
+#        # Upload Docker Image to GitLab
+#        - docker push registry.gitlab.com/bluemangosoft/bluesyndic
+          
