@@ -94,6 +94,7 @@ code_quality:
 
         ################################################################
         # Execute Code Quality Analyze
+        - pwd
         - php splash/vendor/bin/grumphp run --testsuite=travis
         - php splash/vendor/bin/grumphp run --testsuite=csfixer
         - php splash/vendor/bin/grumphp run --testsuite=phpstan
