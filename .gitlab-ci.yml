@@ -92,7 +92,6 @@ code_quality:
         ################################################################################
         # Build Module (Composer)
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
-
         ################################################################
         # Execute Code Quality Analyze
         - pwd

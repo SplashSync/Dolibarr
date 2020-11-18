@@ -19,6 +19,7 @@ echo "----------------------------------------------------"
 ################################################################
 # Copy Contents
 echo "Copy Splash Module to Dolibarr folder"
+shopt -s dotglob
 cp -Rf $CI_PROJECT_DIR/*                    /var/www/html/custom/
 cp -Rf $CI_PROJECT_DIR/.git/                /var/www/html/custom/.git/
 ls -l -a /var/www/html/custom/
@@ -27,7 +28,3 @@ ls -l -a /var/www/html/custom/
 # Install Splash Configuration File
 echo "Install Splash Configuration File"
 cp $CI_PROJECT_DIR/travis/splash.json       /var/www/html/conf/splash.json
-
-echo "Move to Custom Path"
-cd  /var/www/html/custom
-pwd
