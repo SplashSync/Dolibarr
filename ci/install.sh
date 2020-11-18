@@ -21,7 +21,7 @@ echo "----------------------------------------------------"
 echo "Copy Splash Module to Dolibarr folder"
 shopt -s dotglob
 cp -Rf $CI_PROJECT_DIR/*                    /var/www/html/custom/
-cp -Rf $CI_PROJECT_DIR/.git/                /var/www/html/custom/.git/
+#cp -Rf $CI_PROJECT_DIR/.git/                /var/www/html/custom/.git/
 ls -l -a /var/www/html/custom/
 
 ################################################################
