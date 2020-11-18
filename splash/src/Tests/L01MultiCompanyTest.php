@@ -20,7 +20,7 @@ use Splash\Local\Local;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
- * Local Test Suite - Verify Acces to MultiCompany Objects
+ * Local Test Suite - Verify Access to MultiCompany Objects
  */
 class L01MultiCompanyTest extends ObjectsCase
 {
@@ -46,7 +46,7 @@ class L01MultiCompanyTest extends ObjectsCase
      *
      * @return void
      */
-    public function testLoadAcces($sequence, $objectType)
+    public function testLoadAccess($sequence, $objectType)
     {
         $this->loadLocalTestSequence($sequence);
 
@@ -231,7 +231,7 @@ class L01MultiCompanyTest extends ObjectsCase
             $this->objectCount[$objectType] = $list["meta"]["current"];
 
             //====================================================================//
-            //   Remove Meta Datats form Objects List
+            //   Remove Meta Datas form Objects List
             unset($list["meta"]);
 
             //====================================================================//

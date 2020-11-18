@@ -15,7 +15,7 @@
 
 require dirname(__DIR__)."/splash/vendor/autoload.php";
 
-global $db,$langs,$conf,$user,$hookmanager;
+global $db, $langs, $conf, $user, $hookmanager;
 
 //====================================================================//
 // Initiate Dolibarr Global Environment Variables
