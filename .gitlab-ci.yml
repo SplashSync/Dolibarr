@@ -134,10 +134,10 @@ code_quality:
 ## Build Documentation
 #################################################################
 pages:
-    image:    registry.gitlab.com/splashsync/php-console:pages
-    stage:    deploy
-    tags:
-        - Dedicated
+    image:      registry.gitlab.com/splashsync/php-console:pages
+    stage:      deploy
+    tags:       ['Dedicated']
+    retry:      2
     services:
         - docker:dind
     ################################################################################
@@ -155,10 +155,10 @@ pages:
 ## Build Documentation
 #################################################################
 module:
-    image:    registry.gitlab.com/splashsync/php-console:pages
-    stage:    deploy
-    tags:
-        - Dedicated
+    image:      registry.gitlab.com/splashsync/php-console:pages
+    stage:      deploy
+    tags:       ['Dedicated']
+    retry:      2
     services:
         - docker:dind
     ################################################################################
@@ -171,48 +171,3 @@ module:
     artifacts:
         paths:
             - build
-
-################################################################
-# Buil Bluesyndic Module 
-################################################################
-#build:
-##    when: manual
-#    before_script:
-#        ################################################################
-#        # Install Composer
-#        - curl --silent --show-error https://getcomposer.org/installer | php
-#    script:
-#        ################################################################
-#        # Composer Update --no-dev
-#        - rm -Rf /builds/BlueMangoSoft/BlueSyndic/bluesyndic/vendor/*
-#        - php composer.phar update --no-dev
-#
-#    artifacts:
-#        name: module_bluesyndic-0.0.dev
-#        paths:
-#          - /builds/BlueMangoSoft/BlueSyndic/bluesyndic
-          
-################################################################
-# Build Docker Image for Testing 
-################################################################
-# DISBALED => WE USE MONOGRAMM DOLIBARR IMAGE
-#docker:
-#    when: manual
-#    image: docker:stable
-#    tags:
-#        - docker
-#    services:
-#        - docker:dind    
-#    before_script:
-#        - docker info
-#    script:
-#        ########################################################
-#        # Connect Docker to GitLab
-#        - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-#        ########################################################
-#        # Build Splash Docker Image
-#        - docker build -t registry.gitlab.com/bluemangosoft/bluesyndic /builds/BlueMangoSoft/BlueSyndic/docker 
-#        ########################################################
-#        # Upload Docker Image to GitLab
-#        - docker push registry.gitlab.com/bluemangosoft/bluesyndic
-          
