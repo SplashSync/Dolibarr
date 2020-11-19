@@ -83,7 +83,7 @@ before_script:
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
 
 Dol-12-Php-7.2:
-    image:  monogramm/docker-dolibarr:12.0
+    image:  monogramm/docker-dolibarr:12.0-apache
     <<: *functionnal
 
 Dol-10-Php-7.2:
