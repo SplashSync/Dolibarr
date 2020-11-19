@@ -216,7 +216,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         Splash::object($objectType)->lock();
         $objectId = Splash::object($objectType)->set(null, $fakeData);
         $this->assertNotEmpty($objectId);
-        $this->assertInternalType('string', $objectId);
+        $this->assertIsString($objectId);
         //====================================================================//
         //   Add Object Id to Created List
         $this->addTestedObject($objectType, $objectId);

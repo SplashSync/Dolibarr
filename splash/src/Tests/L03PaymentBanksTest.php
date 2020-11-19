@@ -75,7 +75,7 @@ class L03PaymentBanksTest extends ObjectsCase
 
         //====================================================================//
         //   Add Object Id to Created List
-        $this->assertInternalType("string", $objectId);
+        $this->assertIsString($objectId);
         $this->addTestedObject($objectType, $objectId);
 
         //====================================================================//
@@ -202,6 +202,7 @@ class L03PaymentBanksTest extends ObjectsCase
             array("Invoice",    "LIQ",    "Cash"),
             array("Invoice",    "CB",     "DirectDebit"),
             array("Invoice",    "VAD",    "PayPal"),
+            array("Invoice",    "FAC",    "COD"),
         );
     }
 

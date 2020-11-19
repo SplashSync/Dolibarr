@@ -125,7 +125,7 @@ class L01MultiCompanyTest extends ObjectsCase
         //====================================================================//
         //   Create a New Object on Module
         $objectId = Splash::object($objectType)->Set(null, $dummyData);
-        $this->assertInternalType('string', $objectId);
+        $this->assertIsString($objectId);
 
         //====================================================================//
         // Lock New Objects To Avoid Action Commit

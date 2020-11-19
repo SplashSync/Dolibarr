@@ -269,7 +269,7 @@ class L04GuestOrdersTest extends ObjectsCase
         Splash::object($objectType)->lock();
         $objectId = Splash::object($objectType)->set(null, $givenData);
         $this->assertNotEmpty($objectId);
-        $this->assertInternalType("string", $objectId);
+        $this->assertIsString($objectId);
 
         //====================================================================//
         //   Verify Object Id Is Not Empty
@@ -286,7 +286,7 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Object Data are Ok
-        $this->assertInternalType("array", $objectData);
+        $this->assertIsArray($objectData);
         $this->compareDataBlocks($this->Field, $expectedData, $objectData, $objectType);
 
         return $objectId;
@@ -326,7 +326,7 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Object Data are Ok
-        $this->assertInternalType("array", $objectData);
+        $this->assertIsArray($objectData);
         $this->compareDataBlocks($this->Field, $expectedData, $objectData, $objectType);
 
         return $writeObjectId;
@@ -348,7 +348,7 @@ class L04GuestOrdersTest extends ObjectsCase
         Splash::object("ThirdParty")->lock();
         $objectId = Splash::object("ThirdParty")->set(null, $fakeData);
         $this->assertNotEmpty($objectId);
-        $this->assertInternalType("string", $objectId);
+        $this->assertIsString($objectId);
 
         return array(
             "ObjectId" => ObjectsHelper::encode("ThirdParty", $objectId),

@@ -35,9 +35,9 @@ trait PaymentsTrait
     /**
      * Fetch List of Invoices Payments Amounts
      *
-     * @param int $paiementId Paiment Object Id
+     * @param int $paiementId Payment Object Id
      *
-     * @return array List Of Paiment Object Amounts
+     * @return array List Of Payment Object Amounts
      */
     public static function getPaiementAmounts($paiementId)
     {

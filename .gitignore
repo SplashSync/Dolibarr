@@ -16,3 +16,4 @@
 /.gh-pages/
 /docker/overrides/
 /.idea/
+/.phpunit.result.cache

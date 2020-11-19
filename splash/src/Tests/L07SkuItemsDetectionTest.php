@@ -149,7 +149,7 @@ class L07SkuItemsDetectionTest extends ObjectsCase
         Splash::object("Product")->lock();
         $objectId = Splash::object("Product")->set(null, $fakeData);
         $this->assertNotEmpty($objectId);
-        $this->assertInternalType("string", $objectId);
+        $this->assertIsString($objectId);
 
         return array(
             "SplashId" => ObjectsHelper::encode("Product", $objectId),

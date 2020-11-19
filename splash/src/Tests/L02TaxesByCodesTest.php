@@ -44,11 +44,11 @@ class L02TaxesByCodesTest extends ObjectsCase
 
         //====================================================================//
         //   Configure Tax Classes
-        $this->setTaxeCode(1, 5.5, "TVAFR05");      // French VAT  5%
+        $this->setTaxeCode(1, 5.5, "TVAFR05");     // French VAT  5%
         $this->setTaxeCode(1, 10, "TVAFR10");      // French VAT 10%
         $this->setTaxeCode(1, 20, "TVAFR20");      // French VAT 20%
 
-        $this->setTaxeCode(14, 5, "CA-QC");        // Canadian Quebec VAT 5%
+        $this->setTaxeCode(14, 5, "CA-QC", 9.975);  // Canadian Quebec VAT 5%
     }
 
     /**
@@ -191,10 +191,11 @@ class L02TaxesByCodesTest extends ObjectsCase
      * @param int    $countryId
      * @param float  $vatRate
      * @param string $code
+     * @param float  $vatRate2
      *
      * @return void
      */
-    private function setTaxeCode($countryId, $vatRate, $code)
+    private function setTaxeCode($countryId, $vatRate, $code, $vatRate2 = 0)
     {
         global $db;
 
@@ -203,16 +204,35 @@ class L02TaxesByCodesTest extends ObjectsCase
         if ($this->isTaxeCode($countryId, $vatRate, $code)) {
             return;
         }
+        //====================================================================//
+        //   Count Tax Code
+        $sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_tva as t";
+        $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
+        $result = $db->query($sql);
+        $this->assertNotEmpty($result);
+        //====================================================================//
+        //   Add Tax Code
+        if (!$db->num_rows($result)) {
+            $sql = "INSERT INTO ".MAIN_DB_PREFIX."c_tva ";
+            $sql .= " (`rowid`, `fk_pays`, `code`, `taux`, `localtax1`, `localtax1_type`, `localtax2`, `localtax2_type`, `recuperableonly`, `note`, `active`)";
+            $sql .= " VALUES (NULL, '".$countryId."', '".$code."', '".$vatRate."', '".$vatRate2."', '".($vatRate2 ? "1" : "0")."', '0', '0', '0', '".$code."', '1')";
+            $result = $db->query($sql);
+            if (!$result) {
+                dol_print_error($db);
+            }
+            $db->free($result);
 
+            return;
+        }
         //====================================================================//
         //   Update Tax Code
         $sql = "UPDATE ".MAIN_DB_PREFIX."c_tva as t SET code = '".$code;
         $sql .= "' WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
-        $resql = $db->query($sql);
-        if (!$resql) {
+        $result = $db->query($sql);
+        if (!$result) {
             dol_print_error($db);
         }
-        $db->free($resql);
+        $db->free($result);
     }
 
     /**
