@@ -32,6 +32,7 @@ parameters:
 
     # For Building Splash Documentation
     doc-src:            '/splash/resources/docs'
+    doc-target:         '/public'
     doc-contents:       ["splash", "php-docker"]
 
     # For Building Splash Module
