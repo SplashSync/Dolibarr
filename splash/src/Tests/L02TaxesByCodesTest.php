@@ -214,8 +214,10 @@ class L02TaxesByCodesTest extends ObjectsCase
         //   Add Tax Code
         if (!$db->num_rows($result)) {
             $sql = "INSERT INTO ".MAIN_DB_PREFIX."c_tva ";
-            $sql .= " (`rowid`, `fk_pays`, `code`, `taux`, `localtax1`, `localtax1_type`, `localtax2`, `localtax2_type`, `recuperableonly`, `note`, `active`)";
-            $sql .= " VALUES (NULL, '".$countryId."', '".$code."', '".$vatRate."', '".$vatRate2."', '".($vatRate2 ? "1" : "0")."', '0', '0', '0', '".$code."', '1')";
+            $sql .= " (`fk_pays`, `code`, `taux`, `localtax1`, `localtax1_type`,";
+            $sql .= " `localtax2`, `localtax2_type`, `recuperableonly`, `note`, `active`)";
+            $sql .= " VALUES ('".$countryId."', '".$code."', '".$vatRate."', '".$vatRate2."', ";
+            $sql .= " '".($vatRate2 ? "1" : "0")."', '0', '0', '0', '".$code."', '1')";
             $result = $db->query($sql);
             if (!$result) {
                 dol_print_error($db);
