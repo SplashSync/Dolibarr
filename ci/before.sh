@@ -30,4 +30,4 @@ echo "memory_limit = -1" >> /usr/local/etc/php/conf.d/memory_limit.ini;
 # Install Git
 echo "Install Git"
 apt-get update -q                     > /dev/null
-apt-get install git -y -q             > /dev/null
+apt-get install git wget -y -q        > /dev/null
