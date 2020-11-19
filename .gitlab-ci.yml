@@ -99,7 +99,7 @@ Dol-9-Php-7.2:
 # Code Quality Verifications 
 ################################################################
 code_quality:
-    when:       manual
+#    when:       manual
     image:      monogramm/docker-dolibarr
     stage:      quality
     tags:       ['Dedicated']
