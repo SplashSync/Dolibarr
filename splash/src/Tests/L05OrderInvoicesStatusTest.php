@@ -159,7 +159,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Reference
-        $this->assertContains($expectedRef, $object->ref, "Splash Status: ".$splashStatus);
+        $this->assertStringContainsStringIgnoringCase($expectedRef, $object->ref, "Splash Status: ".$splashStatus);
         if ("PROV" != $expectedRef) {
             $this->assertStringContainsStringIgnoringCase(dol_print_date($object->date, '%y%m'), $object->ref);
             $this->assertStringContainsStringIgnoringCase(dol_print_date($fakeData["date"], '%y%m'), $object->ref);
