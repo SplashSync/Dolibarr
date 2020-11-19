@@ -39,23 +39,24 @@ variables:
 stages:
     - quality
     - tests
-
-################################################################
-# Before Script
-################################################################
-before_script:
-    - cat ci/before.sh | bash
+    - deploy
 
 ################################################################
 # Functional Tests
 ################################################################
 .functionnal:   &functionnal
-#    when:       manual
+    when:       manual
     stage:      tests
     tags:       ['Dedicated']
     retry:      2
     services:
         - mysql:5.7
+    ################################################################
+    # Before Script
+    before_script:
+        - cat ci/before.sh | bash
+    ################################################################
+    # Main Script
     script:
         - pwd
         ################################################################
@@ -99,11 +100,17 @@ Dol-9-Php-7.2:
 # Code Quality Verifications 
 ################################################################
 code_quality:
-#    when:       manual
+    when:       manual
     image:      monogramm/docker-dolibarr
     stage:      quality
     tags:       ['Dedicated']
     retry:      2
+    ################################################################
+    # Before Script
+    before_script:
+        - cat ci/before.sh | bash
+    ################################################################
+    # Main Script
     script:
         ################################################################
         # Install Module
@@ -123,7 +130,29 @@ code_quality:
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
 
-          
+#################################################################
+## Build Documentation
+#################################################################
+pages:
+    image:    registry.gitlab.com/splashsync/php-console:pages
+    stage:    deploy
+    tags:
+        - Dedicated
+    services:
+        - docker:dind
+    ################################################################################
+    # Run Test Script
+    script:
+        - cd  /var/www/html/custom
+        # Run Composer to Build deps
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+        # Build Documentation
+        - php splash/vendor/bin/grumphp run --tasks=build-docs
+    artifacts:
+        paths:
+            - public
+
+
 ################################################################
 # Buil Bluesyndic Module 
 ################################################################
