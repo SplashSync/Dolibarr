@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  monogramm/docker-dolibarr:10.0
+image:  monogramm/docker-dolibarr
 ################################################################
 # Set any variables we need
 variables:
@@ -49,10 +49,11 @@ before_script:
 ################################################################
 # Functional Tests
 ################################################################
-functionnal:
+.functionnal:   &functionnal
 #    when:       manual
     stage:      tests
     tags:       ['Dedicated']
+    retry:      2
     services:
         - mysql:5.7
     script:
@@ -80,7 +81,20 @@ functionnal:
         # Run PhpUnit Main Local Testsuite
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --testsuite=Local
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
-        
+
+Dol-12-Php-7.2:
+    image:  monogramm/docker-dolibarr:12.0
+    <<: *functionnal
+
+Dol-10-Php-7.2:
+    image:  monogramm/docker-dolibarr:10.0
+    <<: *functionnal
+
+Dol-9-Php-7.2:
+    image:  monogramm/docker-dolibarr:9.0
+    <<: *functionnal
+
+
 ################################################################
 # Code Quality Verifications 
 ################################################################
@@ -89,7 +103,7 @@ code_quality:
     image:      monogramm/docker-dolibarr
     stage:      quality
     tags:       ['Dedicated']
-    retry: 2
+    retry:      2
     script:
         ################################################################
         # Install Module
