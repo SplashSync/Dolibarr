@@ -143,7 +143,6 @@ pages:
     ################################################################################
     # Run Test Script
     script:
-        - cd  /var/www/html/custom
         # Run Composer to Build deps
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
         # Build Documentation
