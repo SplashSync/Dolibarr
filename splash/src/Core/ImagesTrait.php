@@ -164,7 +164,8 @@ trait ImagesTrait
 //      In Next Releases we Will Use this function but now it's not generic
 //        $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->object, $this->object->element);
         $this->dolFilesDir .= '/'.dol_sanitizeFileName($this->object->ref);
-        $this->relFilesDir = $this->elementPath[$element];
+        $this->relFilesDir = ($entity > 1) ? $entity."/" : "";
+        $this->relFilesDir .= $this->elementPath[$element];
         $this->relFilesDir .= "/".dol_sanitizeFileName($this->object->ref);
 
         //====================================================================//
