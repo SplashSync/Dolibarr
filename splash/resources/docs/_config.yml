@@ -24,11 +24,11 @@ title:          Dolibarr Module
 # Subtitle of the Site (Generaly DOC)
 subtitle:       DOC
 # the subpath of your site, e.g. /blog
-baseurl:        "/Dolibarr" 
+baseurl:        "/Dolibarr"
 # Description of the Bundle/Module
 description:    "Welcome to the Dolibarr Module's Documentation
 
-                This module implement Splash Sync connector for Dolibarr ERP. 
+                This module implement Splash Sync connector for Dolibarr ERP.
                 It provide access to multiples Objects for automated synchonization though Splash Sync dedicated protocol."
 # Package Code on Packagist
 package:        "splash/dolibarr"

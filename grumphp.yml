@@ -33,7 +33,7 @@ parameters:
     # For Building Splash Documentation
     doc-src:            '/splash/resources/docs'
     doc-target:         '/public'
-    doc-contents:       ["splash", "php-docker"]
+    doc-contents:       ["splash-faq", "php-docker"]
 
     # For Building Splash Module
     mod-src:            '/splash'
@@ -46,6 +46,7 @@ parameters:
 # Import Generic + Splash Console Configs
 imports:
     - { resource: "./splash/vendor/badpixxel/php-sdk/grumphp/generic.yml" }
+    - { resource: "./splash/vendor/badpixxel/php-sdk/grumphp/extras.yml" }
     - { resource: "./splash/vendor/splash/console/src/Resources/grumphp/*.yml" }
 
 
