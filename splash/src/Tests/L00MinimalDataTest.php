@@ -128,8 +128,27 @@ class L00MinimalDataTest extends ObjectsCase
         $entities = MultiCompany::getMultiCompanyInfos(true);
         $this->assertIsArray($entities);
         //====================================================================//
-        // Create Missing Objects
+        // Create Missing Entities
         for ($i = count($entities); $i < 3; $i++) {
+            //====================================================================//
+            // Create Entity Table
+            $sql = "CREATE TABLE IF NOT EXISTS ".MAIN_DB_PREFIX."entity
+                    (
+                      rowid				integer AUTO_INCREMENT PRIMARY KEY,
+                      label				varchar(255) NOT NULL,
+                      description		text,
+                      tms				timestamp,
+                      datec				datetime,
+                      fk_user_creat		integer,
+                      options			text,
+                      visible			tinyint DEFAULT 1 NOT NULL,
+                      active			tinyint DEFAULT 1 NOT NULL,
+                      rang				smallint DEFAULT 0 NOT NULL
+                      
+                    ) ENGINE=innodb;";
+            $this->assertTrue($db->query($sql), $db->lasterror);
+            //====================================================================//
+            // Add Entity
             $sql = "INSERT INTO ".MAIN_DB_PREFIX."entity";
             $sql .= " (`rowid`, `label`, `description`, `tms`, `fk_user_creat`,";
             $sql .= " `options`, `visible`, `active`, `rang`)";
