@@ -135,11 +135,12 @@ class L00MinimalDataTest extends ObjectsCase
             $sql .= " `options`, `visible`, `active`, `rang`)";
             $sql .= " VALUES (NULL, 'Entity-".$i."', 'Entity Name ".$i."',";
             $sql .= " CURRENT_TIMESTAMP, NULL, NULL, '1', '1', '0');";
-            $this->assertTrue($db->query($sql));
+            $this->assertTrue($db->query($sql), $db->lasterror);
         }
         //====================================================================//
         // Refresh Cache
         MultiCompany::getMultiCompanyInfos(true);
+        $this->assertGreaterThan(2, count(MultiCompany::getMultiCompanyInfos(true)));
     }
 
     /**
