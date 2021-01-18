@@ -164,6 +164,12 @@ class L20MarketPlaceModeTest extends ObjectsCase
             $this->markTestSkipped('This Feature is Not Implemented on Current Dolibarr Release.');
         }
         //====================================================================//
+        // Setup All Entities for Test Sequence
+        foreach (MultiCompany::getMultiCompanyInfos() as $companyInfo) {
+            $conf->entity = $companyInfo->id;
+            $this->loadLocalTestSequence($sequence);
+        }
+        //====================================================================//
         // Force Enable MultiCompany Module
         $this->assertEquals(
             1,
@@ -177,13 +183,6 @@ class L20MarketPlaceModeTest extends ObjectsCase
         // Verify Configuration
         $this->assertTrue(MultiCompany::isMultiCompany(true));
         $this->assertTrue(MultiCompany::isMarketplaceMode(true));
-
-        //====================================================================//
-        // Setup All Entities for Test Sequence
-        foreach (MultiCompany::getMultiCompanyInfos() as $companyInfo) {
-            $conf->entity = $companyInfo->id;
-            $this->loadLocalTestSequence($sequence);
-        }
     }
 
     /**

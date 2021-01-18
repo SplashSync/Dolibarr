@@ -73,7 +73,8 @@ services:
             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap            
         volumes:
             - "./:/var/www/html/custom/"
-            - "./docker/overrides:/var/overrides/"
+            - "./.git/:/var/www/html/custom/.git/"
+#            - "./docker/overrides:/var/overrides/"
         command: sh /var/www/html/custom/docker/docker-entrypoint.sh
         hostname: latest.dolibarr.local
         networks:

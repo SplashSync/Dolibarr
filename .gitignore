@@ -19,3 +19,4 @@
 /.phpunit.result.cache
 /multicompany/
 /public/
+/travis/.phpunit.result.cache
