@@ -123,7 +123,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
      *
      * @param string      $objectType
      * @param string      $splashStatus
-     * @param string      $dolibarrStatus
+     * @param int         $dolibarrStatus
      * @param null|string $expectedRef
      *
      * @throws Exception
@@ -133,7 +133,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     public function testStatusOnCreate(
         string $objectType,
         string $splashStatus,
-        string $dolibarrStatus,
+        int $dolibarrStatus,
         $expectedRef = null
     ) {
         //====================================================================//
