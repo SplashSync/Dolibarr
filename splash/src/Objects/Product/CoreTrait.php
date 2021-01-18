@@ -138,7 +138,7 @@ trait CoreTrait
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'ref':
                 // Update Path of Object Documents In Database
                 $this->updateFilesPath("produit", $this->object->ref, $fieldData);

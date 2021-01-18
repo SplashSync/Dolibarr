@@ -13,6 +13,8 @@
  *  file that was distributed with this source code.
  */
 
+global $db, $action, $conf, $langs, $error;
+
 //====================================================================//
 // *******************************************************************//
 // ACTIONS
@@ -24,7 +26,7 @@
 if ('UpdateMultiStock' == $action) {
     //====================================================================//
     // Update Server Expert Mode
-    $multiStocks = GETPOST('MultiStock')?1:0;
+    $multiStocks = GETPOST('MultiStock') ? "1": "0";
     dolibarr_set_const($db, "SPLASH_MULTISTOCK", $multiStocks, 'int', 0, '', $conf->entity);
     header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
@@ -40,25 +42,25 @@ if ('UpdateProducts' == $action) {
 
     //====================================================================//
     // Update Default Stock
-    $DfStock = GETPOST('stock', 'alpha');
-    if ($DfStock) {
-        if (dolibarr_set_const($db, "SPLASH_STOCK", $DfStock, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfStock = GETPOST('stock', 'alpha');
+    if ($dfStock && !is_array($dfStock)) {
+        if (dolibarr_set_const($db, "SPLASH_STOCK", $dfStock, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
     //====================================================================//
     // Update Products Default Stock
-    $DfProductStock = GETPOST('product_stock', 'alpha');
-    if ($DfProductStock) {
-        if (dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", $DfProductStock, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfProductStock = GETPOST('product_stock', 'alpha');
+    if ($dfProductStock && !is_array($dfProductStock)) {
+        if (dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", $dfProductStock, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
     //====================================================================//
     // Update Default MultiPrice
-    $DfPrice = GETPOST('price_level', 'alpha');
-    if ($DfPrice) {
-        if (dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", $DfPrice, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfPrice = GETPOST('price_level', 'alpha');
+    if ($dfPrice && !is_array($dfPrice)) {
+        if (dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", $dfPrice, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }

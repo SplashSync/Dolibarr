@@ -25,6 +25,9 @@ curl -s https://raw.githubusercontent.com/Monogramm/docker-dolibarr/master/docke
 echo "Updating Dolibarr Custom folder ownership..."
 chmod -R 777  /var/www/html/custom
 
+echo "Remove Duplicate Calendar Module"
+rm /usr/local/etc/php/conf.d/docker-php-ext-calendar.ini
+
 echo "Install Git" 
 apt update && apt install -y git
 

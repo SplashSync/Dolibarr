@@ -15,9 +15,11 @@
 
 use Splash\Client\Splash;
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // Open Connection Test Tab
-dol_fiche_head(array(), null, $langs->trans("SPL_WsTest"), 0, null);
+dol_fiche_head(array(), "", $langs->trans("SPL_WsTest"), 0, "");
 
 echo Splash::log()->GetHtmlLog(true);
 

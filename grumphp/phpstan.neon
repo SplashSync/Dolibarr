@@ -4,7 +4,8 @@ includes:
     - '../splash/vendor/phpstan/phpstan-phpunit/rules.neon'
 
 parameters:
-    bootstrap: "./phpstan.php"
+    bootstrapFiles:
+        - "./phpstan.php"
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true 

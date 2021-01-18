@@ -16,10 +16,9 @@
 namespace   Splash\Local\Objects;
 
 use Commande;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ImagesTrait;
-use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
@@ -31,7 +30,6 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 class Order extends AbstractObject
 {
     // Splash Php Core Traits
-    use IntelParserTrait;
     use SimpleFieldsTrait;
     use ObjectsTrait;
     use PricesTrait;
@@ -39,25 +37,26 @@ class Order extends AbstractObject
     use ImagesTrait;
 
     // Dolibarr Core Traits
-    use \Splash\Local\Core\ErrorParserTrait;
-    use \Splash\Local\Core\LocalizationTrait;
-    use \Splash\Local\Core\MetaDatesTrait;
-    use \Splash\Local\Core\CreditModeTrait;
-    use \Splash\Local\Core\BaseItemsTrait;
-    use \Splash\Local\Core\ExtraFieldsTrait;
-    use \Splash\Local\Core\ObjectsListTrait;
-    use \Splash\Local\Core\ImagesTrait;
-    use \Splash\Local\Core\CustomerTrait;
-    use \Splash\Local\Core\ContactsTrait;
-    use \Splash\Local\Core\MultiCompanyTrait;
+    use Core\ErrorParserTrait;
+    use Core\LocalizationTrait;
+    use Core\MetaDatesTrait;
+    use Core\CreditModeTrait;
+    use Core\BaseItemsTrait;
+    use Core\ExtraFieldsTrait;
+    use Core\ObjectsListTrait;
+    use Core\ImagesTrait;
+    use Core\CustomerTrait;
+    use Core\ContactsTrait;
+    use Core\MultiCompanyFieldsTrait;
+    use Core\MarketplaceModeTrait;
 
     // Dolibarr Orders Traits
-    use \Splash\Local\Objects\Order\ObjectsListTrait;
-    use \Splash\Local\Objects\Order\CRUDTrait;
-    use \Splash\Local\Objects\Order\CoreTrait;
-    use \Splash\Local\Objects\Order\MainTrait;
-    use \Splash\Local\Objects\Order\ItemsTrait;
-    use \Splash\Local\Objects\Order\StatusTrait;
+    use Order\ObjectsListTrait;
+    use Order\CRUDTrait;
+    use Order\CoreTrait;
+    use Order\MainTrait;
+    use Order\ItemsTrait;
+    use Order\StatusTrait;
 
     //====================================================================//
     // ExtraFields Type

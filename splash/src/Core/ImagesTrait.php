@@ -229,7 +229,7 @@ trait ImagesTrait
     }
 
     //====================================================================//
-    // Fields Writting Functions
+    // Fields Writing Functions
     //====================================================================//
 
     /**
@@ -287,6 +287,56 @@ trait ImagesTrait
     }
 
     /**
+     * Update Object Files Path if Ref Changed
+     *
+     * @param string $element
+     * @param string $oldRef
+     * @param string $newRef
+     *
+     * @return void
+     */
+    protected function updateFilesPath($element, $oldRef, $newRef)
+    {
+        global $db;
+
+        //====================================================================//
+        // Check if Ref was Changed
+        if (empty($element) || empty($oldRef) || empty($newRef) || ($oldRef == $newRef)) {
+            return;
+        }
+
+        //====================================================================//
+        // Ensure Dolibarr Version is Compatible
+        if (Local::dolVersionCmp($this->minVersion) < 0) {
+            return;
+        }
+
+        require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+
+        //====================================================================//
+        // Create EcmFiles Main Object
+        $ecmImage = new EcmFiles($db);
+
+        //====================================================================//
+        // Prepare Update Request
+        $sql = $sql = 'UPDATE '.MAIN_DB_PREFIX.$ecmImage->table_element.' SET';
+        $sql .= ' filepath = "'.$element.'/'.$newRef.'" ';
+        $sql .= ' WHERE filepath="'.$element.'/'.$oldRef.'"';
+
+        //====================================================================//
+        // Execute Update Request
+        $db->begin();
+        $resql = $db->query($sql);
+        if (!$resql) {
+            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->lasterror());
+            $db->rollback();
+
+            return;
+        }
+        $db->commit();
+    }
+
+    /**
      * @param string $fieldName
      *
      * @return void
@@ -337,10 +387,10 @@ trait ImagesTrait
 
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->out, "images", $fieldName, $file["position"], $image);
-            self::lists()->Insert($this->out, "images", "cover", $file["position"], $file["cover"]);
-            self::lists()->Insert($this->out, "images", "visible", $file["position"], true);
-            self::lists()->Insert($this->out, "images", "position", $file["position"], $file["position"]);
+            self::lists()->insert($this->out, "images", $fieldName, $file["position"], $image);
+            self::lists()->insert($this->out, "images", "cover", $file["position"], $file["cover"]);
+            self::lists()->insert($this->out, "images", "visible", $file["position"], true);
+            self::lists()->insert($this->out, "images", "position", $file["position"], $file["position"]);
         }
 
         //====================================================================//
@@ -424,7 +474,7 @@ trait ImagesTrait
         //====================================================================//
         // Safety Check
         if (!($ecmImage instanceof EcmFiles)) {
-            return Splash::log()->err("Ann Error Occured on Image Identify");
+            return Splash::log()->err("Ann Error Occurred on Image Identify");
         }
         //====================================================================//
         // Image New but May Be A Duplicate
@@ -595,56 +645,6 @@ trait ImagesTrait
         $this->object->addThumbs($this->dolFilesDir."/".$ecmImage->filename);
 
         return true;
-    }
-
-    /**
-     * Update Object Files Path if Ref Changed
-     *
-     * @param string $element
-     * @param string $oldRef
-     * @param string $newRef
-     *
-     * @return void
-     */
-    private function updateFilesPath($element, $oldRef, $newRef)
-    {
-        global $db;
-
-        //====================================================================//
-        // Check if Ref was Changed
-        if (empty($element) || empty($oldRef) || empty($newRef) || ($oldRef == $newRef)) {
-            return;
-        }
-
-        //====================================================================//
-        // Ensure Dolibarr Version is Compatible
-        if (Local::dolVersionCmp($this->minVersion) < 0) {
-            return;
-        }
-
-        require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
-
-        //====================================================================//
-        // Create EcmFiles Main Object
-        $ecmImage = new EcmFiles($db);
-
-        //====================================================================//
-        // Prepare Update Request
-        $sql = $sql = 'UPDATE '.MAIN_DB_PREFIX.$ecmImage->table_element.' SET';
-        $sql .= ' filepath = "'.$element.'/'.$newRef.'" ';
-        $sql .= ' WHERE filepath="'.$element.'/'.$oldRef.'"';
-
-        //====================================================================//
-        // Execute Update Request
-        $db->begin();
-        $resql = $db->query($sql);
-        if (!$resql) {
-            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->lasterror());
-            $db->rollback();
-
-            return;
-        }
-        $db->commit();
     }
 
     /**

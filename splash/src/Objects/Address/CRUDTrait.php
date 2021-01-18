@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Address;
 
 use Contact;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Services\MultiCompany;
 use User;
 
 /**
@@ -49,7 +50,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to load Contact Address (".$objectId.").");
         }
 
@@ -174,7 +175,7 @@ trait CRUDTrait
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,

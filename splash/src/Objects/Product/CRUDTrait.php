@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Product;
 
 use Product;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Services\MultiCompany;
 use Splash\Local\Services\VariantsManager;
 use User;
 
@@ -56,7 +57,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to load Product (".$objectId.").");
         }
         //====================================================================//
@@ -180,7 +181,7 @@ trait CRUDTrait
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to Delete Product (".$objectId.").");
         }
         //====================================================================//

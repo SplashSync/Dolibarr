@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Objects\Order;
 
+use Splash\Local\Services\MultiCompany;
+
 /**
  * Dolibarr Customer Order List Functions
  */
@@ -37,6 +39,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database fields
         $sql .= " o.rowid as id,";                  // Object Id
+        $sql .= " o.entity as entity_id,";          // Entity Id
         $sql .= " o.ref as ref,";                   // Dolibarr Reference
         $sql .= " o.ref_ext as ref_ext,";           // External Reference
         $sql .= " o.ref_int as ref_int,";           // Internal Reference
@@ -49,11 +52,12 @@ trait ObjectsListTrait
         $sql .= " FROM ".MAIN_DB_PREFIX."commande as o ";
         //====================================================================//
         // Entity Filter
-        $sql .= " WHERE o.entity IN (".getEntity('commande', 1).")";
+        $entityIds = MultiCompany::isMarketplaceMode() ? MultiCompany::getVisibleSqlIds() : getEntity('commande', 1);
+        $sql .= " WHERE o.entity IN (".$entityIds.")";
         //====================================================================//
         // Setup filters
         //====================================================================//
-        // Add filters with names convertions. Added LOWER function to be NON case sensitive
+        // Add filters with names conversions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
             $sql .= " AND ( ";
             //====================================================================//

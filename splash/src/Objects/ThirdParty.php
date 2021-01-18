@@ -15,8 +15,8 @@
 
 namespace   Splash\Local\Objects;
 
+use Splash\Local\Core;
 use Splash\Models\AbstractObject;
-use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
@@ -27,26 +27,26 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 class ThirdParty extends AbstractObject
 {
     // Splash Php Core Traits
-    use IntelParserTrait;
     use SimpleFieldsTrait;
     use ObjectsTrait;
     use PricesTrait;
 
     // Dolibarr Core Traits
-    use \Splash\Local\Core\ErrorParserTrait;
-    use \Splash\Local\Core\LocalizationTrait;
-    use \Splash\Local\Core\MetaDatesTrait;
-    use \Splash\Local\Core\ExtraFieldsTrait;
-    use \Splash\Local\Core\ObjectsListTrait;
-    use \Splash\Local\Core\MultiCompanyTrait;
+    use Core\ErrorParserTrait;
+    use Core\LocalizationTrait;
+    use Core\MetaDatesTrait;
+    use Core\ExtraFieldsTrait;
+    use Core\ObjectsListTrait;
+    use Core\MultiCompanyFieldsTrait;
+    use Core\MarketplaceModeTrait;
 
     // Dolibarr ThirdParty Traits
-    use \Splash\Local\Objects\ThirdParty\ObjectsListTrait;
-    use \Splash\Local\Objects\ThirdParty\CRUDTrait;
-    use \Splash\Local\Objects\ThirdParty\CoreTrait;
-    use \Splash\Local\Objects\ThirdParty\MainTrait;
-    use \Splash\Local\Objects\ThirdParty\AddressTrait;
-    use \Splash\Local\Objects\ThirdParty\MetaTrait;
+    use ThirdParty\ObjectsListTrait;
+    use ThirdParty\CRUDTrait;
+    use ThirdParty\CoreTrait;
+    use ThirdParty\MainTrait;
+    use ThirdParty\AddressTrait;
+    use ThirdParty\MetaTrait;
 
     //====================================================================//
     // ExtraFields Type

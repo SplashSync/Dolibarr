@@ -16,6 +16,7 @@
 namespace   Splash\Local\Objects\Invoice;
 
 use Splash\Local\Local;
+use Splash\Local\Services\MultiCompany;
 
 /**
  * Dolibarr Customer Invoice List Functions
@@ -33,8 +34,8 @@ trait ObjectsListTrait
     protected function getSqlBaseRequest($filter = null, $params = null)
     {
         //====================================================================//
-        // Dolibarr Reference Colums Name was Updated in V10
-        $refColomn = (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
+        // Dolibarr Reference Columns Name was Updated in V10
+        $refColumn = (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
 
         //====================================================================//
         // Prepare SQL request for reading in Database
@@ -43,7 +44,8 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database fields
         $sql .= " f.rowid as id,";                  // Object Id
-        $sql .= " ".$refColomn." as ref,";          // Dolibarr Reference
+        $sql .= " f.entity as entity_id,";          // Entity Id
+        $sql .= " ".$refColumn." as ref,";          // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
         $sql .= " f.ref_int as ref_int,";           // Internal Reference
         $sql .= " f.ref_client as ref_client,";     // Customer Reference
@@ -53,21 +55,21 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database tables
         $sql .= " FROM ".MAIN_DB_PREFIX."facture as f ";
-
         //====================================================================//
         // Entity Filter
-        $sql .= " WHERE f.entity IN (".getEntity('facture', 1).")";
+        $entityIds = MultiCompany::isMarketplaceMode() ? MultiCompany::getVisibleSqlIds() : getEntity('facture', 1);
+        $sql .= " WHERE f.entity IN (".$entityIds.")";
         $sql .= " AND f.type IN (".implode(", ", static::$dolibarrTypes).")";
 
         //====================================================================//
         // Setup filters
         //====================================================================//
-        // Add filters with names convertions. Added LOWER function to be NON case sensitive
+        // Add filters with names conversions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
             $sql .= " AND ( ";
             //====================================================================//
             // Search in Invoice Ref.
-            $sql .= " LOWER( ".$refColomn." ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " LOWER( ".$refColumn." ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice Internal Ref
             $sql .= " OR LOWER( f.ref_int ) LIKE LOWER( '%".$filter."%') ";

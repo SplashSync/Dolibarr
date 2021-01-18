@@ -13,6 +13,8 @@
  *  file that was distributed with this source code.
  */
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // *******************************************************************//
 // ACTIONS
@@ -30,9 +32,9 @@ if ('UpdatePayments' == $action) {
 
     //====================================================================//
     // Update Default Bank Account Id
-    $DfBank = GETPOST('accountid', 'alpha');
-    if ($DfBank) {
-        if (dolibarr_set_const($db, "SPLASH_BANK", $DfBank, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfBank = GETPOST('accountid', 'alpha');
+    if ($dfBank && !is_array($dfBank)) {
+        if (dolibarr_set_const($db, "SPLASH_BANK", $dfBank, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
@@ -40,17 +42,18 @@ if ('UpdatePayments' == $action) {
     //====================================================================//
     // Payment Methods to Bank Account Associations
     $form->load_cache_types_paiements();
-    foreach ($form->cache_types_paiements as $Type) {
+    foreach ($form->cache_types_paiements as $accType) {
         //====================================================================//
         // Filter Default & Disabled Payment Methods
-        if (!$Type["active"] || empty($Type["label"])) {
+        if (!$accType["active"] || empty($accType["label"])) {
             continue;
         }
         //====================================================================//
         // Update Account Select
-        $Acc = GETPOST($Type["id"], 'alpha');
-        if ($Acc) {
-            if (dolibarr_set_const($db, "SPLASH_BANK_FOR_".$Type["id"], $Acc, 'chaine', 0, '', $conf->entity) <= 0) {
+        $accId = GETPOST($accType["id"], 'alpha');
+        if ($accId && !is_array($accId)) {
+            $res = dolibarr_set_const($db, "SPLASH_BANK_FOR_".$accType["id"], $accId, 'chaine', 0, '', $conf->entity);
+            if ($res <= 0) {
                 $errors++;
             }
         }

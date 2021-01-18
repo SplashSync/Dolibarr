@@ -15,6 +15,8 @@
 
 use Splash\Core\SplashCore as Splash;
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // Create Setup Form
 echo    '<form name="MainSetup" action="'.filter_input(INPUT_SERVER, "PHP_SELF").'" method="POST">';
@@ -23,7 +25,7 @@ echo    '<input type="hidden" name="action" value="UpdateProducts">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), null, $langs->trans("Products"), 0, null);
+dol_fiche_head(array(), "", $langs->trans("Products"), 0, "");
 
 echo '<table class="noborder" width="100%"><tbody>';
 
@@ -73,8 +75,10 @@ if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
     echo '      <td>';
 
     print '<select name="price_level" class="flat">';
+    // @phpstan-ignore-next-line
     for ($i = 1; $i <= $conf->global->PRODUIT_MULTIPRICES_LIMIT; $i++) {
         print '<option value="'.$i.'"' ;
+        // @phpstan-ignore-next-line
         if ($i == $conf->global->SPLASH_MULTIPRICE_LEVEL) {
             print 'selected';
         }

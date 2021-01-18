@@ -188,8 +188,11 @@ class CustomerInvoicesStats extends AbstractWidget
         $result = $db->query($sql);
 
         $rawData = array();
-        foreach (mysqli_fetch_all($result, MYSQLI_ASSOC) as $value) {
-            $rawData[$value["step"]] = $value["total"];
+        $results = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        if (is_iterable($results)) {
+            foreach ($results as $value) {
+                $rawData[$value["step"]] = $value["total"];
+            }
         }
 
         return $this->parseDatedData($rawData);

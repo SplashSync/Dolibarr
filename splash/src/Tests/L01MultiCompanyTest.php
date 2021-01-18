@@ -17,6 +17,7 @@ namespace Splash\Local\Tests;
 
 use Splash\Client\Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\MultiCompany;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
@@ -24,8 +25,6 @@ use Splash\Tests\Tools\ObjectsCase;
  */
 class L01MultiCompanyTest extends ObjectsCase
 {
-    use \Splash\Local\Core\MultiCompanyTrait;
-
     /**
      * @var array
      */
@@ -165,21 +164,26 @@ class L01MultiCompanyTest extends ObjectsCase
      */
     public function changeMultiCompanyMode($state = false)
     {
-        global $db, $conf;
-
+        global $db;
         //====================================================================//
         // Check Dolibarr Version Is Compatible
         if (Local::dolVersionCmp("5.0.0") < 0) {
             $this->markTestSkipped('This Feature is Not Implemented on Current Dolibarr Release.');
         }
-
         //====================================================================//
         // Force Enable MultiCompany Module
         $this->assertEquals(
             1,
-            dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', $conf->entity),
+            dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", ($state?'1':'0'), 'chaine', 0, '', 0),
             $db->lasterror()
         );
+        //====================================================================//
+        // Force Disable MarketPlace Mode
+        Splash::configuration()->MarketplaceMode = false;
+        //====================================================================//
+        // Verify Configuration
+        $this->assertEquals($state, MultiCompany::isMultiCompany(true));
+        $this->assertEquals(false, MultiCompany::isMarketplaceMode(true));
     }
 
     /**
@@ -195,7 +199,7 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         // Check MultiCompany Module
-        $this->assertTrue(self::isMultiCompany());
+        $this->assertTrue(MultiCompany::isMultiCompany());
 
         //====================================================================//
         // Switch Entity
@@ -318,7 +322,7 @@ class L01MultiCompanyTest extends ObjectsCase
         Splash::object($objectType)->Lock();
 
         //====================================================================//
-        // Clean Objects Commited Array
+        // Clean Objects Committed Array
         Splash::$commited = array();
 
         return $this->fakeObjectData($fields);

@@ -249,6 +249,7 @@ class AttributesManager
         }
         //====================================================================//
         // Delete Attribute
+        // @phpstan-ignore-next-line
         if ($attribute->delete($user) < 0) {
             return Splash::log()->errTrace(
                 " Unable to Delete Product Attribute (".$attribute->ref.")."

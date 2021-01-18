@@ -15,8 +15,10 @@
 
 namespace Splash\Local\Tests;
 
+use Exception;
 use Splash\Client\Splash;
 use Splash\Local\Core\ErrorParserTrait;
+use Splash\Local\Services\MultiCompany;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
@@ -56,9 +58,11 @@ class L00MinimalDataTest extends ObjectsCase
             $warehouse = new \Entrepot($db);
             $warehouse->statut = 1;
             $warehouse->ref = "WH-".$i;
-            $warehouse->libelle = "Warhouse ".$i;
-            $warehouse->label = "Warhouse ".$i;
-            $warehouse->description = "Warhouse ".$i;
+            $warehouse->libelle = "Warehouse ".$i;
+            if (property_exists($warehouse, "label")) {
+                $warehouse->label = "Warehouse ".$i;
+            }
+            $warehouse->description = "Warehouse ".$i;
             $warehouse->create($user);
             $this->assertTrue($this->catchDolibarrErrors($warehouse));
         }
@@ -71,6 +75,8 @@ class L00MinimalDataTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @throws Exception
      *
      * @return void
      */
@@ -92,8 +98,6 @@ class L00MinimalDataTest extends ObjectsCase
             $dummyData = $this->prepareForTesting($objectType);
             if (false == $dummyData) {
                 $this->markTestSkipped($objectType." does not Allow Create");
-
-                return;
             }
             //====================================================================//
             //   Create a New Object on Module
@@ -104,11 +108,48 @@ class L00MinimalDataTest extends ObjectsCase
     }
 
     /**
+     * Ensure at Least 5 Objects of Each Types Exists
+     *
+     * @dataProvider sequencesProvider
+     *
+     * @param string $sequence
+     *
+     * @throws Exception
+     *
+     * @return void
+     */
+    public function testAtLeastThreeEntities(string $sequence)
+    {
+        global $db;
+
+        $this->loadLocalTestSequence($sequence);
+        //====================================================================//
+        //   Get Entities List
+        $entities = MultiCompany::getMultiCompanyInfos(true);
+        $this->assertIsArray($entities);
+        //====================================================================//
+        // Create Missing Objects
+        for ($i = count($entities); $i < 3; $i++) {
+            $sql = "INSERT INTO ".MAIN_DB_PREFIX."entity";
+            $sql .= " (`rowid`, `label`, `description`, `tms`, `fk_user_creat`,";
+            $sql .= " `options`, `visible`, `active`, `rang`)";
+            $sql .= " VALUES (NULL, 'Entity-".$i."', 'Entity Name ".$i."',";
+            $sql .= " CURRENT_TIMESTAMP, NULL, NULL, '1', '1', '0');";
+            $this->assertNotEmpty($db->query($sql));
+        }
+        //====================================================================//
+        // Refresh Cache
+        MultiCompany::getMultiCompanyInfos(true);
+    }
+
+    /**
      * @param string $objectType
+     *
+     * @throws Exception
      *
      * @return bool
      */
-    public function verifyTestIsAllowed(string $objectType)
+    public function verifyTestIsAllowed(string $objectType): bool
     {
         $definition = Splash::object($objectType)->Description();
 

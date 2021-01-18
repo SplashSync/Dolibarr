@@ -16,6 +16,8 @@
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // Create Setup Form
 echo    '<form name="MainSetup" action="'.filter_input(INPUT_SERVER, "PHP_SELF").'" method="POST">';
@@ -24,7 +26,7 @@ echo    '<input type="hidden" name="action" value="UpdateOrder">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), null, $langs->trans("SPL_Orders_Config"), 0, null);
+dol_fiche_head(array(), "", $langs->trans("SPL_Orders_Config"), 0, "");
 
 echo '<table class="noborder" width="100%"><tbody>';
 

@@ -16,6 +16,7 @@
 namespace Splash\Local\Tests;
 
 use Commande;
+use Exception;
 use Facture;
 use Splash\Client\Splash;
 use Splash\Local\Objects\Invoice;
@@ -77,16 +78,16 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Reference
-        $this->assertContains($expectedRef, $object->ref, "Splash Status: ".$splashStatus);
+        $this->assertStringContainsString((string) $expectedRef, $object->ref, "Splash Status: ".$splashStatus);
         if ("PROV" != $expectedRef) {
-            $this->assertContains(dol_print_date($object->date, '%y%m'), $object->ref);
+            $this->assertStringContainsString(dol_print_date($object->date, '%y%m'), $object->ref);
         }
     }
 
     /**
      * @return array
      */
-    public function statusProvider()
+    public function statusProvider(): array
     {
         //====================================================================//
         // Init Dolibarr
@@ -125,10 +126,16 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
      * @param string      $dolibarrStatus
      * @param null|string $expectedRef
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testStatusOnCreate($objectType, $splashStatus, $dolibarrStatus, $expectedRef = null)
-    {
+    public function testStatusOnCreate(
+        string $objectType,
+        string $splashStatus,
+        string $dolibarrStatus,
+        $expectedRef = null
+    ) {
         //====================================================================//
         //   Create Fake Order Data
         $fields = $this->fakeFieldsList($objectType, array(), true);
@@ -159,7 +166,11 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Reference
-        $this->assertStringContainsStringIgnoringCase($expectedRef, $object->ref, "Splash Status: ".$splashStatus);
+        $this->assertStringContainsStringIgnoringCase(
+            (string) $expectedRef,
+            $object->ref,
+            "Splash Status: ".$splashStatus
+        );
         if ("PROV" != $expectedRef) {
             $this->assertStringContainsStringIgnoringCase(dol_print_date($object->date, '%y%m'), $object->ref);
             $this->assertStringContainsStringIgnoringCase(dol_print_date($fakeData["date"], '%y%m'), $object->ref);

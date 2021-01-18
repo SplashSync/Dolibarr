@@ -16,6 +16,7 @@
 namespace   Splash\Local\Objects\Address;
 
 use Splash\Local\Local;
+use Splash\Local\Services\MultiCompany;
 
 /**
  * Dolibarr Contacts Address List Functions
@@ -39,6 +40,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database fields
         $sql .= " c.rowid as id,";                    // Object Id
+        $sql .= " c.entity as entity_id,";           // Entity Id
         $sql .= " c.ref_ext as ref_ext,";             // Reference
         $sql .= " c.firstname as firstname,";         // FirstName
         $sql .= " c.lastname as lastname,";           // LastName
@@ -57,21 +59,19 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database tables
         $sql .= " FROM ".MAIN_DB_PREFIX."socpeople as c ";
-
         if (Local::dolVersionCmp("3.7.0") >= 0) {
             $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_country as p on c.fk_pays = p.rowid";
         } else {
             $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_pays as p on c.fk_pays = p.rowid";
         }
-
         //====================================================================//
         // Entity Filter
-        $sql .= " WHERE c.entity IN (".getEntity('contact', 1).")";
-
+        $entityIds = MultiCompany::isMarketplaceMode() ? MultiCompany::getVisibleSqlIds() : getEntity('contact', 1);
+        $sql .= " WHERE c.entity IN (".$entityIds.")";
         //====================================================================//
         // Setup filters
         //====================================================================//
-        // Add filters with names convertions. Added LOWER function to be NON case sensitive
+        // Add filters with names conversions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
             $sql .= " AND ( ";
             //====================================================================//
@@ -100,11 +100,11 @@ trait ObjectsListTrait
         }
 
         //====================================================================//
-        // Setup sortorder
+        // Setup sort order
         //====================================================================//
-        $sortfield = empty($params["sortfield"])?"c.rowid":$params["sortfield"];
-        $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
-        $sql .= " ORDER BY ".$sortfield." ".$sortorder;
+        $sortField = empty($params["sortfield"])?"c.rowid":$params["sortfield"];
+        $sortOrder = empty($params["sortorder"])?"DESC":$params["sortorder"];
+        $sql .= " ORDER BY ".$sortField." ".$sortOrder;
 
         return $sql;
     }

@@ -18,6 +18,7 @@ namespace Splash\Local\Objects\ThirdParty;
 use Societe;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\MultiCompany;
 use User;
 
 /**
@@ -42,6 +43,9 @@ trait CRUDTrait
         // Init Object
         $object = new Societe($db);
         //====================================================================//
+        // Replace Multi-Company Module Global to Allow Fetch
+        MultiCompany::replaceMcGlobal();
+        //====================================================================//
         // Fetch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
@@ -50,9 +54,12 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!self::isMultiCompanyAllowed($object)) {
-            return Splash::log()->errTrace("Unable to load ThirdParty (".$objectId.").");
+        if (!MultiCompany::isAllowed($object)) {
+            return Splash::log()->errTrace("Unable to load ThirdParty (".$objectId."). MC");
         }
+        //====================================================================//
+        // Restore Multi-Company Module Global
+        MultiCompany::restoreMcGlobal();
 
         return $object;
     }
@@ -161,7 +168,7 @@ trait CRUDTrait
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to Delete ThirdParty (".$objectId.").");
         }
         //====================================================================//

@@ -13,6 +13,8 @@
  *  file that was distributed with this source code.
  */
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // *******************************************************************//
 // ACTIONS
@@ -24,9 +26,9 @@
 if ('UpdateMode' == $action) {
     //====================================================================//
     // Update Server Expert Mode
-    $WsExpert = GETPOST('WsExpert')?1:0;
-    dolibarr_set_const($db, "SPLASH_WS_EXPERT", $WsExpert, 'int', 0, '', $conf->entity);
-    if (!$WsExpert) {
+    $wsExpert = GETPOST('WsExpert') ? "1" : "0";
+    dolibarr_set_const($db, "SPLASH_WS_EXPERT", $wsExpert, 'int', 0, '', $conf->entity);
+    if (!$wsExpert) {
         dolibarr_set_const($db, "SPLASH_WS_HOST", "", 'chaine', 0, '', $conf->entity);
     }
     header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
@@ -42,43 +44,43 @@ if ('UpdateMain' == $action) {
     $errors = 0;
     //====================================================================//
     // Update Server Id
-    $WsId = GETPOST('WsId', 'alpha');
-    if ($WsId) {
-        if (dolibarr_set_const($db, "SPLASH_WS_ID", $WsId, 'chaine', 0, '', $conf->entity) <= 0) {
+    $wsId = GETPOST('WsId', 'alpha');
+    if ($wsId && !is_array($wsId)) {
+        if (dolibarr_set_const($db, "SPLASH_WS_ID", $wsId, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
 
     //====================================================================//
     // Update Server Encryption Key
-    $WsKey = GETPOST('WsKey', 'alpha');
-    if ($WsKey) {
-        if (dolibarr_set_const($db, "SPLASH_WS_KEY", $WsKey, 'chaine', 0, '', $conf->entity) <= 0) {
+    $wsKey = GETPOST('WsKey', 'alpha');
+    if ($wsKey && !is_array($wsKey)) {
+        if (dolibarr_set_const($db, "SPLASH_WS_KEY", $wsKey, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
 
     //====================================================================//
     // Update Server Host Url
-    $WsHost = GETPOST('WsHost', 'alpha');
-    if ($WsKey) {
-        if (dolibarr_set_const($db, "SPLASH_WS_HOST", $WsHost, 'chaine', 0, '', $conf->entity) <= 0) {
+    $wsHost = GETPOST('WsHost', 'alpha');
+    if ($wsHost && !is_array($wsHost)) {
+        if (dolibarr_set_const($db, "SPLASH_WS_HOST", $wsHost, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
 
     //====================================================================//
     // Update Protocol
-    $WsMethod = GETPOST('WsMethod', 'alpha');
-    if ($WsMethod) {
-        if (dolibarr_set_const($db, "SPLASH_WS_METHOD", $WsMethod, 'chaine', 0, '', $conf->entity) <= 0) {
+    $wsMethod = GETPOST('WsMethod', 'alpha');
+    if ($wsMethod && !is_array($wsMethod)) {
+        if (dolibarr_set_const($db, "SPLASH_WS_METHOD", $wsMethod, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
 
     //====================================================================//
     // Update Smart Notifications
-    $smartNotify = GETPOST('SmartNotify') ? 1 : 0;
+    $smartNotify = GETPOST('SmartNotify') ? "1" : "0";
     if (dolibarr_set_const($db, "SPLASH_SMART_NOTIFY", $smartNotify, 'int', 0, '', $conf->entity) <= 0) {
         $errors++;
     }

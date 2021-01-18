@@ -13,6 +13,8 @@
  *  file that was distributed with this source code.
  */
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // *******************************************************************//
 // ACTIONS
@@ -29,27 +31,27 @@ if ('UpdateLocal' == $action) {
     $errors = 0;
     //====================================================================//
     // Update Default Lang
-    $DfLang = GETPOST('DefaultLang', 'alpha');
-    if ($DfLang) {
-        if (dolibarr_set_const($db, "SPLASH_LANG", $DfLang, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfLang = GETPOST('DefaultLang', 'alpha');
+    if ($dfLang && !is_array($dfLang)) {
+        if (dolibarr_set_const($db, "SPLASH_LANG", $dfLang, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
 
     //====================================================================//
     // Update Other Langs
-    $OtherLangs = GETPOST('OtherLangs', 'alpha');
-    if ($OtherLangs) {
-        if (dolibarr_set_const($db, "SPLASH_LANGS", serialize($OtherLangs), 'chaine', 0, '', $conf->entity) <= 0) {
+    $otherLangs = GETPOST('OtherLangs', 'alpha');
+    if ($otherLangs && !is_array($otherLangs)) {
+        if (dolibarr_set_const($db, "SPLASH_LANGS", serialize($otherLangs), 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
 
     //====================================================================//
     // Update Default User
-    $DfUser = GETPOST('user', 'alpha');
-    if ($DfUser) {
-        if (dolibarr_set_const($db, "SPLASH_USER", $DfUser, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfUser = GETPOST('user', 'alpha');
+    if ($dfUser && !is_array($dfUser)) {
+        if (dolibarr_set_const($db, "SPLASH_USER", $dfUser, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }

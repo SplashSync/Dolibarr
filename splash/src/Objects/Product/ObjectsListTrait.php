@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Objects\Product;
 
+use Splash\Local\Services\MultiCompany;
+
 /**
  * Dolibarr Products Objects List Functions
  */
@@ -37,6 +39,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database fields
         $sql .= " p.rowid as id,";                    // Object Id
+        $sql .= " p.entity as entity_id,";            // Entity Id
         $sql .= " p.ref as ref,";                     // Reference
         $sql .= " p.label as label,";                 // Product Name
         $sql .= " p.description as description,";     // Short Description
@@ -51,11 +54,12 @@ trait ObjectsListTrait
         $sql .= "LEFT JOIN ".MAIN_DB_PREFIX."product_attribute_combination as c ON p.rowid = c.fk_product_parent";
         //====================================================================//
         // Entity Filter
-        $sql .= " WHERE p.entity IN (".getEntity('product', 1).") AND c.rowid IS NULL";
+        $entityIds = MultiCompany::isMarketplaceMode() ? MultiCompany::getVisibleSqlIds() : getEntity('product', 1);
+        $sql .= " WHERE c.rowid IS NULL AND p.entity IN (".$entityIds.")";
         //====================================================================//
         // Setup filters
         //====================================================================//
-        // Add filters with names convertions. Added LOWER function to be NON case sensitive
+        // Add filters with names conversions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
             $sql .= " AND ( ";
             //====================================================================//
@@ -76,11 +80,11 @@ trait ObjectsListTrait
             $sql .= " ) ";
         }
         //====================================================================//
-        // Setup sortorder
+        // Setup sort order
         //====================================================================//
-        $sortfield = empty($params["sortfield"])?"p.rowid":$params["sortfield"];
-        $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
-        $sql .= " ORDER BY ".$sortfield." ".$sortorder;
+        $sortField = empty($params["sortfield"])?"p.rowid":$params["sortfield"];
+        $sortOrder = empty($params["sortorder"])?"DESC":$params["sortorder"];
+        $sql .= " ORDER BY ".$sortField." ".$sortOrder;
 
         return $sql;
     }

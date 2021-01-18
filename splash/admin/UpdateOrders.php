@@ -13,6 +13,8 @@
  *  file that was distributed with this source code.
  */
 
+global $db, $action, $conf, $langs, $error, $form;
+
 //====================================================================//
 // *******************************************************************//
 // ACTIONS
@@ -22,8 +24,8 @@
 //====================================================================//
 // Update Detect Tax Names Mode
 if ('UpdateOrderTaxMode' == $action) {
-    $DetectTaxMode = GETPOST('DetectTax')?1:0;
-    dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", $DetectTaxMode, 'chaine', 0, '', $conf->entity);
+    $detectTaxMode = GETPOST('DetectTax') ? "1": "0";
+    dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", $detectTaxMode, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
     header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
@@ -31,7 +33,7 @@ if ('UpdateOrderTaxMode' == $action) {
 //====================================================================//
 // Update Product SKU Detection Mode
 if ('UpdateOrderDetectSkuMode' == $action) {
-    $detectSkuMode = GETPOST('DetectSku')?1:0;
+    $detectSkuMode = GETPOST('DetectSku') ? "1": "0";
     dolibarr_set_const($db, "SPLASH_DECTECT_ITEMS_BY_SKU", $detectSkuMode, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
     header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
@@ -40,8 +42,8 @@ if ('UpdateOrderDetectSkuMode' == $action) {
 //====================================================================//
 // Update Allow Guests Orders
 if ('UpdateOrderAllowGuest' == $action) {
-    $AllowGuest = GETPOST('AllowGuest')?1:0;
-    dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", $AllowGuest, 'chaine', 0, '', $conf->entity);
+    $allowGuest = GETPOST('AllowGuest') ? "1": "0";
+    dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", $allowGuest, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
     header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
@@ -49,8 +51,8 @@ if ('UpdateOrderAllowGuest' == $action) {
 //====================================================================//
 // Update Detcet Customer Email on Order Import
 if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW && ('UpdateOrderEmail' == $action)) {
-    $DetectEmail = GETPOST('DetectEmail')?1:0;
-    dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", $DetectEmail, 'chaine', 0, '', $conf->entity);
+    $detectEmail = GETPOST('DetectEmail')? "1": "0";
+    dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", $detectEmail, 'chaine', 0, '', $conf->entity);
     setEventMessage($langs->trans("SetupSaved"), 'mesgs');
     header("location:".filter_input(INPUT_SERVER, "PHP_SELF"));
 }
@@ -66,9 +68,9 @@ if ('UpdateOrder' == $action) {
 
     //====================================================================//
     // Update Default Payment Mode Id
-    $DfPayMode = GETPOST('paiementcode', 'alpha');
-    if ($DfPayMode) {
-        if (dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", $DfPayMode, 'chaine', 0, '', $conf->entity) <= 0) {
+    $dfPayMode = GETPOST('paiementcode', 'alpha');
+    if ($dfPayMode && !is_array($dfPayMode)) {
+        if (dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", $dfPayMode, 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }
     }
@@ -76,9 +78,9 @@ if ('UpdateOrder' == $action) {
     //====================================================================//
     // Update Default Guest Customer
     if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
-        $SocId = GETPOST('GuestCustomerid', 'alpha');
-        if ($SocId) {
-            if (dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", $SocId, 'chaine', 0, '', $conf->entity) <= 0) {
+        $socId = GETPOST('GuestCustomerid', 'alpha');
+        if ($socId && !is_array($socId)) {
+            if (dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", $socId, 'chaine', 0, '', $conf->entity) <= 0) {
                 $errors++;
             }
         }

@@ -17,8 +17,8 @@ namespace Splash\Local;
 
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Core\ExtraFieldsPhpUnitTrait;
-use Splash\Local\Core\MultiCompanyTrait;
 use Splash\Local\Services\ConfigManager;
+use Splash\Local\Services\MultiCompany;
 use Splash\Models\LocalClassInterface;
 use User;
 
@@ -30,7 +30,6 @@ use User;
 class Local implements LocalClassInterface
 {
     use ExtraFieldsPhpUnitTrait;
-    use MultiCompanyTrait;
 
     /**
      * @var string
@@ -81,12 +80,12 @@ class Local implements LocalClassInterface
             $parameters["DefaultLanguage"] = $langs->getDefaultLang();
         }
         //====================================================================//
-        // Overide Module Local Name in Logs
+        // Override Module Local Name in Logs
         $parameters["localname"] = self::getParameter("MAIN_INFO_SOCIETE_NOM");
         //====================================================================//
-        // Overide Webserver Path if MultiCompany Module Is Active
-        if ($this->isMultiCompanyChildEntity()) {
-            $parameters["ServerPath"] = $this->getMultiCompanyServerPath();
+        // Override Webserver Path if MultiCompany Module Is Active
+        if (MultiCompany::isMultiCompanyChildEntity()) {
+            $parameters["ServerPath"] = MultiCompany::getServerPath();
         }
         //====================================================================//
         // Setup Custom Json Configuration Path to (../conf/splash.json)
@@ -128,7 +127,7 @@ class Local implements LocalClassInterface
             global $db, $langs, $conf, $user, $hookmanager, $dolibarr_main_url_root, $mysoc;
             /** @codingStandardsIgnoreEnd */
             //====================================================================//
-            // Initiate Dolibarr Global Envirement Variables
+            // Initiate Dolibarr Global Environment Variables
             require_once($this->getDolibarrRoot()."/".self::ROOT_INC);
 
             //====================================================================//
@@ -146,7 +145,7 @@ class Local implements LocalClassInterface
             //====================================================================//
             // Manage MultiCompany
             //====================================================================//
-            $this->setupMultiCompany();
+            MultiCompany::setup();
         }
 
         return true;
@@ -172,6 +171,11 @@ class Local implements LocalClassInterface
         //====================================================================//
         //  Verify - User Config
         if (!self::selfTestConfig()) {
+            return false;
+        }
+        //====================================================================//
+        //  Verify - System Informations
+        if (!self::selfTestInfo()) {
             return false;
         }
 
@@ -247,7 +251,7 @@ class Local implements LocalClassInterface
             case "Monolangual":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
@@ -269,7 +273,7 @@ class Local implements LocalClassInterface
             case "Multilangual":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '1', 'chaine', 0, '', $ent);
@@ -284,7 +288,7 @@ class Local implements LocalClassInterface
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '1', 'chaine', 0, '', $ent);
@@ -303,7 +307,7 @@ class Local implements LocalClassInterface
             case "ExtraFields":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
 
@@ -317,7 +321,7 @@ class Local implements LocalClassInterface
             case "Variants":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
 
@@ -331,7 +335,7 @@ class Local implements LocalClassInterface
             case "GuestOrders":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", '1', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $ent);
@@ -346,7 +350,7 @@ class Local implements LocalClassInterface
                 return array();
             case "VariantsMultiPrices":
                 dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', $ent);
+                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
                 dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
                 dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
 
@@ -535,6 +539,27 @@ class Local implements LocalClassInterface
                 "Splash Module for Dolibarr require Dolibarr Version Above 4.0. "
                     ."Please update your system before using Splash."
             );
+        }
+
+        return true;
+    }
+
+    /**
+     * Execute Module Informations SelfTest
+     *
+     * @return bool
+     */
+    private static function selfTestInfo()
+    {
+        //====================================================================//
+        // Check Marketplace Mode
+        if (MultiCompany::isMarketplaceMode()) {
+            Splash::log()->msg("Splash Module uses Marketplace Mode.");
+        }
+        //====================================================================//
+        // Check Marketplace Mode
+        if (MultiCompany::isMultiCompany()) {
+            Splash::log()->msg("Splash Module uses Multi-company Mode.");
         }
 
         return true;

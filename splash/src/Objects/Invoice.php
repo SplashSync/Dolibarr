@@ -17,8 +17,8 @@ namespace   Splash\Local\Objects;
 
 use Facture;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Core;
 use Splash\Models\AbstractObject;
-use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
@@ -30,32 +30,32 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 class Invoice extends AbstractObject
 {
     // Splash Php Core Traits
-    use IntelParserTrait;
     use SimpleFieldsTrait;
     use ObjectsTrait;
     use PricesTrait;
     use ListsTrait;
 
     // Dolibarr Core Traits
-    use \Splash\Local\Core\ErrorParserTrait;
-    use \Splash\Local\Core\LocalizationTrait;
-    use \Splash\Local\Core\MetaDatesTrait;
-    use \Splash\Local\Core\CreditModeTrait;
-    use \Splash\Local\Core\BaseItemsTrait;
-    use \Splash\Local\Core\ExtraFieldsTrait;
-    use \Splash\Local\Core\ObjectsListTrait;
-    use \Splash\Local\Core\CustomerTrait;
-    use \Splash\Local\Core\ContactsTrait;
-    use \Splash\Local\Core\MultiCompanyTrait;
+    use Core\ErrorParserTrait;
+    use Core\LocalizationTrait;
+    use Core\MetaDatesTrait;
+    use Core\CreditModeTrait;
+    use Core\BaseItemsTrait;
+    use Core\ExtraFieldsTrait;
+    use Core\ObjectsListTrait;
+    use Core\CustomerTrait;
+    use Core\ContactsTrait;
+    use Core\MultiCompanyFieldsTrait;
+    use Core\MarketplaceModeTrait;
 
     // Dolibarr Invoices Traits
-    use \Splash\Local\Objects\Invoice\ObjectsListTrait;
-    use \Splash\Local\Objects\Invoice\CRUDTrait;
-    use \Splash\Local\Objects\Invoice\CoreTrait;
-    use \Splash\Local\Objects\Invoice\MainTrait;
-    use \Splash\Local\Objects\Invoice\ItemsTrait;
-    use \Splash\Local\Objects\Invoice\PaymentsTrait;
-    use \Splash\Local\Objects\Invoice\StatusTrait;
+    use Invoice\ObjectsListTrait;
+    use Invoice\CRUDTrait;
+    use Invoice\CoreTrait;
+    use Invoice\MainTrait;
+    use Invoice\ItemsTrait;
+    use Invoice\PaymentsTrait;
+    use Invoice\StatusTrait;
 
     //====================================================================//
     // ExtraFields Type

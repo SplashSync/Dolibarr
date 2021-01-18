@@ -20,7 +20,10 @@
     "config": {
         "vendor-dir":                       "splash/vendor",
         "bin-dir":                          "splash/vendor/bin",
-        "preferred-install":                "dist"
+        "preferred-install":                "dist",
+        "platform": {
+            "php":                          "7.2.0"
+        }
     },
     
     "autoload": {

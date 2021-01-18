@@ -17,3 +17,4 @@
 /docker/overrides/
 /.idea/
 /.phpunit.result.cache
+/multicompany/

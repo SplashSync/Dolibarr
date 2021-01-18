@@ -16,10 +16,9 @@
 namespace   Splash\Local\Objects;
 
 use Product as BaseProduct;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ImagesTrait;
-use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
@@ -31,7 +30,6 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 class Product extends AbstractObject
 {
     // Splash Php Core Traits
-    use IntelParserTrait;
     use SimpleFieldsTrait;
     use PricesTrait;
     use ListsTrait;
@@ -39,27 +37,28 @@ class Product extends AbstractObject
     use ObjectsTrait;
 
     // Dolibarr Core Traits
-    use \Splash\Local\Core\ErrorParserTrait;
-    use \Splash\Local\Core\MultilangualTrait;
-    use \Splash\Local\Core\MetaDatesTrait;
-    use \Splash\Local\Core\UnitConverterTrait;
-    use \Splash\Local\Core\ExtraFieldsTrait;
-    use \Splash\Local\Core\ImagesTrait;
-    use \Splash\Local\Core\ObjectsListTrait;
-    use \Splash\Local\Core\MultiCompanyTrait;
+    use Core\ErrorParserTrait;
+    use Core\MultilangualTrait;
+    use Core\MetaDatesTrait;
+    use Core\UnitConverterTrait;
+    use Core\ExtraFieldsTrait;
+    use Core\ImagesTrait;
+    use Core\ObjectsListTrait;
+    use Core\MultiCompanyFieldsTrait;
+    use Core\MarketplaceModeTrait;
 
     // Dolibarr Products Traits
-    use Product\ObjectsListTrait;                   // Objecst List Readings Product Specifiers
+    use Product\ObjectsListTrait;                   // Objects List Readings Product Specifiers
     use Product\CRUDTrait;                          // Local Products CRUD Functions
     use Product\CoreTrait;                          // Access to Required Fields
-    use Product\MultilangTrait;                     // Access to Multilangual Fielms
+    use Product\MultilangTrait;                     // Access to Multi-lang Fields
     use Product\MainTrait;                          // Access to Dimensions, Weights & more...
     use Product\BarcodeTrait;                       // Access to Product Barcodes
-    use Product\PricesTrait;                        // Access to Product Sell & Wholsale Prices
+    use Product\PricesTrait;                        // Access to Product Sell & Wholesale Prices
     use Product\MultiPricesTrait;                   // Access to Product Sell Multi-Prices
     use Product\StockTrait;                         // Access to Product Stocks
-    use Product\MetaTrait;                          // Access to Products Metadatas
-    use Product\VariantsTrait;                      // Access to Variants Fileds & Management Functions
+    use Product\MetaTrait;                          // Access to Products Metadata
+    use Product\VariantsTrait;                      // Access to Variants Fields & Management Functions
 
     //====================================================================//
     // ExtraFields Type

@@ -18,6 +18,7 @@ namespace Splash\Local\Objects\Order;
 use Commande;
 use DateTime;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Services\MultiCompany;
 use User;
 
 /**
@@ -60,7 +61,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,
@@ -186,7 +187,7 @@ trait CRUDTrait
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = null;
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
                 __CLASS__,

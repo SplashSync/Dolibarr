@@ -19,6 +19,7 @@ use DateTime;
 use Facture;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Objects\CreditNote;
+use Splash\Local\Services\MultiCompany;
 use User;
 
 /**
@@ -57,7 +58,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to load Customer Invoice (".$objectId.").");
         }
         //====================================================================//
@@ -205,7 +206,7 @@ trait CRUDTrait
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
-        if (!self::isMultiCompanyAllowed($object)) {
+        if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to Delete Customer Invoice (".$objectId.").");
         }
         //====================================================================//

@@ -16,6 +16,7 @@
 namespace   Splash\Local\Objects\ThirdParty;
 
 use Splash\Local\Local;
+use Splash\Local\Services\MultiCompany;
 
 /**
  * Dolibarr ThirdParty List Functions
@@ -39,6 +40,7 @@ trait ObjectsListTrait
         //====================================================================//
         // Select Database fields
         $sql .= " s.rowid as id,";                   // Object Id
+        $sql .= " s.entity as entity_id,";           // Entity Id
         $sql .= " s.nom as name,";                   // Company Name
         $sql .= " s.code_client as code_client,";    // Reference
         $sql .= " s.phone as phone,";                // Phone
@@ -60,13 +62,13 @@ trait ObjectsListTrait
         } else {
             $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_pays as p on s.fk_pays = p.rowid";
         }
-
         //====================================================================//
         // Entity Filter
-        $sql .= " WHERE s.entity IN (".getEntity('societe', 1).")";
+        $entityIds = MultiCompany::isMarketplaceMode() ? MultiCompany::getVisibleSqlIds() : getEntity('societe', 1);
+        $sql .= " WHERE s.entity IN (".$entityIds.")";
         //====================================================================//
         // Setup filters
-        // Add filters with names convertions. Added LOWER function to be NON case sensitive
+        // Add filters with names conversions. Added LOWER function to be NON case sensitive
         if (!empty($filter) && is_string($filter)) {
             $sql .= " AND ( ";
             //====================================================================//

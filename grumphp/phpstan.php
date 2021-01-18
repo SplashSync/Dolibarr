@@ -19,10 +19,11 @@
 
 require dirname(__DIR__)."/splash/vendor/autoload.php";
 
-global $db,$langs,$conf,$user,$hookmanager;
+global $db, $langs, $conf, $user, $hookmanager;
 
 //====================================================================//
-// Initiate Dolibarr Global Envirement Variables
+// Initiate Dolibarr Global Environment Variables
+define("NOLOGIN", "1");
 require_once(dirname(dirname(__DIR__))."/main.inc.php");
 
 //====================================================================//
@@ -33,6 +34,7 @@ require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
+require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
 
 //====================================================================//
 // Objects Classes

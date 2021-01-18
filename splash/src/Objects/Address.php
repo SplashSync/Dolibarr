@@ -15,8 +15,8 @@
 
 namespace   Splash\Local\Objects;
 
+use Splash\Local\Core;
 use Splash\Models\AbstractObject;
-use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
@@ -27,25 +27,25 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 class Address extends AbstractObject
 {
     // Splash Php Core Traits
-    use IntelParserTrait;
     use SimpleFieldsTrait;
     use ObjectsTrait;
     use PricesTrait;
 
     // Dolibarr Core Traits
-    use \Splash\Local\Core\ErrorParserTrait;
-    use \Splash\Local\Core\DirectAccessTrait;
-    use \Splash\Local\Core\LocalizationTrait;
-    use \Splash\Local\Core\MetaDatesTrait;
-    use \Splash\Local\Core\ExtraFieldsTrait;
-    use \Splash\Local\Core\ObjectsListTrait;
-    use \Splash\Local\Core\MultiCompanyTrait;
+    use Core\ErrorParserTrait;
+    use Core\DirectAccessTrait;
+    use Core\LocalizationTrait;
+    use Core\MetaDatesTrait;
+    use Core\ExtraFieldsTrait;
+    use Core\ObjectsListTrait;
+    use Core\MultiCompanyFieldsTrait;
+    use Core\MarketplaceModeTrait;
 
     // Dolibarr Address Traits
-    use \Splash\Local\Objects\Address\ObjectsListTrait;
-    use \Splash\Local\Objects\Address\CRUDTrait;
-    use \Splash\Local\Objects\Address\CoreTrait;
-    use \Splash\Local\Objects\Address\MainTrait;
+    use Address\ObjectsListTrait;
+    use Address\CRUDTrait;
+    use Address\CoreTrait;
+    use Address\MainTrait;
 
     //====================================================================//
     // ExtraFields Type
