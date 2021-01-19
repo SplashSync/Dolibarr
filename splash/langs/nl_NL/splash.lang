@@ -1,0 +1,109 @@
+################################################################################
+# Dolibarr language file - en_NL Kindly provided by Macrorom ICT-services
+################################################################################
+#
+# * Copyright (C) 2017 Splash Sync       <contact@splashsync.com>
+# * This program is Copyright (C) Protected.
+# *  \Id 	 $Id: splash.lang 527 2016-05-25 10:18:55Z Nanard33 $
+# *  \version    $Revision: 527 $
+# *  \brief      Main Translations file for Splash Module
+#
+################################################################################
+
+CHARSET=UTF-8
+
+################################################################################
+# General
+################################################################################
+
+SPL_Welcome         =   Splash Module is geactiveerd
+
+################################################################################
+# Admin Page Index
+################################################################################
+SPL_Name            =   Splash Sync Module
+SPL_Short_Desc      =   Splash Sync Connector voor Dolibarr.
+SPL_Full_Desc       =   Splash Sync Connector voor Dolibarr. Open-Source Synchronisatie systeem voor Dolibarr. Meer informatie op <a href="https://www.splashsync.com" target="_blank">www.splashsync.com</a>
+SPL_Help_Msg        =   Ik heb hulp nodig 
+
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
+
+SPL_Main_Config     =   Hoofd Parameters
+SPL_Main_Help       =   https://splashsync.github.io/Dolibarr/configuration
+SPL_SiteId          =   Unieke identificatie voor deze website op Splash-servers (8 Char Max). 
+SPL_SiteId_Tooltip  =   Deze parameter wordt verstrekt wanneer u een nieuwe server op onze website aanmaakt.
+SPL_WsKey           =   Unieke coderingssleutel
+SPL_WsKey_Tooltip   =   Deze parameter wordt verstrekt wanneer u een nieuwe server op onze website aanmaakt. 
+
+SPL_WsExpert        =   Schakel geavanceerde configuratie in voor deze server
+SPL_WsExpert_Tooltip=   Alleen op ons verzoek gebruiken! Uw server werkt mogelijk niet niet correct. 
+SPL_WsHost          =   URL van de Splash Server
+SPL_WsHost_Tooltip  =   Pas alleen aan op ons verzoek! Standaardwaarde : www.splashsync.com/ws/soap 
+SPL_WsMethod        =   Te gebruiken webserviceprotocol
+SPL_Smart           =   Slimme meldingen
+SPL_Smart_Tooltip   =   Geef bij wijzigingen alleen waarschuwingen en fouten weer. 
+
+################################################################################
+# Admin Page Index - Local Parameters
+################################################################################
+
+SPL_Local_Config    =   Lokale parameters 
+SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/configuration/#setup-default-parameters
+SPL_DfLang          =   Standaardtaal die door de module wordt gebruikt
+SPL_OtherLangs      =   Andere talen die door de module worden gebruikt
+SPL_DfUser          =   Gebruiker te gebruiken voor alle externe bewerkingen
+SPL_DfStock         =   Magazijn gebruikt voor voorraadtransacties (als er geen standaardmagazijn is opgegeven op productniveau)
+SPL_ProductStock    =   Standaardmagazijn voor productinstellingen (indien lege waarde of niet opgegeven)
+SPL_DfPayMethod     =   Standaard betalingsmethode gebruikt door de module (indien niet gespecificeerd)
+SPL_DfMultiPrice    =   Standaardprijs gebruikt door de module (MultiPrices-modus is ingeschakeld)
+
+################################################################################
+# Admin Page Index - Orders & Invoices
+################################################################################
+
+SPL_Orders_Config   =   Bestellingen en facturen
+SPL_Orders_Help     =   https://splashsync.github.io/Dolibarr/orders
+SPL_DetectTaxName   =   Detecteer belastingtarieven met behulp van het woordenboek voor belastingcodes
+SPL_DetectTaxName_T =   Als er bij het importeren van bestellingen en facturen een belastingtariefcode is opgegeven die in uw woordenboek kan worden herkend, wordt deze door de module gebruikt in plaats van het btw-tarief dat in de prijs is vermeld.
+SPL_DetectBySku     =   Detecteer producten op basis van referentie (Ref. / SKU)
+SPL_DetectBySku_T   =   Als er bij het importeren van bestellingen en facturen geen product-ID is opgegeven, probeer het product dan te identificeren via referentie.
+SPL_Orders_Guest    =   Sta het importeren van gastenorders en facturen toe
+SPL_Orders_Guest_T  =   Met deze modus kunnen bestellingen en facturen worden geïmporteerd met behulp van de gastmodus op moderne e-commerceplatforms.
+SPL_Orders_Guest_U  =   Selecteer de standaardklant waaraan alle gastfacturen zullen worden toegevoegd.
+SPL_Orders_Email    =   Probeer de bestaande klant te detecteren met behulp van zijn e-mail
+
+################################################################################
+# Admin Page Index - Payments
+################################################################################
+
+SPL_Payment_Config  =   Betalingen importeren
+SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/payments
+SPL_DfBankAccount   =   Standaardbankrekening gebruikt door de module (indien niet gespecificeerd)
+SPL_BankAccountFor  =   Bankrekening gebruikt voor <b>%s</b> betalingen (%s)
+
+################################################################################
+# Admin Page Self Tests Results
+################################################################################
+
+SPL_ObjectsList     = Lijst met beschikbare objecten 
+SPL_WidgetsList     = Lijst met beschikbare widgets
+
+################################################################################
+# Admin Page Connect Tests Results
+################################################################################
+
+SPL_WsTest              = Module verbindingstest
+SPL_SelfTest            = Splash-module zelftest en instellingsverificatie
+SPL_WsTestPing          = Splash Server Ping Test (geen versleuteling)
+SPL_WsTestConnect       = Splash-serververbindingstest (met versleuteling)
+
+SPL_SelfTestOk          = Zelftest en verificaties geslaagd
+SPL_SelfTestKo          = Zelftest of verificaties mislukt
+SPL_WsPingOk            = Splash Server Ping-test geslaagd
+SPL_WsPingKo            = Pingtest Splash-server mislukt
+SPL_WsConnectOk         = Verbindingstest Splash-server geslaagd
+SPL_WsConnectKo         = Verbindingstest Splash-server mislukt
+
+
