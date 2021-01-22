@@ -307,6 +307,11 @@ trait BaseItemsTrait
             }
         }
         //====================================================================//
+        // FIX for Module that Compare Changed Data on Update
+        if (is_object($this->currentItem)) {
+            $this->currentItem->oldline = clone $this->currentItem;
+        }
+        //====================================================================//
         // Update Line Description
         $this->setItemSimpleData($itemData, "desc");
         //====================================================================//
