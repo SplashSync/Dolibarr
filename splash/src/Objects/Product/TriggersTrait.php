@@ -49,7 +49,7 @@ trait TriggersTrait
      */
     protected function doProductCommit($action, $object)
     {
-        global $db;
+//        global $db;
 
         //====================================================================//
         // Filter Triggered Actions
@@ -57,9 +57,9 @@ trait TriggersTrait
             return false;
         }
 
-        //====================================================================//
-        // Commit Last Changes done On DataBase
-        $db->Commit();
+//        //====================================================================//
+//        // Commit Last Changes done On DataBase
+//        $db->Commit();
 
         //====================================================================//
         // Store Global Action Parameters
