@@ -84,15 +84,20 @@ stages:
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist
 
 Dol-12-Php-7.2:
-    image:  monogramm/docker-dolibarr:12.0-apache
+    image:          monogramm/docker-dolibarr:12.0-apache
     <<: *functionnal
 
 Dol-10-Php-7.2:
-    image:  monogramm/docker-dolibarr:10.0
+    image:          monogramm/docker-dolibarr:10.0
     <<: *functionnal
 
 Dol-9-Php-7.2:
-    image:  monogramm/docker-dolibarr:9.0
+    image:          monogramm/docker-dolibarr:9.0
+    <<: *functionnal
+
+Dol-Dev-Php-7.2:
+    image:          monogramm/docker-dolibarr:develop
+    allow_failure:  true
     <<: *functionnal
 
 
