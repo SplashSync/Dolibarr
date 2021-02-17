@@ -32,21 +32,14 @@ trait TriggersTrait
      */
     protected function doThirdPartyCommit($action, $object)
     {
-        global $db;
-
         //====================================================================//
-        // Check if Commit is Requierd
+        // Check if Commit is Required
         if (!$this->isThirdPartyCommitRequired($action)) {
             return false;
         }
         if (!($object instanceof Societe)) {
             return false;
         }
-
-        //====================================================================//
-        // Commit Last Changes done On DataBase
-        $db->Commit();
-
         //====================================================================//
         // Store Global Action Parameters
         $this->objectType = "ThirdParty";
@@ -66,9 +59,9 @@ trait TriggersTrait
     }
 
     /**
-     * Check if Commit is Requiered
+     * Check if Commit is Required
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Code de l'évènement
      *
      * @return bool
      */

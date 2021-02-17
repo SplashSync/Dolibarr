@@ -36,18 +36,11 @@ trait TriggersTrait
      */
     protected function doInvoiceCommit($action, $object)
     {
-        global $db;
-
         //====================================================================//
-        // Check if Commit is Requierd
+        // Check if Commit is Required
         if (!$this->isInvoiceCommitRequired($action)) {
             return false;
         }
-
-        //====================================================================//
-        // Commit Last Changes done On DataBase
-        $db->Commit();
-
         //====================================================================//
         // Store Global Action Parameters
         $this->setInvoiceObjectId($object);

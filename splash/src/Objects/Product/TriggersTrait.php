@@ -49,18 +49,11 @@ trait TriggersTrait
      */
     protected function doProductCommit($action, $object)
     {
-//        global $db;
-
         //====================================================================//
         // Filter Triggered Actions
         if (!$this->isProductCommitRequired($action, $object)) {
             return false;
         }
-
-//        //====================================================================//
-//        // Commit Last Changes done On DataBase
-//        $db->Commit();
-
         //====================================================================//
         // Store Global Action Parameters
         $this->setProductObjectId($object);

@@ -32,21 +32,14 @@ trait TriggersTrait
      */
     protected function doAddressCommit($action, $object)
     {
-        global $db;
-
         //====================================================================//
-        // Check if Commit is Requierd
+        // Check if Commit is Required
         if (!$this->isAddressCommitRequired($action)) {
             return false;
         }
         if (!($object instanceof Contact)) {
             return false;
         }
-
-        //====================================================================//
-        // Commit Last Changes done On DataBase
-        $db->Commit();
-
         //====================================================================//
         // Store Global Action Parameters
         $this->objectType = "Address";

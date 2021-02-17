@@ -34,17 +34,11 @@ trait TriggersTrait
      */
     protected function doOrderCommit($action, $object)
     {
-        global $db;
-
         //====================================================================//
         // Check if Commit is Required
         if (!$this->isOrderCommitRequired($action)) {
             return false;
         }
-
-        //====================================================================//
-        // Commit Last Changes done On DataBase
-        $db->Commit();
 
         //====================================================================//
         // Store Global Action Parameters
