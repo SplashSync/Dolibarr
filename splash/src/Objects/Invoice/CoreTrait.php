@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use DateTime;
+use Splash\Local\Local;
 
 /**
  * Dolibarr Customer Invoice Fields (Required)
@@ -59,10 +60,14 @@ trait CoreTrait
 
         //====================================================================//
         // Internal Reference
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_int")
-            ->Name($langs->trans("RefCustomer")." ".$langs->trans("Internal"))
-            ->MicroData("http://schema.org/Invoice", "description");
+        /** @deprecated V13.0 */
+        if (Local::dolVersionCmp("13.0.0") < 0) {
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->identifier("ref_int")
+                ->name($langs->trans("RefCustomer")." ".$langs->trans("Internal"))
+                ->microData("http://schema.org/Invoice", "description")
+            ;
+        }
 
         //====================================================================//
         // External Reference

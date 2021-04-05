@@ -48,7 +48,7 @@ trait CRUDTrait
         // Init Object
         $object = new Commande($db);
         //====================================================================//
-        // Fatch Object
+        // Fetch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 

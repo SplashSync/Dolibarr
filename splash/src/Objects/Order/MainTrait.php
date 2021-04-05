@@ -32,14 +32,15 @@ trait MainTrait
      */
     protected function buildMainFields()
     {
-        global $langs,$conf;
+        global $langs, $conf;
 
         //====================================================================//
-        // Delivry Estimated Date
+        // Estimated Delivery Date
         $this->fieldsFactory()->create(SPL_T_DATE)
             ->Identifier("date_livraison")
             ->Name($langs->trans("DeliveryDate"))
-            ->MicroData("http://schema.org/ParcelDelivery", "expectedArrivalUntil");
+            ->MicroData("http://schema.org/ParcelDelivery", "expectedArrivalUntil")
+        ;
 
         //====================================================================//
         // PRICES INFORMATIONS
@@ -239,7 +240,9 @@ trait MainTrait
                 if (dol_print_date($this->object->{$fieldName}, 'standard') === $fieldData) {
                     break;
                 }
-                $this->object->set_date_livraison($user, $fieldData);
+                if ($this->object->set_date_livraison($user, $fieldData) < 0) {
+                    $this->catchDolibarrErrors();
+                }
                 $this->needUpdate();
 
                 break;
