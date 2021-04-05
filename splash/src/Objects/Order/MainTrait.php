@@ -243,6 +243,9 @@ trait MainTrait
                 if ($this->object->set_date_livraison($user, $fieldData) < 0) {
                     $this->catchDolibarrErrors();
                 }
+                //====================================================================//
+                // FIX for V12 & 13 - Move to delivery_date in next releases.
+                $this->setSimple('delivery_date', $this->object->date_livraison);
                 $this->needUpdate();
 
                 break;

@@ -32,7 +32,35 @@ splash:
                 WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt                
                 WsHost:             http://latest.dolibarr.local
                 WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
-        
+
+        ########################################################################
+        # Dolibarr V13
+        dol-13:
+            id:                 ThisIsDol13Key
+            key:                ThisTokenIsNotSoSecretChangeIt
+            name:               Dolibarr 13
+            host:               false
+            connector:          soap
+            config:
+                WsIdentifier:       ThisIsDol13Key
+                WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt
+                WsHost:             http://v13.dolibarr.local
+                WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
+
+#        ########################################################################
+#        # Dolibarr V12
+#        dol-12:
+#            id:                 ThisIsDol12Key
+#            key:                ThisTokenIsNotSoSecretChangeIt
+#            name:               Dolibarr 12
+#            host:               false
+#            connector:          soap
+#            config:
+#                WsIdentifier:       ThisIsDol12Key
+#                WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt
+#                WsHost:             http://v12.dolibarr.local
+#                WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
+
 #        ########################################################################
 #        # Dolibarr V11
 #        dol-11:
