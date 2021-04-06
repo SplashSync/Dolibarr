@@ -460,10 +460,6 @@ trait PaymentsTrait
     private function createPaymentItem($lineData)
     {
         global $db,$user;
-
-        Splash::log()->www("Inv Id", $this->object->id);
-        Splash::log()->www("Payment", $lineData);
-
         //====================================================================//
         // Verify Minimal Fields Ar available
         if (!array_key_exists("mode", $lineData)
@@ -472,7 +468,6 @@ trait PaymentsTrait
                 || empty((double) $lineData["amount"])) {
             return false;
         }
-
         $payment = new Paiement($db);
         //====================================================================//
         // Setup Payment Invoice Id
