@@ -171,7 +171,7 @@ class L00MinimalDataTest extends ObjectsCase
      */
     public function verifyTestIsAllowed(string $objectType): bool
     {
-        $definition = Splash::object($objectType)->Description();
+        $definition = Splash::object($objectType)->description();
 
         $this->assertNotEmpty($definition);
         //====================================================================//

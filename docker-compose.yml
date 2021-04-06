@@ -86,7 +86,7 @@ services:
     ################################################################################
     # Dolibarr V13
     dol-13:
-        image: monogramm/docker-dolibarr:12.0
+        image: monogramm/docker-dolibarr:13.0
         container_name: dolibarr-v13
         depends_on:
             - mysql

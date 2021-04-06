@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Invoice;
 
 use Paiement;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 
 /**
  * Dolibarr Customer Invoice Payments Fields
@@ -426,8 +427,11 @@ trait PaymentsTrait
 
         //====================================================================//
         // Update Payment Number
-        if (array_key_exists("number", $lineData)
-            && ($payment->num_paiement !== $lineData["number"])) {
+        /** @since V12.0 Field Renamed  */
+        $number = (Local::dolVersionCmp("12.0.0") < 0)
+            ? $payment->num_paiement
+            : $payment->num_payment;
+        if (array_key_exists("number", $lineData) && ($number !== $lineData["number"])) {
             $payment->update_num($lineData["number"]);
             $this->catchDolibarrErrors($payment);
         }
@@ -457,6 +461,9 @@ trait PaymentsTrait
     {
         global $db,$user;
 
+        Splash::log()->www("Inv Id", $this->object->id);
+        Splash::log()->www("Payment", $lineData);
+
         //====================================================================//
         // Verify Minimal Fields Ar available
         if (!array_key_exists("mode", $lineData)
@@ -477,8 +484,13 @@ trait PaymentsTrait
         // Setup Payment Method
         $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
         //====================================================================//
-        // Setup Payment Refrence
-        $payment->num_paiement = $lineData["number"];
+        // Setup Payment Reference
+        /** @since V12.0 Field Renamed  */
+        if (Local::dolVersionCmp("12.0.0") < 0) {
+            $payment->num_paiement = $lineData["number"];
+        } else {
+            $payment->num_payment = $lineData["number"];
+        }
         //====================================================================//
         // Setup Payment Amount
         $payment->amounts[$payment->facid] = self::parsePrice($lineData["amount"]);
@@ -486,7 +498,7 @@ trait PaymentsTrait
         //====================================================================//
         // Create Payment Line
         if ($payment->create($user) <= 0) {
-            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create Invoice Payment. ");
+            Splash::log()->errTrace("Unable to create Invoice Payment. ");
 
             return $this->catchDolibarrErrors($payment);
         }
