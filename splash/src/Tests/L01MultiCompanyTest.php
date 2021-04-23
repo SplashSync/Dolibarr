@@ -16,6 +16,7 @@
 namespace Splash\Local\Tests;
 
 use Splash\Client\Splash;
+use Splash\Components\CommitsManager;
 use Splash\Local\Local;
 use Splash\Local\Services\MultiCompany;
 use Splash\Tests\Tools\ObjectsCase;
@@ -323,7 +324,7 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         // Clean Objects Committed Array
-        Splash::$commited = array();
+        CommitsManager::resetSessionCommitted();
 
         return $this->fakeObjectData($fields);
     }

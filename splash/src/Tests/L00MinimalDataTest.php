@@ -17,6 +17,7 @@ namespace Splash\Local\Tests;
 
 use Exception;
 use Splash\Client\Splash;
+use Splash\Components\CommitsManager;
 use Splash\Local\Core\ErrorParserTrait;
 use Splash\Local\Services\MultiCompany;
 use Splash\Tests\Tools\ObjectsCase;
@@ -226,7 +227,7 @@ class L00MinimalDataTest extends ObjectsCase
 
         //====================================================================//
         // Clean Objects Committed Array
-        Splash::$commited = array();
+        CommitsManager::resetSessionCommitted();
 
         return $this->fakeObjectData($fields);
     }
