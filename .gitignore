@@ -20,3 +20,4 @@
 /multicompany/
 /public/
 /travis/.phpunit.result.cache
+/.php-cs-fixer.cache

@@ -22,7 +22,7 @@ parameters:
 
     core_dir:           "./splash/vendor/badpixxel/php-sdk"
     mode:               "splashsync"
-    exclude:            ['splash/vendor', 'docs', 'docker', 'build']
+    exclude:            ['splash/vendor', 'docs', 'docker', 'build', 'multicompany']
 
     # Php Cs Fixer
     csfixer-config:     "./grumphp/cs.%mode%.php"
@@ -38,7 +38,7 @@ parameters:
     # For Building Splash Module
     mod-src:            '/splash'
     mod-target:         '/splash/'
-    mod-file:           "module_splash-1.9.0"
+    mod-file:           "module_splash-1.9.1"
 
     # For Building Splash Manifest
     yml-enable:         false

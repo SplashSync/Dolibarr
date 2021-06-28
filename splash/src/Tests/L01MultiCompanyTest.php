@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Tests;
 
+use Exception;
 use Splash\Client\Splash;
 use Splash\Components\CommitsManager;
 use Splash\Local\Local;
@@ -44,9 +45,11 @@ class L01MultiCompanyTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testLoadAccess($sequence, $objectType)
+    public function testLoadAccess(string $sequence, string $objectType): void
     {
         $this->loadLocalTestSequence($sequence);
 
@@ -101,9 +104,11 @@ class L01MultiCompanyTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testDeleteAccess($sequence, $objectType)
+    public function testDeleteAccess(string $sequence, string $objectType): void
     {
         $this->loadLocalTestSequence($sequence);
 
@@ -163,7 +168,7 @@ class L01MultiCompanyTest extends ObjectsCase
      *
      * @return void
      */
-    public function changeMultiCompanyMode($state = false)
+    public function changeMultiCompanyMode(bool $state = false)
     {
         global $db;
         //====================================================================//
@@ -194,7 +199,7 @@ class L01MultiCompanyTest extends ObjectsCase
      *
      * @return int
      */
-    public function changeEntityId($entityId = 10)
+    public function changeEntityId(int $entityId = 10): int
     {
         global $conf, $db, $user;
 
@@ -220,9 +225,11 @@ class L01MultiCompanyTest extends ObjectsCase
     /**
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return bool| string
      */
-    public function getNextObjectId($objectType)
+    public function getNextObjectId(string $objectType)
     {
         //====================================================================//
         //   If Object List Not Loaded
@@ -260,9 +267,11 @@ class L01MultiCompanyTest extends ObjectsCase
     /**
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return bool
      */
-    public function verifyTestIsAllowed($objectType)
+    public function verifyTestIsAllowed(string $objectType): bool
     {
         $definition = Splash::object($objectType)->Description();
 
@@ -284,30 +293,32 @@ class L01MultiCompanyTest extends ObjectsCase
     /**
      * @param string $objectType
      *
-     * @return array|false
+     * @throws Exception
+     *
+     * @return null|array
      */
-    public function prepareForTesting($objectType)
+    public function prepareForTesting(string $objectType): ?array
     {
         //====================================================================//
         //   Verify Test is Required
         if (!$this->verifyTestIsAllowed($objectType)) {
-            return false;
+            return null;
         }
 
         //====================================================================//
         // Read Required Fields & Prepare Dummy Data
         //====================================================================//
         $write = false;
-        $fields = Splash::object($objectType)->Fields();
+        $fields = Splash::object($objectType)->fields();
         foreach ($fields as $key => $field) {
             //====================================================================//
             // Skip Non Required Fields
-            if (!$field->required) {
+            if (!$field['required']) {
                 unset($fields[$key]);
             }
             //====================================================================//
             // Check if Write Fields
-            if ($field->write) {
+            if ($field['write']) {
                 $write = true;
             }
         }
@@ -315,7 +326,7 @@ class L01MultiCompanyTest extends ObjectsCase
         //====================================================================//
         // If No Writable Fields
         if (!$write) {
-            return false;
+            return null;
         }
 
         //====================================================================//

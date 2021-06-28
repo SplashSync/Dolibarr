@@ -36,9 +36,11 @@ class L00MinimalDataTest extends ObjectsCase
      *
      * @param string $sequence
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testAtLeastTwoWarehouses(string $sequence)
+    public function testAtLeastTwoWarehouses(string $sequence): void
     {
         global $db, $user;
 
@@ -81,7 +83,7 @@ class L00MinimalDataTest extends ObjectsCase
      *
      * @return void
      */
-    public function testAtLeastFiveObjects(string $sequence, string $objectType)
+    public function testAtLeastFiveObjects(string $sequence, string $objectType): void
     {
         $this->loadLocalTestSequence($sequence);
         //====================================================================//
@@ -119,7 +121,7 @@ class L00MinimalDataTest extends ObjectsCase
      *
      * @return void
      */
-    public function testAtLeastThreeEntities(string $sequence)
+    public function testAtLeastThreeEntities(string $sequence): void
     {
         global $db;
 
@@ -187,14 +189,16 @@ class L00MinimalDataTest extends ObjectsCase
     /**
      * @param string $objectType
      *
-     * @return array|false
+     * @throws Exception
+     *
+     * @return null|array
      */
-    public function prepareForTesting(string $objectType)
+    public function prepareForTesting(string $objectType): ?array
     {
         //====================================================================//
         //   Verify Test is Required
         if (!$this->verifyTestIsAllowed($objectType)) {
-            return false;
+            return null;
         }
 
         //====================================================================//
@@ -205,12 +209,12 @@ class L00MinimalDataTest extends ObjectsCase
         foreach ($fields as $key => $field) {
             //====================================================================//
             // Skip Non Required Fields
-            if (!$field->required) {
+            if (!$field['required']) {
                 unset($fields[$key]);
             }
             //====================================================================//
             // Check if Write Fields
-            if ($field->write) {
+            if ($field['write']) {
                 $write = true;
             }
         }
@@ -218,7 +222,7 @@ class L00MinimalDataTest extends ObjectsCase
         //====================================================================//
         // If No Writable Fields
         if (!$write) {
-            return false;
+            return null;
         }
 
         //====================================================================//

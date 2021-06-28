@@ -15,7 +15,6 @@
 
 namespace Splash\Local\Tests;
 
-use ArrayObject;
 use Exception;
 use Splash\Client\Splash;
 use Splash\Local\Local;
@@ -46,9 +45,11 @@ class L20MarketPlaceModeTest extends ObjectsCase
      *
      * @param string $sequence
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testSequenceSetup(string $sequence)
+    public function testSequenceSetup(string $sequence): void
     {
         //====================================================================//
         //   Ensure Marketplace Mode
@@ -72,7 +73,7 @@ class L20MarketPlaceModeTest extends ObjectsCase
      *
      * @return void
      */
-    public function testMarketPlaceFieldsSetup(string $sequence, string $objectType)
+    public function testMarketPlaceFieldsSetup(string $sequence, string $objectType): void
     {
         //====================================================================//
         // Init Marketplace Mode
@@ -102,9 +103,11 @@ class L20MarketPlaceModeTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testMarketPlaceCrud(string $sequence, string $objectType)
+    public function testMarketPlaceCrud(string $sequence, string $objectType): void
     {
         //====================================================================//
         // Init Marketplace Mode
@@ -115,7 +118,7 @@ class L20MarketPlaceModeTest extends ObjectsCase
             $this->currentEntity = $companyInfo;
             //====================================================================//
             //   Execute Core CRUD Tests
-            $this->coreTestSetSingleFieldFromService($objectType, new ArrayObject());
+            $this->coreTestSetSingleFieldFromService($objectType, array());
         }
     }
 
@@ -124,7 +127,7 @@ class L20MarketPlaceModeTest extends ObjectsCase
      *
      * @return void
      */
-    public function testSequenceClose()
+    public function testSequenceClose(): void
     {
         global $db;
         //====================================================================//
@@ -153,9 +156,11 @@ class L20MarketPlaceModeTest extends ObjectsCase
      *
      * @param string $sequence
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function initMarketplaceMode(string $sequence)
+    public function initMarketplaceMode(string $sequence): void
     {
         global $db, $conf;
         //====================================================================//
@@ -190,17 +195,19 @@ class L20MarketPlaceModeTest extends ObjectsCase
      * -> This Function uses Preloaded Fields
      * -> If Md5 provided, check Current Field was Modified
      *
-     * @param string           $objectType Current Object Type
-     * @param null|ArrayObject $field      Current Tested Field (ArrayObject)
-     * @param bool             $unik       Ask for Unik Field Data
+     * @param string $objectType Current Object Type
+     * @param array  $field      Current Tested Field
+     * @param bool   $unique     Ask for Unique Field Data
      *
-     * @return array|false Generated Data Block or False if not Allowed
+     * @throws Exception
+     *
+     * @return null|array Generated Data Block or False if not Allowed
      */
-    protected function prepareForTesting(string $objectType, ?ArrayObject $field, bool $unik = true)
+    protected function prepareForTesting(string $objectType, array $field, bool $unique = true): ?array
     {
         //====================================================================//
         //   Generate Core Data
-        $coreData = $this->corePrepareForTesting($objectType, $field, $unik);
+        $coreData = $this->corePrepareForTesting($objectType, $field, $unique);
         //====================================================================//
         //   Generate Core Data
         if (is_object($this->currentEntity)) {
@@ -222,7 +229,7 @@ class L20MarketPlaceModeTest extends ObjectsCase
      *
      * @return void
      */
-    protected function verifySetResponse(string $objectType, $objectId, string $action, array $expectedData)
+    protected function verifySetResponse(string $objectType, $objectId, string $action, array $expectedData): void
     {
         //====================================================================//
         //   Execute Core Data Verifications

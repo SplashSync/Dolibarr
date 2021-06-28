@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Tests;
 
+use Exception;
 use Splash\Client\Splash;
 use Splash\Models\Helpers\ObjectsHelper;
 use Splash\Tests\Tools\ObjectsCase;
@@ -37,7 +38,7 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @return void
      */
-    public function testDetectionWithoutTheOption($sequence, $objectType)
+    public function testDetectionWithoutTheOption(string $sequence, string $objectType): void
     {
         global $db, $conf;
 
@@ -77,7 +78,7 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @return void
      */
-    public function testDetectionWithTheOption($sequence, $objectType)
+    public function testDetectionWithTheOption(string $sequence, string $objectType): void
     {
         global $db, $conf;
 
@@ -113,9 +114,11 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return bool
      */
-    public function isAllowedTestSequence($sequence, $objectType)
+    public function isAllowedTestSequence(string $sequence, string $objectType)
     {
         //====================================================================//
         //   Only For Orders & Invoices
@@ -134,13 +137,15 @@ class L07SkuItemsDetectionTest extends ObjectsCase
     /**
      * Create a Product for Testing
      *
+     * @throws Exception
+     *
      * @return array
      */
-    private function createProduct()
+    private function createProduct(): array
     {
         //====================================================================//
         //   Create Fake Product Data
-        $fields = $this->fakeFieldsList("Product", false, true);
+        $fields = $this->fakeFieldsList("Product");
         $fakeData = $this->fakeObjectData($fields);
         $this->assertNotEmpty($fakeData['ref']);
 
@@ -162,13 +167,15 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      * Test of Product Detection
      *
      * @param string      $objectType
-     * @param string      $itemDesc
-     * @param null|string $itemFkProduct
+     * @param string      $desc
+     * @param null|string $fkProduct
      * @param int         $result
+     *
+     * @throws Exception
      *
      * @return void
      */
-    private function verifyProductDetection($objectType, $itemDesc, $itemFkProduct, $result)
+    private function verifyProductDetection(string $objectType, string $desc, ?string $fkProduct, int $result): void
     {
         //====================================================================//
         //   Load Tested Object
@@ -176,8 +183,8 @@ class L07SkuItemsDetectionTest extends ObjectsCase
         //====================================================================//
         //   Execute Test Detection
         $itemData = array(
-            "desc" => $itemDesc,
-            "fk_product" => $itemFkProduct
+            "desc" => $desc,
+            "fk_product" => $fkProduct
         );
         $this->assertEquals(
             $result,

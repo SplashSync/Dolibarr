@@ -36,54 +36,54 @@ trait MainTrait
         //====================================================================//
         // Weight
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("weight")
-            ->Name($langs->trans("Weight"))
-            ->Description($langs->trans("Weight")." (".$langs->trans("WeightUnitkg").")")
-            ->MicroData("http://schema.org/Product", "weight");
+            ->identifier("weight")
+            ->name($langs->trans("Weight"))
+            ->description($langs->trans("Weight")." (".$langs->trans("WeightUnitkg").")")
+            ->microData("http://schema.org/Product", "weight");
 
         //====================================================================//
-        // Lenght
+        // Length
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("length")
-            ->Name($langs->trans("Length"))
-            ->Description($langs->trans("Length")." (".$langs->trans("LengthUnitm").")")
-            ->MicroData("http://schema.org/Product", "depth");
+            ->identifier("length")
+            ->name($langs->trans("Length"))
+            ->description($langs->trans("Length")." (".$langs->trans("LengthUnitm").")")
+            ->microData("http://schema.org/Product", "depth");
 
         //====================================================================//
         // Width
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("width")
-            ->Name($langs->trans("Width"))
-            ->Description($langs->trans("Width")." (".$langs->trans("LengthUnitm").")")
-            ->MicroData("http://schema.org/Product", "width")
+            ->identifier("width")
+            ->name($langs->trans("Width"))
+            ->description($langs->trans("Width")." (".$langs->trans("LengthUnitm").")")
+            ->microData("http://schema.org/Product", "width")
             ->isNotTested()
         ;
 
         //====================================================================//
         // Height
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("height")
-            ->Name($langs->trans("Height"))
-            ->Description($langs->trans("Heigth")." (".$langs->trans("LengthUnitm").")")
-            ->MicroData("http://schema.org/Product", "height")
+            ->identifier("height")
+            ->name($langs->trans("Height"))
+            ->description($langs->trans("Heigth")." (".$langs->trans("LengthUnitm").")")
+            ->microData("http://schema.org/Product", "height")
             ->isNotTested()
         ;
 
         //====================================================================//
         // Surface
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("surface")
-            ->Name($langs->trans("Surface"))
-            ->Description($langs->trans("Surface")." (".$langs->trans("SurfaceUnitm2").")")
-            ->MicroData("http://schema.org/Product", "surface");
+            ->identifier("surface")
+            ->name($langs->trans("Surface"))
+            ->description($langs->trans("Surface")." (".$langs->trans("SurfaceUnitm2").")")
+            ->microData("http://schema.org/Product", "surface");
 
         //====================================================================//
         // Volume
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("volume")
-            ->Name($langs->trans("Volume"))
-            ->Description($langs->trans("Volume")." (".$langs->trans("VolumeUnitm3").")")
-            ->MicroData("http://schema.org/Product", "volume");
+            ->identifier("volume")
+            ->name($langs->trans("Volume"))
+            ->description($langs->trans("Volume")." (".$langs->trans("VolumeUnitm3").")")
+            ->microData("http://schema.org/Product", "volume");
     }
 
     /**
@@ -94,7 +94,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getMainFields($key, $fieldName)
+    protected function getMainFields(string $key, string $fieldName)
     {
         //====================================================================//
         // READ Fields
@@ -148,7 +148,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function setMainFields($fieldName, $fieldData)
+    protected function setMainFields(string $fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field
@@ -198,7 +198,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function setDimFields($fieldName, $fieldData)
+    protected function setDimFields(string $fieldName, $fieldData)
     {
         //====================================================================//
         // WRITE Field

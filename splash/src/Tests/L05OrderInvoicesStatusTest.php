@@ -34,9 +34,11 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
     private static $objectsIds = array();
 
     /**
+     * @throws Exception
+     *
      * @return void
      */
-    public function testCreateObjects()
+    public function testCreateObjects(): void
     {
         $this->loadLocalTestSequence("Monolangual");
 
@@ -50,18 +52,24 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
      * @dataProvider statusProvider
      *
      * @param string      $objectType
-     * @param string      $splashStatus
-     * @param string      $dolibarrStatus
+     * @param string      $splStatus
+     * @param int         $dolStatus
      * @param null|string $expectedRef
+     *
+     *@throws Exception
      *
      * @return void
      */
-    public function testStatusChanges($objectType, $splashStatus, $dolibarrStatus, $expectedRef = null)
-    {
+    public function testStatusChanges(
+        string $objectType,
+        string $splStatus,
+        int $dolStatus,
+        string $expectedRef = null
+    ): void {
         //====================================================================//
         //   Update Status Directly on Module
         Splash::object($objectType)->lock();
-        $objectId = Splash::object($objectType)->set(self::$objectsIds[$objectType], array("status" => $splashStatus));
+        $objectId = Splash::object($objectType)->set(self::$objectsIds[$objectType], array("status" => $splStatus));
         $this->assertTrue(false !== $objectId);
         $this->assertEquals(self::$objectsIds[$objectType], $objectId);
 
@@ -74,11 +82,11 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         }
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
-        $this->assertEquals($dolibarrStatus, $object->statut);
+        $this->assertEquals($dolStatus, $object->statut);
 
         //====================================================================//
         //   Verify Reference
-        $this->assertStringContainsString((string) $expectedRef, $object->ref, "Splash Status: ".$splashStatus);
+        $this->assertStringContainsString((string) $expectedRef, $object->ref, "Splash Status: ".$splStatus);
         if ("PROV" != $expectedRef) {
             $this->assertStringContainsString(dol_print_date($object->date, '%y%m'), $object->ref);
         }
@@ -173,6 +181,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         );
         if ("PROV" != $expectedRef) {
             $this->assertStringContainsStringIgnoringCase(dol_print_date($object->date, '%y%m'), $object->ref);
+            // @phpstan-ignore-next-line
             $this->assertStringContainsStringIgnoringCase(dol_print_date($fakeData["date"], '%y%m'), $object->ref);
         }
     }

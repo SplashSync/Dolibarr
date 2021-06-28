@@ -25,9 +25,10 @@ include_once(dirname(dirname(dirname(__FILE__)))."/_conf/defines.inc.php");
 
 use Splash\Client\Splash;
 use Splash\Components\Logger;
+use Splash\Local\Objects;
 
 /**
- * Classe des fonctions triggers des actions personalisees du workflow
+ * Splash Module Changes Detection Triggers
  *
  * @SuppressWarnings(PHPMD.CamelCaseClassName)
  */
@@ -36,11 +37,12 @@ class InterfaceSplash
     //====================================================================//
     // Import Commit Triggers Action from Objects Namespaces
     //====================================================================//
-    use \Splash\Local\Objects\ThirdParty\TriggersTrait;
-    use \Splash\Local\Objects\Address\TriggersTrait;
-    use \Splash\Local\Objects\Product\TriggersTrait;
-    use \Splash\Local\Objects\Order\TriggersTrait;
-    use \Splash\Local\Objects\Invoice\TriggersTrait;
+    use Objects\ThirdParty\TriggersTrait;
+    use Objects\Address\TriggersTrait;
+    use Objects\Product\TriggersTrait;
+    use Objects\Order\TriggersTrait;
+    use Objects\Invoice\TriggersTrait;
+
     private $db;
     private $name;
     private $family;
@@ -76,7 +78,7 @@ class InterfaceSplash
         $this->version = 'dolibarr';
 
         //====================================================================//
-        // Load traductions files requiredby by page
+        // Load traductions files required by by page
         $langs->load("errors");
     }
 
@@ -236,6 +238,8 @@ class InterfaceSplash
     /**
      * Publish Object Change to Splash Sync Server
      *
+     * @throws Exception
+     *
      * @return void
      */
     protected function doSplashCommit()
@@ -264,11 +268,11 @@ class InterfaceSplash
             Splash::commit(
                 $this->objectType,          // Object Type
                 $this->objectId,            // Object Identifier (RowId ro Array of RowId)
-                $this->action,              // Splash Action Type
+                (string) $this->action,     // Splash Action Type
                 $this->login,               // Current User Login
                 (string) $this->comment     // Action Comment
             );
-            Splash::log()->deb("Change Commited (Action=".$this->comment.") Object => ".$this->objectType);
+            Splash::log()->deb("Change Committed (Action=".$this->comment.") Object => ".$this->objectType);
         } else {
             Splash::log()->war("Commit Id Missing (Action=".$this->comment.") Object => ".$this->objectType);
         }

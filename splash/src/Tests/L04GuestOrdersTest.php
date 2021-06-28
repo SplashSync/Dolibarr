@@ -15,7 +15,7 @@
 
 namespace Splash\Local\Tests;
 
-use ArrayObject;
+use Exception;
 use Splash\Client\Splash;
 use Splash\Models\Helpers\ObjectsHelper;
 use Splash\Tests\Tools\ObjectsCase;
@@ -43,9 +43,11 @@ class L04GuestOrdersTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testFieldsDefinitions($sequence, $objectType)
+    public function testFieldsDefinitions(string $sequence, string $objectType): void
     {
         global $conf;
 
@@ -71,8 +73,8 @@ class L04GuestOrdersTest extends ObjectsCase
             //   Verify SocId Field
             $socId = $this->findField($fields, array("socid"));
             $this->assertNotEmpty($socId);
-            $this->assertInstanceOf(ArrayObject::class, $socId);
-            $this->assertTrue($socId->required);
+            $this->assertIsArray($socId);
+            $this->assertTrue($socId['required']);
             //====================================================================//
             //   Verify Email Field
             $this->assertEmpty($this->findField($fields, array("email")));
@@ -88,17 +90,17 @@ class L04GuestOrdersTest extends ObjectsCase
         //   Verify SocId Field
         $socId = $this->findField($fields, array("socid"));
         $this->assertNotEmpty($socId);
-        $this->assertInstanceOf(ArrayObject::class, $socId);
-        $this->assertFalse($socId->required);
+        $this->assertIsArray($socId);
+        $this->assertFalse($socId['required']);
         //====================================================================//
         //   Verify Email Field
         $email = $this->findField($fields, array("email"));
         $this->assertNotEmpty($email);
-        $this->assertInstanceOf(ArrayObject::class, $email);
-        $this->assertEquals(SPL_T_EMAIL, $email->type);
-        $this->assertFalse($email->required);
-        $this->assertFalse($email->read);
-        $this->assertTrue($email->write);
+        $this->assertIsArray($email);
+        $this->assertEquals(SPL_T_EMAIL, $email['type']);
+        $this->assertFalse($email['required']);
+        $this->assertFalse($email['read']);
+        $this->assertTrue($email['write']);
     }
 
     /**
@@ -109,9 +111,11 @@ class L04GuestOrdersTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testGuestWithoutEmailDetection($sequence, $objectType)
+    public function testGuestWithoutEmailDetection(string $sequence, string $objectType)
     {
         global $db, $conf;
 
@@ -126,7 +130,7 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Create Fake Order/Invoice Data
-        $this->Fields = $this->fakeFieldsList($objectType, false, true);
+        $this->Fields = $this->fakeFieldsList($objectType);
         $this->Field = array($this->findField($this->Fields, array("socid")));
         $fakeData = $this->fakeObjectData($this->Fields);
 
@@ -165,7 +169,7 @@ class L04GuestOrdersTest extends ObjectsCase
      *
      * @return void
      */
-    public function testGuestWithEmailDetection($sequence, $objectType)
+    public function testGuestWithEmailDetection(string $sequence, string $objectType)
     {
         global $db, $conf;
 
@@ -180,7 +184,7 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Create Fake Order/Invoice Data
-        $this->Fields = $this->fakeFieldsList($objectType, false, true);
+        $this->Fields = $this->fakeFieldsList($objectType);
         $this->Field = array($this->findField($this->Fields, array("socid")));
         $fakeData = $this->fakeObjectData($this->Fields);
 
@@ -226,9 +230,11 @@ class L04GuestOrdersTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return bool
      */
-    public function isAllowedGuestSequence($sequence, $objectType)
+    public function isAllowedGuestSequence(string $sequence, string $objectType)
     {
         global $conf;
 
@@ -260,9 +266,11 @@ class L04GuestOrdersTest extends ObjectsCase
      * @param array  $givenData
      * @param array  $expectedData
      *
+     * @throws Exception
+     *
      * @return string
      */
-    private function verifyCreate($objectType, $givenData, $expectedData)
+    private function verifyCreate(string $objectType, array $givenData, array $expectedData): string
     {
         //====================================================================//
         //   Create Object on Module
@@ -300,9 +308,11 @@ class L04GuestOrdersTest extends ObjectsCase
      * @param array  $givenData
      * @param array  $expectedData
      *
+     * @throws Exception
+     *
      * @return string
      */
-    private function verifyUpdate($objectType, $objectId, $givenData, $expectedData)
+    private function verifyUpdate(string $objectType, string $objectId, array $givenData, array $expectedData): string
     {
         //====================================================================//
         //   Create Object on Module
@@ -333,13 +343,15 @@ class L04GuestOrdersTest extends ObjectsCase
     }
 
     /**
+     * @throws Exception
+     *
      * @return array
      */
-    private function createThirdPartyWithEmail()
+    private function createThirdPartyWithEmail(): array
     {
         //====================================================================//
         //   Create Fake ThirdParty Data
-        $fields = $this->fakeFieldsList("ThirdParty", false, true);
+        $fields = $this->fakeFieldsList("ThirdParty");
         $fakeData = $this->fakeObjectData($fields);
         $this->assertNotEmpty($fakeData['email']);
 

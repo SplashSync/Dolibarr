@@ -18,13 +18,14 @@ namespace Splash\Local\Services;
 use ProductAttribute;
 use ProductAttributeValue;
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Core\ErrorParserTrait;
 
 /**
  * Products Variants Attributes Manager
  */
 class AttributesManager
 {
-    use \Splash\Local\Core\ErrorParserTrait;
+    use ErrorParserTrait;
 
     /**
      * Array Of Products Attributes
@@ -45,7 +46,7 @@ class AttributesManager
      *
      * @return void
      */
-    public static function init()
+    public static function init(): void
     {
         global $db;
 
@@ -67,7 +68,7 @@ class AttributesManager
      *
      * @return void
      */
-    public static function loadAttributeValues($attributeId)
+    public static function loadAttributeValues(int $attributeId)
     {
         global $db;
         //====================================================================//
@@ -88,7 +89,7 @@ class AttributesManager
      *
      * @return null|ProductAttribute
      */
-    public static function getAttributeById($attributeId)
+    public static function getAttributeById(int $attributeId): ?ProductAttribute
     {
         //====================================================================//
         // Ensure Service Init
@@ -112,7 +113,7 @@ class AttributesManager
      *
      * @return null|ProductAttribute
      */
-    public static function getAttributeByCode($attributeCode)
+    public static function getAttributeByCode(string $attributeCode): ?ProductAttribute
     {
         //====================================================================//
         // Ensure Service Init
@@ -132,12 +133,12 @@ class AttributesManager
     /**
      * Add Product Combinations Attribute
      *
-     * @param string $attributeCode Product Attribute Code
-     * @param string $attributeName Product Attribute Name
+     * @param string      $attributeCode Product Attribute Code
+     * @param null|string $attributeName Product Attribute Name
      *
      * @return false|ProductAttribute
      */
-    public static function addAttribute($attributeCode, $attributeName = null)
+    public static function addAttribute(string $attributeCode, string $attributeName = null)
     {
         global $db, $user;
 
@@ -177,7 +178,7 @@ class AttributesManager
      *
      * @return bool
      */
-    public static function updateAttribute($attribute, $attributeName)
+    public static function updateAttribute($attribute, string $attributeName): bool
     {
         global $user;
         //====================================================================//
@@ -208,7 +209,7 @@ class AttributesManager
      *
      * @return false|ProductAttribute
      */
-    public static function touchAttributeGroup($code, $name)
+    public static function touchAttributeGroup(string $code, string $name)
     {
         //====================================================================//
         // Load Product Attribute Group
@@ -234,7 +235,7 @@ class AttributesManager
      *
      * @return bool
      */
-    public static function removeAttribute($attribute)
+    public static function removeAttribute(ProductAttribute $attribute): bool
     {
         global $user;
         //====================================================================//
@@ -249,7 +250,6 @@ class AttributesManager
         }
         //====================================================================//
         // Delete Attribute
-        // @phpstan-ignore-next-line
         if ($attribute->delete($user) < 0) {
             return Splash::log()->errTrace(
                 " Unable to Delete Product Attribute (".$attribute->ref.")."
@@ -270,7 +270,7 @@ class AttributesManager
      *
      * @return null|ProductAttributeValue
      */
-    public static function getAttributeValueById($attribute, $valueId)
+    public static function getAttributeValueById(ProductAttribute $attribute, int $valueId)
     {
         //====================================================================//
         // Ensure Service Init & Attribute Values are Loaded
@@ -299,7 +299,7 @@ class AttributesManager
      *
      * @return null|ProductAttributeValue
      */
-    public static function getAttributeValueByName($attribute, $valueName)
+    public static function getAttributeValueByName(ProductAttribute $attribute, string $valueName)
     {
         //====================================================================//
         // Ensure Service Init & Attribute Values are Loaded
@@ -325,11 +325,11 @@ class AttributesManager
      *
      * @param ProductAttribute $attribute Product Attribute Class
      * @param string           $valueCode Product Attribute Value Code
-     * @param string           $valueName Product Attribute Value Name
+     * @param null|string      $valueName Product Attribute Value Name
      *
      * @return false|ProductAttributeValue
      */
-    public static function addAttributeValue($attribute, $valueCode, $valueName = null)
+    public static function addAttributeValue(ProductAttribute $attribute, string $valueCode, string $valueName = null)
     {
         global $db, $user;
 
@@ -365,7 +365,7 @@ class AttributesManager
      *
      * @return false|ProductAttributeValue
      */
-    public static function touchAttributeValue($attribute, $value)
+    public static function touchAttributeValue(ProductAttribute $attribute, string $value)
     {
         //====================================================================//
         // Load Product Attribute Value
@@ -386,7 +386,7 @@ class AttributesManager
      *
      * @return bool
      */
-    public static function removeAttributeValue($value)
+    public static function removeAttributeValue(ProductAttributeValue $value): bool
     {
         global $user;
         //====================================================================//
