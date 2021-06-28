@@ -59,6 +59,7 @@ class Product extends AbstractObject
     use Product\StockTrait;                         // Access to Product Stocks
     use Product\MetaTrait;                          // Access to Products Metadata
     use Product\VariantsTrait;                      // Access to Variants Fields & Management Functions
+    use Product\CategoriesTrait;                    // Access to Products Categories
 
     //====================================================================//
     // ExtraFields Type
