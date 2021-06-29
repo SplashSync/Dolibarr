@@ -39,7 +39,7 @@
 
     "require": {
         "php":                              "^7.2",
-        "splash/phpcore":                   "dev-master"
+        "splash/phpcore":                   "@stable"
     },
     
     "require-dev": {
