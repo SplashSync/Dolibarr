@@ -54,7 +54,7 @@ stages:
     artifacts:
         when: always
         reports:
-            junit: "/var/www/html/custom/*-report.xml"
+            junit: "/var/www/html/*-report.xml"
     ################################################################
     # Before Script
     before_script:
