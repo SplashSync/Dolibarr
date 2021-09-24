@@ -227,7 +227,7 @@ class L01MultiCompanyTest extends ObjectsCase
      *
      * @throws Exception
      *
-     * @return bool| string
+     * @return bool|string
      */
     public function getNextObjectId(string $objectType)
     {
