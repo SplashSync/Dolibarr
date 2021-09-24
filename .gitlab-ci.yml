@@ -51,6 +51,10 @@ stages:
     retry:      2
     services:
         - mysql:5.7
+    artifacts:
+        when: always
+        reports:
+            junit: "*-report.xml"
     ################################################################
     # Before Script
     before_script:
