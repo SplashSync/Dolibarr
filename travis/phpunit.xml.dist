@@ -30,10 +30,6 @@
         </whitelist>
     </filter>
 
-    <logging>
-        <log type="junit" target="/tmp/phpunit-report.xml"/>
-    </logging>
-    
     <php>
         <ini    name="display_errors"   value="true"/>
         <const  name="SPLASH_DEBUG"     value="true" />
