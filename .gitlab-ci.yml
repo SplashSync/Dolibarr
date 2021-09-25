@@ -85,7 +85,7 @@ stages:
         - splash/vendor/phpunit/phpunit/phpunit --version
         # Run PhpUnit Main Local Testsuite
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/local-report.xml --testsuite=Local
-        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/full-report.xml
+#         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/full-report.xml
 
 Dol-13-Php-7.3:
     image:          monogramm/docker-dolibarr:13.0-apache
