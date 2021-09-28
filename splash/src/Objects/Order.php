@@ -49,6 +49,7 @@ class Order extends AbstractObject
     use Core\ContactsTrait;
     use Core\MultiCompanyFieldsTrait;
     use Core\MarketplaceModeTrait;
+    use Core\DownloadUrlsTrait;
 
     // Dolibarr Orders Traits
     use Order\ObjectsListTrait;

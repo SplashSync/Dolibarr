@@ -46,6 +46,7 @@ class CreditNote extends AbstractObject
     use Core\CustomerTrait;
     use Core\MultiCompanyFieldsTrait;
     use Core\MarketplaceModeTrait;
+    use Core\DownloadUrlsTrait;
 
     // Dolibarr Invoices Traits
     use Invoice\ObjectsListTrait;

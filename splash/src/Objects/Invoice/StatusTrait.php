@@ -53,7 +53,7 @@ trait StatusTrait
      *
      * @return void
      */
-    protected function getStatusFields($key, $fieldName)
+    protected function getStatusFields(string $key, string $fieldName)
     {
         if ('status' != $fieldName) {
             return;
@@ -86,7 +86,7 @@ trait StatusTrait
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function setStatusFields($fieldName, $fieldData)
+    protected function setStatusFields(string $fieldName, $fieldData)
     {
         global $conf,$langs,$user;
 
@@ -102,7 +102,7 @@ trait StatusTrait
         }
         //====================================================================//
         // Verify Stock Is Defined if Required
-        // If stock is incremented on validate invoice, we must provide warhouse id
+        // If stock is incremented on validate invoice, we must provide warehouse id
         if (!empty($conf->stock->enabled) && 1 == $conf->global->STOCK_CALCULATE_ON_BILL) {
             if (empty($conf->global->SPLASH_STOCK)) {
                 return Splash::log()->errTrace($langs->trans("WarehouseSourceNotDefined"));
@@ -136,7 +136,7 @@ trait StatusTrait
                     return false;
                 }
                 //====================================================================//
-                // If Not Valdidated => Set Validated
+                // If Not Validated => Set Validated
                 if ((1 != $this->object->statut)
                         && (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK))) {
                     return $this->catchDolibarrErrors();
@@ -190,7 +190,7 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusDraft()
+    private function setStatusDraft(): bool
     {
         global $conf, $user;
 

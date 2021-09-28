@@ -1,0 +1,87 @@
+<?php
+
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
+namespace   Splash\Local\Core;
+
+use Splash\Local\Objects\CreditNote;
+use Splash\Local\Objects\Invoice;
+use Splash\Local\Objects\Order;
+
+/**
+ * Direct Access to Dolibarr Documents Public Urls
+ */
+trait DownloadUrlsTrait
+{
+    /**
+     * Build Fields using FieldFactory
+     *
+     * @return void
+     */
+    protected function buildDownloadUrlsFields()
+    {
+        global $langs, $conf;
+
+        //====================================================================//
+        // Allowed for Orders
+        if (($this instanceof Order) && empty($conf->global->ORDER_ALLOW_EXTERNAL_DOWNLOAD)) {
+            return;
+        }
+        //====================================================================//
+        // Allowed for Invoices
+        if (($this instanceof Invoice) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
+            return;
+        }
+        //====================================================================//
+        // Allowed for Invoices
+        if (($this instanceof CreditNote) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
+            return;
+        }
+
+        //====================================================================//
+        // Public Download Url
+        $this->fieldsFactory()->create(SPL_T_URL)
+            ->identifier("main_doc_link")
+            ->name("Download Link")
+            ->description($langs->trans("DirectDownloadLink"))
+            ->microData("https://schema.org/DownloadAction", "url")
+            ->isReadOnly()
+        ;
+    }
+
+    /**
+     * Read requested Field
+     *
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
+     */
+    protected function getDownloadUrlsFields(string $key, string $fieldName)
+    {
+        //====================================================================//
+        // READ Fields
+        switch ($fieldName) {
+            case 'main_doc_link':
+                $url = $this->object->getLastMainDocLink($this->object->element);
+                $this->out[$fieldName] = $url ?: null;
+
+                break;
+            default:
+                return;
+        }
+
+        unset($this->in[$key]);
+    }
+}
