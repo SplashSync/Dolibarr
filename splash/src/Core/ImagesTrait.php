@@ -161,12 +161,19 @@ trait ImagesTrait
         $entity = $this->object->entity ? $this->object->entity : $conf->entity;
         $element = $this->object->element;
         $this->dolFilesDir = $conf->{$element}->multidir_output[$entity];
-//      In Next Releases we Will Use this function but now it's not generic
-//        $this->DolFilesDir.= '/'.get_exdir(0, 0, 0, 0, $this->object, $this->object->element);
-        $this->dolFilesDir .= '/'.dol_sanitizeFileName($this->object->ref);
-        $this->relFilesDir = ($entity > 1) ? $entity."/" : "";
-        $this->relFilesDir .= $this->elementPath[$element];
-        $this->relFilesDir .= "/".dol_sanitizeFileName($this->object->ref);
+
+        //====================================================================//
+        // For backward compatibility
+        if ('product' == $element && !empty($conf->global->PRODUCT_USE_OLD_PATH_FOR_PHOTO)) {
+            $this->relFilesDir = '/'.get_exdir($this->object->id, 2, 0, 0, $this->object, $element);
+            $this->relFilesDir .= $this->object->id."/photos/";
+            $this->dolFilesDir .= $this->relFilesDir;
+        } else {
+            $this->dolFilesDir .= '/'.dol_sanitizeFileName($this->object->ref);
+            $this->relFilesDir = ($entity > 1) ? $entity."/" : "";
+            $this->relFilesDir .= $this->elementPath[$element];
+            $this->relFilesDir .= "/".dol_sanitizeFileName($this->object->ref);
+        }
 
         //====================================================================//
         // Fetch Object Attached Images
@@ -295,7 +302,7 @@ trait ImagesTrait
      *
      * @return void
      */
-    protected function updateFilesPath($element, $oldRef, $newRef)
+    protected function updateFilesPath(string $element, $oldRef, $newRef)
     {
         global $db;
 
@@ -341,25 +348,34 @@ trait ImagesTrait
      *
      * @return void
      */
-    private function getImagesArrayFromDir($fieldName)
+    private function getImagesArrayFromDir(string $fieldName)
     {
+        global $conf;
+
         require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
         require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 
         //====================================================================//
         // Refresh Object Attached Images (Manually, OR Ref Changed)
         if (function_exists("completeFileArrayWithDatabaseInfo")) {
-            $diskFileArray = \dol_dir_list($this->dolFilesDir, "files");
+            $diskArray = \dol_dir_list($this->dolFilesDir, "files");
 
             try {
-                \completeFileArrayWithDatabaseInfo($diskFileArray, $this->relFilesDir);
+                \completeFileArrayWithDatabaseInfo($diskArray, $this->relFilesDir);
             } catch (Exception $ex) {
                 Splash::log()->deb("ErrLocalTpl", __CLASS__, __FUNCTION__, $ex->getMessage());
             }
         }
         //====================================================================//
-        // Fetch Object Attached Images from Database
-        $fileArray = \dol_dir_list_in_database($this->relFilesDir, "", null, "position");
+        // For backward compatibility
+        $element = $this->object->element;
+        if (isset($diskArray) && ('product' == $element) && !empty($conf->global->PRODUCT_USE_OLD_PATH_FOR_PHOTO)) {
+            $fileArray = $diskArray;
+        } else {
+            //====================================================================//
+            // Fetch Object Attached Images from Database
+            $fileArray = \dol_dir_list_in_database($this->relFilesDir, "", null, "position");
+        }
         //====================================================================//
         // Detect if List has Cover Image or Force it
         $this->detectCoverImage($fileArray);
@@ -533,7 +549,7 @@ trait ImagesTrait
             // Delete Object In Database
             if (!empty($ecmImage->label) && ($ecmImage->delete($user) <= 0)) {
                 $this->catchDolibarrErrors($ecmImage);
-                Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to Delete Image File. ");
+                Splash::log()->errTrace("Unable to Delete Image File. ");
             }
             //====================================================================//
             // Delete Object From Disk
@@ -554,7 +570,7 @@ trait ImagesTrait
     {
         foreach ($this->out["images"] as $key => $currentImage) {
             if (($currentImage["image"]["md5"] === $imageData["md5"])
-                    && ($currentImage["image"]["filename"] === $imageData["filename"])) {
+                && ($currentImage["image"]["filename"] === $imageData["filename"])) {
                 $ecmImage->fetch(0, '', $this->relFilesDir."/".$currentImage["image"]["filename"]);
                 unset($this->out["images"][$key]);
 
@@ -628,7 +644,7 @@ trait ImagesTrait
             if ($ecmImage->create($user) <= 0) {
                 $this->catchDolibarrErrors($ecmImage);
 
-                return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Image File. ");
+                return Splash::log()->errTrace("Unable to create new Image File. ");
             }
             $ecmImage->position = $position;
         }
@@ -637,7 +653,7 @@ trait ImagesTrait
         if ($ecmImage->update($user) <= 0) {
             $this->catchDolibarrErrors($ecmImage);
 
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to update Image File. ");
+            return Splash::log()->errTrace("Unable to update Image File. ");
         }
 
         //====================================================================//
