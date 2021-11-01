@@ -142,12 +142,12 @@ trait CoreTrait
 
                 break;
             case 'ref_ext':
-                $this->setSimple($fieldName, $fieldData);
                 //====================================================================//
                 // Update of ref_ext added to Update Func in V14
                 if ((Local::dolVersionCmp("14.0.0") < 0) && ($this->object->{$fieldName} != $fieldData)) {
                     $this->setDatabaseField("ref_ext", $fieldData);
                 }
+                $this->setSimple($fieldName, $fieldData);
 
                 break;
             default:
