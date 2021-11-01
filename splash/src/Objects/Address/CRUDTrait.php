@@ -42,7 +42,7 @@ trait CRUDTrait
         // Init Object
         $object = new Contact($db);
         //====================================================================//
-        // Fatch Object
+        // Fetch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
@@ -56,7 +56,7 @@ trait CRUDTrait
 
         //====================================================================//
         // Fix V11
-        if (is_null($object->socid)) {
+        if (!isset($object->socid)) {
             $object->socid = 0;
         }
 

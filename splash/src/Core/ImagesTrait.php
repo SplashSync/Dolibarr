@@ -616,7 +616,7 @@ trait ImagesTrait
         //====================================================================//
         // Check Image Cover Flag
         if ($ecmImage->cover != $isCover) {
-            $ecmImage->cover = $isCover;
+            $ecmImage->cover = $isCover ? "1" : "";
             $this->imgUpdated = true;
         }
     }

@@ -49,7 +49,13 @@ trait ObjectsListTrait
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
         $sql .= " f.ref_int as ref_int,";           // Internal Reference
         $sql .= " f.ref_client as ref_client,";     // Customer Reference
-        $sql .= " f.total as total_ht,";            // Total net of tax
+        //====================================================================//
+        // Renamed Since Dolibarr Version 14.0
+        if (Local::dolVersionCmp("14.0.0") >= 0) {
+            $sql .= " f.total_ht as total_ht,";      // Total net of tax
+        } else {
+            $sql .= " f.total as total_ht,";         // Total net of tax
+        }
         $sql .= " f.total_ttc as total_ttc,";       // Total with tax
         $sql .= " f.datef as date";                 // Invoice date
         //====================================================================//

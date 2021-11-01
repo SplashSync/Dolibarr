@@ -251,7 +251,7 @@ trait CRUDTrait
         $product->weight = 0;
         //====================================================================//
         // Detect Location Id from Default Configuration
-        $product->fk_default_warehouse = $this->detectDefaultLocation(null);
+        $product->fk_default_warehouse = (int) $this->detectDefaultLocation(null);
         //====================================================================//
         // Required For Dolibarr Below 3.6
         $product->type = 0;

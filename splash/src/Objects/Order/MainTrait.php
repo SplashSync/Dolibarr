@@ -124,7 +124,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getMainFields($key, $fieldName)
+    protected function getMainFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -158,7 +158,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getTotalsFields($key, $fieldName)
+    protected function getTotalsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -187,7 +187,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getStatesFields($key, $fieldName)
+    protected function getStatesFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -227,7 +227,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function setMainFields($fieldName, $fieldData)
+    protected function setMainFields(string $fieldName, $fieldData): void
     {
         global $user;
 
@@ -268,11 +268,11 @@ trait MainTrait
     }
 
     /**
-     * Update Order Billed Flag if Required & Possibe
+     * Update Order Billed Flag if Required & Possible
      *
      * @return void
      */
-    protected function updateBilledFlag()
+    protected function updateBilledFlag(): void
     {
         global $user;
 
@@ -289,7 +289,7 @@ trait MainTrait
         if ($this->updateBilled) {
             $this->object->classifyBilled($user);
         } else {
-            $this->object->classifyUnBilled();
+            $this->object->classifyUnBilled($user);
         }
         $this->updateBilled = null;
         $this->catchDolibarrErrors();

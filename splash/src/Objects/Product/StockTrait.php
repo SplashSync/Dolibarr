@@ -322,9 +322,9 @@ trait StockTrait
      *
      * @param mixed $fieldData Field Data
      *
-     * @return null|int Strock Location Id
+     * @return null|int Stock Location ID
      */
-    protected function detectDefaultLocation($fieldData)
+    protected function detectDefaultLocation($fieldData): ?int
     {
         $locationId = null;
         //====================================================================//

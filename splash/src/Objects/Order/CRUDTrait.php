@@ -123,7 +123,7 @@ trait CRUDTrait
      *
      * @param bool $needed Is This Update Needed
      *
-     * @return false|string Object Id
+     * @return false|string Object ID
      */
     public function update($needed)
     {
@@ -186,7 +186,7 @@ trait CRUDTrait
         $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = null;
+        $object->entity = null;         // @phpstan-ignore-line
         if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->err(
                 "ErrLocalTpl",
@@ -197,7 +197,6 @@ trait CRUDTrait
         }
         //====================================================================//
         // Delete Object
-//        $Arg1 = ( Local::dolVersionCmp("6.0.0") > 0 ) ? $user : 0;
         if ($object->delete($user) <= 0) {
             return $this->catchDolibarrErrors($object);
         }
