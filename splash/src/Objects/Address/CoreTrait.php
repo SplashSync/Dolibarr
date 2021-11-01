@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Objects\Address;
 
+use Splash\Local\Local;
+
 /**
  * Dolibarr Contacts Address Fields (Required)
  */
@@ -83,7 +85,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getCoreFields($key, $fieldName)
+    protected function getCoreFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -119,7 +121,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function setCoreFields($fieldName, $fieldData)
+    protected function setCoreFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -131,7 +133,7 @@ trait CoreTrait
 
                 break;
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'name':
             case 'firstname':
             case 'lastname':
@@ -140,7 +142,10 @@ trait CoreTrait
 
                 break;
             case 'ref_ext':
-                if ($this->object->{$fieldName} != $fieldData) {
+                $this->setSimple($fieldName, $fieldData);
+                //====================================================================//
+                // Update of ref_ext added to Update Func in V14
+                if ((Local::dolVersionCmp("14.0.0") >= 0) && ($this->object->{$fieldName} != $fieldData)) {
                     $this->setDatabaseField("ref_ext", $fieldData);
                 }
 

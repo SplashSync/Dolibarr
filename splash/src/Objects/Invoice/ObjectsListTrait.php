@@ -36,6 +36,9 @@ trait ObjectsListTrait
         //====================================================================//
         // Dolibarr Reference Columns Name was Updated in V10
         $refColumn = (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
+        //====================================================================//
+        // Dolibarr Total Ht Columns Name was Updated in V14
+        $totalHtColumn = (Local::dolVersionCmp("14.0.0") >= 0) ? "f.total_ht" : "f.total";
 
         //====================================================================//
         // Prepare SQL request for reading in Database
@@ -43,19 +46,13 @@ trait ObjectsListTrait
         $sql = "SELECT ";
         //====================================================================//
         // Select Database fields
-        $sql .= " f.rowid as id,";                  // Object Id
-        $sql .= " f.entity as entity_id,";          // Entity Id
+        $sql .= " f.rowid as id,";                  // Object ID
+        $sql .= " f.entity as entity_id,";          // Entity ID
         $sql .= " ".$refColumn." as ref,";          // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
         $sql .= " f.ref_int as ref_int,";           // Internal Reference
         $sql .= " f.ref_client as ref_client,";     // Customer Reference
-        //====================================================================//
-        // Renamed Since Dolibarr Version 14.0
-        if (Local::dolVersionCmp("14.0.0") >= 0) {
-            $sql .= " f.total_ht as total_ht,";      // Total net of tax
-        } else {
-            $sql .= " f.total as total_ht,";         // Total net of tax
-        }
+        $sql .= " ".$totalHtColumn." as total_ht,"; // Total net of tax
         $sql .= " f.total_ttc as total_ttc,";       // Total with tax
         $sql .= " f.datef as date";                 // Invoice date
         //====================================================================//
