@@ -145,7 +145,7 @@ trait CoreTrait
                 $this->setSimple($fieldName, $fieldData);
                 //====================================================================//
                 // Update of ref_ext added to Update Func in V14
-                if ((Local::dolVersionCmp("14.0.0") >= 0) && ($this->object->{$fieldName} != $fieldData)) {
+                if ((Local::dolVersionCmp("14.0.0") < 0) && ($this->object->{$fieldName} != $fieldData)) {
                     $this->setDatabaseField("ref_ext", $fieldData);
                 }
 
