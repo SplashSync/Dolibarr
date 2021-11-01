@@ -37,8 +37,8 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
-    - quality
     - tests
+    - quality
     - deploy
 
 ################################################################
@@ -67,11 +67,6 @@ stages:
         # Start Web Server
         - service apache2 restart && service apache2 status
         ################################################################
-        # Complete Dolibarr Install
-        - curl http://localhost/install/step2.php -d "action=set" > /dev/null
-        - curl http://localhost/install/step5.php -d "action=set&pass=PhpUnitPwd&pass_verif=PhpUnitPwd" > /dev/null
-        - curl http://localhost/
-        ################################################################
         # Install Module
         - cat ci/install.sh | bash
         - cd  /var/www/html/custom
@@ -87,13 +82,13 @@ stages:
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/local-report.xml --testsuite=Local
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/full-report.xml
 
-Dol-14-Php-7.4:
-    image:          tuxgasy/dolibarr:14
-    <<: *functionnal
-
-# Dol-13-Php-7.3:
-#     image:          monogramm/docker-dolibarr:13.0-apache
+# Dol-14-Php-7.4:
+#     image:          tuxgasy/dolibarr:14
 #     <<: *functionnal
+
+Dol-13-Php-7.3:
+    image:          tuxgasy/dolibarr:13
+    <<: *functionnal
 #
 # Dol-12-Php-7.2:
 #     image:          monogramm/docker-dolibarr:12.0-apache
@@ -116,7 +111,7 @@ Dol-14-Php-7.4:
 ################################################################
 # Code Quality Verifications 
 ################################################################
-code_quality:
+.code_quality:   &code_quality
 #    when:       manual
     image:      tuxgasy/dolibarr:14
     stage:      quality
@@ -148,6 +143,19 @@ code_quality:
     # Run After Script
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+
+Dol-14-Quality:
+    image:      tuxgasy/dolibarr:14
+    <<: *code_quality
+
+Dol-12-Quality:
+    image:      tuxgasy/dolibarr:12
+    <<: *code_quality
+
+Dol-Dev-Quality:
+    image:      tuxgasy/dolibarr:develop
+    allow_failure:  true
+    <<: *code_quality
 
 #################################################################
 ## Build Documentation
