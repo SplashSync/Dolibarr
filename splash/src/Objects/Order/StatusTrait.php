@@ -163,7 +163,7 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusCancel()
+    private function setStatusCancel(): bool
     {
         global $conf, $user;
 
@@ -199,13 +199,23 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusReValidate()
+    private function setStatusReValidate(): bool
     {
         global $conf, $user;
 
-        if ((-1 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
+        //====================================================================//
+        // Must Be Canceled
+        if (-1 != $this->object->statut) {
+            return false;
+        }
+        //====================================================================//
+        // Do Validate
+        if (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK)) {
             return $this->catchDolibarrErrors();
         }
+        //====================================================================//
+        // Mark Main Document Download Url as Updated
+        $this->setDownloadUrlsUpdated();
 
         return true;
     }
@@ -215,7 +225,7 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusDraft()
+    private function setStatusDraft(): bool
     {
         global $conf, $user;
 
@@ -241,13 +251,23 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusValidated()
+    private function setStatusValidated(): bool
     {
         global $conf, $user, $langs;
 
-        if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
+        //====================================================================//
+        // Must Be Draft
+        if (0 != $this->object->statut) {
+            return false;
+        }
+        //====================================================================//
+        // Do Validate
+        if (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK)) {
             return Splash::log()->errTrace($langs->trans($this->object->error));
         }
+        //====================================================================//
+        // Mark Main Document Download Url as Updated
+        $this->setDownloadUrlsUpdated();
 
         return true;
     }
@@ -257,7 +277,7 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusReOpen()
+    private function setStatusReOpen(): bool
     {
         global $user, $langs;
 
@@ -276,7 +296,7 @@ trait StatusTrait
      *
      * @return bool
      */
-    private function setStatusClosed()
+    private function setStatusClosed(): bool
     {
         global $user, $langs;
 

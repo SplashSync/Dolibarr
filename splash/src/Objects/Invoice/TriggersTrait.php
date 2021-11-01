@@ -60,7 +60,7 @@ trait TriggersTrait
     }
 
     /**
-     * Check if Commit is Requiered
+     * Check if Commit is Required
      *
      * @param string $action Code de l'evenement
      *

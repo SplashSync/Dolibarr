@@ -49,7 +49,7 @@ trait CRUDTrait
         // Init Object
         $object = new Facture($db);
         //====================================================================//
-        // Fatch Object
+        // Fetch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
             Splash::log()->errTrace("Current Entity is : ".$conf->entity);

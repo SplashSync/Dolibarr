@@ -31,24 +31,13 @@ trait DownloadUrlsTrait
      */
     protected function buildDownloadUrlsFields()
     {
-        global $langs, $conf;
+        global $langs;
 
         //====================================================================//
-        // Allowed for Orders
-        if (($this instanceof Order) && empty($conf->global->ORDER_ALLOW_EXTERNAL_DOWNLOAD)) {
+        // Check if Public Download Url is Allowed for Object
+        if (!$this->hasDownloadUrl()) {
             return;
         }
-        //====================================================================//
-        // Allowed for Invoices
-        if (($this instanceof Invoice) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
-            return;
-        }
-        //====================================================================//
-        // Allowed for Invoices
-        if (($this instanceof CreditNote) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
-            return;
-        }
-
         //====================================================================//
         // Public Download Url
         $this->fieldsFactory()->create(SPL_T_URL)
@@ -83,5 +72,51 @@ trait DownloadUrlsTrait
         }
 
         unset($this->in[$key]);
+    }
+
+    /**
+     * Mark Main Document Download Url as Updated
+     * - Force On Save Commit
+     *
+     * @return void
+     */
+    protected function setDownloadUrlsUpdated(): void
+    {
+        //====================================================================//
+        // Check if Public Download Url is Allowed for Object
+        if (!$this->hasDownloadUrl()) {
+            return ;
+        }
+        //====================================================================//
+        // Release Lock for this object
+        $this->unLock((string) $this->object->id ?: "new");
+    }
+
+    /**
+     * Check if Object Share Main Download Url
+     *
+     * @return bool
+     */
+    private function hasDownloadUrl(): bool
+    {
+        global $conf;
+
+        //====================================================================//
+        // Allowed for Orders
+        if (($this instanceof Order) && empty($conf->global->ORDER_ALLOW_EXTERNAL_DOWNLOAD)) {
+            return true;
+        }
+        //====================================================================//
+        // Allowed for Invoices
+        if (($this instanceof Invoice) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
+            return true;
+        }
+        //====================================================================//
+        // Allowed for CreditNote
+        if (($this instanceof CreditNote) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
+            return true;
+        }
+
+        return false;
     }
 }

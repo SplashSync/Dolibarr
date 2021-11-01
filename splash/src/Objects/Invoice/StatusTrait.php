@@ -88,7 +88,7 @@ trait StatusTrait
      */
     protected function setStatusFields(string $fieldName, $fieldData)
     {
-        global $conf,$langs,$user;
+        global $conf, $langs, $user;
 
         if ('status' != $fieldName) {
             return true;
@@ -137,9 +137,13 @@ trait StatusTrait
                 }
                 //====================================================================//
                 // If Not Validated => Set Validated
-                if ((1 != $this->object->statut)
-                        && (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK))) {
-                    return $this->catchDolibarrErrors();
+                if ((1 != $this->object->statut)) {
+                    if (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK)) {
+                        return $this->catchDolibarrErrors();
+                    }
+                    //====================================================================//
+                    // Mark Main Document Download Url as Updated
+                    $this->setDownloadUrlsUpdated();
                 }
                 $this->object->paye = 0;
                 $this->object->statut = \Facture::STATUS_VALIDATED;
@@ -151,9 +155,13 @@ trait StatusTrait
             case "PaymentComplete":
                 //====================================================================//
                 // If Draft => Set Validated
-                if ((0 == $this->object->statut)
-                        && (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK))) {
-                    return $this->catchDolibarrErrors();
+                if (0 == $this->object->statut) {
+                    if (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK)) {
+                        return $this->catchDolibarrErrors();
+                    }
+                    //====================================================================//
+                    // Mark Main Document Download Url as Updated
+                    $this->setDownloadUrlsUpdated();
                 }
                 //====================================================================//
                 // If Validated => Set Paid
