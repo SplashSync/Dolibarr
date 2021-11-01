@@ -37,8 +37,8 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
-    - tests
     - quality
+    - tests
     - deploy
 
 ################################################################
@@ -82,9 +82,9 @@ stages:
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/local-report.xml --testsuite=Local
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/full-report.xml
 
-# Dol-14-Php-7.4:
-#     image:          tuxgasy/dolibarr:14
-#     <<: *functionnal
+Dol-14-Php-7.4:
+    image:          tuxgasy/dolibarr:14
+    <<: *functionnal
 
 Dol-13-Php-7.3:
     image:          tuxgasy/dolibarr:13
