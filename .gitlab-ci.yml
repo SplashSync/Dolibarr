@@ -87,26 +87,30 @@ stages:
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/local-report.xml --testsuite=Local
         - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/full-report.xml
 
-Dol-13-Php-7.3:
-    image:          monogramm/docker-dolibarr:13.0-apache
+Dol-14-Php-7.4:
+    image:          tuxgasy/dolibarr:14
     <<: *functionnal
 
-Dol-12-Php-7.2:
-    image:          monogramm/docker-dolibarr:12.0-apache
-    <<: *functionnal
-
-Dol-10-Php-7.2:
-    image:          monogramm/docker-dolibarr:10.0
-    <<: *functionnal
-
-Dol-9-Php-7.2:
-    image:          monogramm/docker-dolibarr:9.0
-    <<: *functionnal
-
-Dol-Dev-Php-7.2:
-    image:          monogramm/docker-dolibarr:develop
-    allow_failure:  true
-    <<: *functionnal
+# Dol-13-Php-7.3:
+#     image:          monogramm/docker-dolibarr:13.0-apache
+#     <<: *functionnal
+#
+# Dol-12-Php-7.2:
+#     image:          monogramm/docker-dolibarr:12.0-apache
+#     <<: *functionnal
+#
+# Dol-10-Php-7.2:
+#     image:          monogramm/docker-dolibarr:10.0
+#     <<: *functionnal
+#
+# Dol-9-Php-7.2:
+#     image:          monogramm/docker-dolibarr:9.0
+#     <<: *functionnal
+#
+# Dol-Dev-Php-7.2:
+#     image:          monogramm/docker-dolibarr:develop
+#     allow_failure:  true
+#     <<: *functionnal
 
 
 ################################################################
@@ -114,7 +118,7 @@ Dol-Dev-Php-7.2:
 ################################################################
 code_quality:
 #    when:       manual
-    image:      monogramm/docker-dolibarr
+    image:      tuxgasy/dolibarr:14
     stage:      quality
     tags:       ['Dedicated']
     retry:      2
