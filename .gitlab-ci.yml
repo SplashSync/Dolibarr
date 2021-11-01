@@ -91,15 +91,15 @@ Dol-13-Php-7.3:
     <<: *functionnal
 
 Dol-12-Php-7.2:
-    image:          monogramm/docker-dolibarr:12.0-apache
+    image:          tuxgasy/dolibarr:12
     <<: *functionnal
 
 Dol-10-Php-7.2:
-    image:          monogramm/docker-dolibarr:10.0
+    image:          tuxgasy/dolibarr:10
     <<: *functionnal
 
 Dol-9-Php-7.2:
-    image:          monogramm/docker-dolibarr:9.0
+    image:          tuxgasy/dolibarr:9
     <<: *functionnal
 
 Dol-Dev-Php-7.2:
