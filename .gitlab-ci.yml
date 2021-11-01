@@ -122,6 +122,8 @@ code_quality:
     stage:      quality
     tags:       ['Dedicated']
     retry:      2
+    services:
+        - mysql:5.7
     ################################################################
     # Before Script
     before_script:
