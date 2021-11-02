@@ -27,7 +27,7 @@ trait MultiPricesTrait
      *
      * @return void
      */
-    protected function buildMultiPricesFields()
+    protected function buildMultiPricesFields(): void
     {
         global $conf, $langs;
 
@@ -69,7 +69,7 @@ trait MultiPricesTrait
      *
      * @return void
      */
-    protected function getMultiPricesFields($key, $fieldName)
+    protected function getMultiPricesFields(?string $key, string $fieldName): void
     {
         global $conf;
 
@@ -128,7 +128,7 @@ trait MultiPricesTrait
      *
      * @return void
      */
-    protected function setMuiltiPricesFields($fieldName, $fieldData)
+    protected function setMultiPricesFields(string $fieldName, $fieldData): void
     {
         global $conf, $user;
 

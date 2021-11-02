@@ -15,6 +15,8 @@
 
 namespace   Splash\Local\Objects\Product;
 
+use Splash\Client\Splash;
+
 /**
  * Dolibarr Products MataData Fields
  */
@@ -56,7 +58,7 @@ trait MetaTrait
      *
      * @return void
      */
-    private function getMetaFields($key, $fieldName)
+    private function getMetaFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -82,16 +84,22 @@ trait MetaTrait
      *
      * @return void
      */
-    private function setMetaFields($fieldName, $fieldData)
+    private function setMetaFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'status':
             case 'status_buy':
                 $this->setSimple($fieldName, (bool) $fieldData);
+                //====================================================================//
+                // Since V14: Force Parent Status.
+                // See https://github.com/Dolibarr/dolibarr/pull/19286
+                if (Splash::isDebugMode() && $this->isVariant()) {
+                    $this->setSimple($fieldName, (bool) $fieldData, 'baseProduct');
+                }
 
                 break;
             default:
