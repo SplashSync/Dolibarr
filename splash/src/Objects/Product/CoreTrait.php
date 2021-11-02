@@ -152,13 +152,13 @@ trait CoreTrait
                     return;
                 }
                 $this->setSimple($fieldName, $fieldData);
-                $this->setMultilangContent($fieldName, $langs->getDefaultLang(), $fieldData);
+                $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), $fieldData);
 
                 break;
             case 'description':
             case 'note':
                 $this->setSimple($fieldName, $fieldData);
-                $this->setMultilangContent($fieldName, $langs->getDefaultLang(), $fieldData);
+                $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), $fieldData);
 
                 break;
             default:

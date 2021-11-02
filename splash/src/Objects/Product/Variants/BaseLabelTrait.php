@@ -73,7 +73,7 @@ trait BaseLabelTrait
      *
      * @return void
      */
-    protected function getVariantsLabelFields($key, $fieldName)
+    protected function getVariantsLabelFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Read Default Lang Base Label
@@ -83,10 +83,10 @@ trait BaseLabelTrait
         }
 
         //====================================================================//
-        // Read Multilang Label
+        // Read Multi-langs Label
         if (0 === strpos($fieldName, 'base_label_')) {
             $langCode = substr($fieldName, strlen('base_label_'));
-            $this->out[$fieldName] = $this->getMultilang("label", $langCode);
+            $this->out[$fieldName] = $this->getMultiLang("label", $langCode);
             unset($this->in[$key]);
         }
     }
@@ -102,10 +102,8 @@ trait BaseLabelTrait
      * @param mixed  $fieldData Field Data
      *
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function setVariantsLabelFields($fieldName, $fieldData)
+    protected function setVariantsLabelFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // Write Default Lang Base Label
@@ -115,10 +113,10 @@ trait BaseLabelTrait
         }
 
         //====================================================================//
-        // Write Multilang Label
+        // Write Multi-langs Label
         if (0 === strpos($fieldName, 'base_label_')) {
             $langCode = substr($fieldName, strlen('base_label_'));
-            $this->setMultilangContent("label", $langCode, $fieldData);
+            $this->setMultiLangContent("label", $langCode, $fieldData);
             unset($this->in[$fieldName]);
         }
     }

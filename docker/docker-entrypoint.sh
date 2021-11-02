@@ -66,6 +66,7 @@ mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET valu
 mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = 'SOAP' WHERE name = 'SPLASH_WS_METHOD';"
 mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = '1' WHERE name = 'SPLASH_USER';"
 mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = 'fr_FR' WHERE name = 'SPLASH_LANG';"
+mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = 'a:2:{i:0;s:5:\"fr_BE\";i:1;s:5:\"en_US\";}' WHERE name = 'SPLASH_LANGS';"
 mysql -h $DOLI_DB_HOST -D $DOLI_DB_NAME -pdolibarr -e "UPDATE llx_const SET value = '1' WHERE name = 'SPLASH_STOCK';"
 
 if [ -d /var/overrides ]; then

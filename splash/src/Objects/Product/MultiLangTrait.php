@@ -18,11 +18,11 @@ namespace   Splash\Local\Objects\Product;
 use Splash\Models\Fields\FieldsManagerTrait;
 
 /**
- * Dolibarr Products Multilang Fields
+ * Dolibarr Products Multi-lang Fields
  *
  * @see Multilang Field Definition Already done by CoreTrait
  */
-trait MultilangTrait
+trait MultiLangTrait
 {
     use FieldsManagerTrait;
 
@@ -34,21 +34,21 @@ trait MultilangTrait
      *
      * @return void
      */
-    protected function getMultilangFields($key, $fieldName)
+    protected function getMultiLangFields(string $key, string $fieldName): void
     {
         //====================================================================//
-        // Read Multilang Label
+        // Read Multi-lang Label
         if (0 === strpos($fieldName, 'label_')) {
             $langCode = substr($fieldName, strlen('label_'));
-            $this->out[$fieldName] = $this->getMultilang("label", $langCode);
+            $this->out[$fieldName] = $this->getMultiLang("label", $langCode);
             unset($this->in[$key]);
         }
 
         //====================================================================//
-        // Read Multilang Description
+        // Read Multi-lang Description
         if (0 === strpos($fieldName, 'description_')) {
             $langCode = substr($fieldName, strlen('description_'));
-            $this->out[$fieldName] = $this->getMultilang('description', $langCode);
+            $this->out[$fieldName] = $this->getMultiLang('description', $langCode);
             unset($this->in[$key]);
         }
     }
@@ -61,21 +61,21 @@ trait MultilangTrait
      *
      * @return void
      */
-    protected function setMultilangFields($fieldName, $fieldData)
+    protected function setMultiLangFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
-        // Write Multilang Label
+        // Write Multi-lang Label
         if (0 === strpos($fieldName, 'label_')) {
             $langCode = substr($fieldName, strlen('label_'));
-            $this->setMultilangContent("label", $langCode, $fieldData);
+            $this->setMultiLangContent("label", $langCode, $fieldData);
             unset($this->in[$fieldName]);
         }
 
         //====================================================================//
-        // Write Multilang Description
+        // Write Multi-lang Description
         if (0 === strpos($fieldName, 'description_')) {
             $langCode = substr($fieldName, strlen('description_'));
-            $this->setMultilangContent('description', $langCode, $fieldData);
+            $this->setMultiLangContent('description', $langCode, $fieldData);
             unset($this->in[$fieldName]);
         }
     }

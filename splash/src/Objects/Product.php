@@ -38,7 +38,7 @@ class Product extends AbstractObject
 
     // Dolibarr Core Traits
     use Core\ErrorParserTrait;
-    use Core\MultilangualTrait;
+    use Core\MultiLangsTrait;
     use Core\MetaDatesTrait;
     use Core\UnitConverterTrait;
     use Core\ExtraFieldsTrait;
@@ -51,7 +51,7 @@ class Product extends AbstractObject
     use Product\ObjectsListTrait;                   // Objects List Readings Product Specifiers
     use Product\CRUDTrait;                          // Local Products CRUD Functions
     use Product\CoreTrait;                          // Access to Required Fields
-    use Product\MultilangTrait;                     // Access to Multi-lang Fields
+    use Product\MultiLangTrait;                     // Access to Multi-lang Fields
     use Product\MainTrait;                          // Access to Dimensions, Weights & more...
     use Product\BarcodeTrait;                       // Access to Product Barcodes
     use Product\PricesTrait;                        // Access to Product Sell & Wholesale Prices

@@ -16,9 +16,9 @@
 namespace   Splash\Local\Core;
 
 /**
- * Access to Dolibarr Multilang Fields
+ * Access to Dolibarr Multi-lang Fields
  */
-trait MultilangualTrait
+trait MultiLangsTrait
 {
     /**
      * Check if ISO Code is Default Languages
@@ -27,7 +27,7 @@ trait MultilangualTrait
      *
      * @return bool
      */
-    public static function isDefaultLanguage($isoCode)
+    public static function isDefaultLanguage(string $isoCode): bool
     {
         global $langs;
 
@@ -39,16 +39,16 @@ trait MultilangualTrait
      *
      * @return array
      */
-    public function getAvailableLanguages()
+    public function getAvailableLanguages(): array
     {
         global $conf, $langs;
         //====================================================================//
-        // We Are in Monolangual Mode
+        // We Are in Mono-langs Mode
         if (!$conf->global->MAIN_MULTILANGS) {
             return array($langs->getDefaultLang());
         }
         //====================================================================//
-        // We Are in Multilangual Mode
+        // We Are in Multi-langs Mode
         return array_merge(
             array($langs->getDefaultLang()),
             $this->getExtraLanguages()
@@ -60,18 +60,18 @@ trait MultilangualTrait
      *
      * @return array
      */
-    public function getExtraLanguages()
+    public function getExtraLanguages(): array
     {
         global $conf;
 
         //====================================================================//
-        // We Are in Monolangual Mode
+        // We Are in Mono-langs Mode
         if (!$conf->global->MAIN_MULTILANGS) {
             return array();
         }
 
         //====================================================================//
-        // If No Langauges Selected
+        // If No Languages Selected
         $extraLangs = unserialize($conf->global->SPLASH_LANGS);
         if (!is_array($extraLangs)) {
             return array();
@@ -81,15 +81,15 @@ trait MultilangualTrait
     }
 
     /**
-     * Update a Single Multilangual Field of an Object
+     * Update a Single Multi-langs Field of an Object
      *
-     * @param string $fieldName Id of a Multilangual Contents
+     * @param string $fieldName ID of a Multi-langs Contents
      * @param string $isoCode   Language Iso Code
      * @param string $content   Content String
      *
      * @return void
      */
-    public function setMultilangContent($fieldName, $isoCode, $content)
+    public function setMultiLangContent(string $fieldName, string $isoCode, string $content): void
     {
         global $langs;
 
@@ -106,21 +106,34 @@ trait MultilangualTrait
             $this->needUpdate();
         }
         //====================================================================//
+        // NOT Default language
+        if ($isoCode != $langs->getDefaultLang()) {
+            return;
+        }
+        //====================================================================//
         // Duplicate Contents to Default language if needed
-        if (($isoCode == $langs->getDefaultLang()) && property_exists(get_class($this->object), $fieldName)) {
+        if (property_exists(get_class($this->object), $fieldName)) {
             $this->object->{$fieldName} = $content;
+        }
+        //====================================================================//
+        // Duplicate Contents to Extra languages if not Defined
+        foreach ($this->getExtraLanguages() as $isoCode) {
+            if (!empty($this->object->multilangs[$isoCode][$fieldName])) {
+                continue;
+            }
+            $this->object->multilangs[$isoCode][$fieldName] = $content;
         }
     }
 
     /**
-     * Read Multilangual Fields of an Object
+     * Read Multi-langs Fields of an Object
      *
-     * @param string $fieldName Id of a Multilangual Contents
+     * @param string $fieldName ID of a Multi-langs Contents
      * @param string $isoCode   Language Code
      *
      * @return null|string
      */
-    public function getMultilang($fieldName, $isoCode)
+    public function getMultiLang(string $fieldName, string $isoCode): ?string
     {
         global $conf;
 
@@ -131,15 +144,15 @@ trait MultilangualTrait
         }
 
         //====================================================================//
-        // Native Multilangs Descriptions
+        // Native Multi-langs Descriptions
         //====================================================================//
 
         //====================================================================//
-        // If Multilang Contents doesn't exists
+        // If Multi-langs Contents doesn't exists
         if (!isset($this->object->multilangs[$isoCode][$fieldName])) {
             return null;
         }
 
-        return $this->object->multilangs[$isoCode][$fieldName];
+        return (string) $this->object->multilangs[$isoCode][$fieldName];
     }
 }

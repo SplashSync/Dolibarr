@@ -103,7 +103,7 @@ Dol-9-Php-7.2:
     <<: *functionnal
 
 Dol-Dev-Php-7.2:
-    image:          monogramm/docker-dolibarr:develop
+    image:          tuxgasy/dolibarr:develop
     allow_failure:  true
     <<: *functionnal
 
