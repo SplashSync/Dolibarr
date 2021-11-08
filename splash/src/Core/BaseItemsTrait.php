@@ -20,6 +20,8 @@ use OrderLine;
 use Product;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Objects\SupplierInvoice;
+use SupplierInvoiceLine;
 
 /**
  * Dolibarr Orders & Invoices Items Fields
@@ -36,7 +38,7 @@ trait BaseItemsTrait
     private $itemUpdate = false;
 
     /**
-     * @var null|FactureLigne|OrderLine
+     * @var null|FactureLigne|OrderLine|SupplierInvoiceLine
      */
     private $currentItem;
 
@@ -59,13 +61,14 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Description
+        $descFieldName = ($this instanceof SupplierInvoice) ? "description" : "desc";
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("desc")
+            ->Identifier($descFieldName)
             ->InList("lines")
             ->Name($langs->trans("Description"))
             ->Group($groupName)
             ->MicroData("http://schema.org/partOfInvoice", "description")
-            ->Association("desc@lines", "qty@lines", "price@lines");
+            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
 
         //====================================================================//
         // Order Line Product Identifier
@@ -75,7 +78,7 @@ trait BaseItemsTrait
             ->Name($langs->trans("Product"))
             ->Group($groupName)
             ->MicroData("http://schema.org/Product", "productID")
-            ->Association("desc@lines", "qty@lines", "price@lines");
+            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
 
         //====================================================================//
         // Order Line Quantity
@@ -85,7 +88,7 @@ trait BaseItemsTrait
             ->Name($langs->trans("Quantity"))
             ->Group($groupName)
             ->MicroData("http://schema.org/QuantitativeValue", "value")
-            ->Association("desc@lines", "qty@lines", "price@lines");
+            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
 
         //====================================================================//
         // Order Line Discount
@@ -95,7 +98,7 @@ trait BaseItemsTrait
             ->Name($langs->trans("Discount"))
             ->Group($groupName)
             ->MicroData("http://schema.org/Order", "discount")
-            ->Association("desc@lines", "qty@lines", "price@lines");
+            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
 
         //====================================================================//
         // Order Line Unit Price
@@ -105,7 +108,7 @@ trait BaseItemsTrait
             ->Name($langs->trans("Price"))
             ->Group($groupName)
             ->MicroData("http://schema.org/PriceSpecification", "price")
-            ->Association("desc@lines", "qty@lines", "price@lines");
+            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
 
         //====================================================================//
         // Order Line Tax Name
@@ -117,8 +120,8 @@ trait BaseItemsTrait
                 ->MicroData("http://schema.org/PriceSpecification", "valueAddedTaxName")
                 ->Group($groupName)
                 ->addOption('maxLength', '10')
-                ->Association("desc@lines", "qty@lines", "price@lines")
-                    ;
+                ->Association($descFieldName."@lines", "qty@lines", "price@lines")
+            ;
         }
     }
 
@@ -130,7 +133,7 @@ trait BaseItemsTrait
      *
      * @return void
      */
-    protected function getItemsFields($key, $fieldName)
+    protected function getItemsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
@@ -159,14 +162,16 @@ trait BaseItemsTrait
     /**
      * Insert an Item to Order or Invoice
      *
-     * @param FactureLigne|OrderLine $item
+     * @param FactureLigne|OrderLine|SupplierInvoiceLine $item
      *
-     * @return null|FactureLigne|OrderLine
+     * @return null|FactureLigne|OrderLine|SupplierInvoiceLine
      */
     protected function insertItem($item)
     {
-        $item->subprice = 0;
-        $item->price = 0;
+        if (!$item instanceof SupplierInvoiceLine) {
+            $item->subprice = 0;
+            $item->price = 0;
+        }
         $item->qty = 0;
 
         $item->total_ht = 0;
@@ -194,12 +199,14 @@ trait BaseItemsTrait
     /**
      * Read requested Field
      *
-     * @param FactureLigne|OrderLine $line      Line Data Object
-     * @param string                 $fieldName Field Identifier / Name
+     * @param FactureLigne|OrderLine|SupplierInvoiceLine $line      Line Data Object
+     * @param string                                     $fieldName Field Identifier / Name
      *
      * @return null|array|bool|float|int|string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getItemField($line, $fieldName)
+    private function getItemField($line, string $fieldName)
     {
         global $conf;
 
@@ -209,12 +216,14 @@ trait BaseItemsTrait
             //====================================================================//
             // Order Line Description
             case 'desc@lines':
-                return  $line->desc;
+                return ($line instanceof SupplierInvoiceLine) ? "" : $line->desc;
+            case 'description@lines':
+                return $line->description;
             //====================================================================//
             // Order Line Product Id
             case 'fk_product@lines':
                 return ($line->fk_product)
-                    ? self::objects()->Encode("Product", (string) $line->fk_product)
+                    ? self::objects()->encode("Product", (string) $line->fk_product)
                     : null;
             //====================================================================//
             // Order Line Quantity
@@ -230,7 +239,7 @@ trait BaseItemsTrait
                 $price = (double) self::parsePrice($line->subprice);
                 $vat = (double) $line->tva_tx;
 
-                return  self::prices()->Encode($price, $vat, null, $conf->global->MAIN_MONNAIE);
+                return  self::prices()->encode($price, $vat, null, $conf->global->MAIN_MONNAIE);
             //====================================================================//
             // Order Line Tax Name
             case 'vat_src_code@lines':
@@ -248,7 +257,7 @@ trait BaseItemsTrait
      *
      * @return void
      */
-    private function setItemsFields($fieldName, $fieldData)
+    private function setItemsFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -301,7 +310,7 @@ trait BaseItemsTrait
             // Create New Line Item
             $this->currentItem = $this->createItem();
             if (empty($this->currentItem)) {
-                Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create Line Item. ");
+                Splash::log()->errTrace("Unable to create Line Item. ");
 
                 return;
             }
@@ -313,6 +322,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Update Line Description
+        $this->setItemSimpleData($itemData, "description");
         $this->setItemSimpleData($itemData, "desc");
         //====================================================================//
         // Update Line Label
@@ -353,7 +363,7 @@ trait BaseItemsTrait
         // Perform Line Update
         if ($this->currentItem->update($arg1) <= 0) {
             $this->catchDolibarrErrors($this->currentItem);
-            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to update Line Item. ");
+            Splash::log()->errTrace("Unable to update Line Item. ");
 
             return;
         }
@@ -396,18 +406,24 @@ trait BaseItemsTrait
         //====================================================================//
         // Parse Item Prices
         $htPrice = self::parsePrice($itemData["price"]["ht"]);
-        $vatPrecent = $itemData["price"]["vat"];
+        $ttcPrice = self::parsePrice($itemData["price"]["ttc"]);
+        $vatPercent = $itemData["price"]["vat"];
         //====================================================================//
         // Update Unit & Sub Prices
         if (abs($this->currentItem->subprice - $htPrice) > 1E-6) {
             $this->currentItem->subprice = $htPrice;
-            $this->currentItem->price = $htPrice;
+            if ($this->currentItem instanceof SupplierInvoiceLine) {
+                $this->currentItem->pu_ht = $htPrice;
+                $this->currentItem->pu_ttc = $ttcPrice;
+            } else {
+                $this->currentItem->price = $htPrice;
+            }
             $this->itemUpdate = true;
         }
         //====================================================================//
         // Update VAT Rate
-        if (abs($this->currentItem->tva_tx - $vatPrecent) > 1E-6) {
-            $this->currentItem->tva_tx = $vatPrecent;
+        if (abs($this->currentItem->tva_tx - $vatPercent) > 1E-6) {
+            $this->currentItem->tva_tx = $vatPercent;
             $this->itemUpdate = true;
         }
         //====================================================================//
@@ -415,7 +431,7 @@ trait BaseItemsTrait
         if (empty($this->currentItem->subprice)) {
             $this->currentItem->subprice = 0;
         }
-        if (empty($this->currentItem->price)) {
+        if (empty($this->currentItem->price) && (!$this->currentItem instanceof SupplierInvoiceLine)) {
             $this->currentItem->price = 0;
         }
     }
@@ -524,7 +540,7 @@ trait BaseItemsTrait
     }
 
     /**
-     * Detect Product Id from Input Line Item with SKU Detection
+     * Detect Product ID from Input Line Item with SKU Detection
      *
      * @param array $itemData Input Item Data Array
      *
@@ -615,7 +631,9 @@ trait BaseItemsTrait
             0,
             "HT",
             $this->currentItem->info_bits,
-            $this->currentItem->type,
+            ($this->currentItem instanceof SupplierInvoiceLine)
+                ? $this->currentItem->product_type
+                : $this->currentItem->type,
             $mysoc,
             $localtaxType
         );
