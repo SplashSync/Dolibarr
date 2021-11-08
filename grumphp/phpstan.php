@@ -46,6 +46,9 @@ require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/cpaiement.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/stock/class/mouvementstock.class.php';
 
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/paiementfourn.class.php';
+
 require_once DOL_DOCUMENT_ROOT."/variants/class/ProductAttribute.class.php";
 require_once DOL_DOCUMENT_ROOT."/variants/class/ProductAttributeValue.class.php";
 require_once DOL_DOCUMENT_ROOT."/variants/class/ProductCombination.class.php";

@@ -116,7 +116,7 @@ trait TriggersTrait
         if ($object instanceof Paiement) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts
-            $amounts = Invoice::getPaiementAmounts($object->id);
+            $amounts = self::getPaiementAmounts($object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array
             $this->objectId = array_keys($amounts);
@@ -201,5 +201,42 @@ trait TriggersTrait
 
                 break;
         }
+    }
+
+    /**
+     * Fetch List of Invoices Payments Amounts
+     *
+     * @param int $paiementId Payment Object Id
+     *
+     * @return array List Of Payment Object Amounts
+     */
+    private static function getPaiementAmounts($paiementId)
+    {
+        global $db;
+        //====================================================================//
+        // Init Result Array
+        $amounts = array();
+        //====================================================================//
+        // SELECT SQL Request
+        $sql = 'SELECT fk_facture, amount';
+        $sql .= ' FROM '.MAIN_DB_PREFIX.'paiement_facture';
+        $sql .= ' WHERE fk_paiement = '.$paiementId;
+        $resql = $db->query($sql);
+        //====================================================================//
+        // SQL Error
+        if (!$resql) {
+            Splash::log()->errTrace($db->error());
+
+            return $amounts;
+        }
+        //====================================================================//
+        // Populate Object
+        for ($i = 0; $i < $db->num_rows($resql); $i++) {
+            $obj = $db->fetch_object($resql);
+            $amounts[$obj->fk_facture] = $obj->amount;
+        }
+        $db->free($resql);
+
+        return $amounts;
     }
 }

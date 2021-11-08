@@ -130,7 +130,7 @@ trait CustomerTrait
      *
      * @return void
      */
-    protected function getCustomerFields($key, $fieldName)
+    protected function getCustomerFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -165,7 +165,7 @@ trait CustomerTrait
             // Customer Id
             case 'socid':
                 //====================================================================//
-                // Standard Mode => A SocId is Requiered
+                // Standard Mode => A SocId is Required
                 if (!$this->isAllowedGuest()) {
                     $this->setSimple($fieldName, self::objects()->Id($fieldData));
 

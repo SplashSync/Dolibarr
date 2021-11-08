@@ -4,5 +4,8 @@
     },
     "CreditNote": {
         "disabled": false
+    },
+    "SupplierInvoice": {
+        "disabled": false
     }
 }

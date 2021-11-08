@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Order;
 
 use FactureLigne;
 use OrderLine;
+use SupplierInvoiceLine;
 
 /**
  * Dolibarr Customer Orders Items Fields
@@ -26,7 +27,7 @@ trait ItemsTrait
     /**
      * Create a New Line Item
      *
-     * @return null|FactureLigne|OrderLine
+     * @return null|FactureLigne|OrderLine|SupplierInvoiceLine
      */
     protected function createItem()
     {
