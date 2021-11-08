@@ -42,7 +42,9 @@
         <!--<const  name="SPLASH_TYPES"     value="Product" />-->
         <!--<const  name="SPLASH_TYPES"     value="Order" />-->
         <!--<const  name="SPLASH_TYPES"     value="Invoice" />-->
-        
+        <!--<const  name="SPLASH_TYPES"     value="CreditNote" />-->
+        <!--<const  name="SPLASH_TYPES"     value="SupplierInvoice" />-->
+
         <!-- Only Test Specified Sequence -->
         <!--<const  name="SPLASH_SEQUENCE"  value="Monolangual" />-->           
         <!--<const  name="SPLASH_SEQUENCE"  value="Variants" />-->

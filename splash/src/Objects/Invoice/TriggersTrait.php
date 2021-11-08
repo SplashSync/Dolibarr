@@ -164,13 +164,13 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Product
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Code de l'évènement
      *
      * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function setInvoiceParameters($action)
+    private function setInvoiceParameters(string $action): void
     {
         switch ($action) {
             case 'BILL_CREATE':
@@ -210,7 +210,7 @@ trait TriggersTrait
      *
      * @return array List Of Payment Object Amounts
      */
-    private static function getPaiementAmounts($paiementId)
+    private static function getPaiementAmounts(int $paiementId)
     {
         global $db;
         //====================================================================//
