@@ -34,9 +34,6 @@ trait ObjectsListTrait
     protected function getSqlBaseRequest($filter = null, $params = null)
     {
         //====================================================================//
-        // Dolibarr Reference Columns Name was Updated in V10
-        $refColumn = (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
-        //====================================================================//
         // Dolibarr Total Ht Columns Name was Updated in V14
         $totalHtColumn = (Local::dolVersionCmp("14.0.0") >= 0) ? "f.total_ht" : "f.total";
 
