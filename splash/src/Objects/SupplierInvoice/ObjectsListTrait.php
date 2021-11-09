@@ -48,7 +48,7 @@ trait ObjectsListTrait
         // Select Database fields
         $sql .= " f.rowid as id,";                  // Object ID
         $sql .= " f.entity as entity_id,";          // Entity ID
-        $sql .= " ".$refColumn." as ref,";          // Dolibarr Reference
+        $sql .= " f.ref as ref,";                   // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
         $sql .= " f.ref_supplier as ref_supplier,"; // Supplier Reference
         $sql .= " ".$totalHtColumn." as total_ht,"; // Total net of tax
@@ -71,7 +71,7 @@ trait ObjectsListTrait
             $sql .= " AND ( ";
             //====================================================================//
             // Search in Invoice Ref.
-            $sql .= " LOWER( ".$refColumn." ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " LOWER( f.ref ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice Supplier Ref
             $sql .= " OR LOWER( f.ref_supplier ) LIKE LOWER( '%".$filter."%') ";
