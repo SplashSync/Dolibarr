@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Order;
 
 use Commande;
 use DateTime;
+use Exception;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Services\MultiCompany;
 use User;
@@ -52,22 +53,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Customer Order (".$objectId.")."
-            );
+            return Splash::log()->errTrace(" Unable to load Customer Order (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to load Customer Order (".$objectId.")."
-            );
+            return Splash::log()->errTrace(" Unable to load Customer Order (".$objectId.").");
         }
         $object->fetch_lines();
         $this->initCustomerDetection();
@@ -77,6 +68,8 @@ trait CRUDTrait
 
     /**
      * Create Request Object
+     *
+     * @throws Exception
      *
      * @return Commande|false
      */
@@ -112,7 +105,7 @@ trait CRUDTrait
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Customer Order. ");
+            return Splash::log()->errTrace("Unable to create new Customer Order. ");
         }
 
         return $this->object;
@@ -125,7 +118,7 @@ trait CRUDTrait
      *
      * @return false|string Object ID
      */
-    public function update($needed)
+    public function update(bool $needed)
     {
         global $user;
         //====================================================================//
@@ -144,12 +137,7 @@ trait CRUDTrait
         if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Update Customer Order (".$this->object->id.")"
-            ) ;
+            return Splash::log()->errTrace(" Unable to Update Customer Order (".$this->object->id.")") ;
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -163,11 +151,11 @@ trait CRUDTrait
     /**
      * Delete requested Object
      *
-     * @param string $objectId Object Id.  If NULL, Object needs to be created.
+     * @param string $objectId Object ID.  If NULL, Object needs to be created.
      *
      * @return bool
      */
-    public function delete($objectId = null)
+    public function delete($objectId = null): bool
     {
         global $db,$user;
         //====================================================================//
@@ -188,12 +176,7 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany)
         $object->entity = null;         // @phpstan-ignore-line
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Delete Customer Order (".$objectId.")."
-            );
+            return Splash::log()->errTrace(" Unable to Delete Customer Order (".$objectId.").");
         }
         //====================================================================//
         // Delete Object
