@@ -67,10 +67,6 @@ trait CRUDTrait
         if (!in_array((int) $object->type, static::$dolibarrTypes, true)) {
             return Splash::log()->errTrace("Wrong Invoice Object Type.");
         }
-        //====================================================================//
-        // fetch SocId from fk_soc
-        // @phpstan-ignore-next-line
-        $this->object->socid = $this->object->fk_soc;
 
         $object->fetch_lines();
         $this->loadPayments($objectId);

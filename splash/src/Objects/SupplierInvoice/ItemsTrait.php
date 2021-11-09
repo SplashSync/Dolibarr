@@ -39,6 +39,7 @@ trait ItemsTrait
         //====================================================================//
         // Pre-Setup of Item
         $item->fk_facture_fourn = $this->object->id;
+        $item->product_type = 0;
 
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert

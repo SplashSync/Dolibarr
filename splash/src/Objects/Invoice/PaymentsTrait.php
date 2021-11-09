@@ -125,7 +125,7 @@ trait PaymentsTrait
         // Execute SQL Request
         $result = $db->query($sql);
         if (!$result) {
-            dol_print_error($db);
+            $this->catchDolibarrErrors();
 
             return false;
         }
