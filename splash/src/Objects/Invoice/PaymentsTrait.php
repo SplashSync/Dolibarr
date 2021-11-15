@@ -387,8 +387,8 @@ trait PaymentsTrait
 
         //====================================================================//
         // Update Payment Number
-        /** @since V12.0 Field Renamed  */
-        $number = (Local::dolVersionCmp("12.0.0") < 0)
+        /** @since V13.0 Field Renamed  */
+        $number = (Local::dolVersionCmp("13.0.0") < 0)
             ? $payment->num_paiement
             : $payment->num_payment;
         if (isset($lineData["number"]) && ($number !== $lineData["number"])) {
@@ -440,8 +440,8 @@ trait PaymentsTrait
         $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
         //====================================================================//
         // Setup Payment Reference
-        /** @since V12.0 Field Renamed  */
-        if (Local::dolVersionCmp("12.0.0") < 0) {
+        /** @since V13.0 Field Renamed  */
+        if (Local::dolVersionCmp("13.0.0") < 0) {
             $payment->num_paiement = $lineData["number"];
         } else {
             $payment->num_payment = $lineData["number"];
