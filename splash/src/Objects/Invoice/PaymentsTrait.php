@@ -94,13 +94,17 @@ trait PaymentsTrait
      * Fetch Invoice Payments List (Done after Load)
      *
      * @param mixed $invoiceId
+     * @param bool  $isSupplier
      *
      * @return bool
      */
-    protected function loadPayments($invoiceId): bool
+    protected function loadPayments($invoiceId, bool $isSupplier = false): bool
     {
         global $db;
 
+        //====================================================================//
+        // Detect Supplier Invoices Mode
+        $isSupplier |= ($this instanceof SupplierInvoice);
         //====================================================================//
         // Prepare SQL Request
         // Payments already done (from payment on this invoice)
@@ -109,13 +113,13 @@ trait PaymentsTrait
         $sql .= ' pf.amount as amount,';
         $sql .= ' ba.rowid as baid, ba.ref, ba.label';
         $sql .= ' FROM '.MAIN_DB_PREFIX.'c_paiement as c, ' ;
-        $sql .= ($this instanceof SupplierInvoice)
+        $sql .= $isSupplier
             ? MAIN_DB_PREFIX.'paiementfourn_facturefourn as pf, '.MAIN_DB_PREFIX.'paiementfourn as p'
             : MAIN_DB_PREFIX.'paiement_facture as pf, '.MAIN_DB_PREFIX.'paiement as p'
         ;
         $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'bank as b ON p.fk_bank = b.rowid';
         $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'bank_account as ba ON b.fk_account = ba.rowid';
-        $sql .= ($this instanceof SupplierInvoice)
+        $sql .= $isSupplier
             ? ' WHERE pf.fk_facturefourn = '.$invoiceId.' AND p.fk_paiement = c.id AND pf.fk_paiementfourn = p.rowid'
             : ' WHERE pf.fk_facture = '.$invoiceId.' AND p.fk_paiement = c.id AND pf.fk_paiement = p.rowid'
         ;
