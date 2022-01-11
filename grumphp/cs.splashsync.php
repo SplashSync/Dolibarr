@@ -17,9 +17,10 @@ global $config, $finder;
 
 $sdkPath = $_SERVER['PWD']."/splash/vendor/badpixxel/php-sdk/phpcs/";
 $dirs = array(
-    $_SERVER['PWD']."/splash",
+    $_SERVER['PWD']."/ci",
+    $_SERVER['PWD']."/docker",
     $_SERVER['PWD']."/grumphp",
-    $_SERVER['PWD']."/travis",
+    $_SERVER['PWD']."/splash",
 );
 
 include_once $sdkPath."headers/splashsync.php";
