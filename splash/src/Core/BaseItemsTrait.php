@@ -562,7 +562,7 @@ trait BaseItemsTrait
     {
         //====================================================================//
         // Safety Check
-        if (is_null($this->currentItem)) {
+        if (is_null($this->currentItem) || !is_iterable($itemData)) {
             return;
         }
         $extraFieldsParser = LinesExtraFieldsParser::fromSplashObject($this);
