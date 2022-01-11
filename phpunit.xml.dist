@@ -6,8 +6,8 @@
     backupStaticAttributes      = "false"
     colors                      = "true"
     convertErrorsToExceptions   = "true"
-    convertNoticesToExceptions  = "false"
     convertWarningsToExceptions = "true"
+    convertNoticesToExceptions  = "false"
     processIsolation            = "false"
     stopOnFailure               = "true"
     bootstrap                   = "splash/vendor/autoload.php" 
@@ -46,7 +46,7 @@
         <!--<const  name="SPLASH_TYPES"     value="SupplierInvoice" />-->
 
         <!-- Only Test Specified Sequence -->
-        <!--<const  name="SPLASH_SEQUENCE"  value="Monolangual" />-->           
+        <!--<const  name="SPLASH_SEQUENCE"  value="Monolangual" />-->
         <!--<const  name="SPLASH_SEQUENCE"  value="Variants" />-->
         <!--<const  name="SPLASH_SEQUENCE"  value="VariantsMultiPrices" />-->
     </php>

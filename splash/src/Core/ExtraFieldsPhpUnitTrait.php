@@ -30,11 +30,7 @@ trait ExtraFieldsPhpUnitTrait
         "text" => "phpunit_text",
         "int" => "phpunit_int",
         "bool" => "phpunit_bool",
-        "double" => "phpunit_double",
         "price" => "phpunit_price",
-        "mail" => "phpunit_mail",
-        "phone" => "phpunit_phone",
-        "url" => "phpunit_url",
         "date" => "phpunit_date",
     );
 
