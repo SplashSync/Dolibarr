@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="GrumpPhp Verify" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="splash/vendor/bin/grumphp" scriptParameters="run --tasks=phplint,jsonlint,ymllint,xlslint,phpcs,phpmd,phpcpd,phpcsfixer2,phpstan">
+    <CommandLine>
+      <PhpTestInterpreterSettings>
+        <option name="interpreterName" value="Docker" />
+      </PhpTestInterpreterSettings>
+    </CommandLine>
+    <method v="2" />
+  </configuration>
+</component>

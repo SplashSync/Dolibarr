@@ -116,7 +116,7 @@ trait TriggersTrait
         if ($object instanceof Paiement) {
             //====================================================================//
             // Read Paiement Object Invoices Amounts
-            $amounts = self::getPaiementAmounts($object->id);
+            $amounts = self::getPaiementAmounts((int) $object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array
             $this->objectId = array_keys($amounts);

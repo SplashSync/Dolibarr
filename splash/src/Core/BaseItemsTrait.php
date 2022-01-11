@@ -185,8 +185,8 @@ trait BaseItemsTrait
         $item->total_localtax1 = 0;
         $item->total_localtax2 = 0;
 
-        $item->fk_multicurrency = "NULL";
-        $item->multicurrency_code = "NULL";
+        $item->fk_multicurrency = "";
+        $item->multicurrency_code = "";
         $item->multicurrency_subprice = "0.0";
         $item->multicurrency_total_ht = "0.0";
         $item->multicurrency_total_tva = "0.0";
