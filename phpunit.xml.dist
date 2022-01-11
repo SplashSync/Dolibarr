@@ -16,25 +16,37 @@
 >
 
     <testsuites>
-        <testsuite name="Core">
-            <directory>splash/vendor/splash/phpcore/Tests/*</directory>
+        <testsuite name="Init">
+            <directory>splash/vendor/splash/phpcore/Tests/Core</directory>
+            <file>splash/src/Tests/L00MinimalDataTest.php</file>
         </testsuite>
+
         <testsuite name="Local">
+            <directory>splash/vendor/splash/phpcore/Tests/Core</directory>
+            <directory>splash/src/Tests</directory>
+        </testsuite>
+
+        <testsuite name="Basic">
+            <directory>splash/vendor/splash/phpcore/Tests</directory>
+            <directory>splash/src/Tests</directory>
+        </testsuite>
+
+        <testsuite name="Advanced">
+            <directory>splash/vendor/splash/phpcore/Tests</directory>
+            <directory>splash/src/Tests</directory>
+        </testsuite>
+
+        <testsuite name="Variants">
+            <directory>splash/vendor/splash/phpcore/Tests</directory>
             <directory>splash/src/Tests</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>../splash/src/Objects</directory>
-        </whitelist>
-    </filter>
 
     <php>
         <ini    name="display_errors"   value="true"/>
         <const  name="SPLASH_DEBUG"     value="true" />
         <server name="SPLASH_TRAVIS"    value="true" />
-        <server name="SERVER_NAME"      value="http://localhost/Dolibarr/Dol-7.0/custom"/>
+        <server name="SERVER_NAME"      value="http://localhost"/>
         
         <!-- Only Test Specified Types -->
         <!--<const  name="SPLASH_TYPES"     value="Address" />-->
@@ -46,8 +58,8 @@
         <!--<const  name="SPLASH_TYPES"     value="SupplierInvoice" />-->
 
         <!-- Only Test Specified Sequence -->
-        <!--<const  name="SPLASH_SEQUENCE"  value="Monolangual" />-->
+        <!--<const  name="SPLASH_SEQUENCE"  value="Basic" />-->
+        <!--<const  name="SPLASH_SEQUENCE"  value="Advanced" />-->
         <!--<const  name="SPLASH_SEQUENCE"  value="Variants" />-->
-        <!--<const  name="SPLASH_SEQUENCE"  value="VariantsMultiPrices" />-->
     </php>
 </phpunit>

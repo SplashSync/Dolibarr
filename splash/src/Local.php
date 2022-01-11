@@ -233,166 +233,21 @@ class Local implements LocalClassInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function testSequences($name = null)
     {
-        global $db, $conf;
-        require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
-        require_once(DOL_DOCUMENT_ROOT."/variants/class/ProductCombination.class.php");
-        $ent = $conf->entity;
-
-        //====================================================================//
-        // Disable BackLog for Dolibarr Version below 9.0
-        if (Local::dolVersionCmp("9.0.0") < 0) {
-            $conf->blockedlog->enabled = 0;
-        }
+        \Splash\Local\Services\SequencesManager::init();
 
         switch ($name) {
-            case "Monolangual":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_DETECT_TAX_NAME", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_CODECLIENT_ADDON", 'mod_codeclient_monkey', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_CODECOMPTA_ADDON", 'mod_codecompta_aquarium', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF1_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
-
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
-            case "Multilangual":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF1_MANDATORY", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '0', 'chaine', 0, '', $ent);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
-            case "MultiPrices":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_EMAIL_MANDATORY", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF1_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF2_MANDATORY", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF3_MANDATORY", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SOCIETE_IDPROF4_MANDATORY", '1', 'chaine', 0, '', $ent);
-
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
-            case "ExtraFields":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-
-                self::configurePhpUnitExtraFields("societe", true);
-                self::configurePhpUnitExtraFields("socpeople", true);
-                self::configurePhpUnitExtraFields("product", true);
-                self::configurePhpUnitExtraFields("commande", true);
-                self::configurePhpUnitExtraFields("facture", true);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
+            case "Basic":
+                return \Splash\Local\Services\SequencesManager::initBasic();
+            case "Advanced":
+                return \Splash\Local\Services\SequencesManager::initAdvanced();
             case "Variants":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
-
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
-            case "GuestOrders":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_EMAIL", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '0', 'chaine', 0, '', $ent);
-
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
-            case "VariantsMultiPrices":
-                dolibarr_set_const($db, "MAIN_MULTILANGS", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_MULTICOMPANY", '0', 'chaine', 0, '', 0);
-                dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_ALLOW", '0', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "MAIN_MODULE_VARIANTS", '1', 'chaine', 0, '', $ent);
-
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES", '1', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "PRODUIT_MULTIPRICES_LIMIT", '3', 'chaine', 0, '', $ent);
-                dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $ent);
-
-                self::configurePhpUnitExtraFields("societe", false);
-                self::configurePhpUnitExtraFields("socpeople", false);
-                self::configurePhpUnitExtraFields("product", false);
-                self::configurePhpUnitExtraFields("commande", false);
-                self::configurePhpUnitExtraFields("facture", false);
-
-                MultiCompany::isMultiCompany(true);
-
-                return array();
+                return \Splash\Local\Services\SequencesManager::initVariants();
             default:
             case "List":
-                $list = array("Monolangual", "Multilangual", "Variants", "MultiPrices");
-                //====================================================================//
-                // Enable Variant Multi-prices for Dolibarr Version above 13.0
-                if (property_exists("ProductCombination", "combination_price_levels")) {
-                    unset($list[2]);
-                    $list[] = "VariantsMultiPrices";
-                };
-
-                return $list;
+                return \Splash\Local\Services\SequencesManager::listSequences();
         }
     }
 
