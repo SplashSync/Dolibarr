@@ -80,7 +80,7 @@ stages:
         # Show PhpUnit Version
         - splash/vendor/phpunit/phpunit/phpunit --version
         # Run PhpUnit Main Local Testsuite
-        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=Init               --log-junit $CI_PROJECT_DIR/local-report.xml
+        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=Init               --log-junit $CI_PROJECT_DIR/init-report.xml
         - splash/vendor/phpunit/phpunit/phpunit  --testsuite=$PHPUNIT_SUITE     --log-junit $CI_PROJECT_DIR/full-report.xml
 
 .functionnal-basic:   &functionnal-basic
@@ -122,6 +122,12 @@ Dol-14-Variants:
 Dol-13-Basics:
     image:          tuxgasy/dolibarr:13
     <<: *functionnal-basic
+Dol-13-Advanced:
+    image:          tuxgasy/dolibarr:13
+    <<: *functionnal-advanced
+Dol-13-Variants:
+    image:          tuxgasy/dolibarr:13
+    <<: *functionnal-variants
 
 ################################################################
 # Dolibarr V10
@@ -146,14 +152,17 @@ Dol-9-Variants:
 Dol-Dev-Basics:
     image:          tuxgasy/dolibarr:develop
     allow_failure:  true
+    retry:          0
     <<: *functionnal-basic
 Dol-Dev-Advanced:
     image:          tuxgasy/dolibarr:develop
     allow_failure:  true
+    retry:          0
     <<: *functionnal-advanced
 Dol-Dev-Variants:
     image:          tuxgasy/dolibarr:develop
     allow_failure:  true
+    retry:          0
     <<: *functionnal-variants
 
 
