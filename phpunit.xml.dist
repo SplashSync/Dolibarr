@@ -7,7 +7,7 @@
     colors                      = "true"
     convertErrorsToExceptions   = "true"
     convertNoticesToExceptions  = "false"
-    convertWarningsToExceptions = "false"
+    convertWarningsToExceptions = "true"
     processIsolation            = "false"
     stopOnFailure               = "true"
     bootstrap                   = "splash/vendor/autoload.php" 

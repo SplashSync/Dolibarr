@@ -79,7 +79,7 @@ trait ExtraFieldsPhpUnitTrait
                     0,
                     0,
                     0,
-                    array(),
+                    array("options" => array()),
                     1,
                     '',
                     '0',
