@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PhpUnit Basic" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+    <CommandLine>
+      <PhpTestInterpreterSettings>
+        <option name="interpreterName" value="Docker" />
+      </PhpTestInterpreterSettings>
+    </CommandLine>
+    <TestRunner configuration_file="/var/www/html/custom/phpunit.xml.dist" coverage_engine="PHPDBG" scope="XML" options="--testsuite=Basic" />
+    <method v="2" />
+  </configuration>
+</component>
