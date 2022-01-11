@@ -384,7 +384,7 @@ class Local implements LocalClassInterface
                 return array();
             default:
             case "List":
-                $list = array("Monolangual", "Multilangual", "Variants", "MultiPrices", "GuestOrders", "ExtraFields" );
+                $list = array("Monolangual", "Multilangual", "Variants", "MultiPrices");
                 //====================================================================//
                 // Enable Variant Multi-prices for Dolibarr Version above 13.0
                 if (property_exists("ProductCombination", "combination_price_levels")) {
