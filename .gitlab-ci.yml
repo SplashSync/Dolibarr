@@ -38,9 +38,9 @@ variables:
 # Defined Pipeline Stages
 stages:
     - quality
-    - tests-basic
-#     - tests-advanced
-#     - tests-variants
+    - basic
+#     - advanced
+#     - variants
     - deploy
 
 ################################################################
@@ -85,19 +85,19 @@ stages:
 
 .functionnal-basic:   &functionnal-basic
     <<: *functionnal
-    stage:          tests-basic
+    stage:          basic
     variables:
-        PHPUNIT_SUITE:   Basics
+        PHPUNIT_SUITE:   Basic
 
 .functionnal-advanced:   &functionnal-advanced
     <<: *functionnal
-    stage:          tests-advanced
+    stage:          advanced
     variables:
         PHPUNIT_SUITE:   Advanced
 
 .functionnal-variants:   &functionnal-variants
     <<: *functionnal
-    stage:          tests-variants
+    stage:          variants
     variables:
         PHPUNIT_SUITE:   Variants
 
