@@ -39,8 +39,8 @@ variables:
 stages:
     - quality
     - basic
-#     - advanced
-#     - variants
+    - advanced
+    - variants
     - deploy
 
 ################################################################
