@@ -65,9 +65,18 @@ class SupplierInvoice extends AbstractObject
     //====================================================================//
 
     /**
+     * Type for Extra Fields
+     *
      * @var string
      */
-    public static $ExtraFieldsType = "facture_fourn";
+    public static $extraFieldsType = "facture_fourn";
+
+    /**
+     * Type for Lines Extra Fields
+     *
+     * @var string
+     */
+    public static $extraLineFieldsType = "facture_fourn_det";
 
     //====================================================================//
     // Dolibarr Type

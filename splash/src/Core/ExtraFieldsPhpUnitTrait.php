@@ -54,12 +54,12 @@ trait ExtraFieldsPhpUnitTrait
         require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
         $extraFields = new ExtraFields($db);
         //====================================================================//
-        // Load array of extrafields for elementype = $this->table_element
+        // Load array of ExtraFields for elementType = $this->table_element
         $extraFields->fetch_name_optionals_label($elementType);
 
         //====================================================================//
         // Load Existing Types for this Element
-        $existingTypes = $extraFields->attribute_type['type'];
+        $existingTypes = $extraFields->attributes[$elementType]['type'];
         if (empty($existingTypes)) {
             $existingTypes = array();
         }

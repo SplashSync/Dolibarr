@@ -16,6 +16,7 @@
 namespace   Splash\Local\Core;
 
 use ExtraFields;
+use Splash\Models\Helpers\InlineHelper;
 
 /**
  * Access to Dolibarr Extra Fields
@@ -28,9 +29,21 @@ trait ExtraFieldsTrait
     private $extraFields;
 
     /**
+     * ExtraFields Attributes
+     *
+     * @var array<string, array<string, mixed>>
+     */
+    private $extraFieldsAttrs;
+
+    /**
      * @var string
      */
     private $extraPrefix = "options_";
+
+    /**
+     * @var null|string
+     */
+    private $extraInList;
 
     //====================================================================//
     // Generic Splash Fields Access Functions
@@ -41,7 +54,7 @@ trait ExtraFieldsTrait
      *
      * @return void
      */
-    protected function buildExtraFields()
+    public function buildExtraFields()
     {
         //====================================================================//
         // Load ExtraFields List
@@ -58,7 +71,7 @@ trait ExtraFieldsTrait
             // Create Extra Field Definition
             $this->fieldsFactory()
                 ->Create($this->getSplashType($fieldType))
-                ->Identifier($this->extraPrefix.$fieldId)
+                ->Identifier($this->encodeType($fieldId))
                 ->Name($this->getLabel($fieldId))
                 ->Group("Extra")
                 ->addOption('maxLength', '14')
@@ -69,6 +82,12 @@ trait ExtraFieldsTrait
             }
             if ($this->isReadOnly($fieldId)) {
                 $this->fieldsFactory()->isReadOnly();
+            }
+            if ($this->extraInList) {
+                $this->fieldsFactory()->inList($this->extraInList);
+            }
+            if (in_array($fieldType, array('select', "checkbox"), true)) {
+                $this->fieldsFactory()->addChoices($this->getChoices($fieldType, $fieldId));
             }
         }
     }
@@ -87,7 +106,7 @@ trait ExtraFieldsTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function getExtraFields($key, $fieldName)
+    protected function getExtraFields(string $key, string $fieldName): void
     {
         global $conf;
         $this->loadExtraFields();
@@ -131,10 +150,22 @@ trait ExtraFieldsTrait
                 $this->out[$fieldName] = (bool) $fieldData;
 
                 break;
+            case SPL_T_INLINE:
+                $fieldType = (string) $this->decodeType($fieldName);
+                //====================================================================//
+                // Explode Storage Value
+                $value = explode(",", $fieldData);
+                //====================================================================//
+                // Build Intersection Value
+                $this->out[$fieldName] = InlineHelper::fromArray(
+                    array_intersect_key($this->getOptions($fieldType), array_flip($value))
+                );
+
+                break;
             case SPL_T_PRICE:
                 $this->out[$fieldName] = self::prices()->Encode(
                     (double) $fieldData,
-                    (double) 0,
+                    0.0,
                     null,
                     $conf->global->MAIN_MONNAIE
                 );
@@ -190,6 +221,21 @@ trait ExtraFieldsTrait
                 }
 
                 break;
+            case SPL_T_INLINE:
+                $fieldType = (string) $this->decodeType($fieldName);
+                //====================================================================//
+                // Build Storage Value
+                $fieldDataStorage = implode(',', array_keys(
+                    array_intersect($this->getOptions($fieldType), InlineHelper::toArray($fieldData))
+                ));
+                //====================================================================//
+                // Compare with Current
+                if ($currentData != $fieldDataStorage) {
+                    $this->object->array_options[$fieldName] = $fieldDataStorage;
+                    $this->needUpdate();
+                }
+
+                break;
             case SPL_T_DATETIME:
                 if ($currentData != $fieldData) {
                     date_default_timezone_set('UTC');
@@ -220,7 +266,7 @@ trait ExtraFieldsTrait
      *
      * @return mixed
      */
-    protected function getExtraData($fieldName)
+    protected function getExtraData(string $fieldName)
     {
         //====================================================================//
         // Extract Field Data
@@ -232,13 +278,25 @@ trait ExtraFieldsTrait
     }
 
     /**
-     * Load ExtraFields Definition
+     * Setup for Pushing Fields to a Splash List Name
      *
-     * @param string $elementType
+     * @param string $listName List Identifier
      *
      * @return void
      */
-    private function loadExtraFields($elementType = null)
+    protected function setInList(string $listName): void
+    {
+        $this->extraInList = $listName;
+    }
+
+    /**
+     * Load ExtraFields Definition
+     *
+     * @param null|string $elementType
+     *
+     * @return void
+     */
+    private function loadExtraFields(string $elementType = null)
     {
         global $db;
         //====================================================================//
@@ -246,8 +304,9 @@ trait ExtraFieldsTrait
         if (null == $this->extraFields) {
             require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
             $this->extraFields = new ExtraFields($db);
-            $key = is_null($elementType) ? static::$ExtraFieldsType : $elementType;
+            $key = is_null($elementType) ? static::$extraFieldsType : $elementType;
             $this->extraFields->fetch_name_optionals_label($key, true);
+            $this->extraFieldsAttrs = $this->extraFields->attributes[$key] ?? array();
         }
     }
 
@@ -258,7 +317,7 @@ trait ExtraFieldsTrait
      *
      * @return string
      */
-    private function encodeType($fieldType)
+    private function encodeType(string $fieldType): string
     {
         return $this->extraPrefix.$fieldType;
     }
@@ -270,7 +329,7 @@ trait ExtraFieldsTrait
      *
      * @return null|string
      */
-    private function decodeType($fieldType)
+    private function decodeType(string $fieldType): ?string
     {
         if (0 == strpos($this->extraPrefix, $fieldType)) {
             return substr($fieldType, strlen($this->extraPrefix));
@@ -284,13 +343,9 @@ trait ExtraFieldsTrait
      *
      * @return array
      */
-    private function getExtraTypes()
+    private function getExtraTypes(): array
     {
-        if (empty($this->extraFields->attribute_type)) {
-            return array();
-        }
-
-        return $this->extraFields->attribute_type;
+        return $this->extraFieldsAttrs['type'] ?? array();
     }
 
     /**
@@ -300,7 +355,7 @@ trait ExtraFieldsTrait
      *
      * @return bool
      */
-    private function isExtraType($fieldType)
+    private function isExtraType($fieldType): bool
     {
         if (empty($this->getExtraTypes())) {
             return false;
@@ -315,13 +370,13 @@ trait ExtraFieldsTrait
     /**
      * Convert Dolibarr Field Type to SPlash Type
      *
-     * @param string $fieldType Dolibarr Extrafield Type NAme
+     * @param string $fieldType Dolibarr Extra field Type NAme
      *
      * @return null|string Splash Field Type
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getSplashType($fieldType)
+    private function getSplashType(string $fieldType): ?string
     {
         switch ($fieldType) {
             case "varchar":
@@ -341,8 +396,9 @@ trait ExtraFieldsTrait
                 return SPL_T_DATETIME;
             case "boolean":
             case "radio":
-            case "checkbox":
                 return SPL_T_BOOL;
+            case "checkbox":
+                return SPL_T_INLINE;
             case "price":
                 return SPL_T_PRICE;
             case "phone":
@@ -361,72 +417,124 @@ trait ExtraFieldsTrait
     }
 
     /**
-     * Get Splash Type from ExtraFields Id
+     * Get Splash Type from ExtraFields ID
      *
-     * @param mixed $fieldName
+     * @param string $fieldName
      *
      * @return null|string
      */
-    private function getSplashTypeFromId($fieldName)
+    private function getSplashTypeFromId(string $fieldName): ?string
     {
-        $fieldId = $this->decodeType($fieldName);
-        $fieldType = $this->extraFields->attribute_type[$fieldId];
+        $fieldType = $this->getExtraFieldAttr(
+            (string) $this->decodeType($fieldName),
+            "type"
+        );
 
-        return $this->getSplashType($fieldType);
+        return is_scalar($fieldType)
+            ? $this->getSplashType((string) $fieldType)
+            : null
+        ;
     }
 
     /**
      * Get ExtraField Label
      *
-     * @param string $fieldType Dolibarr Extrafield Type NAme
+     * @param string $fieldType Dolibarr Extra field Type NAme
      *
      * @return string Splash Field Label
      */
-    private function getLabel($fieldType)
+    private function getLabel(string $fieldType): string
     {
         global $langs;
 
-        $this->loadExtraFields();
-
         //====================================================================//
         // Load ExtraField Label with Translation
-        if (!empty($this->extraFields->attribute_langfile[$fieldType])) {
-            $langs->load($this->extraFields->attribute_langfile[$fieldType]);
+        $langFile = $this->getExtraFieldAttr($fieldType, "langfile");
+        $label = $this->getExtraFieldAttr($fieldType, "label");
+        if (!empty($langFile) && is_scalar($langFile)) {
+            $langs->load((string) $langFile);
 
-            return $langs->trans($this->extraFields->attribute_label[$fieldType]);
+            return $langs->trans(is_scalar($label) ? (string) $label : $fieldType);
         }
 
-        return $this->extraFields->attribute_label[$fieldType];
+        return is_scalar($label) ? (string) $label : $fieldType;
     }
 
     /**
      * Get ExtraField Required Flag
      *
-     * @param string $fieldType Dolibarr Extrafield Type NAme
+     * @param string $fieldType Dolibarr Extra field Type Name
      *
      * @return bool
      */
-    private function isRequired($fieldType)
+    private function isRequired(string $fieldType): bool
     {
-        $this->loadExtraFields();
-
-        return $this->extraFields->attribute_required[$fieldType];
+        return (bool) $this->getExtraFieldAttr($fieldType, "required");
     }
 
     /**
      * Get ExtraField ReadOnly Flag
      *
-     * @param string $fieldType Dolibarr Extrafield Type NAme
+     * @param string $fieldType Dolibarr Extra field Type Name
      *
      * @return bool
      */
-    private function isReadOnly($fieldType)
+    private function isReadOnly(string $fieldType): bool
     {
-        $this->loadExtraFields();
-        if (isset($this->extraFields->attribute_computed)) {
-            return !empty($this->extraFields->attribute_computed[$fieldType]);
+        return (bool) $this->getExtraFieldAttr($fieldType, "computed");
+    }
+
+    /**
+     * Get ExtraField Options
+     *
+     * @param string $fieldType Dolibarr Extra field Type Name
+     *
+     * @return string[]
+     */
+    private function getOptions(string $fieldType): array
+    {
+        $param = $this->getExtraFieldAttr($fieldType, "param");
+        if (!is_array($param) || empty($param["options"]) || !is_array($param["options"])) {
+            return array();
         }
 
-        return false;
+        return $param["options"];
+    }
+
+    /**
+     * Get ExtraField Choices
+     *
+     * @param string $fieldType Dolibarr Extra field Type
+     * @param string $fieldId   Dolibarr Extra field Name
+     *
+     * @return array<string, string>
+     */
+    private function getChoices(string $fieldType, string $fieldId): array
+    {
+        if ('select' == $fieldType) {
+            return $this->getOptions($fieldId);
+        }
+
+        $choices = array();
+        foreach ($this->getOptions($fieldId) as $option) {
+            $choices[$option] = $option;
+        }
+
+        return $choices;
+    }
+
+    /**
+     * Get ExtraField Attribute Value
+     *
+     * @param string $fieldType Dolibarr Extra field Type Name
+     * @param string $attrType  Dolibarr Extra field Attribute Code
+     *
+     * @return null|bool|string|string[]
+     */
+    private function getExtraFieldAttr(string $fieldType, string $attrType)
+    {
+        $this->loadExtraFields();
+
+        return $this->extraFieldsAttrs[$attrType][$fieldType] ?? null;
     }
 }

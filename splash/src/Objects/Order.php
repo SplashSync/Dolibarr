@@ -64,9 +64,18 @@ class Order extends AbstractObject
     //====================================================================//
 
     /**
+     * Type for Extra Fields
+     *
      * @var string
      */
-    public static $ExtraFieldsType = "commande";
+    public static $extraFieldsType = "commande";
+
+    /**
+     * Type for Lines Extra Fields
+     *
+     * @var string
+     */
+    public static $extraLineFieldsType = "commandedet";
 
     //====================================================================//
     // Object Definition Parameters

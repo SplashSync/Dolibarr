@@ -54,7 +54,7 @@ class Address extends AbstractObject
     /**
      * @var string
      */
-    public static $ExtraFieldsType = "socpeople";
+    public static $extraFieldsType = "socpeople";
 
     //====================================================================//
     // Object Definition Parameters

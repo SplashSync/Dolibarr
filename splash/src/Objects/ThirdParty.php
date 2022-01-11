@@ -55,7 +55,7 @@ class ThirdParty extends AbstractObject
     /**
      * @var string
      */
-    public static $ExtraFieldsType = "societe";
+    public static $extraFieldsType = "societe";
 
     //====================================================================//
     // Object Definition Parameters

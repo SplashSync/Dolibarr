@@ -21,6 +21,7 @@ use Product;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Local\Objects\SupplierInvoice;
+use Splash\Local\Services\LinesExtraFieldsParser;
 use SupplierInvoiceLine;
 
 /**
@@ -43,7 +44,7 @@ trait BaseItemsTrait
     private $currentItem;
 
     /**
-     * Build Address Fields using FieldFactory
+     * Build Line Item Fields using FieldFactory
      *
      * @return void
      */
@@ -123,6 +124,10 @@ trait BaseItemsTrait
                 ->Association($descFieldName."@lines", "qty@lines", "price@lines")
             ;
         }
+
+        //====================================================================//
+        // Order Line Extra Fields
+        LinesExtraFieldsParser::fromSplashObject($this)->buildExtraFields();
     }
 
     /**
@@ -151,10 +156,10 @@ trait BaseItemsTrait
         foreach ($this->object->lines as $index => $orderLine) {
             //====================================================================//
             // Read Data from Line Item
-            $value = $this->getItemField($orderLine, $fieldName);
+            $value = $this->getItemField($orderLine, $fieldId);
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->out, "lines", $fieldName, $index, $value);
+            self::lists()->insert($this->out, "lines", $fieldName, $index, $value);
         }
         unset($this->in[$key]);
     }
@@ -199,53 +204,57 @@ trait BaseItemsTrait
     /**
      * Read requested Field
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $line      Line Data Object
-     * @param string                                     $fieldName Field Identifier / Name
+     * @param FactureLigne|OrderLine|SupplierInvoiceLine $line    Line Data Object
+     * @param string                                     $fieldId Field Identifier / Name
      *
      * @return null|array|bool|float|int|string
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getItemField($line, string $fieldName)
+    private function getItemField($line, string $fieldId)
     {
         global $conf;
 
         //====================================================================//
         // READ Fields
-        switch ($fieldName) {
+        switch ($fieldId) {
             //====================================================================//
             // Order Line Description
-            case 'desc@lines':
+            case 'desc':
                 return ($line instanceof SupplierInvoiceLine) ? "" : $line->desc;
-            case 'description@lines':
+            case 'description':
                 return $line->description;
             //====================================================================//
             // Order Line Product Id
-            case 'fk_product@lines':
+            case 'fk_product':
                 return ($line->fk_product)
                     ? self::objects()->encode("Product", (string) $line->fk_product)
                     : null;
             //====================================================================//
             // Order Line Quantity
-            case 'qty@lines':
+            case 'qty':
                 return (int) $line->qty;
             //====================================================================//
             // Order Line Discount Percentile
-            case "remise_percent@lines":
+            case "remise_percent":
                 return  (double) $line->remise_percent;
             //====================================================================//
             // Order Line Price
-            case 'price@lines':
+            case 'price':
                 $price = (double) self::parsePrice($line->subprice);
                 $vat = (double) $line->tva_tx;
 
                 return  self::prices()->encode($price, $vat, null, $conf->global->MAIN_MONNAIE);
             //====================================================================//
             // Order Line Tax Name
-            case 'vat_src_code@lines':
+            case 'vat_src_code':
                 return  $line->vat_src_code;
+            //====================================================================//
+            // Extra Field or Null
             default:
-                return null;
+                return LinesExtraFieldsParser::fromSplashObject($this)
+                    ->getExtraField($line, $fieldId)
+                ;
         }
     }
 
@@ -342,6 +351,9 @@ trait BaseItemsTrait
         //====================================================================//
         // Update Product Link
         $this->setItemProductLink($itemData);
+        //====================================================================//
+        // Update Extra Fields
+        $this->setItemExtraFields($itemData);
         //====================================================================//
         // Update Line Totals
         $this->updateItemTotals();
@@ -537,6 +549,35 @@ trait BaseItemsTrait
         // Update Product Link
         $this->currentItem->setValueFrom("fk_product", $productId, '', null, '', '', "none");
         $this->catchDolibarrErrors($this->currentItem);
+    }
+
+    /**
+     * Write Given ExtraFields to Line Item
+     *
+     * @param array $itemData Input Item Data Array
+     *
+     * @return void
+     */
+    private function setItemExtraFields($itemData)
+    {
+        //====================================================================//
+        // Safety Check
+        if (is_null($this->currentItem)) {
+            return;
+        }
+        $extraFieldsParser = LinesExtraFieldsParser::fromSplashObject($this);
+        //====================================================================//
+        // Walk on Received Data
+        foreach ($itemData as $fieldName => $fieldData) {
+            $update = $extraFieldsParser->setExtraField(
+                $this->currentItem,
+                $fieldName,
+                $fieldData
+            );
+            if ($update) {
+                $this->itemUpdate = true;
+            }
+        }
     }
 
     /**

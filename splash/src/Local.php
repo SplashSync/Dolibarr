@@ -644,10 +644,10 @@ class Local implements LocalClassInterface
 
         //====================================================================//
         // Start From Folder Above this module
-        $rootFolder = dirname(dirname(dirname(__FILE__)));
+        $rootFolder = dirname(__FILE__, 3);
         for ($i = 0; $i < 5; $i++) {
             //====================================================================//
-            // Check if main.inc.phpo file exist
+            // Check if main.inc.php file exist
             if (is_file($rootFolder."/main.inc.php")) {
                 return $rootFolder;
             }
@@ -657,6 +657,18 @@ class Local implements LocalClassInterface
             $rootFolder = dirname($rootFolder);
         }
 
-        return dirname(dirname(dirname(__FILE__)));
+        //====================================================================//
+        // Search in Applications Folders
+        $extraPaths = array(
+            // Bitmani
+            "/opt/bitnami/dolibarr/htdocs",
+        );
+        foreach ($extraPaths as $rootFolder) {
+            if (is_file($rootFolder."/main.inc.php")) {
+                return $rootFolder;
+            }
+        }
+
+        return dirname(__FILE__, 3);
     }
 }

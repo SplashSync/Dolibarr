@@ -32,6 +32,7 @@
 # 172.100.0.14        v14.dolibarr.local
 # 172.100.0.99        latest.dolibarr.local
 # 172.100.0.100       toolkit.dolibarr.local
+# 172.100.0.101       db.dolibarr.local
 # 172.100.0.200       phpmyadmin.dolibarr.local
 #
 ################################################################################
@@ -44,7 +45,7 @@ services:
     # MySQL Container
     mysql:
         image: mysql:5.7
-        container_name: dolibarr-mysql
+        container_name: db.dolibarr.local
         logging: { driver: "none" }
         environment:
             - "MYSQL_ROOT_PASSWORD=dolibarr"
@@ -52,7 +53,8 @@ services:
             - "MYSQL_USER=dolibarr"
             - "MYSQL_PASSWORD=dolibarr"
         networks:
-            - dolibarr            
+            dolibarr:      { ipv4_address: 172.100.0.101, aliases: [ db.dolibarr.local ] }
+            splashsync:    { aliases: [ db.dolibarr.local ] }
 
     ################################################################################
     # Dolibarr Latest (Develop)
