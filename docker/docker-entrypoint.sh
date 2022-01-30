@@ -74,5 +74,9 @@ if [ -d /var/overrides ]; then
   cp -Rf /var/overrides/* /var/www/html
 fi
 
+################################################################################
+# Move to Module Dir
+cd /var/www/html/custom/
+
 echo "Serving Dolibarr..."
 exec "apache2-foreground"

@@ -16,6 +16,7 @@
 namespace Splash\Local\Tests;
 
 use Account;
+use Exception;
 use Facture;
 use Splash\Client\Splash;
 use Splash\Components\FieldsFactory;
@@ -47,9 +48,11 @@ class L03PaymentBanksTest extends ObjectsCase
      * @param string $paymentType
      * @param string $splashMethod
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testSetupBankAccount($objectType, $paymentType, $splashMethod)
+    public function testSetupBankAccount(string $objectType, string $paymentType, string $splashMethod): void
     {
         //====================================================================//
         //   Create Bank Account for this Payment Type
@@ -93,12 +96,13 @@ class L03PaymentBanksTest extends ObjectsCase
 
         //====================================================================//
         //   Load Invoice Payments
-        $this->loadPayments($objectId);
+        $this->loadPayments($objectId, ("SupplierInvoice" == $objectType));
+
         //====================================================================//
         //   Verify Payments Are in Correct Bank Account
         foreach ($this->payments as $payment) {
-            $this->assertEquals($payment->baid, $account->rowid);
-            $this->assertEquals($payment->code, $paymentType);
+            $this->assertEquals($account->rowid, $payment->baid);
+            $this->assertEquals($paymentType, $payment->code);
         }
     }
 
@@ -109,7 +113,7 @@ class L03PaymentBanksTest extends ObjectsCase
      *
      * @return Account
      */
-    public function createBankAccount($paymentType)
+    public function createBankAccount(string $paymentType): Account
     {
         global $db, $user;
 
@@ -155,7 +159,7 @@ class L03PaymentBanksTest extends ObjectsCase
      *
      * @return void
      */
-    public function setupBankAccount($paymentType, $account)
+    public function setupBankAccount(string $paymentType, Account $account): void
     {
         global $db, $conf, $user;
 
@@ -190,26 +194,40 @@ class L03PaymentBanksTest extends ObjectsCase
     }
 
     /**
-     * @return array
+     * @return array<string, array>
      */
-    public function paymentsTypesProvider()
+    public function paymentsTypesProvider(): array
     {
-        return array(
-            //====================================================================//
-            //   Tests For Invoices Objects
-            array("Invoice",    "VIR",    "ByBankTransferInAdvance"),
-            array("Invoice",    "CHQ",    "CheckInAdvance"),
-            array("Invoice",    "LIQ",    "Cash"),
-            array("Invoice",    "CB",     "DirectDebit"),
-            array("Invoice",    "VAD",    "PayPal"),
-            array("Invoice",    "FAC",    "COD"),
+        //====================================================================//
+        //   Test Object Types
+        $objectTypes = array("Invoice", "CreditNote", "SupplierInvoice");
+        //====================================================================//
+        //   Possible Payment Methods Types
+        $methods = array(
+            array("VIR",    "ByBankTransferInAdvance"),
+            array("CHQ",    "CheckInAdvance"),
+            array("LIQ",    "Cash"),
+            array("CB",     "DirectDebit"),
+            array("VAD",    "PayPal"),
+            array("FAC",    "COD"),
         );
+
+        $paymentTypes = array();
+        foreach ($objectTypes as $objectType) {
+            foreach ($methods as $method) {
+                $paymentTypes[$objectType."-".$method[0]] = array(
+                    $objectType, $method[0], $method[1]
+                );
+            }
+        }
+
+        return $paymentTypes;
     }
 
     /**
      * @return FieldsFactory
      */
-    protected static function fieldsFactory()
+    protected static function fieldsFactory(): FieldsFactory
     {
         return new FieldsFactory();
     }

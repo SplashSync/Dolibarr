@@ -26,4 +26,4 @@ ls -l -a /var/www/html/custom/
 ################################################################
 # Install Splash Configuration File
 echo "Install Splash Configuration File"
-cp $CI_PROJECT_DIR/travis/splash.json       /var/www/html/conf/splash.json
+cp $CI_PROJECT_DIR/ci/splash.json       /var/www/html/conf/splash.json

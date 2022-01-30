@@ -68,7 +68,7 @@ class Product extends AbstractObject
     /**
      * @var string
      */
-    public static $ExtraFieldsType = "product";
+    public static $extraFieldsType = "product";
 
     //====================================================================//
     // Object Definition Parameters

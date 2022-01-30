@@ -15,26 +15,25 @@
 
 namespace   Splash\Local\Objects;
 
-use Commande;
+use FactureFournisseur;
+use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Core;
 use Splash\Models\AbstractObject;
-use Splash\Models\Objects\ImagesTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
- * CUSTOMERS ORDERS DATA MANAGEMENT
+ * SUPPLIER INVOICE DATA MANAGEMENT
  */
-class Order extends AbstractObject
+class SupplierInvoice extends AbstractObject
 {
     // Splash Php Core Traits
     use SimpleFieldsTrait;
     use ObjectsTrait;
     use PricesTrait;
     use ListsTrait;
-    use ImagesTrait;
 
     // Dolibarr Core Traits
     use Core\ErrorParserTrait;
@@ -44,20 +43,22 @@ class Order extends AbstractObject
     use Core\BaseItemsTrait;
     use Core\ExtraFieldsTrait;
     use Core\ObjectsListTrait;
-    use Core\ImagesTrait;
     use Core\CustomerTrait;
     use Core\ContactsTrait;
     use Core\MultiCompanyFieldsTrait;
     use Core\MarketplaceModeTrait;
     use Core\DownloadUrlsTrait;
 
-    // Dolibarr Orders Traits
-    use Order\ObjectsListTrait;
-    use Order\CRUDTrait;
-    use Order\CoreTrait;
-    use Order\MainTrait;
-    use Order\ItemsTrait;
-    use Order\StatusTrait;
+    // Dolibarr Invoices Traits
+    use Invoice\MainTrait;
+    use Invoice\StatusTrait;
+    use Invoice\PaymentsTrait;
+
+    // Dolibarr Supplier Invoices Traits
+    use SupplierInvoice\CRUDTrait;
+    use SupplierInvoice\ObjectsListTrait;
+    use SupplierInvoice\CoreTrait;
+    use SupplierInvoice\ItemsTrait;
 
     //====================================================================//
     // ExtraFields Type
@@ -68,58 +69,80 @@ class Order extends AbstractObject
      *
      * @var string
      */
-    public static $extraFieldsType = "commande";
+    public static $extraFieldsType = "facture_fourn";
 
     /**
      * Type for Lines Extra Fields
      *
      * @var string
      */
-    public static $extraLineFieldsType = "commandedet";
+    public static $extraLineFieldsType = "facture_fourn_det";
+
+    //====================================================================//
+    // Dolibarr Type
+    // 0 => Standard invoice
+    // 1 => Replacement invoice
+    // 2 => Credit note invoice
+    // 3 => Deposit invoice
+    // 4 => Proforma invoice
+    //====================================================================//
+
+    /**
+     * @var array
+     */
+    public static $dolibarrTypes = array(0, 1);
+
+    /**
+     * @var FactureFournisseur
+     */
+    protected $object;
 
     //====================================================================//
     // Object Definition Parameters
     //====================================================================//
 
     /**
+     * Object Disable Flag. Uncomment this line to Override this flag and disable Object.
+     *
+     * {@inheritdoc}
+     */
+    protected static $DISABLED = false;
+
+    /**
      * Object Name (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Customer Order";
+    protected static $NAME = "Supplier Invoice";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Customers Order Object";
+    protected static $DESCRIPTION = "Dolibarr Supplier Invoice Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-shopping-cart ";
+    protected static $ICO = "fa fa-money";
 
     //====================================================================//
     // Class Constructor
     //====================================================================//
 
     /**
-     * @var Commande
-     */
-    protected $object;
-
-    /**
-     * Class Constructor (Used only if localy necessary)
+     * Class Constructor (Used only if locally necessary)
      */
     public function __construct()
     {
         global $langs;
         //====================================================================//
         // Include Object Dolibarr Class
-        require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
+        require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
+        require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
 
         //====================================================================//
         // Load Required Dolibarr Translation Files
@@ -127,10 +150,27 @@ class Order extends AbstractObject
         $langs->load("admin");
         $langs->load("companies");
         $langs->load("orders");
+        $langs->load("bills");
         $langs->load("other");
         $langs->load("stocks");
+        $langs->load("suppliers");
+        //====================================================================//
+        //  Load Local Translation File
+        Splash::translator()->Load("objects@local");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("Module25Name");
+        static::$NAME = $langs->trans("SupplierInvoice");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getIsDisabled()
+    {
+        if (Splash::isDebugMode()) {
+            return false;
+        }
+
+        return static::$DISABLED;
     }
 }

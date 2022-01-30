@@ -335,7 +335,7 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         // Clean Objects Committed Array
-        CommitsManager::resetSessionCommitted();
+        CommitsManager::reset();
 
         return $this->fakeObjectData($fields);
     }

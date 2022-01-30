@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  monogramm/docker-dolibarr
+image:  tuxgasy/dolibarr:14
 ################################################################
 # Set any variables we need
 variables:
@@ -38,7 +38,9 @@ variables:
 # Defined Pipeline Stages
 stages:
     - quality
-    - tests
+    - basic
+    - advanced
+    - variants
     - deploy
 
 ################################################################
@@ -46,7 +48,6 @@ stages:
 ################################################################
 .functionnal:   &functionnal
 #    when:       manual
-    stage:      tests
     tags:       ['Dedicated']
     retry:      2
     services:
@@ -75,37 +76,94 @@ stages:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
         ################################################################################
         # Execute Bootstrap file
-        - php travis/bootstrap.php
+        - php ci/bootstrap.php
         # Show PhpUnit Version
         - splash/vendor/phpunit/phpunit/phpunit --version
         # Run PhpUnit Main Local Testsuite
-        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/local-report.xml --testsuite=Local
-        - splash/vendor/phpunit/phpunit/phpunit -c travis/phpunit.xml.dist --log-junit $CI_PROJECT_DIR/full-report.xml
+        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=Init               --log-junit $CI_PROJECT_DIR/init-report.xml
+        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=$PHPUNIT_SUITE     --log-junit $CI_PROJECT_DIR/full-report.xml
 
-Dol-14-Php-7.4:
+.functionnal-basic:   &functionnal-basic
+    <<: *functionnal
+    stage:          basic
+    variables:
+        PHPUNIT_SUITE:   Basic
+
+.functionnal-advanced:   &functionnal-advanced
+    <<: *functionnal
+    stage:          advanced
+    variables:
+        PHPUNIT_SUITE:   Advanced
+
+.functionnal-variants:   &functionnal-variants
+    <<: *functionnal
+    stage:          variants
+    variables:
+        PHPUNIT_SUITE:   Variants
+
+################################################################
+# Functional Tests Map
+################################################################
+
+################################################################
+# Dolibarr V14
+Dol-14-Basics:
     image:          tuxgasy/dolibarr:14
-    <<: *functionnal
+    <<: *functionnal-basic
+Dol-14-Advanced:
+    image:          tuxgasy/dolibarr:14
+    <<: *functionnal-advanced
+Dol-14-Variants:
+    image:          tuxgasy/dolibarr:14
+    <<: *functionnal-variants
 
-Dol-13-Php-7.3:
+################################################################
+# Dolibarr V13
+Dol-13-Basics:
     image:          tuxgasy/dolibarr:13
-    <<: *functionnal
+    <<: *functionnal-basic
+Dol-13-Advanced:
+    image:          tuxgasy/dolibarr:13
+    <<: *functionnal-advanced
+Dol-13-Variants:
+    image:          tuxgasy/dolibarr:13
+    <<: *functionnal-variants
 
-Dol-12-Php-7.2:
-    image:          tuxgasy/dolibarr:12
-    <<: *functionnal
+################################################################
+# Dolibarr V10
+Dol-10-Basics:
+    image:          tuxgasy/dolibarr:13
+    <<: *functionnal-basic
 
-Dol-10-Php-7.2:
-    image:          tuxgasy/dolibarr:10
-    <<: *functionnal
-
-Dol-9-Php-7.2:
+################################################################
+# Dolibarr V9
+Dol-9-Basics:
     image:          tuxgasy/dolibarr:9
-    <<: *functionnal
+    <<: *functionnal-basic
+Dol-9-Advanced:
+    image:          tuxgasy/dolibarr:9
+    <<: *functionnal-advanced
+Dol-9-Variants:
+    image:          tuxgasy/dolibarr:9
+    <<: *functionnal-variants
 
-Dol-Dev-Php-7.2:
+################################################################
+# Dolibarr V9
+Dol-Dev-Basics:
     image:          tuxgasy/dolibarr:develop
     allow_failure:  true
-    <<: *functionnal
+    retry:          0
+    <<: *functionnal-basic
+Dol-Dev-Advanced:
+    image:          tuxgasy/dolibarr:develop
+    allow_failure:  true
+    retry:          0
+    <<: *functionnal-advanced
+Dol-Dev-Variants:
+    image:          tuxgasy/dolibarr:develop
+    allow_failure:  true
+    retry:          0
+    <<: *functionnal-variants
 
 
 ################################################################

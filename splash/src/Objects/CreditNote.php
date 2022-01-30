@@ -62,9 +62,18 @@ class CreditNote extends AbstractObject
     //====================================================================//
 
     /**
+     * Type for Extra Fields
+     *
      * @var string
      */
-    public static $ExtraFieldsType = "facture";
+    public static $extraFieldsType = "facture";
+
+    /**
+     * Type for Lines Extra Fields
+     *
+     * @var string
+     */
+    public static $extraLineFieldsType = "facturedet";
 
     //====================================================================//
     // Dolibarr Type

@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Local\Objects\Invoice;
+namespace Splash\Local\Objects\SupplierInvoice;
 
 use FactureLigne;
 use OrderLine;
@@ -21,7 +21,7 @@ use Splash\Core\SplashCore      as Splash;
 use SupplierInvoiceLine;
 
 /**
- * Dolibarr Customer Invoice Items Fields
+ * Dolibarr Supplier Invoice Items Fields
  */
 trait ItemsTrait
 {
@@ -34,25 +34,26 @@ trait ItemsTrait
     {
         global $db;
 
-        $item = new  FactureLigne($db);
+        $item = new SupplierInvoiceLine($db);
 
         //====================================================================//
         // Pre-Setup of Item
-        $item->fk_facture = $this->object->id;
+        $item->fk_facture_fourn = $this->object->id;
+        $item->product_type = 0;
 
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
-        return $this->insertItem($item);
+        return $this->insertItem($item); // @phpstan-ignore-line
     }
 
     /**
      * Delete a Line Item
      *
-     * @param FactureLigne $factureLigne Order FactureLigne Item
+     * @param SupplierInvoiceLine $factureLigne Supplier Invoice Line Item
      *
      * @return bool
      */
-    protected function deleteItem($factureLigne)
+    protected function deleteItem(SupplierInvoiceLine $factureLigne): bool
     {
         //====================================================================//
         // Debug Mode => Force Allow Delete

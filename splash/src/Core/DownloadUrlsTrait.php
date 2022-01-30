@@ -103,17 +103,17 @@ trait DownloadUrlsTrait
 
         //====================================================================//
         // Allowed for Orders
-        if (($this instanceof Order) && empty($conf->global->ORDER_ALLOW_EXTERNAL_DOWNLOAD)) {
+        if (($this instanceof Order) && !empty($conf->global->ORDER_ALLOW_EXTERNAL_DOWNLOAD)) {
             return true;
         }
         //====================================================================//
         // Allowed for Invoices
-        if (($this instanceof Invoice) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
+        if (($this instanceof Invoice) && !empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
             return true;
         }
         //====================================================================//
         // Allowed for CreditNote
-        if (($this instanceof CreditNote) && empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
+        if (($this instanceof CreditNote) && !empty($conf->global->INVOICE_ALLOW_EXTERNAL_DOWNLOAD)) {
             return true;
         }
 

@@ -42,6 +42,7 @@ class InterfaceSplash
     use Objects\Product\TriggersTrait;
     use Objects\Order\TriggersTrait;
     use Objects\Invoice\TriggersTrait;
+    use Objects\SupplierInvoice\TriggersTrait;
 
     private $db;
     private $name;
@@ -209,6 +210,10 @@ class InterfaceSplash
         // TRIGGER ACTION FOR : INVOICE
         //====================================================================//
         $doCommit |= $this->doInvoiceCommit($action, $object);
+        //====================================================================//
+        // TRIGGER ACTION FOR : SUPPLIER INVOICE
+        //====================================================================//
+        $doCommit |= $this->doSupplierInvoiceCommit($action, $object);
 
         //====================================================================//
         // Log Trigger Action

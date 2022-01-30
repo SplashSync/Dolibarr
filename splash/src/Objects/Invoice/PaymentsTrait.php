@@ -15,12 +15,15 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use ArrayObject;
 use Paiement;
+use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Objects\SupplierInvoice;
 
 /**
- * Dolibarr Customer Invoice Payments Fields
+ * Dolibarr Customer/Supplier Invoice Payments Fields
  */
 trait PaymentsTrait
 {
@@ -32,43 +35,6 @@ trait PaymentsTrait
      * @var array
      */
     protected $payments = array();
-
-    /**
-     * Fetch List of Invoices Payments Amounts
-     *
-     * @param int $paiementId Payment Object Id
-     *
-     * @return array List Of Payment Object Amounts
-     */
-    public static function getPaiementAmounts($paiementId)
-    {
-        global $db;
-        //====================================================================//
-        // Init Result Array
-        $amounts = array();
-        //====================================================================//
-        // SELECT SQL Request
-        $sql = 'SELECT fk_facture, amount';
-        $sql .= ' FROM '.MAIN_DB_PREFIX.'paiement_facture';
-        $sql .= ' WHERE fk_paiement = '.$paiementId;
-        $resql = $db->query($sql);
-        //====================================================================//
-        // SQL Error
-        if (!$resql) {
-            Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, $db->error());
-
-            return $amounts;
-        }
-        //====================================================================//
-        // Populate Object
-        for ($i = 0; $i < $db->num_rows($resql); $i++) {
-            $obj = $db->fetch_object($resql);
-            $amounts[$obj->fk_facture] = $obj->amount;
-        }
-        $db->free($resql);
-
-        return $amounts;
-    }
 
     /**
      * Build Address Fields using FieldFactory
@@ -125,16 +91,20 @@ trait PaymentsTrait
     }
 
     /**
-     * Fetch Invoive Payments List (Done after Load)
+     * Fetch Invoice Payments List (Done after Load)
      *
      * @param mixed $invoiceId
+     * @param bool  $isSupplier
      *
      * @return bool
      */
-    protected function loadPayments($invoiceId)
+    protected function loadPayments($invoiceId, bool $isSupplier = false): bool
     {
         global $db;
 
+        //====================================================================//
+        // Detect Supplier Invoices Mode
+        $isSupplier |= ($this instanceof SupplierInvoice);
         //====================================================================//
         // Prepare SQL Request
         // Payments already done (from payment on this invoice)
@@ -143,17 +113,23 @@ trait PaymentsTrait
         $sql .= ' pf.amount as amount,';
         $sql .= ' ba.rowid as baid, ba.ref, ba.label';
         $sql .= ' FROM '.MAIN_DB_PREFIX.'c_paiement as c, ' ;
-        $sql .= MAIN_DB_PREFIX.'paiement_facture as pf, '.MAIN_DB_PREFIX.'paiement as p';
+        $sql .= $isSupplier
+            ? MAIN_DB_PREFIX.'paiementfourn_facturefourn as pf, '.MAIN_DB_PREFIX.'paiementfourn as p'
+            : MAIN_DB_PREFIX.'paiement_facture as pf, '.MAIN_DB_PREFIX.'paiement as p'
+        ;
         $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'bank as b ON p.fk_bank = b.rowid';
         $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'bank_account as ba ON b.fk_account = ba.rowid';
-        $sql .= ' WHERE pf.fk_facture = '.$invoiceId.' AND p.fk_paiement = c.id AND pf.fk_paiement = p.rowid';
+        $sql .= $isSupplier
+            ? ' WHERE pf.fk_facturefourn = '.$invoiceId.' AND p.fk_paiement = c.id AND pf.fk_paiementfourn = p.rowid'
+            : ' WHERE pf.fk_facture = '.$invoiceId.' AND p.fk_paiement = c.id AND pf.fk_paiement = p.rowid'
+        ;
         $sql .= ' ORDER BY p.rowid';
 
         //====================================================================//
         // Execute SQL Request
         $result = $db->query($sql);
         if (!$result) {
-            dol_print_error($db);
+            $this->catchDolibarrErrors();
 
             return false;
         }
@@ -186,11 +162,11 @@ trait PaymentsTrait
      *
      * @return void
      */
-    protected function getPaymentsFields($key, $fieldName)
+    protected function getPaymentsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->InitOutput($this->out, "payments", $fieldName);
+        $fieldId = self::lists()->initOutput($this->out, "payments", $fieldName);
         if (!$fieldId) {
             return;
         }
@@ -229,7 +205,7 @@ trait PaymentsTrait
             }
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->out, "payments", $fieldName, $index, $value);
+            self::lists()->insert($this->out, "payments", $fieldName, $index, $value);
         }
         unset($this->in[$key]);
     }
@@ -242,18 +218,13 @@ trait PaymentsTrait
      *
      * @return void
      */
-    protected function setPaymentLineFields($fieldName, $fieldData)
+    protected function setPaymentLineFields(string $fieldName, $fieldData)
     {
-        global $db;
         //====================================================================//
         // Safety Check
         if ("payments" !== $fieldName) {
             return;
         }
-        //====================================================================//
-        // Include Object Dolibarr Class
-        require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
-        require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
         //====================================================================//
         // Verify Lines List & Update if Needed
         if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
@@ -266,7 +237,7 @@ trait PaymentsTrait
         foreach ($this->payments as $paymentData) {
             //====================================================================//
             // Fetch Payment Line Entity
-            $payment = new Paiement($db);
+            $payment = $this->newPayment();
             $payment->fetch($paymentData->id);
             //====================================================================//
             // Check If Payment impact another Bill
@@ -284,17 +255,12 @@ trait PaymentsTrait
     /**
      * Delete All Invoices Payments (Only Used for Debug in PhpUnit)
      *
-     * @param int $invoiceId Invoice Object Id
+     * @param int $invoiceId Invoice Object ID
      *
      * @return void
      */
-    protected function clearPayments($invoiceId)
+    protected function clearPayments(int $invoiceId): void
     {
-        global $db;
-        //====================================================================//
-        // Include Object Dolibarr Class
-        require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
-        require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
         //====================================================================//
         // Load Invoice Payments
         $this->loadPayments($invoiceId);
@@ -303,7 +269,7 @@ trait PaymentsTrait
         foreach ($this->payments as $paymentData) {
             //====================================================================//
             // Fetch Payment Line Entity
-            $payment = new Paiement($db);
+            $payment = $this->newPayment();
             $payment->fetch($paymentData->id);
             //====================================================================//
             // Check If Payment impact another Bill
@@ -324,11 +290,11 @@ trait PaymentsTrait
     /**
      * Update a Payment line Data
      *
-     * @param array $lineData Line Data Array
+     * @param array|ArrayObject $lineData Line Data Array
      *
      * @return bool
      */
-    private function setPaymentLineData($lineData)
+    private function setPaymentLineData($lineData): bool
     {
         //====================================================================//
         // Read Next Payment Line
@@ -359,18 +325,16 @@ trait PaymentsTrait
     /**
      * Update an Exiting Payment
      *
-     * @param int   $paymentId Payment Item Id
-     * @param array $lineData  Line Data Array
+     * @param int               $paymentId Payment Item ID
+     * @param array|ArrayObject $lineData  Line Data Array
      *
      * @return bool Re-Create Payment Item or Exit?
      */
-    private function updatePaymentItem($paymentId, $lineData)
+    private function updatePaymentItem(int $paymentId, $lineData): bool
     {
-        global $db;
-
         //====================================================================//
         // Load Payment Item
-        $payment = new Paiement($db);
+        $payment = $this->newPayment();
         $payment->fetch($paymentId);
 
         //====================================================================//
@@ -385,7 +349,7 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Safety Check => Amount is Defined
-        if (!array_key_exists("amount", $lineData)) {
+        if (!isset($lineData["amount"])) {
             return false;
         }
         //====================================================================//
@@ -410,8 +374,8 @@ trait PaymentsTrait
     /**
      * Update an Exiting Payment Datas
      *
-     * @param Paiement $payment  Payment Item Id
-     * @param array    $lineData Line Data Array
+     * @param Paiement|PaiementFourn $payment  Payment Item ID
+     * @param array|ArrayObject      $lineData Line Data Array
      *
      * @return void
      */
@@ -419,7 +383,7 @@ trait PaymentsTrait
     {
         //====================================================================//
         // Update Payment Date
-        if (array_key_exists("date", $lineData)
+        if (isset($lineData["date"])
             && (dol_print_date($payment->datepaye, 'standard') !== $lineData["date"])) {
             $payment->update_date($lineData["date"]);
             $this->catchDolibarrErrors($payment);
@@ -427,18 +391,18 @@ trait PaymentsTrait
 
         //====================================================================//
         // Update Payment Number
-        /** @since V12.0 Field Renamed  */
-        $number = (Local::dolVersionCmp("12.0.0") < 0)
+        /** @since V13.0 Field Renamed  */
+        $number = (Local::dolVersionCmp("13.0.0") < 0)
             ? $payment->num_paiement
             : $payment->num_payment;
-        if (array_key_exists("number", $lineData) && ($number !== $lineData["number"])) {
+        if (isset($lineData["number"]) && ($number !== $lineData["number"])) {
             $payment->update_num($lineData["number"]);
             $this->catchDolibarrErrors($payment);
         }
 
         //====================================================================//
         // Update Payment Method
-        if (array_key_exists("mode", $lineData)) {
+        if (isset($lineData["mode"])) {
             //====================================================================//
             // Detect Payment Method Id
             $newMethodId = $this->identifyPaymentMethod($lineData["mode"]);
@@ -453,22 +417,22 @@ trait PaymentsTrait
     /**
      * Update an Exiting Payment
      *
-     * @param array $lineData Line Data Array
+     * @param array|ArrayObject $lineData Line Data Array
      *
      * @return bool Re-Create Payment Item or Exit?
      */
     private function createPaymentItem($lineData)
     {
-        global $db,$user;
+        global $user;
         //====================================================================//
         // Verify Minimal Fields Ar available
-        if (!array_key_exists("mode", $lineData)
-                || !array_key_exists("date", $lineData)
-                || !array_key_exists("amount", $lineData)
-                || empty((double) $lineData["amount"])) {
+        if (!isset($lineData["mode"])
+            || !isset($lineData["date"])
+            || !isset($lineData["amount"])
+            || empty((double) $lineData["amount"])) {
             return false;
         }
-        $payment = new Paiement($db);
+        $payment = $this->newPayment();
         //====================================================================//
         // Setup Payment Invoice Id
         $payment->facid = $this->object->id;
@@ -480,8 +444,8 @@ trait PaymentsTrait
         $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
         //====================================================================//
         // Setup Payment Reference
-        /** @since V12.0 Field Renamed  */
-        if (Local::dolVersionCmp("12.0.0") < 0) {
+        /** @since V13.0 Field Renamed  */
+        if (Local::dolVersionCmp("13.0.0") < 0) {
             $payment->num_paiement = $lineData["number"];
         } else {
             $payment->num_payment = $lineData["number"];
@@ -519,6 +483,28 @@ trait PaymentsTrait
     }
 
     /**
+     * Create a New Payment Object
+     *
+     * @return Paiement|PaiementFourn
+     */
+    private function newPayment()
+    {
+        global $db;
+        static $isInitDone;
+
+        if (!isset($isInitDone)) {
+            //====================================================================//
+            // Include Object Dolibarr Class
+            require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
+            require_once DOL_DOCUMENT_ROOT.'/fourn/class/paiementfourn.class.php';
+            require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+            $isInitDone = true;
+        }
+
+        return ($this instanceof SupplierInvoice) ? new PaiementFourn($db) : new Paiement($db);
+    }
+
+    /**
      * Write Given Fields
      *
      * @param string $methodType
@@ -527,7 +513,7 @@ trait PaymentsTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function identifySplashPaymentMethod($methodType)
+    private function identifySplashPaymentMethod(string $methodType)
     {
         //====================================================================//
         // Detect Payment Method Type from Default Payment "known" methods
@@ -561,7 +547,7 @@ trait PaymentsTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function identifyPaymentMethod($methodType)
+    private function identifyPaymentMethod(string $methodType)
     {
         global $conf;
 
@@ -593,13 +579,13 @@ trait PaymentsTrait
     }
 
     /**
-     * Identify Payment Method Id using Payment Method Code
+     * Identify Payment Method ID using Payment Method Code
      *
      * @param string $paymentTypeCode Payment Method Code
      *
      * @return int
      */
-    private function identifyPaymentType($paymentTypeCode)
+    private function identifyPaymentType(string $paymentTypeCode)
     {
         global $db;
 
@@ -626,13 +612,13 @@ trait PaymentsTrait
     }
 
     /**
-     * Identify Bank Accopunt Id using Splash Configuration
+     * Identify Bank Account ID using Splash Configuration
      *
-     * @param int $paymentTypeId Payment Method Id
+     * @param int $paymentTypeId Payment Method ID
      *
      * @return int
      */
-    private function identifyBankAccountId($paymentTypeId)
+    private function identifyBankAccountId(int $paymentTypeId)
     {
         global $conf;
 

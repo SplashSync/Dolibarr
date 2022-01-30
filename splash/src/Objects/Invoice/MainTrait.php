@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use Splash\Local\Objects\SupplierInvoice;
+
 /**
  * Dolibarr Customer Orders Fields
  */
@@ -32,9 +34,10 @@ trait MainTrait
         //====================================================================//
         // Invoice PaymentDueDate Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("date_lim_reglement")
-            ->Name($langs->trans("DateMaxPayment"))
-            ->MicroData("http://schema.org/Invoice", "paymentDueDate");
+            ->identifier(($this instanceof SupplierInvoice) ? "date_echeance" : "date_lim_reglement")
+            ->name($langs->trans("DateMaxPayment"))
+            ->microData("http://schema.org/Invoice", "paymentDueDate")
+        ;
 
         //====================================================================//
         // PRICES INFORMATIONS
@@ -43,18 +46,19 @@ trait MainTrait
         //====================================================================//
         // Order Total Price HT
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("total_ht")
-            ->Name($langs->trans("TotalHT")." (".$conf->global->MAIN_MONNAIE.")")
-            ->MicroData("http://schema.org/Invoice", "totalPaymentDue")
-            ->isReadOnly();
-
+            ->identifier("total_ht")
+            ->name($langs->trans("TotalHT")." (".$conf->global->MAIN_MONNAIE.")")
+            ->microData("http://schema.org/Invoice", "totalPaymentDue")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Total Price TTC
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("total_ttc")
-            ->Name($langs->trans("TotalTTC")." (".$conf->global->MAIN_MONNAIE.")")
-            ->MicroData("http://schema.org/Invoice", "totalPaymentDueTaxIncluded")
-            ->isReadOnly();
+            ->identifier("total_ttc")
+            ->name($langs->trans("TotalTTC")." (".$conf->global->MAIN_MONNAIE.")")
+            ->microData("http://schema.org/Invoice", "totalPaymentDueTaxIncluded")
+            ->isReadOnly()
+        ;
 
         //====================================================================//
         // INVOICE STATUS FLAGS
@@ -63,41 +67,42 @@ trait MainTrait
         //====================================================================//
         // Is Draft
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isDraft")
-            ->Name($langs->trans("Invoice")." : ".$langs->trans("Draft"))
-            ->Group(html_entity_decode($langs->trans("Status")))
-            ->MicroData("http://schema.org/PaymentStatusType", "InvoiceDraft")
-            ->Association("isDraft", "isCanceled", "isValidated")
-            ->isReadOnly();
-
+            ->identifier("isDraft")
+            ->name($langs->trans("Invoice")." : ".$langs->trans("Draft"))
+            ->group(html_entity_decode($langs->trans("Status")))
+            ->microData("http://schema.org/PaymentStatusType", "InvoiceDraft")
+            ->association("isDraft", "isCanceled", "isValidated")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Is Canceled
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isCanceled")
-            ->Name($langs->trans("Invoice")." : ".$langs->trans("Canceled"))
-            ->Group(html_entity_decode($langs->trans("Status")))
-            ->MicroData("http://schema.org/PaymentStatusType", "PaymentDeclined")
-            ->Association("isDraft", "isCanceled", "isValidated")
-            ->isReadOnly();
-
+            ->identifier("isCanceled")
+            ->name($langs->trans("Invoice")." : ".$langs->trans("Canceled"))
+            ->group(html_entity_decode($langs->trans("Status")))
+            ->microData("http://schema.org/PaymentStatusType", "PaymentDeclined")
+            ->association("isDraft", "isCanceled", "isValidated")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Is Validated
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isValidated")
-            ->Name($langs->trans("Invoice")." : ".$langs->trans("Validated"))
-            ->Group(html_entity_decode($langs->trans("Status")))
-            ->MicroData("http://schema.org/PaymentStatusType", "PaymentDue")
-            ->Association("isDraft", "isCanceled", "isValidated")
-            ->isReadOnly();
-
+            ->identifier("isValidated")
+            ->name($langs->trans("Invoice")." : ".$langs->trans("Validated"))
+            ->group(html_entity_decode($langs->trans("Status")))
+            ->microData("http://schema.org/PaymentStatusType", "PaymentDue")
+            ->association("isDraft", "isCanceled", "isValidated")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Is Paid
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isPaid")
-            ->Name($langs->trans("Invoice")." : ".$langs->trans("Paid"))
-            ->Group(html_entity_decode($langs->trans("Status")))
-            ->MicroData("http://schema.org/PaymentStatusType", "PaymentComplete")
-            ->isNotTested();
+            ->identifier("isPaid")
+            ->name($langs->trans("Invoice")." : ".$langs->trans("Paid"))
+            ->group(html_entity_decode($langs->trans("Status")))
+            ->microData("http://schema.org/PaymentStatusType", "PaymentComplete")
+            ->isNotTested()
+        ;
     }
 
     /**
@@ -108,7 +113,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getMainFields($key, $fieldName)
+    protected function getMainFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -116,8 +121,9 @@ trait MainTrait
             //====================================================================//
             // Order Delivery Date
             case 'date_lim_reglement':
-                $date = $this->object->date_lim_reglement;
-                $this->out[$fieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
+            case 'date_echeance':
+                $date = $this->object->{$fieldName};
+                $this->out[$fieldName] = !empty($date) ? dol_print_date($date, '%Y-%m-%d') : null;
 
                 break;
             default:
@@ -135,7 +141,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getTotalsFields($key, $fieldName)
+    protected function getTotalsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -164,7 +170,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getStateFields($key, $fieldName)
+    protected function getStateFields(string $key, string $fieldName)
     {
         //====================================================================//
         // READ Fields
@@ -204,7 +210,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function setMainFields($fieldName, $fieldData)
+    protected function setMainFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -212,6 +218,7 @@ trait MainTrait
             //====================================================================//
             // Invoice Payment Due Date
             case 'date_lim_reglement':
+            case 'date_echeance':
                 if (dol_print_date($this->object->{$fieldName}, 'standard') === $fieldData) {
                     break;
                 }
@@ -238,7 +245,7 @@ trait MainTrait
      *
      * @return bool
      */
-    private function setPaidFlag($data)
+    private function setPaidFlag($data): bool
     {
         global $user;
 
@@ -263,7 +270,7 @@ trait MainTrait
         }
 
         //====================================================================//
-        // Setup Current Object not to Overite changes with Update
+        // Setup Current Object not to Override changes with Update
         $this->object->paye = ($data ? 1 : 0);
 
         return true;

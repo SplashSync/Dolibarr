@@ -178,7 +178,7 @@ trait StatusTrait
             case "PaymentCanceled":
                 //====================================================================//
                 // Whatever => Set Canceled
-                if ((3 != $this->object->statut) && (1 != $this->object->set_canceled($user))) {
+                if ((3 != $this->object->statut) && (!$this->setStatusCancel())) {
                     return $this->catchDolibarrErrors();
                 }
                 $this->object->paye = 0;
@@ -208,6 +208,27 @@ trait StatusTrait
         }
         if (method_exists($this->object, "setDraft")
                 && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+            return $this->catchDolibarrErrors();
+        }
+
+        return true;
+    }
+
+    /**
+     * Set Invoice State as Cancelled
+     *
+     * @return bool
+     */
+    private function setStatusCancel(): bool
+    {
+        global $user;
+
+        if (method_exists($this->object, "set_canceled")
+            && (1 != $this->object->set_canceled($user))) {
+            return $this->catchDolibarrErrors();
+        }
+        if (method_exists($this->object, "setCanceled")
+            && (1 != $this->object->setCanceled($user))) {
             return $this->catchDolibarrErrors();
         }
 

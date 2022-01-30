@@ -13,13 +13,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects\Invoice;
+namespace   Splash\Local\Objects\SupplierInvoice;
 
 use Splash\Local\Local;
 use Splash\Local\Services\MultiCompany;
 
 /**
- * Dolibarr Customer Invoice List Functions
+ * Dolibarr Supplier Invoice List Functions
  */
 trait ObjectsListTrait
 {
@@ -34,10 +34,7 @@ trait ObjectsListTrait
     protected function getSqlBaseRequest($filter = null, $params = null)
     {
         //====================================================================//
-        /** @since V10.0 Dolibarr Reference Columns Name was Updated */
-        $refColumn = (Local::dolVersionCmp("10.0.0") >= 0) ? "f.ref" : "f.facnumber";
-        //====================================================================//
-        /** @since V14.0 Dolibarr Total Ht Columns Name was Updated */
+        // Dolibarr Total Ht Columns Name was Updated in V14
         $totalHtColumn = (Local::dolVersionCmp("14.0.0") >= 0) ? "f.total_ht" : "f.total";
 
         //====================================================================//
@@ -48,16 +45,15 @@ trait ObjectsListTrait
         // Select Database fields
         $sql .= " f.rowid as id,";                  // Object ID
         $sql .= " f.entity as entity_id,";          // Entity ID
-        $sql .= " ".$refColumn." as ref,";          // Dolibarr Reference
+        $sql .= " f.ref as ref,";                   // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
-        $sql .= " f.ref_int as ref_int,";           // Internal Reference
-        $sql .= " f.ref_client as ref_client,";     // Customer Reference
+        $sql .= " f.ref_supplier as ref_supplier,"; // Supplier Reference
         $sql .= " ".$totalHtColumn." as total_ht,"; // Total net of tax
         $sql .= " f.total_ttc as total_ttc,";       // Total with tax
         $sql .= " f.datef as date";                 // Invoice date
         //====================================================================//
         // Select Database tables
-        $sql .= " FROM ".MAIN_DB_PREFIX."facture as f ";
+        $sql .= " FROM ".MAIN_DB_PREFIX."facture_fourn as f ";
         //====================================================================//
         // Entity Filter
         $entityIds = MultiCompany::isMarketplaceMode() ? MultiCompany::getVisibleSqlIds() : getEntity('facture', 1);
@@ -72,23 +68,17 @@ trait ObjectsListTrait
             $sql .= " AND ( ";
             //====================================================================//
             // Search in Invoice Ref.
-            $sql .= " LOWER( ".$refColumn." ) LIKE LOWER( '%".$filter."%') ";
+            $sql .= " LOWER( f.ref ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
-            // Search in Invoice Internal Ref
-            $sql .= " OR LOWER( f.ref_int ) LIKE LOWER( '%".$filter."%') ";
-            //====================================================================//
-            // Search in Invoice External Ref
-            $sql .= " OR LOWER( f.ref_ext ) LIKE LOWER( '%".$filter."%') ";
-            //====================================================================//
-            // Search in Invoice Customer Ref
-            $sql .= " OR LOWER( f.ref_client ) LIKE LOWER( '%".$filter."%') ";
+            // Search in Invoice Supplier Ref
+            $sql .= " OR LOWER( f.ref_supplier ) LIKE LOWER( '%".$filter."%') ";
             $sql .= " ) ";
         }
         //====================================================================//
-        // Setup sortorder
-        $sortfield = empty($params["sortfield"])?"f.rowid":$params["sortfield"];
-        $sortorder = empty($params["sortorder"])?"DESC":$params["sortorder"];
-        $sql .= " ORDER BY ".$sortfield." ".$sortorder;
+        // Setup sort order
+        $sortField = empty($params["sortfield"])?"f.rowid":$params["sortfield"];
+        $sortOrder = empty($params["sortorder"])?"DESC":$params["sortorder"];
+        $sql .= " ORDER BY ".$sortField." ".$sortOrder;
 
         return $sql;
     }

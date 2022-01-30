@@ -13,17 +13,17 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Local\Objects\Order;
+namespace Splash\Local\Objects\SupplierInvoice;
 
-use Commande;
 use DateTime;
 use Exception;
+use FactureFournisseur;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Services\MultiCompany;
 use User;
 
 /**
- * Dolibarr Customer Orders CRUD Functions
+ * Dolibarr Supplier Invoice CRUD Functions
  */
 trait CRUDTrait
 {
@@ -32,35 +32,44 @@ trait CRUDTrait
      *
      * @param string $objectId Object id
      *
-     * @return Commande|false
+     * @return FactureFournisseur|false
      */
     public function load($objectId)
     {
-        global $db, $user;
+        global $db, $user, $conf;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace();
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (!($user instanceof User) || empty($user->login)) {
+        if (empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
+
         //====================================================================//
         // Init Object
-        $object = new Commande($db);
+        $object = new FactureFournisseur($db);
         //====================================================================//
         // Fetch Object
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
+            Splash::log()->errTrace("Current Entity is : ".$conf->entity);
 
-            return Splash::log()->errTrace(" Unable to load Customer Order (".$objectId.").");
+            return Splash::log()->errTrace("Unable to load Supplier Invoice (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace(" Unable to load Customer Order (".$objectId.").");
+            return Splash::log()->errTrace("Unable to load Supplier Invoice (".$objectId.").");
         }
+        //====================================================================//
+        // Check Object Type Access (Invoices| Credit Notes)
+        if (!in_array((int) $object->type, static::$dolibarrTypes, true)) {
+            return Splash::log()->errTrace("Wrong Invoice Object Type.");
+        }
+
         $object->fetch_lines();
+        $this->loadPayments($objectId);
         $this->initCustomerDetection();
 
         return $object;
@@ -71,7 +80,7 @@ trait CRUDTrait
      *
      * @throws Exception
      *
-     * @return Commande|false
+     * @return FactureFournisseur|false
      */
     public function create()
     {
@@ -80,7 +89,12 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace();
         //====================================================================//
-        // Check Invoice Date is given
+        // Check Supplier Ref is given
+        if (empty($this->in["ref_supplier"])) {
+            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "ref_supplier");
+        }
+        //====================================================================//
+        // Check Order Date is given
         if (empty($this->in["date"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
         }
@@ -89,23 +103,26 @@ trait CRUDTrait
         if (!($user instanceof User) || empty($user->login)) {
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
+
         //====================================================================//
         // Init Object
-        $this->object = new Commande($db);
+        $this->object = new FactureFournisseur($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $dateTime = new DateTime($this->in["date"]);
         $this->setSimple('date', $dateTime->getTimestamp());
-        $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
-        $this->setSimple("statut", Commande::STATUS_DRAFT);
-
+        $this->setSimple("statut", FactureFournisseur::STATUS_DRAFT);
+        $this->object->entity = MultiCompany::getCurrentId();
+        $this->object->ref_supplier = $this->in["ref_supplier"];
+        $this->object->statut = FactureFournisseur::STATUS_DRAFT;
+        $this->object->paye = 0;
         //====================================================================//
         // Create Object In Database
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace("Unable to create new Customer Order. ");
+            return Splash::log()->errTrace("Unable to create new Supplier Invoice.");
         }
 
         return $this->object;
@@ -133,17 +150,25 @@ trait CRUDTrait
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
-        // Update Product Object
+        // Migrate SocId to fk_soc
+        // @phpstan-ignore-next-line
+        $this->object->fk_soc = $this->object->socid;
+
+        //====================================================================//
+        // Update Object
         if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace(" Unable to Update Customer Order (".$this->object->id.")") ;
+            return Splash::log()->errTrace("Unable to Update Supplier Invoice (".$this->object->id.")") ;
         }
         //====================================================================//
         // Update Object Extra Fields
         if ($this->object->insertExtraFields() <= 0) {
             $this->catchDolibarrErrors();
         }
+        //====================================================================//
+        // Update Object Pdf Document
+        $this->updateObjectPdf();
 
         return $this->getObjectIdentifier();
     }
@@ -155,7 +180,7 @@ trait CRUDTrait
      *
      * @return bool
      */
-    public function delete($objectId = null): bool
+    public function delete($objectId = null)
     {
         global $db,$user;
         //====================================================================//
@@ -163,7 +188,7 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Load Object
-        $object = new Commande($db);
+        $object = new FactureFournisseur($db);
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
@@ -174,14 +199,16 @@ trait CRUDTrait
         $object->id = (int) $objectId;
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = null;         // @phpstan-ignore-line
+        $object->entity = 0;
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace(" Unable to Delete Customer Order (".$objectId.").");
+            return Splash::log()->errTrace("Unable to Delete Supplier Invoice (".$objectId.").");
         }
         //====================================================================//
         // Delete Object
         if ($object->delete($user) <= 0) {
-            return $this->catchDolibarrErrors($object);
+            $this->catchDolibarrErrors($object);
+
+            return Splash::log()->errTrace("Unable to Delete Supplier Invoice (".$objectId.")");
         }
 
         return true;
@@ -197,5 +224,34 @@ trait CRUDTrait
         }
 
         return (string) $this->object->id;
+    }
+
+    /**
+     * Re-Generate Invoice Pdf if Needed
+     *
+     * @return void
+     */
+    public function updateObjectPdf()
+    {
+        global $langs, $conf;
+        //====================================================================//
+        // Only if Feature is Not Disabled
+        if (!empty($conf->global->MAIN_DISABLE_PDF_AUTOUPDATE)) {
+            return;
+        }
+        //====================================================================//
+        // Only if Supplier Invoice is Valid
+        if (0 >= $this->object->statut) {
+            return;
+        }
+        //====================================================================//
+        // Reload to get new records
+        $this->object->fetch($this->object->id);
+        //====================================================================//
+        // Generate Pdf Document
+        $result = $this->object->generateDocument("", $langs);
+        if ($result < 0) {
+            $this->catchDolibarrErrors();
+        }
     }
 }

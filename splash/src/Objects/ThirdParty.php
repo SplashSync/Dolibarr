@@ -46,6 +46,7 @@ class ThirdParty extends AbstractObject
     use ThirdParty\CoreTrait;
     use ThirdParty\MainTrait;
     use ThirdParty\AddressTrait;
+    use ThirdParty\CategoriesTrait;
     use ThirdParty\MetaTrait;
 
     //====================================================================//
@@ -55,7 +56,7 @@ class ThirdParty extends AbstractObject
     /**
      * @var string
      */
-    public static $ExtraFieldsType = "societe";
+    public static $extraFieldsType = "societe";
 
     //====================================================================//
     // Object Definition Parameters

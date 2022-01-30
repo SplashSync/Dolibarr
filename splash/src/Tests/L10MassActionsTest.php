@@ -15,14 +15,16 @@
 
 namespace Splash\Local\Tests;
 
+use Exception;
 use Splash\Tests\Tools\ObjectsCase;
+use Splash\Tests\Tools\Traits\ObjectsMassActionsTrait;
 
 /**
  * Local Test Suite - Test for Massive Objects actions
  */
 class L10MassActionsTest extends ObjectsCase
 {
-    use \Splash\Tests\Tools\Traits\ObjectsMassActionsTrait;
+    use ObjectsMassActionsTrait;
 
     /**
      * @var array
@@ -85,6 +87,16 @@ class L10MassActionsTest extends ObjectsCase
             'update' => false,
             'delete' => false,
         ),
+        "SupplierInvoice" => array(
+            'max' => 10,
+            'batch' => 5,
+            'fields' => array(
+                "status" => "PaymentComplete",
+            ),
+            'verify' => true,
+            'update' => false,
+            'delete' => false,
+        ),
     );
 
     /**
@@ -95,9 +107,11 @@ class L10MassActionsTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testMassCrudActionsFromModule($sequence, $objectType)
+    public function testMassCrudActionsFromModule(string $sequence, string $objectType): void
     {
         //====================================================================//
         // Setup Test Mode
@@ -115,9 +129,11 @@ class L10MassActionsTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testMassCrudActionsFromService($sequence, $objectType)
+    public function testMassCrudActionsFromService(string $sequence, string $objectType): void
     {
         //====================================================================//
         // Setup Test Mode
@@ -135,9 +151,11 @@ class L10MassActionsTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    public function testBatchCrudActions($sequence, $objectType)
+    public function testBatchCrudActions(string $sequence, string $objectType): void
     {
         //====================================================================//
         // Ensure Object Config Exists & Is Valid
@@ -189,9 +207,11 @@ class L10MassActionsTest extends ObjectsCase
      * @param string $sequence
      * @param string $objectType
      *
+     * @throws Exception
+     *
      * @return void
      */
-    private function baseMassCrudActions($sequence, $objectType)
+    private function baseMassCrudActions(string $sequence, string $objectType): void
     {
         //====================================================================//
         // Ensure Object Config Exists & Is Valid

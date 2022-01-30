@@ -30,11 +30,7 @@ trait ExtraFieldsPhpUnitTrait
         "text" => "phpunit_text",
         "int" => "phpunit_int",
         "bool" => "phpunit_bool",
-        "double" => "phpunit_double",
         "price" => "phpunit_price",
-        "mail" => "phpunit_mail",
-        "phone" => "phpunit_phone",
-        "url" => "phpunit_url",
         "date" => "phpunit_date",
     );
 
@@ -54,12 +50,12 @@ trait ExtraFieldsPhpUnitTrait
         require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
         $extraFields = new ExtraFields($db);
         //====================================================================//
-        // Load array of extrafields for elementype = $this->table_element
+        // Load array of ExtraFields for elementType = $this->table_element
         $extraFields->fetch_name_optionals_label($elementType);
 
         //====================================================================//
         // Load Existing Types for this Element
-        $existingTypes = $extraFields->attribute_type['type'];
+        $existingTypes = $extraFields->attributes[$elementType]['type'];
         if (empty($existingTypes)) {
             $existingTypes = array();
         }
@@ -79,7 +75,7 @@ trait ExtraFieldsPhpUnitTrait
                     0,
                     0,
                     0,
-                    array(),
+                    array("options" => array()),
                     1,
                     '',
                     '0',
