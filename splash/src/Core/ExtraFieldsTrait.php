@@ -280,7 +280,7 @@ trait ExtraFieldsTrait
             try {
                 $object = $this->object;
 
-                return dol_eval($computeSource, 1, 0);
+                return dol_eval((string) $computeSource, 1, 0);
             } catch (\Throwable $ex) {
                 return null;
             }
