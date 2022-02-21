@@ -34,21 +34,29 @@ trait MainTrait
         //====================================================================//
 
         //====================================================================//
+        // Customs HS Code
+        $this->fieldsFactory()->create(SPL_T_DOUBLE)
+            ->identifier("customcode")
+            ->name("Customs HS Code")
+            ->description($langs->trans("CustomCode"))
+            ->microData("http://schema.org/Product", "customsHsCode")
+        ;
+        //====================================================================//
         // Weight
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->identifier("weight")
             ->name($langs->trans("Weight"))
             ->description($langs->trans("Weight")." (".$langs->trans("WeightUnitkg").")")
-            ->microData("http://schema.org/Product", "weight");
-
+            ->microData("http://schema.org/Product", "weight")
+        ;
         //====================================================================//
         // Length
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->identifier("length")
             ->name($langs->trans("Length"))
             ->description($langs->trans("Length")." (".$langs->trans("LengthUnitm").")")
-            ->microData("http://schema.org/Product", "depth");
-
+            ->microData("http://schema.org/Product", "depth")
+        ;
         //====================================================================//
         // Width
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
@@ -58,7 +66,6 @@ trait MainTrait
             ->microData("http://schema.org/Product", "width")
             ->isNotTested()
         ;
-
         //====================================================================//
         // Height
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
@@ -68,22 +75,22 @@ trait MainTrait
             ->microData("http://schema.org/Product", "height")
             ->isNotTested()
         ;
-
         //====================================================================//
         // Surface
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->identifier("surface")
             ->name($langs->trans("Surface"))
             ->description($langs->trans("Surface")." (".$langs->trans("SurfaceUnitm2").")")
-            ->microData("http://schema.org/Product", "surface");
-
+            ->microData("http://schema.org/Product", "surface")
+        ;
         //====================================================================//
         // Volume
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->identifier("volume")
             ->name($langs->trans("Volume"))
             ->description($langs->trans("Volume")." (".$langs->trans("VolumeUnitm3").")")
-            ->microData("http://schema.org/Product", "volume");
+            ->microData("http://schema.org/Product", "volume")
+        ;
     }
 
     /**
@@ -102,6 +109,10 @@ trait MainTrait
             //====================================================================//
             // PRODUCT SPECIFICATIONS
             //====================================================================//
+            case 'customcode':
+                $this->getSimple($fieldName);
+
+                break;
             case 'weight':
                 $this->out[$fieldName] = (float) $this->convertWeight(
                     $this->object->weight,
@@ -156,6 +167,10 @@ trait MainTrait
             //====================================================================//
             // PRODUCT SPECIFICATIONS
             //====================================================================//
+            case 'customcode':
+                $this->setSimple($fieldName, $fieldData);
+
+                break;
             case 'weight':
                 $this->updateProductWeight($fieldData);
 

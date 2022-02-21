@@ -64,7 +64,8 @@ trait BarcodeTrait
             ->identifier("barcode")
             ->name($langs->trans("BarcodeValue"))
             ->description($langs->trans("BarcodeValue")." (".$this->getDefaultBarcodeType().")")
-            ->microData("http://schema.org/Product", $this->getBarcodeSchema());
+            ->microData("http://schema.org/Product", $this->getBarcodeSchema())
+        ;
     }
 
     /**

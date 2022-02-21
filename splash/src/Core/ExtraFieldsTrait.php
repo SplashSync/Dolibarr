@@ -70,12 +70,12 @@ trait ExtraFieldsTrait
             //====================================================================//
             // Create Extra Field Definition
             $this->fieldsFactory()
-                ->Create($this->getSplashType($fieldType))
-                ->Identifier($this->encodeType($fieldId))
-                ->Name($this->getLabel($fieldId))
-                ->Group("Extra")
+                ->create($this->getSplashType($fieldType))
+                ->identifier($this->encodeType($fieldId))
+                ->name($this->getLabel($fieldId))
+                ->group("Extra")
                 ->addOption('maxLength', '14')
-                ->MicroData("http://meta.schema.org/additionalType", $fieldId);
+                ->microData("http://meta.schema.org/additionalType", $fieldId);
 
             if ($this->isRequired($fieldId)) {
                 $this->fieldsFactory()->isRequired();
@@ -192,7 +192,7 @@ trait ExtraFieldsTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function setExtraFields($fieldName, $fieldData)
+    protected function setExtraFields(string $fieldName, $fieldData)
     {
         $this->loadExtraFields();
         //====================================================================//
@@ -268,8 +268,25 @@ trait ExtraFieldsTrait
      */
     protected function getExtraData(string $fieldName)
     {
+        global $conf, $object;
+
+        $fieldType = (string) $this->decodeType($fieldName);
         //====================================================================//
-        // Extract Field Data
+        // Detect Computed Data
+        $computeSource = $this->getExtraFieldAttr($fieldType, "computed");
+        if (!empty($computeSource) && is_scalar($computeSource) && empty($conf->disable_compute)) {
+            //====================================================================//
+            // Evaluate Computed Data
+            try {
+                $object = $this->object;
+
+                return dol_eval($computeSource, 1, 0);
+            } catch (\Throwable $ex) {
+                return null;
+            }
+        }
+        //====================================================================//
+        // Extract Generic Field Data
         if (isset($this->object->array_options) && array_key_exists($fieldName, $this->object->array_options)) {
             return $this->object->array_options[$fieldName];
         }
