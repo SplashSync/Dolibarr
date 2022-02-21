@@ -32,7 +32,7 @@ use Splash\Local\Objects;
  *
  * @SuppressWarnings(PHPMD.CamelCaseClassName)
  */
-class InterfaceSplash
+class InterfaceSplash extends DolibarrTriggers
 {
     //====================================================================//
     // Import Commit Triggers Action from Objects Namespaces
@@ -43,12 +43,6 @@ class InterfaceSplash
     use Objects\Order\TriggersTrait;
     use Objects\Invoice\TriggersTrait;
     use Objects\SupplierInvoice\TriggersTrait;
-
-    private $db;
-    private $name;
-    private $family;
-    private $version;
-    private $description;
 
     /** @var null|array|string */
     private $objectId;
@@ -72,61 +66,14 @@ class InterfaceSplash
 
         //====================================================================//
         // Class Init
-        $this->db = $db ;
-        $this->name = (string) preg_replace('/^Interface/i', '', get_class($this));
+        parent::__construct($db);
         $this->family = "Modules";
         $this->description = "Triggers of Splash module.";
-        $this->version = 'dolibarr';
+        $this->version = self::VERSION_DOLIBARR;
 
         //====================================================================//
         // Load traductions files required by by page
         $langs->load("errors");
-    }
-
-    /**
-     * Renvoi nom du lot de triggers
-     *
-     * @return string Nom du lot de triggers
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Renvoi descriptif du lot de triggers
-     *
-     * @return string Descriptif du lot de triggers
-     */
-    public function getDesc()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Renvoi version du lot de triggers
-     *
-     * @return string Version du lot de triggers
-     */
-    public function getVersion()
-    {
-        global $langs;
-        $langs->load("admin");
-
-        if ('development' == $this->version) {
-            return $langs->trans("Development");
-        }
-        if ('experimental' == $this->version) {
-            return $langs->trans("Experimental");
-        }
-        if ('dolibarr' == $this->version) {
-            return DOL_VERSION;
-        }
-        if ($this->version) {
-            return $this->version;
-        }
-
-        return $langs->trans("Unknown");
     }
 
     /**
@@ -145,34 +92,25 @@ class InterfaceSplash
         }
 
         if (!empty($log->msg)) {
-            setEventMessage($log->GetHtml($log->msg), 'mesgs');
+            setEventMessage($log->getHtml($log->msg), 'mesgs');
         }
         if (!empty($log->war)) {
-            setEventMessage($log->GetHtml($log->war), 'warnings');
+            setEventMessage($log->getHtml($log->war), 'warnings');
         }
         if (!empty($log->err)) {
-            setEventMessage($log->GetHtml($log->err), 'errors');
+            setEventMessage($log->getHtml($log->err), 'errors');
         }
         if (!empty($log->deb)) {
-            setEventMessage($log->GetHtml($log->deb), 'warnings');
+            setEventMessage($log->getHtml($log->deb), 'warnings');
         }
 
         $log->CleanLog();
     }
 
     /**
-     * Fonction appelee lors du declenchement d'un evenement Dolibarr.
-     * D'autres fonctions run_trigger peuvent etre presentes dans includes/triggers
-     *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
-     * @param User   $user   Objet user
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * {@inheritDoc}
      */
-    public function run_trigger($action, $object, $user)
+    public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
     {
         Splash::log()->deb("Start of Splash Module Trigger Actions (Action=".$action.")");
 
@@ -181,7 +119,7 @@ class InterfaceSplash
         $this->objectType = null;
         $this->objectId = null;
         $this->action = null;
-        $this->login = ($user->login)?$user->login:"Unknown";
+        $this->login = $user->login ?:"Unknown";
         $this->comment = null;
 
         $doCommit = false;
