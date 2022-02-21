@@ -115,8 +115,8 @@ class modSplash extends DolibarrModules
         $this->rights = $this->getRights();
 
         //====================================================================//
-            // Main menu entries
-            $this->menu = array();         // List of menus to add
+        // Main menu entries
+        $this->menu = array();         // List of menus to add
     }
 
     /**

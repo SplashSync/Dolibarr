@@ -39,10 +39,13 @@ dolibarr_set_const($db, "STOCK_ALLOW_NEGATIVE_TRANSFER", '1', 'chaine', 0, '', 0
 
 //====================================================================//
 // Setup Splash Module
-dolibarr_set_const($db, "SPLASH_WS_ID", "12345678", 'chaine', 0, '', $conf->entity);
-dolibarr_set_const($db, "SPLASH_WS_KEY", "001234567800", 'chaine', 0, '', $conf->entity);
-dolibarr_set_const($db, "SPLASH_USER", "1", 'chaine', 0, '', $conf->entity);
-dolibarr_set_const($db, "SPLASH_LANG", "fr_FR", 'chaine', 0, '', $conf->entity);
+dolibarr_set_const($db, "MAIN_MODULE_SPLASH", "1", 'chaine', 0, '', 0);
+dolibarr_set_const($db, "MAIN_MODULE_SPLASH_TRIGGERS", "1", 'chaine', 0, '', 0);
+dolibarr_set_const($db, "SPLASH_WS_ID", "12345678", 'chaine', 0, '', 0);
+dolibarr_set_const($db, "SPLASH_WS_KEY", "001234567800", 'chaine', 0, '', 0);
+dolibarr_set_const($db, "SPLASH_USER", "1", 'chaine', 0, '', 0);
+dolibarr_set_const($db, "SPLASH_LANG", "fr_FR", 'chaine', 0, '', 0);
+
 dolibarr_set_const($db, "SPLASH_LANGS", 'a:2:{i:0;s:5:"fr_BE";i:1;s:5:"en_US";}', 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_STOCK", "1", 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", "1", 'chaine', 0, '', $conf->entity);
