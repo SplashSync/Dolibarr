@@ -35,6 +35,7 @@ require_once(DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php');
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
 require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
+require_once(DOL_DOCUMENT_ROOT."/core/triggers/dolibarrtriggers.class.php");
 
 //====================================================================//
 // Objects Classes

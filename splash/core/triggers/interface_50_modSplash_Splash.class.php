@@ -108,9 +108,18 @@ class InterfaceSplash extends DolibarrTriggers
     }
 
     /**
-     * {@inheritDoc}
+     * @param string    $action Event action code
+     * @param Object    $object Object
+     * @param User      $user   Object user
+     * @param Translate $langs  Object langs
+     * @param Conf      $conf   Object conf
+     *
+     * @throws Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return int
      */
-    public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
+    public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf): int
     {
         Splash::log()->deb("Start of Splash Module Trigger Actions (Action=".$action.")");
 
@@ -166,7 +175,7 @@ class InterfaceSplash extends DolibarrTriggers
             // Add Dolibarr Log Message
             dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
 
-            return;
+            return 1;
         }
 
         //====================================================================//
@@ -176,6 +185,8 @@ class InterfaceSplash extends DolibarrTriggers
         //====================================================================//
         // Add Dolibarr Log Message
         dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
+
+        return 1;
     }
 
     /**
