@@ -98,10 +98,10 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getCoreFields($key, $fieldName)
+    protected function getCoreFields(string $key, string $fieldName)
     {
         //====================================================================//
-        // Read Company FullName => Firstname, Lastname - Compagny
+        // Read Company FullName => Firstname, Lastname - Company
         $fullname = $this->decodeFullName($this->object->name);
 
         //====================================================================//

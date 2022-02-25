@@ -91,6 +91,9 @@ class Local implements LocalClassInterface
         // Setup Custom Json Configuration Path to (../conf/splash.json)
         $parameters["ConfiguratorPath"] = $this->getDolibarrRoot()."/conf/splash.json";
         //====================================================================//
+        // Setup Extensions Path
+        $parameters["ExtensionsPath"] = $this->getDolibarrRoot()."/custom/splash-extensions";
+        //====================================================================//
         // Force Post Request Commits Mode
         $parameters["WsPostCommit"] = true;
 
