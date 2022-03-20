@@ -103,7 +103,7 @@ trait AttributesTrait
         $attributes = VariantsManager::getProductAttributes($this->object->id);
         //====================================================================//
         // READ Fields
-        foreach ($attributes as $details) {
+        foreach ($attributes as $index => $details) {
             //====================================================================//
             // Get Variant Infos
             switch ($fieldId) {
@@ -123,7 +123,7 @@ trait AttributesTrait
                     return;
             }
 
-            self::lists()->insert($this->out, "attributes", $fieldId, $details['attribute']->ref, $value);
+            self::lists()->insert($this->out, "attributes", $fieldId, $index, $value);
         }
         unset($this->in[$key]);
         //====================================================================//
