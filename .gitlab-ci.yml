@@ -106,6 +106,18 @@ stages:
 ################################################################
 
 ################################################################
+# Dolibarr V15
+Dol-15-Basics:
+    image:          tuxgasy/dolibarr:15
+    <<: *functionnal-basic
+Dol-15-Advanced:
+    image:          tuxgasy/dolibarr:15
+    <<: *functionnal-advanced
+Dol-15-Variants:
+    image:          tuxgasy/dolibarr:15
+    <<: *functionnal-variants
+
+################################################################
 # Dolibarr V14
 Dol-14-Basics:
     image:          tuxgasy/dolibarr:14
