@@ -160,7 +160,7 @@ Dol-9-Variants:
     <<: *functionnal-variants
 
 ################################################################
-# Dolibarr V9
+# Dolibarr DEV
 Dol-Dev-Basics:
     image:          tuxgasy/dolibarr:develop
     allow_failure:  true
