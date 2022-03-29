@@ -23,6 +23,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * Dolibarr Contacts Address for SplashSync
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Address extends AbstractObject
 {

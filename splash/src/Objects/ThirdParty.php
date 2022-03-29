@@ -23,6 +23,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * ThirdParty - Customers / Supplier Management Class
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class ThirdParty extends AbstractObject
 {

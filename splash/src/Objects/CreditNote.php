@@ -26,6 +26,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * CUSTOMERS CREDIT NOTES DATA MANAGEMENT
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class CreditNote extends AbstractObject
 {

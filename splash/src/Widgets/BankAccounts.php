@@ -21,6 +21,8 @@ use Splash\Models\AbstractWidget;
 
 /**
  * BANK ACCOUNTS LEVELS WIDGET
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class BankAccounts extends AbstractWidget
 {

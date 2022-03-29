@@ -26,6 +26,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * Dolibarr Product for SplashSync
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Product extends AbstractObject
 {

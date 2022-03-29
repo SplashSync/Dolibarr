@@ -31,6 +31,7 @@ use Splash\Models\AbstractWidget;
  * Dolibarr Dashboard Widget
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Dashboard extends AbstractWidget
 {

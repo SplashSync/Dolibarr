@@ -23,6 +23,8 @@ use Splash\Models\AbstractWidget;
 
 /**
  * Dolibarr Products Distributions Widget
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class ProductDistribution extends AbstractWidget
 {

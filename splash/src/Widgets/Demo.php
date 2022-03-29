@@ -28,7 +28,9 @@ use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
 
 /**
- *  TEST & DEMONSTRATION WIDGET
+ * TEST & DEMONSTRATION WIDGET
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Demo extends AbstractWidget
 {

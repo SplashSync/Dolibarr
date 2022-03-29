@@ -28,12 +28,12 @@ class L04GuestOrdersTest extends ObjectsCase
     /**
      * @var array
      */
-    protected $Fields;
+    protected $fields;
 
     /**
      * @var array
      */
-    private $Field;
+    private $field;
 
     /**
      * Test Objects Have Corrects Fields Definitions
@@ -130,9 +130,9 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Create Fake Order/Invoice Data
-        $this->Fields = $this->fakeFieldsList($objectType);
-        $this->Field = array($this->findField($this->Fields, array("socid")));
-        $fakeData = $this->fakeObjectData($this->Fields);
+        $this->fields = $this->fakeFieldsList($objectType);
+        $this->field = array($this->findField($this->fields, array("socid")));
+        $fakeData = $this->fakeObjectData($this->fields);
 
         //====================================================================//
         //   Setup Given
@@ -184,9 +184,9 @@ class L04GuestOrdersTest extends ObjectsCase
 
         //====================================================================//
         //   Create Fake Order/Invoice Data
-        $this->Fields = $this->fakeFieldsList($objectType);
-        $this->Field = array($this->findField($this->Fields, array("socid")));
-        $fakeData = $this->fakeObjectData($this->Fields);
+        $this->fields = $this->fakeFieldsList($objectType);
+        $this->field = array($this->findField($this->fields, array("socid")));
+        $fakeData = $this->fakeObjectData($this->fields);
 
         //====================================================================//
         //   Create Fake Customer with Email
@@ -295,7 +295,7 @@ class L04GuestOrdersTest extends ObjectsCase
         //====================================================================//
         //   Verify Object Data are Ok
         $this->assertIsArray($objectData);
-        $this->compareDataBlocks($this->Field, $expectedData, $objectData, $objectType);
+        $this->compareDataBlocks($this->field, $expectedData, $objectData, $objectType);
 
         return $objectId;
     }
@@ -337,7 +337,7 @@ class L04GuestOrdersTest extends ObjectsCase
         //====================================================================//
         //   Verify Object Data are Ok
         $this->assertIsArray($objectData);
-        $this->compareDataBlocks($this->Field, $expectedData, $objectData, $objectType);
+        $this->compareDataBlocks($this->field, $expectedData, $objectData, $objectType);
 
         return $writeObjectId;
     }

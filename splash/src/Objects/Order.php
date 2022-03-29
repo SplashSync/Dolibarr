@@ -26,6 +26,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * CUSTOMERS ORDERS DATA MANAGEMENT
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Order extends AbstractObject
 {

@@ -26,6 +26,8 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
  * SUPPLIER INVOICE DATA MANAGEMENT
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class SupplierInvoice extends AbstractObject
 {

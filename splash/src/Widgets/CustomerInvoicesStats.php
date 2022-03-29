@@ -27,6 +27,9 @@ use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
 
+/**
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class CustomerInvoicesStats extends AbstractWidget
 {
     /**

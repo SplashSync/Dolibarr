@@ -21,6 +21,8 @@ use Splash\Models\AbstractWidget;
 
 /**
  * LAST CUSTOMER BOX WIDGET
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class UpdatedCustomers extends AbstractWidget
 {
