@@ -35,7 +35,7 @@ trait MainTrait
 
         //====================================================================//
         // Customs HS Code
-        $this->fieldsFactory()->create(SPL_T_DOUBLE)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("customcode")
             ->name("Customs HS Code")
             ->description($langs->trans("CustomCode"))
