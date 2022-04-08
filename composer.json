@@ -39,12 +39,12 @@
 
     "require": {
         "php":                              "^7.2|^8.0",
-        "splash/phpcore":                   "@stable"
+        "splash/phpcore":                   "~1.7"
     },
     
     "require-dev": {
         "splash/console":                   "dev-master",
-        "badpixxel/php-sdk":                "dev-main"
+        "badpixxel/php-sdk":                "~1.0"
     },
 
     "archive": {

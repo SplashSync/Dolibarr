@@ -108,7 +108,7 @@ class SupplierInvoice extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $DISABLED = false;
+    protected static $DISABLED = true;
 
     /**
      * Object Name (Translated by Module)
