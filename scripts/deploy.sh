@@ -16,13 +16,13 @@
 
 ##################################################################
 ## Detect Configuration
-if [ ! -z "${SPLASH_MODULE_SRC}" ]; then
-  export SPLASH_MODULE_SRC='~/splash/module'
+if [ -z "${SPLASH_MODULE_SRC}" ]; then
+  export SPLASH_MODULE_SRC='/tmp/splash/module'
 fi
 if [ ! -d "${SPLASH_MODULE_DIR}" ]; then
   export SPLASH_MODULE_DIR='/var/www/html/custom'
 fi
-if [ ! -z ${SPLASH_MODULE_VERSION} ]; then
+if [ -z ${SPLASH_MODULE_VERSION} ]; then
   export SPLASH_MODULE_VERSION='@stable'
 fi
 echo "Install Splash Module ${SPLASH_MODULE_VERSION} to ${SPLASH_MODULE_DIR}"
