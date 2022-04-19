@@ -89,9 +89,9 @@ trait CustomerTrait
     }
 
     /**
-     * Init Customer SocId with Guste Mode Management
+     * Init Customer SocId with Guest Mode Management
      *
-     * @param Array|ArrayObject $receivedData Received Data
+     * @param array|arrayObject $receivedData Received Data
      *
      * @return void
      */

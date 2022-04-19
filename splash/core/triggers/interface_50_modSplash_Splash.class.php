@@ -17,22 +17,18 @@
 // PHP CS Overrides
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 // phpcs:disable PSR1.Files.SideEffects
-// phpcs:disable PSR1.Methods.CamelCapsMethodName
 
 //====================================================================//
 // Splash Module Definitions
 include_once(dirname(dirname(dirname(__FILE__)))."/_conf/defines.inc.php");
 
-use Splash\Client\Splash;
-use Splash\Components\Logger;
+use Splash\Local\Models\AbstractTrigger;
 use Splash\Local\Objects;
 
 /**
  * Splash Module Changes Detection Triggers
- *
- * @SuppressWarnings(PHPMD.CamelCaseClassName)
  */
-class InterfaceSplash extends DolibarrTriggers
+class InterfaceSplash extends AbstractTrigger
 {
     //====================================================================//
     // Import Commit Triggers Action from Objects Namespaces
@@ -42,95 +38,19 @@ class InterfaceSplash extends DolibarrTriggers
     use Objects\Product\TriggersTrait;
     use Objects\Order\TriggersTrait;
     use Objects\Invoice\TriggersTrait;
-    use Objects\SupplierInvoice\TriggersTrait;
-
-    /** @var null|array|string */
-    private $objectId;
-    /** @var null|string */
-    private $action;
-    /** @var null|string */
-    private $objectType;
-    /** @var string */
-    private $login = "Unknown User";
-    /** @var null|string */
-    private $comment = "Dolibarr Commit";
 
     /**
-     * Class Constructor.
+     * Detect Object Changes
      *
-     * @param mixed $db Dolibarr Database Object
-     */
-    public function __construct($db)
-    {
-        global $langs;
-
-        //====================================================================//
-        // Class Init
-        parent::__construct($db);
-        $this->family = "Modules";
-        $this->description = "Triggers of Splash module.";
-        $this->version = self::VERSION_DOLIBARR;
-
-        //====================================================================//
-        // Load traductions files required by by page
-        $langs->load("errors");
-    }
-
-    /**
-     * Read all log messages posted by OsWs and post it on dolibarr
-     *
-     * @param Logger $log Input Log Class
-     *
-     * @return void
-     */
-    public function postMessages(Logger $log)
-    {
-        //====================================================================//
-        // When Library is called in server mode, no Message Storage
-        if (!empty(SPLASH_SERVER_MODE)) {
-            return;
-        }
-
-        if (!empty($log->msg)) {
-            setEventMessage($log->getHtml($log->msg), 'mesgs');
-        }
-        if (!empty($log->war)) {
-            setEventMessage($log->getHtml($log->war), 'warnings');
-        }
-        if (!empty($log->err)) {
-            setEventMessage($log->getHtml($log->err), 'errors');
-        }
-        if (!empty($log->deb)) {
-            setEventMessage($log->getHtml($log->deb), 'warnings');
-        }
-
-        $log->CleanLog();
-    }
-
-    /**
-     * @param string    $action Event action code
-     * @param Object    $object Object
-     * @param User      $user   Object user
-     * @param Translate $langs  Object langs
-     * @param Conf      $conf   Object conf
+     * @param string $action
+     * @param object $object
      *
      * @throws Exception
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @return int
+     * @return bool
      */
-    public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf): int
+    protected function doActionDetection(string $action, object $object): bool
     {
-        Splash::log()->deb("Start of Splash Module Trigger Actions (Action=".$action.")");
-
-        //====================================================================//
-        // Init Action Parameters
-        $this->objectType = null;
-        $this->objectId = null;
-        $this->action = null;
-        $this->login = $user->login ?:"Unknown";
-        $this->comment = null;
-
         $doCommit = false;
 
         //====================================================================//
@@ -157,82 +77,7 @@ class InterfaceSplash extends DolibarrTriggers
         // TRIGGER ACTION FOR : INVOICE
         //====================================================================//
         $doCommit |= $this->doInvoiceCommit($action, $object);
-        //====================================================================//
-        // TRIGGER ACTION FOR : SUPPLIER INVOICE
-        //====================================================================//
-        $doCommit |= $this->doSupplierInvoiceCommit($action, $object);
 
-        //====================================================================//
-        // Log Trigger Action
-        Splash::log()->deb(
-            "Trigger for action '${action}' launched by '".$this->login."' for Object id=".$this->objectId
-        );
-
-        //====================================================================//
-        // No Action To Perform
-        if (!$doCommit) {
-            //====================================================================//
-            // Add Dolibarr Log Message
-            dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
-
-            return 1;
-        }
-
-        //====================================================================//
-        // Commit change to Splash Server
-        $this->doSplashCommit();
-
-        //====================================================================//
-        // Add Dolibarr Log Message
-        dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
-
-        return 1;
-    }
-
-    /**
-     * Publish Object Change to Splash Sync Server
-     *
-     * @throws Exception
-     *
-     * @return void
-     */
-    protected function doSplashCommit()
-    {
-        //====================================================================//
-        // Safety Check => Required Infos Provided
-        if ((null === $this->objectId) || (null === $this->objectType)) {
-            return;
-        }
-        //====================================================================//
-        // Safety Check => ObjectType is Active
-        if (!in_array($this->objectType, Splash::objects(), true)) {
-            return;
-        }
-        //====================================================================//
-        // Prevent Repeated Commit if Needed
-        if ((SPL_A_UPDATE == $this->action) && Splash::object($this->objectType)->isLocked()) {
-            return;
-        }
-
-        //====================================================================//
-        // Verify Id Before commit
-        if ($this->objectId > 0) {
-            //====================================================================//
-            // Commit Change to OsWs Module
-            Splash::commit(
-                $this->objectType,          // Object Type
-                $this->objectId,            // Object Identifier (RowId ro Array of RowId)
-                (string) $this->action,     // Splash Action Type
-                $this->login,               // Current User Login
-                (string) $this->comment     // Action Comment
-            );
-            Splash::log()->deb("Change Committed (Action=".$this->comment.") Object => ".$this->objectType);
-        } else {
-            Splash::log()->war("Commit Id Missing (Action=".$this->comment.") Object => ".$this->objectType);
-        }
-
-        //====================================================================//
-        //  Post User Messages
-        $this->postMessages(Splash::log());
+        return $doCommit;
     }
 }
