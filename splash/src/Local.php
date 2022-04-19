@@ -93,7 +93,7 @@ class Local implements LocalClassInterface
         //====================================================================//
         // Setup Extensions Path
         $parameters["ExtensionsPath"] = array(
-            $this->getDolibarrRoot()."/custom/splash-advance-pack",
+            $this->getDolibarrRoot()."/custom/splashadvancepack",
             $this->getDolibarrRoot()."/custom/splash-extensions",
         );
         //====================================================================//
