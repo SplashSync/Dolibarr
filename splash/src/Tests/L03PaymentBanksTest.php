@@ -20,6 +20,7 @@ use Exception;
 use Facture;
 use Splash\Client\Splash;
 use Splash\Components\FieldsFactory;
+use Splash\Local\Local;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
@@ -140,7 +141,7 @@ class L03PaymentBanksTest extends ObjectsCase
         $account->entity = 1;
         $account->ref = $paymentType;
         $account->label = $paymentType;
-        $account->courant = \Account::TYPE_CURRENT;
+        $account->courant = Account::TYPE_CURRENT;
         $account->currency_code = "EUR";
 
         $this->assertGreaterThan(0, $account->create($user, 0));
@@ -200,7 +201,10 @@ class L03PaymentBanksTest extends ObjectsCase
     {
         //====================================================================//
         //   Test Object Types
-        $objectTypes = array("Invoice", "CreditNote", "SupplierInvoice");
+        $objectTypes = array_merge(
+            array("Invoice", "CreditNote"),
+            class_exists(Local::CLASS_SUPPLIER_INVOICE) ? array("SupplierInvoice") : array()
+        );
         //====================================================================//
         //   Possible Payment Methods Types
         $methods = array(
