@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects\Product;
 
+use Exception;
 use MouvementStock;
 use Product;
 use Splash\Client\Splash;
@@ -42,12 +43,14 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Product
      *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
+     *
+     * @throws Exception
      *
      * @return bool Commit is required
      */
-    protected function doProductCommit($action, $object)
+    protected function doProductCommit(string $action, object $object): bool
     {
         //====================================================================//
         // Filter Triggered Actions
@@ -63,14 +66,14 @@ trait TriggersTrait
     }
 
     /**
-     * Check if Commit is Requiered
+     * Check if Commit is Required
      *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
      *
      * @return bool
      */
-    private function isProductCommitRequired($action, $object)
+    private function isProductCommitRequired(string $action, object $object): bool
     {
         //====================================================================//
         // Filter on Event Action
@@ -90,11 +93,11 @@ trait TriggersTrait
     /**
      * Identify Order Id from Given Object
      *
-     * @param object $object Objet concerne
+     * @param object $object Impacted Objet
      *
      * @return void
      */
-    private function setProductObjectId($object)
+    private function setProductObjectId(object $object): void
     {
         //====================================================================//
         // Identify Product Id
@@ -108,13 +111,15 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Product
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Event Code
+     *
+     * @throws Exception
      *
      * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function setProductParameters($action)
+    private function setProductParameters(string $action): void
     {
         //====================================================================//
         // Check if object if in Remote Create Mode
@@ -150,11 +155,11 @@ trait TriggersTrait
     /**
      * Commit Delete for Base Product
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Event Code
      *
      * @return void
      */
-    private function onProductVariantChanges($action)
+    private function onProductVariantChanges(string $action): void
     {
         //====================================================================//
         // Only When a New Variant is Created

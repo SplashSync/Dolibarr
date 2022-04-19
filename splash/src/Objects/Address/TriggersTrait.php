@@ -25,12 +25,12 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Address
      *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
      *
      * @return bool Commit is required
      */
-    protected function doAddressCommit($action, $object)
+    protected function doAddressCommit(string $action, object $object): bool
     {
         //====================================================================//
         // Check if Commit is Required

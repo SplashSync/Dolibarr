@@ -23,6 +23,9 @@
         "preferred-install":                "dist",
         "platform": {
             "php":                          "7.2.0"
+        },
+        "allow-plugins": {
+            "phpro/grumphp": true
         }
     },
     

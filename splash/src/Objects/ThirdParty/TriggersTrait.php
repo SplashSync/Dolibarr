@@ -25,12 +25,12 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for ThirdParty
      *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
      *
      * @return bool Commit is required
      */
-    protected function doThirdPartyCommit($action, $object)
+    protected function doThirdPartyCommit(string $action, object $object): bool
     {
         //====================================================================//
         // Check if Commit is Required

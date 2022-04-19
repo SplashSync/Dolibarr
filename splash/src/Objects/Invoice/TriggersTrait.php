@@ -15,11 +15,11 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use Exception;
 use Facture;
 use FactureLigne;
 use Paiement;
 use Splash\Client\Splash;
-use Splash\Local\Objects\Invoice;
 
 /**
  * Invoices Dolibarr Trigger trait
@@ -29,12 +29,14 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Order
      *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
+     *
+     * @throws Exception
      *
      * @return bool Commit is required
      */
-    protected function doInvoiceCommit($action, $object)
+    protected function doInvoiceCommit(string $action, object $object): bool
     {
         //====================================================================//
         // Check if Commit is Required
@@ -62,11 +64,11 @@ trait TriggersTrait
     /**
      * Check if Commit is Required
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Event Code
      *
      * @return bool
      */
-    private function isInvoiceCommitRequired($action)
+    private function isInvoiceCommitRequired(string $action): bool
     {
         return in_array($action, array(
             // Invoice Actions
@@ -95,11 +97,11 @@ trait TriggersTrait
     /**
      * Identify Order Id from Given Object
      *
-     * @param object $object Objet concerne
+     * @param object $object Impacted Objet
      *
      * @return void
      */
-    private function setInvoiceObjectId($object)
+    private function setInvoiceObjectId(object $object): void
     {
         //====================================================================//
         // Identify Invoice Id from Invoice Line
@@ -115,8 +117,8 @@ trait TriggersTrait
         // Identify Invoice Id from Payment Line
         if ($object instanceof Paiement) {
             //====================================================================//
-            // Read Paiement Object Invoices Amounts
-            $amounts = self::getPaiementAmounts((int) $object->id);
+            // Read Payment Object Invoices Amounts
+            $amounts = self::getPaymentAmounts((int) $object->id);
             //====================================================================//
             // Create Impacted Invoices Ids Array
             $this->objectId = array_keys($amounts);
@@ -134,11 +136,11 @@ trait TriggersTrait
     /**
      * Identify Splash Object type from Given Object
      *
-     * @param object $object Objet concerne
+     * @param object $object Impacted Objet
      *
      * @return void
      */
-    private function setInvoiceObjectType($object)
+    private function setInvoiceObjectType(object $object): void
     {
         $objectType = Facture::TYPE_STANDARD;
         //====================================================================//
@@ -164,7 +166,9 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Product
      *
-     * @param string $action Code de l'évènement
+     * @param string $action Event Code
+     *
+     * @throws Exception
      *
      * @return void
      *
@@ -206,11 +210,11 @@ trait TriggersTrait
     /**
      * Fetch List of Invoices Payments Amounts
      *
-     * @param int $paiementId Payment Object Id
+     * @param int $paymentId Payment Object Id
      *
      * @return array List Of Payment Object Amounts
      */
-    private static function getPaiementAmounts(int $paiementId)
+    private static function getPaymentAmounts(int $paymentId): array
     {
         global $db;
         //====================================================================//
@@ -220,7 +224,7 @@ trait TriggersTrait
         // SELECT SQL Request
         $sql = 'SELECT fk_facture, amount';
         $sql .= ' FROM '.MAIN_DB_PREFIX.'paiement_facture';
-        $sql .= ' WHERE fk_paiement = '.$paiementId;
+        $sql .= ' WHERE fk_paiement = '.$paymentId;
         $resql = $db->query($sql);
         //====================================================================//
         // SQL Error

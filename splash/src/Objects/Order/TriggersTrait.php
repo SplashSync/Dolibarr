@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Order;
 
 use Commande;
+use Exception;
 use OrderLine;
 use Splash\Client\Splash;
 
@@ -27,12 +28,14 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Order
      *
-     * @param string $action Code de l'evenement
-     * @param object $object Objet concerne
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
+     *
+     * @throws Exception
      *
      * @return bool Commit is required
      */
-    protected function doOrderCommit($action, $object)
+    protected function doOrderCommit(string $action, object $object): bool
     {
         //====================================================================//
         // Check if Commit is Required
@@ -49,13 +52,13 @@ trait TriggersTrait
     }
 
     /**
-     * Check if Commit is Requiered
+     * Check if Commit is Required
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Event Code
      *
      * @return bool
      */
-    private function isOrderCommitRequired($action)
+    private function isOrderCommitRequired(string $action): bool
     {
         //====================================================================//
         // Filter Triggered Actions
@@ -83,11 +86,11 @@ trait TriggersTrait
     /**
      * Identify Order Id from Given Object
      *
-     * @param object $object Objet concerne
+     * @param object $object Impacted Objet
      *
      * @return void
      */
-    private function setOrderObjectId($object)
+    private function setOrderObjectId(object $object): void
     {
         //====================================================================//
         // Identify Order Id from Order Line
@@ -108,13 +111,15 @@ trait TriggersTrait
     /**
      * Prepare Object Commit for Product
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Event Code
+     *
+     * @throws Exception
      *
      * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function setOrderParameters($action)
+    private function setOrderParameters(string $action): void
     {
         //====================================================================//
         // Store Global Action Parameters

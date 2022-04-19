@@ -78,6 +78,6 @@ class InterfaceSplash extends AbstractTrigger
         //====================================================================//
         $doCommit |= $this->doInvoiceCommit($action, $object);
 
-        return $doCommit;
+        return (bool) $doCommit;
     }
 }

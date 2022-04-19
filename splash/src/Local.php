@@ -36,6 +36,26 @@ class Local implements LocalClassInterface
      */
     const ROOT_INC = "master.inc.php";
 
+    /**
+     * @var class-string
+     */
+    const CLASS_QUOTE = 'Splash\Local\Objects\Quote';
+
+    /**
+     * @var class-string
+     */
+    const CLASS_ORDER = 'Splash\Local\Objects\Order';
+
+    /**
+     * @var class-string
+     */
+    const CLASS_INVOICE = 'Splash\Local\Objects\Invoice';
+
+    /**
+     * @var class-string
+     */
+    const CLASS_SUPPLIER_INVOICE = 'Splash\Local\Objects\SupplierInvoice';
+
     //====================================================================//
     // *******************************************************************//
     //  MANDATORY CORE MODULE LOCAL FUNCTIONS

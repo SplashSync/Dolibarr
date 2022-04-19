@@ -20,7 +20,6 @@ use OrderLine;
 use Product;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
-use Splash\Local\Objects\SupplierInvoice;
 use Splash\Local\Services\LinesExtraFieldsParser;
 use SupplierInvoiceLine;
 
@@ -52,9 +51,9 @@ trait BaseItemsTrait
     {
         global $langs;
 
-        if (is_a($this, 'Splash\Local\Objects\Order')) {
+        if (is_a($this, Local::CLASS_ORDER)) {
             $groupName = $langs->trans("OrderLine");
-        } elseif (is_a($this, 'Splash\Local\Objects\Invoice')) {
+        } elseif (is_a($this, Local::CLASS_INVOICE)) {
             $groupName = $langs->trans("InvoiceLine");
         } else {
             $groupName = "Items";
@@ -62,7 +61,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Order Line Description
-        $descFieldName = ($this instanceof SupplierInvoice) ? "description" : "desc";
+        $descFieldName = is_a($this, Local::CLASS_SUPPLIER_INVOICE) ? "description" : "desc";
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier($descFieldName)
             ->InList("lines")

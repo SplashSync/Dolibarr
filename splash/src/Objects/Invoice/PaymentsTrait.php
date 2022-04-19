@@ -20,7 +20,6 @@ use Paiement;
 use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
-use Splash\Local\Objects\SupplierInvoice;
 
 /**
  * Dolibarr Customer/Supplier Invoice Payments Fields
@@ -104,7 +103,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Detect Supplier Invoices Mode
-        $isSupplier |= ($this instanceof SupplierInvoice);
+        $isSupplier |= is_a($this, Local::CLASS_SUPPLIER_INVOICE);
         //====================================================================//
         // Prepare SQL Request
         // Payments already done (from payment on this invoice)
@@ -501,7 +500,7 @@ trait PaymentsTrait
             $isInitDone = true;
         }
 
-        return ($this instanceof SupplierInvoice) ? new PaiementFourn($db) : new Paiement($db);
+        return is_a($this, Local::CLASS_SUPPLIER_INVOICE) ? new PaiementFourn($db) : new Paiement($db);
     }
 
     /**

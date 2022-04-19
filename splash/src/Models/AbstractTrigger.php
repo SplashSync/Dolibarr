@@ -151,8 +151,8 @@ class AbstractTrigger extends DolibarrTriggers
     /**
      * Detect Object Changes
      *
-     * @param string $action
-     * @param object $object
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
      *
      * @throws Exception
      *
