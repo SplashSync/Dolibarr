@@ -39,7 +39,7 @@ composer create-project splash/dolibarr "${SPLASH_MODULE_SRC}" "${SPLASH_MODULE_
 if [ ! -d "${SPLASH_MODULE_DIR}/splash" ]; then
   mkdir "${SPLASH_MODULE_DIR}/splash"
 fi
-cp -Rf "${SPLASH_MODULE_SRC}/splash" "${SPLASH_MODULE_DIR}/splash"
+cp -Rf "${SPLASH_MODULE_SRC}/splash" "${SPLASH_MODULE_DIR}"
 ##################################################################
 ## User Info
 if [ -f "${SPLASH_MODULE_DIR}/splash/core/modules/modSplash.class.php" ]; then
