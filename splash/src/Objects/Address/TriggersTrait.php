@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Address;
 
 use Contact;
+use Splash\Client\Splash;
 
 /**
  * Address Dolibarr Trigger trait
@@ -60,13 +61,55 @@ trait TriggersTrait
     }
 
     /**
-     * Check if Commit is Requiered
+     * Prepare Object Secondary Commit for Address
      *
-     * @param string $action Code de l'evenement
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
+     *
+     * @return bool Commit is required
+     */
+    protected function doAddressSecondaryCommit(string $action, object $object): bool
+    {
+        //====================================================================//
+        // Check if Feature is Active
+        if (empty(Splash::configuration()->PropagateContactCommits)) {
+            return false;
+        }
+        //====================================================================//
+        // Check if Commit is Required
+        if (!$this->isAddressCommitRequired($action)) {
+            return false;
+        }
+        //====================================================================//
+        // Check Object
+        if (!($object instanceof Contact) || empty($object->socid)) {
+            return false;
+        }
+        //====================================================================//
+        // Store Global Action Parameters
+        $this->objectType = "ThirdParty";
+        $this->objectId = (string) $object->socid;
+        $this->action = SPL_A_UPDATE;
+
+        if ('CONTACT_CREATE' == $action) {
+            $this->comment = "Contact Created on Dolibarr";
+        } elseif ('CONTACT_MODIFY' == $action) {
+            $this->comment = "Contact Updated on Dolibarr";
+        } elseif ('CONTACT_DELETE' == $action) {
+            $this->comment = "Contact Deleted on Dolibarr";
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if Commit is Required
+     *
+     * @param string $action Event Code
      *
      * @return bool
      */
-    private function isAddressCommitRequired($action)
+    private function isAddressCommitRequired(string $action): bool
     {
         return in_array($action, array(
             'CONTACT_CREATE',

@@ -20,7 +20,7 @@
 
 //====================================================================//
 // Splash Module Definitions
-include_once(dirname(dirname(dirname(__FILE__)))."/_conf/defines.inc.php");
+include_once(dirname(__FILE__, 3)."/_conf/defines.inc.php");
 
 use Splash\Local\Models\AbstractTrigger;
 use Splash\Local\Objects;
@@ -79,5 +79,23 @@ class InterfaceSplash extends AbstractTrigger
         $doCommit |= $this->doInvoiceCommit($action, $object);
 
         return (bool) $doCommit;
+    }
+
+    /**
+     * Detect Secondary Object Changes
+     *
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function doSecondaryActionDetection(string $action, object $object): bool
+    {
+        //====================================================================//
+        // TRIGGER ACTION FOR : Address / Contact
+        //====================================================================//
+        return $this->doAddressSecondaryCommit($action, $object);
     }
 }

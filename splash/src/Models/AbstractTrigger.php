@@ -118,32 +118,28 @@ class AbstractTrigger extends DolibarrTriggers
     public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf): int
     {
         Splash::log()->deb("Start of Splash Module Trigger Actions (Action=".$action.")");
-
         //====================================================================//
         // Init Action Parameters
-        $this->objectType = null;
-        $this->objectId = null;
-        $this->action = null;
-        $this->login = $user->login ?:"Unknown";
-        $this->comment = null;
-
+        $this->reset($user);
         //====================================================================//
         // No Action To Perform
         if (!$this->doActionDetection($action, $object)) {
-            //====================================================================//
-            // Add Dolibarr Log Message
-            dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
-
             return 1;
         }
-
         //====================================================================//
         // Commit change to Splash Server
         $this->doSplashCommit();
-
         //====================================================================//
-        // Add Dolibarr Log Message
-        dol_syslog(SPL_LOGPREFIX."End of Trigger for Action='".$action."'", LOG_DEBUG);
+        // Init Action Parameters
+        $this->reset($user);
+        //====================================================================//
+        // No Action To Perform
+        if (!$this->doSecondaryActionDetection($action, $object)) {
+            return 1;
+        }
+        //====================================================================//
+        // Commit change to Splash Server
+        $this->doSplashCommit();
 
         return 1;
     }
@@ -166,13 +162,28 @@ class AbstractTrigger extends DolibarrTriggers
     }
 
     /**
+     * Detect Secondary Object Changes
+     *
+     * @param string $action Event Code
+     * @param object $object Impacted Objet
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function doSecondaryActionDetection(string $action, object $object): bool
+    {
+        return false;
+    }
+
+    /**
      * Publish Object Change to Splash Sync Server
      *
      * @throws Exception
      *
      * @return void
      */
-    protected function doSplashCommit(): void
+    private function doSplashCommit(): void
     {
         //====================================================================//
         // Safety Check => Required Infos Provided
@@ -213,13 +224,29 @@ class AbstractTrigger extends DolibarrTriggers
     }
 
     /**
+     * Reset all status Variables
+     *
+     * @param User $user Object user
+     *
+     * @return void
+     */
+    private function reset(User $user): void
+    {
+        $this->objectType = null;
+        $this->objectId = null;
+        $this->action = null;
+        $this->login = $user->login ?:"Unknown";
+        $this->comment = null;
+    }
+
+    /**
      * Read all log messages posted by OsWs and post it on dolibarr
      *
      * @param Logger $log Input Log Class
      *
      * @return void
      */
-    private function postMessages(Logger $log)
+    private function postMessages(Logger $log): void
     {
         //====================================================================//
         // When Library is called in server mode, no Message Storage
