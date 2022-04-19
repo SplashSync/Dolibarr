@@ -15,8 +15,6 @@
 
 namespace Splash\Local\Objects\Invoice;
 
-use Splash\Local\Objects\SupplierInvoice;
-
 /**
  * Dolibarr Customer Orders Fields
  */
@@ -34,7 +32,7 @@ trait MainTrait
         //====================================================================//
         // Invoice PaymentDueDate Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->identifier(($this instanceof SupplierInvoice) ? "date_echeance" : "date_lim_reglement")
+            ->identifier(is_a($this, Local::CLASS_SUPPLIER_INVOICE) ? "date_echeance" : "date_lim_reglement")
             ->name($langs->trans("DateMaxPayment"))
             ->microData("http://schema.org/Invoice", "paymentDueDate")
         ;
