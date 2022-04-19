@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use Splash\Local\Local;
+
 /**
  * Dolibarr Customer Orders Fields
  */
