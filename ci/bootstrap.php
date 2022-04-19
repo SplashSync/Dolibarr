@@ -19,7 +19,7 @@ global $db, $langs, $conf, $user, $hookmanager;
 
 //====================================================================//
 // Initiate Dolibarr Global Environment Variables
-require_once(dirname(dirname(__DIR__))."/master.inc.php");
+require_once(dirname(__DIR__, 2) ."/master.inc.php");
 //====================================================================//
 // Functions Dolibarr
 require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
