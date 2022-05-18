@@ -154,8 +154,8 @@ class PaymentManager
      * Search for Similar Payment based on Inputs
      *
      * @param Paiement $payment Payment Object
-     * @param Facture $invoice
-     * @param float $amount
+     * @param Facture  $invoice
+     * @param float    $amount
      *
      * @return bool
      */
