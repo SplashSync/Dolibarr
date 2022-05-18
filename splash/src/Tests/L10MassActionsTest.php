@@ -97,6 +97,16 @@ class L10MassActionsTest extends ObjectsCase
             'update' => false,
             'delete' => false,
         ),
+        "Quote" => array(
+            'max' => 10,
+            'batch' => 5,
+            'fields' => array(
+                "status" => \Splash\Models\Objects\Quotation\Status::VALIDATED,
+            ),
+            'verify' => true,
+            'update' => true,
+            'delete' => true,
+        ),
     );
 
     /**
