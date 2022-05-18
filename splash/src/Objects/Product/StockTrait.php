@@ -36,7 +36,7 @@ trait StockTrait
      *
      * @return void
      */
-    protected function buildStockFields()
+    protected function buildStockFields(): void
     {
         global $langs;
 
@@ -48,56 +48,67 @@ trait StockTrait
         // Default Stock Location
         if (Local::dolVersionCmp("8.0.0") >= 0) {
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("fk_default_warehouse")
+                ->identifier("fk_default_warehouse")
                 ->addChoices($this->getStockLocations())
                 ->group($langs->trans("Stock"))
-                ->Name($langs->trans("DefaultWarehouse"))
-                ->MicroData("http://schema.org/Offer", "inventoryLocation");
+                ->name($langs->trans("DefaultWarehouse"))
+                ->microData("http://schema.org/Offer", "inventoryLocation")
+            ;
         }
-
         //====================================================================//
-        // Stock Reel
+        // Reel Stock
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("stock_reel")
-            ->Name($langs->trans("RealStock"))
+            ->identifier("stock_reel")
+            ->name($langs->trans("RealStock"))
             ->group($langs->trans("Stock"))
-            ->MicroData("http://schema.org/Offer", "inventoryLevel")
+            ->microData("http://schema.org/Offer", "inventoryLevel")
             ->isReadOnly(ConfigManager::isMultiStocksMode())
-            ->isListed();
-
+            ->isListed()
+        ;
+        //====================================================================//
+        // Virtual Stock
+        $this->fieldsFactory()->create(SPL_T_INT)
+            ->identifier("stock_theorique")
+            ->name($langs->trans("VirtualStock"))
+            ->description($langs->trans("VirtualStockDesc"))
+            ->group($langs->trans("Stock"))
+            ->MicroData("http://schema.org/Offer", "availableLevel")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Stock Alerte Level
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("seuil_stock_alerte")
-            ->Name($langs->trans("StockLimit"))
+            ->identifier("seuil_stock_alerte")
+            ->name($langs->trans("StockLimit"))
             ->group($langs->trans("Stock"))
-            ->MicroData("http://schema.org/Offer", "inventoryAlertLevel");
-
+            ->microData("http://schema.org/Offer", "inventoryAlertLevel")
+        ;
         //====================================================================//
         // Stock Alerte Flag
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("stock_alert_flag")
-            ->Name($langs->trans("StockTooLow"))
+            ->identifier("stock_alert_flag")
+            ->name($langs->trans("StockTooLow"))
             ->group($langs->trans("Stock"))
-            ->MicroData("http://schema.org/Offer", "inventoryAlertFlag")
-            ->isReadOnly();
-
+            ->microData("http://schema.org/Offer", "inventoryAlertFlag")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Stock Expected Level
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("desiredstock")
-            ->Name($langs->trans("DesiredStock"))
+            ->identifier("desiredstock")
+            ->name($langs->trans("DesiredStock"))
             ->group($langs->trans("Stock"))
-            ->MicroData("http://schema.org/Offer", "inventoryTargetLevel");
-
+            ->microData("http://schema.org/Offer", "inventoryTargetLevel")
+        ;
         //====================================================================//
         // Average Purchase price value
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("pmp")
-            ->Name($langs->trans("EstimatedStockValueShort"))
+            ->identifier("pmp")
+            ->name($langs->trans("EstimatedStockValueShort"))
             ->group($langs->trans("Stock"))
-            ->MicroData("http://schema.org/Offer", "averagePrice")
-            ->isReadOnly();
+            ->microData("http://schema.org/Offer", "averagePrice")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -105,7 +116,7 @@ trait StockTrait
      *
      * @return void
      */
-    protected function buildMultiStockFields()
+    protected function buildMultiStockFields(): void
     {
         global $langs;
 
@@ -140,7 +151,7 @@ trait StockTrait
      *
      * @return void
      */
-    protected function getStockFields($key, $fieldName)
+    protected function getStockFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -165,6 +176,13 @@ trait StockTrait
 
                 break;
             //====================================================================//
+            // Virtual Stock Reading
+            case 'stock_theorique':
+                $this->object->load_virtual_stock();
+                $this->getSimple($fieldName, "object", 0);
+
+                break;
+            //====================================================================//
             // Default Stock Location
             case 'fk_default_warehouse':
                 $this->out[$fieldName] = $this->getDefaultLocation();
@@ -185,7 +203,7 @@ trait StockTrait
      *
      * @return void
      */
-    protected function getMultiStockFields($key, $fieldName)
+    protected function getMultiStockFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // MULTI-LOCATIONS STOCKS
@@ -208,9 +226,7 @@ trait StockTrait
             }
             //====================================================================//
             // Read Real Stock for Location
-            $this->out[$fieldName] = isset($this->object->stock_warehouse[$locationId]->real)
-                ? $this->object->stock_warehouse[$locationId]->real
-                : 0;
+            $this->out[$fieldName] = $this->object->stock_warehouse[$locationId]->real ?? 0;
             unset($this->in[$key]);
         }
     }
@@ -223,7 +239,7 @@ trait StockTrait
      *
      * @return void
      */
-    protected function setStockFields($fieldName, $fieldData)
+    protected function setStockFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -262,7 +278,7 @@ trait StockTrait
      *
      * @return void
      */
-    protected function setMultiStockFields($fieldName, $fieldData)
+    protected function setMultiStockFields(string $fieldName, $fieldData): void
     {
         global $langs, $user;
 
@@ -288,9 +304,7 @@ trait StockTrait
             }
             //====================================================================//
             // Read Real Stock for Location
-            $currentStock = isset($this->object->stock_warehouse[$locationId]->real)
-                ? $this->object->stock_warehouse[$locationId]->real
-                : 0;
+            $currentStock = $this->object->stock_warehouse[$locationId]->real ?? 0;
             //====================================================================//
             // Compare Current Product Stock with new Value
             if ($currentStock == $fieldData) {
