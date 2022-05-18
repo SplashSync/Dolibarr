@@ -20,6 +20,7 @@ use Paiement;
 use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\PaymentManager;
 
 /**
  * Dolibarr Customer/Supplier Invoice Payments Fields
@@ -308,16 +309,22 @@ trait PaymentsTrait
         //====================================================================//
         if ($paymentData) {
             //====================================================================//
-            // Update Payment Infos, If No Need to rRe-Create => EXIT
+            // Update Payment Infos, If No Need to Re-Create => EXIT
             if (!$this->updatePaymentItem($paymentData->id, $lineData)) {
                 return false;
             }
         }
 
         //====================================================================//
+        // Try Multi Invoice Payments Identification
+        //====================================================================//
+        if ($this->identifyExistingPayment((array) $lineData)) {
+            return true;
+        }
+
+        //====================================================================//
         // Create New Line
         //====================================================================//
-
         return $this->createPaymentItem($lineData);
     }
 
@@ -631,5 +638,80 @@ trait PaymentsTrait
         //====================================================================//
         // Default Payment Account Id
         return $conf->global->SPLASH_BANK;
+    }
+
+    /**
+     * Identify Bank Account ID using Splash Configuration
+     *
+     * @param array $lineData Payment Line data
+     *
+     * @return null|Paiement
+     */
+    private function identifyExistingPayment($lineData): ?Paiement
+    {
+        //====================================================================//
+        // Search for Similar Payment in Database
+        $payment = $this->getSimilarPayment($lineData);
+        if (!$payment) {
+            return null;
+        }
+        //====================================================================//
+        // Collect Payment Invoice/Credit Paid Totals
+        $paymentDetails = PaymentManager::getPaymentInvoicesTotals($payment);
+        if (!$paymentDetails || isset($paymentDetails[$this->object->id])) {
+            return null;
+        }
+        //====================================================================//
+        // Attach Payment to this Invoice/Credit Note
+        Splash::log()->war("An Existing Payment was Identified: ".$payment->ref);
+        //====================================================================//
+        // Update Payment Amounts for All Invoice/Credit Note
+        $consumed = $payment->amount;
+        foreach ($paymentDetails as $paymentDetail) {
+            PaymentManager::updatePaymentInvoiceAmount(
+                $payment,
+                $paymentDetail['invoice'],
+                (float) $paymentDetail['invoiced']
+            );
+            $consumed -= (float) $paymentDetail['invoiced'];
+        }
+        //====================================================================//
+        // Add Remaining Amount to Current Invoice
+        PaymentManager::addPaymentInvoiceAmount(
+            $payment,
+            $this->object,
+            (float) $consumed
+        );
+        //====================================================================//
+        // Return Identified Payment
+        return $payment;
+    }
+
+    /**
+     * Search for Similar Payment based on Inputs
+     *
+     * @param array $lineData Payment Line data
+     *
+     * @return null|Paiement
+     */
+    private function getSimilarPayment(array $lineData): ?Paiement
+    {
+        //====================================================================//
+        // Safety Checks
+        if (is_a($this, Local::CLASS_SUPPLIER_INVOICE)
+            || empty($lineData["mode"])
+            || empty($lineData["date"])
+            || empty($lineData["number"])
+            || empty($lineData["amount"])) {
+            return null;
+        }
+        //====================================================================//
+        // Return Identified Payment
+        return PaymentManager::searchForSimilarPayment(
+            $lineData["date"],
+            $lineData["number"],
+            (float) $lineData["amount"],
+            $this->identifyPaymentMethod($lineData["mode"])
+        );
     }
 }

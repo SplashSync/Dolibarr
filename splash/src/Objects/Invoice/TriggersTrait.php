@@ -20,6 +20,7 @@ use Facture;
 use FactureLigne;
 use Paiement;
 use Splash\Client\Splash;
+use Splash\Local\Services\PaymentManager;
 
 /**
  * Invoices Dolibarr Trigger trait
@@ -118,7 +119,7 @@ trait TriggersTrait
         if ($object instanceof Paiement) {
             //====================================================================//
             // Read Payment Object Invoices Amounts
-            $amounts = self::getPaymentAmounts((int) $object->id);
+            $amounts = PaymentManager::getPaymentAmounts($object);
             //====================================================================//
             // Create Impacted Invoices Ids Array
             $this->objectId = array_keys($amounts);
@@ -205,42 +206,5 @@ trait TriggersTrait
 
                 break;
         }
-    }
-
-    /**
-     * Fetch List of Invoices Payments Amounts
-     *
-     * @param int $paymentId Payment Object Id
-     *
-     * @return array List Of Payment Object Amounts
-     */
-    private static function getPaymentAmounts(int $paymentId): array
-    {
-        global $db;
-        //====================================================================//
-        // Init Result Array
-        $amounts = array();
-        //====================================================================//
-        // SELECT SQL Request
-        $sql = 'SELECT fk_facture, amount';
-        $sql .= ' FROM '.MAIN_DB_PREFIX.'paiement_facture';
-        $sql .= ' WHERE fk_paiement = '.$paymentId;
-        $resql = $db->query($sql);
-        //====================================================================//
-        // SQL Error
-        if (!$resql) {
-            Splash::log()->errTrace($db->error());
-
-            return $amounts;
-        }
-        //====================================================================//
-        // Populate Object
-        for ($i = 0; $i < $db->num_rows($resql); $i++) {
-            $obj = $db->fetch_object($resql);
-            $amounts[$obj->fk_facture] = $obj->amount;
-        }
-        $db->free($resql);
-
-        return $amounts;
     }
 }
