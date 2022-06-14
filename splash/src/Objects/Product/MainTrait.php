@@ -110,7 +110,7 @@ trait MainTrait
             // PRODUCT SPECIFICATIONS
             //====================================================================//
             case 'customcode':
-                $this->getSimple($fieldName);
+                $this->out[$fieldName] = str_replace(" ", "", $this->object->customcode ?? "");
 
                 break;
             case 'weight':

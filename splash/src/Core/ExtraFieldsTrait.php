@@ -402,6 +402,7 @@ trait ExtraFieldsTrait
             case "link":
                 return SPL_T_VARCHAR;
             case "text":
+            case "html":
                 return SPL_T_TEXT;
             case "int":
                 return SPL_T_INT;
