@@ -41,7 +41,7 @@ if ('UpdateLocal' == $action) {
     //====================================================================//
     // Update Other Langs
     $otherLangs = GETPOST('OtherLangs', 'alpha');
-    if ($otherLangs && !is_array($otherLangs)) {
+    if ($otherLangs && is_array($otherLangs)) {
         if (dolibarr_set_const($db, "SPLASH_LANGS", serialize($otherLangs), 'chaine', 0, '', $conf->entity) <= 0) {
             $errors++;
         }

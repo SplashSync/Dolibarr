@@ -38,7 +38,7 @@ parameters:
     # For Building Splash Module
     mod-src:            '/splash'
     mod-target:         '/splash/'
-    mod-file:           "module_splash-1.15.2"
+    mod-file:           "module_splash-1.15.3"
 
     # For Building Splash Manifest
     yml-enable:         false
