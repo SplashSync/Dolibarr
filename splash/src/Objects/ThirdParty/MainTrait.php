@@ -42,11 +42,13 @@ trait MainTrait
 
         //====================================================================//
         // Email
+        $emailMandatory = (bool) Local::getParameter("SOCIETE_EMAIL_MANDATORY");
+        $emailUnique = (bool) Local::getParameter("SOCIETE_EMAIL_UNIQUE");
         $this->fieldsFactory()->create(SPL_T_EMAIL)
             ->Identifier("email")
             ->Name($langs->trans("Email"))
             // Set Required when Set As Mandatory in Dolibarr Config
-            ->isRequired((bool) Local::getParameter("SOCIETE_EMAIL_MANDATORY"))
+            ->isRequired($emailMandatory || $emailUnique)
             ->MicroData("http://schema.org/ContactPoint", "email")
             ->isLogged()
             ->isListed();
