@@ -214,9 +214,7 @@ trait CRUDTrait
 
         //====================================================================//
         // If Mandatory, Check Email is given
-        $emailMandatory = (bool) Local::getParameter("SOCIETE_EMAIL_MANDATORY");
-        $emailUnique = (bool) Local::getParameter("SOCIETE_EMAIL_UNIQUE");
-        if (($emailMandatory || $emailUnique) && empty($this->in["email"])) {
+        if (self::isEmailRequired() && empty($this->in["email"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
         }
 
