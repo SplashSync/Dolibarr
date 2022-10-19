@@ -556,7 +556,7 @@ trait BaseItemsTrait
             $this->currentItem->fk_product,
             "fk_product_type"
         );
-        $this->currentItem->setValueFrom("product_type", $productType,'', null, '', '', "none");
+        $this->currentItem->setValueFrom("product_type", $productType, '', null, '', '', "none");
         $this->catchDolibarrErrors($this->currentItem);
     }
 
