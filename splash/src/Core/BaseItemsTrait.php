@@ -375,6 +375,7 @@ trait BaseItemsTrait
         // Perform Line Update
         if ($this->currentItem->update($arg1) <= 0) {
             $this->catchDolibarrErrors($this->currentItem);
+            Splash::log()->errTrace($this->currentItem->db->lastquery());
             Splash::log()->errTrace("Unable to update Line Item. ");
 
             return;
@@ -442,6 +443,9 @@ trait BaseItemsTrait
         // Prices Safety Check
         if (empty($this->currentItem->subprice)) {
             $this->currentItem->subprice = 0;
+        }
+        if (property_exists($this->currentItem, "remise") && empty($this->currentItem->remise)) {
+            $this->currentItem->remise = 0;
         }
         if (empty($this->currentItem->price) && (!$this->currentItem instanceof SupplierInvoiceLine)) {
             $this->currentItem->price = 0;
