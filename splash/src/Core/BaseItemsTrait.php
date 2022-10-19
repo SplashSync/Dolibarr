@@ -444,6 +444,8 @@ trait BaseItemsTrait
         if (empty($this->currentItem->subprice)) {
             $this->currentItem->subprice = 0;
         }
+        //====================================================================//
+        // FIX for Dolibarr V16
         if (property_exists($this->currentItem, "remise") && empty($this->currentItem->remise)) {
             $this->currentItem->remise = 0;
         }
