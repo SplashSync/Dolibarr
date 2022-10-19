@@ -226,6 +226,10 @@ Dol-Dev-Variants:
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
 
+Dol-16-Quality:
+    image:      tuxgasy/dolibarr:16
+    <<: *code_quality
+
 Dol-14-Quality:
     image:      tuxgasy/dolibarr:14
     <<: *code_quality
