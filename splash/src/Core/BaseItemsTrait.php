@@ -63,64 +63,64 @@ trait BaseItemsTrait
         // Order Line Description
         $descFieldName = is_a($this, Local::CLASS_SUPPLIER_INVOICE) ? "description" : "desc";
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier($descFieldName)
-            ->InList("lines")
-            ->Name($langs->trans("Description"))
-            ->Group($groupName)
-            ->MicroData("http://schema.org/partOfInvoice", "description")
-            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
-
+            ->identifier($descFieldName)
+            ->inList("lines")
+            ->name($langs->trans("Description"))
+            ->group($groupName)
+            ->microData("http://schema.org/partOfInvoice", "description")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
         //====================================================================//
         // Order Line Product Identifier
-        $this->fieldsFactory()->create((string) self::objects()->Encode("Product", SPL_T_ID))
-            ->Identifier("fk_product")
-            ->InList("lines")
-            ->Name($langs->trans("Product"))
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "productID")
-            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
-
+        $this->fieldsFactory()->create((string) self::objects()->encode("Product", SPL_T_ID))
+            ->identifier("fk_product")
+            ->inList("lines")
+            ->name($langs->trans("Product"))
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "productID")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
         //====================================================================//
         // Order Line Quantity
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("qty")
-            ->InList("lines")
-            ->Name($langs->trans("Quantity"))
-            ->Group($groupName)
-            ->MicroData("http://schema.org/QuantitativeValue", "value")
-            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
-
+            ->identifier("qty")
+            ->inList("lines")
+            ->name($langs->trans("Quantity"))
+            ->group($groupName)
+            ->microData("http://schema.org/QuantitativeValue", "value")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
         //====================================================================//
         // Order Line Discount
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("remise_percent")
-            ->InList("lines")
-            ->Name($langs->trans("Discount"))
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Order", "discount")
-            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
-
+            ->identifier("remise_percent")
+            ->inList("lines")
+            ->name($langs->trans("Discount"))
+            ->group($groupName)
+            ->microData("http://schema.org/Order", "discount")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
         //====================================================================//
         // Order Line Unit Price
         $this->fieldsFactory()->create(SPL_T_PRICE)
-            ->Identifier("price")
-            ->InList("lines")
-            ->Name($langs->trans("Price"))
-            ->Group($groupName)
-            ->MicroData("http://schema.org/PriceSpecification", "price")
-            ->Association($descFieldName."@lines", "qty@lines", "price@lines");
-
+            ->identifier("price")
+            ->inList("lines")
+            ->name($langs->trans("Price"))
+            ->group($groupName)
+            ->microData("http://schema.org/PriceSpecification", "price")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
         //====================================================================//
         // Order Line Tax Name
         if (Local::dolVersionCmp("5.0.0") >= 0) {
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("vat_src_code")
-                ->InList("lines")
-                ->Name($langs->trans("VATRate"))
-                ->MicroData("http://schema.org/PriceSpecification", "valueAddedTaxName")
-                ->Group($groupName)
+                ->identifier("vat_src_code")
+                ->inList("lines")
+                ->name($langs->trans("VATRate"))
+                ->microData("http://schema.org/PriceSpecification", "valueAddedTaxName")
+                ->group($groupName)
                 ->addOption('maxLength', '10')
-                ->Association($descFieldName."@lines", "qty@lines", "price@lines")
+                ->association($descFieldName."@lines", "qty@lines", "price@lines")
             ;
         }
 
@@ -141,7 +141,7 @@ trait BaseItemsTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->InitOutput($this->out, "lines", $fieldName);
+        $fieldId = self::lists()->initOutput($this->out, "lines", $fieldName);
         if (!$fieldId) {
             return;
         }
@@ -228,7 +228,8 @@ trait BaseItemsTrait
             case 'fk_product':
                 return ($line->fk_product)
                     ? self::objects()->encode("Product", (string) $line->fk_product)
-                    : null;
+                    : null
+                ;
             //====================================================================//
             // Order Line Quantity
             case 'qty':
@@ -547,6 +548,15 @@ trait BaseItemsTrait
         //====================================================================//
         // Update Product Link
         $this->currentItem->setValueFrom("fk_product", $productId, '', null, '', '', "none");
+        $this->catchDolibarrErrors($this->currentItem);
+        //====================================================================//
+        // Update Product Type
+        $productType = $this->currentItem->getValueFrom(
+            "product",
+            $this->currentItem->fk_product,
+            "fk_product_type"
+        );
+        $this->currentItem->setValueFrom("product_type", $productType,'', null, '', '', "none");
         $this->catchDolibarrErrors($this->currentItem);
     }
 

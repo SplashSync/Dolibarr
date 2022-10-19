@@ -30,6 +30,8 @@
 # 172.100.0.12        v12.dolibarr.local
 # 172.100.0.13        v13.dolibarr.local
 # 172.100.0.14        v14.dolibarr.local
+# 172.100.0.15        v15.dolibarr.local
+# 172.100.0.16        v16.dolibarr.local
 # 172.100.0.99        latest.dolibarr.local
 # 172.100.0.100       toolkit.dolibarr.local
 # 172.100.0.101       db.dolibarr.local
@@ -87,10 +89,10 @@ services:
             splashsync:    { aliases: [ latest.dolibarr.local ] }
 
     ################################################################################
-    # Dolibarr V14
-    dol-14:
-        image: tuxgasy/dolibarr:14
-        container_name: dolibarr-v14
+    # Dolibarr V16
+    dol-16:
+        image: tuxgasy/dolibarr:16
+        container_name: v16.dolibarr.local
         depends_on:
             - mysql
         links:
@@ -98,22 +100,80 @@ services:
         environment:
             - "DOLI_DB_TYPE=mysqli"
             - "DOLI_DB_HOST=mysql"
-            - "DOLI_DB_NAME=dolibarr14"
+            - "DOLI_DB_NAME=dolibarr16"
             - "DOLI_DB_USER=root"
             - "DOLI_DB_PASSWORD=dolibarr"
             - "DOLI_ADMIN_LOGIN=Admin"
             - "PHP_MEMORY_LIMIT=-1"
-            - SPLASH_WS_ID=ThisIsDol14Key
+            - SPLASH_WS_ID=ThisIsDol16Key
             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
         volumes:
             - "./:/var/www/html/custom/"
             - "./.git/:/var/www/html/custom/.git/"
         entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
-        hostname: v14.dolibarr.local
+        hostname: v16.dolibarr.local
         networks:
-            dolibarr:      { ipv4_address: 172.100.0.14 }
-            splashsync:    { aliases: [ v14.dolibarr.local ] }
+            dolibarr:      { ipv4_address: 172.100.0.16 }
+            splashsync:    { aliases: [ v16.dolibarr.local ] }
+
+    ################################################################################
+    # Dolibarr V15
+    dol-15:
+        image: tuxgasy/dolibarr:15
+        container_name: v15.dolibarr.local
+        depends_on:
+            - mysql
+        links:
+            - mysql
+        environment:
+            - "DOLI_DB_TYPE=mysqli"
+            - "DOLI_DB_HOST=mysql"
+            - "DOLI_DB_NAME=dolibarr15"
+            - "DOLI_DB_USER=root"
+            - "DOLI_DB_PASSWORD=dolibarr"
+            - "DOLI_ADMIN_LOGIN=Admin"
+            - "PHP_MEMORY_LIMIT=-1"
+            - SPLASH_WS_ID=ThisIsDol15Key
+            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
+            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
+        volumes:
+            - "./:/var/www/html/custom/"
+            - "./.git/:/var/www/html/custom/.git/"
+        entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
+        hostname: v15.dolibarr.local
+        networks:
+            dolibarr:      { ipv4_address: 172.100.0.15 }
+            splashsync:    { aliases: [ v15.dolibarr.local ] }
+
+    ################################################################################
+    # Dolibarr V14
+#    dol-14:
+#        image: tuxgasy/dolibarr:14
+#        container_name: dolibarr-v14
+#        depends_on:
+#            - mysql
+#        links:
+#            - mysql
+#        environment:
+#            - "DOLI_DB_TYPE=mysqli"
+#            - "DOLI_DB_HOST=mysql"
+#            - "DOLI_DB_NAME=dolibarr14"
+#            - "DOLI_DB_USER=root"
+#            - "DOLI_DB_PASSWORD=dolibarr"
+#            - "DOLI_ADMIN_LOGIN=Admin"
+#            - "PHP_MEMORY_LIMIT=-1"
+#            - SPLASH_WS_ID=ThisIsDol14Key
+#            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
+#            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
+#        volumes:
+#            - "./:/var/www/html/custom/"
+#            - "./.git/:/var/www/html/custom/.git/"
+#        entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
+#        hostname: v14.dolibarr.local
+#        networks:
+#            dolibarr:      { ipv4_address: 172.100.0.14 }
+#            splashsync:    { aliases: [ v14.dolibarr.local ] }
 
     ################################################################################
     # Dolibarr V13
@@ -227,7 +287,7 @@ services:
     ################################################################################
     # Splash Toolkit Container   
     toolkit:
-        image: 'splashsync/toolkit'
+        image: 'splashsync/toolkit:alpine'
         container_name: toolkit.dolibarr.local
         logging: { driver: "none" }
         volumes:
