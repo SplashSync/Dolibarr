@@ -444,11 +444,6 @@ trait BaseItemsTrait
         if (empty($this->currentItem->subprice)) {
             $this->currentItem->subprice = 0;
         }
-        //====================================================================//
-        // FIX for Dolibarr V16
-        if (property_exists($this->currentItem, "remise") && empty($this->currentItem->remise)) {
-            $this->currentItem->remise = 0;
-        }
         if (empty($this->currentItem->price) && (!$this->currentItem instanceof SupplierInvoiceLine)) {
             $this->currentItem->price = 0;
         }
@@ -699,5 +694,11 @@ trait BaseItemsTrait
         $this->currentItem->total_ttc = $tabPrice[2];
         $this->currentItem->total_localtax1 = $tabPrice[9];
         $this->currentItem->total_localtax2 = $tabPrice[10];
+
+        //====================================================================//
+        // FIX for Dolibarr V16
+        if (property_exists($this->currentItem, "remise") && empty($this->currentItem->remise)) {
+            $this->currentItem->remise = 0;
+        }
     }
 }
