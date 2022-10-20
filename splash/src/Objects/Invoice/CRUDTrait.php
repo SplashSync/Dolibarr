@@ -104,6 +104,7 @@ trait CRUDTrait
         $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
         $this->setSimple("statut", Facture::STATUS_DRAFT);
+        $this->object->entity = MultiCompany::getCurrentId();
         $this->object->statut = Facture::STATUS_DRAFT;
         $this->object->paye = 0;
         //====================================================================//
@@ -196,8 +197,12 @@ trait CRUDTrait
             $this->clearPayments((int) $objectId);
         }
         //====================================================================//
-        // Set Object Id, fetch not needed
-        $object->id = (int) $objectId;
+        // Fetch Object
+        if (1 != $object->fetch((int) $objectId)) {
+            $this->catchDolibarrErrors($object);
+
+            return true;
+        }
         //====================================================================//
         // If Credit Note => Setup Type
         if ($this instanceof CreditNote) {
@@ -205,7 +210,6 @@ trait CRUDTrait
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = 0;
         if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace("Unable to Delete Customer Invoice (".$objectId.").");
         }

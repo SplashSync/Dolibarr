@@ -82,45 +82,46 @@ trait ImagesTrait
         //====================================================================//
         // Product Images List
         $this->fieldsFactory()->create(SPL_T_IMG)
-            ->Identifier("image")
-            ->InList("images")
-            ->Name($langs->trans("PhotoFile"))
-            ->Group("Images")
+            ->identifier("image")
+            ->inList("images")
+            ->name($langs->trans("PhotoFile"))
+            ->group("Images")
             ->setPreferWrite()
-            ->MicroData("http://schema.org/Product", "image");
-
+            ->microData("http://schema.org/Product", "image")
+        ;
         //====================================================================//
         // Product Images => Is Cover
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("cover")
-            ->InList("images")
-            ->Name("Cover Image")
+            ->identifier("cover")
+            ->inList("images")
+            ->name("Cover Image")
             ->setPreferWrite()
-            ->MicroData("http://schema.org/Product", "isCover")
-            ->Group("Images")
-            ->isNotTested();
-
+            ->microData("http://schema.org/Product", "isCover")
+            ->group("Images")
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Images => Is Visible
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("visible")
-            ->InList("images")
-            ->Name("Visible Image")
+            ->identifier("visible")
+            ->inList("images")
+            ->name("Visible Image")
             ->setPreferWrite()
-            ->MicroData("http://schema.org/Product", "isVisibleImage")
-            ->Group("Images")
-            ->isNotTested();
-
+            ->microData("http://schema.org/Product", "isVisibleImage")
+            ->group("Images")
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Images => Position in List
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("position")
-            ->InList("images")
-            ->Name("Position")
+            ->identifier("position")
+            ->inList("images")
+            ->name("Position")
             ->setPreferNone()
-            ->MicroData("http://schema.org/Product", "positionImage")
-            ->Group("Images")
-            ->isReadOnly();
+            ->microData("http://schema.org/Product", "positionImage")
+            ->group("Images")
+            ->isReadOnly()
+        ;
     }
 
     //====================================================================//
@@ -135,7 +136,7 @@ trait ImagesTrait
      *
      * @return void
      */
-    protected function getImagesFields($key, $fieldName)
+    protected function getImagesFields(string $key, string $fieldName)
     {
         global $conf;
 
@@ -146,7 +147,7 @@ trait ImagesTrait
         }
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->InitOutput($this->out, "images", $fieldName);
+        $fieldId = self::lists()->initOutput($this->out, "images", $fieldName);
         if (!$fieldId) {
             return;
         }
@@ -600,7 +601,7 @@ trait ImagesTrait
             $ecmImage->filepath = $this->relFilesDir;
             $ecmImage->filename = $imageData["filename"];
             $ecmImage->fullpath_orig = $ecmImage->filepath;
-            $ecmImage->fk_user_c = $user->rowid;
+            $ecmImage->fk_user_c = $user->id;
             $ecmImage->entity = $this->object->entity ? $this->object->entity : $conf->entity;
             $ecmImage->gen_or_uploaded = "uploaded";
             $this->imgUpdated = true;

@@ -94,6 +94,7 @@ trait CRUDTrait
         $this->object = new Commande($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
+        $this->object->entity = MultiCompany::getCurrentId();
         $dateTime = new DateTime($this->in["date"]);
         $this->setSimple('date', $dateTime->getTimestamp());
         $this->setSimple('date_commande', $dateTime->getTimestamp());
@@ -170,11 +171,14 @@ trait CRUDTrait
             return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
-        // Set Object Id, fetch not needed
-        $object->id = (int) $objectId;
+        // Fetch Object
+        if (1 != $object->fetch((int) $objectId)) {
+            $this->catchDolibarrErrors($object);
+
+            return true;
+        }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
-        $object->entity = null;         // @phpstan-ignore-line
         if (!MultiCompany::isAllowed($object)) {
             return Splash::log()->errTrace(" Unable to Delete Customer Order (".$objectId.").");
         }

@@ -50,44 +50,45 @@ trait PaymentsTrait
         //====================================================================//
         // Payment Line Payment Method
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("mode")
-            ->InList("payments")
-            ->Name($listName.$langs->trans("PaymentMode"))
-            ->MicroData("http://schema.org/Invoice", "PaymentMethod")
-            ->AddChoice("ByBankTransferInAdvance", "By bank transfer in advance")
-            ->AddChoice("CheckInAdvance", "Check in advance")
-            ->AddChoice("COD", "Cash On Delivery")
-            ->AddChoice("Cash", "Cash")
-            ->AddChoice("PayPal", "Online Payments (PayPal, more..)")
-            ->AddChoice("DirectDebit", "Credit Card")
-            ->Association("date@payments", "mode@payments", "amount@payments");
-
+            ->identifier("mode")
+            ->inList("payments")
+            ->name($listName.$langs->trans("PaymentMode"))
+            ->microData("http://schema.org/Invoice", "PaymentMethod")
+            ->addChoice("ByBankTransferInAdvance", "By bank transfer in advance")
+            ->addChoice("CheckInAdvance", "Check in advance")
+            ->addChoice("COD", "Cash On Delivery")
+            ->addChoice("Cash", "Cash")
+            ->addChoice("PayPal", "Online Payments (PayPal, more..)")
+            ->addChoice("DirectDebit", "Credit Card")
+            ->association("date@payments", "mode@payments", "amount@payments")
+        ;
         //====================================================================//
         // Payment Line Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("date")
-            ->InList("payments")
-            ->Name($listName.$langs->trans("Date"))
-            ->MicroData("http://schema.org/PaymentChargeSpecification", "validFrom")
-            ->Association("date@payments", "mode@payments", "amount@payments");
-
+            ->identifier("date")
+            ->inList("payments")
+            ->name($listName.$langs->trans("Date"))
+            ->microData("http://schema.org/PaymentChargeSpecification", "validFrom")
+            ->association("date@payments", "mode@payments", "amount@payments")
+        ;
         //====================================================================//
         // Payment Line Payment Identifier
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("number")
-            ->InList("payments")
-            ->Name($listName.$langs->trans('Numero'))
-            ->MicroData("http://schema.org/Invoice", "paymentMethodId")
-            ->Association("date@payments", "mode@payments", "amount@payments");
-
+            ->identifier("number")
+            ->inList("payments")
+            ->name($listName.$langs->trans('Numero'))
+            ->microData("http://schema.org/Invoice", "paymentMethodId")
+            ->association("date@payments", "mode@payments", "amount@payments")
+        ;
         //====================================================================//
         // Payment Line Amount
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("amount")
-            ->InList("payments")
-            ->Name($listName.$langs->trans("PaymentAmount"))
-            ->MicroData("http://schema.org/PaymentChargeSpecification", "price")
-            ->Association("date@payments", "mode@payments", "amount@payments");
+            ->identifier("amount")
+            ->inList("payments")
+            ->name($listName.$langs->trans("PaymentAmount"))
+            ->microData("http://schema.org/PaymentChargeSpecification", "price")
+            ->association("date@payments", "mode@payments", "amount@payments")
+        ;
     }
 
     /**
@@ -444,7 +445,7 @@ trait PaymentsTrait
         $payment->facid = $this->object->id;
         //====================================================================//
         // Setup Payment Date
-        $payment->datepaye = $lineData["date"];
+        $payment->datepaye = (new \DateTime($lineData["date"]))->getTimestamp();
         //====================================================================//
         // Setup Payment Method
         $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
@@ -452,14 +453,18 @@ trait PaymentsTrait
         // Setup Payment Reference
         /** @since V13.0 Field Renamed  */
         if (Local::dolVersionCmp("13.0.0") < 0) {
-            $payment->num_paiement = $lineData["number"];
+            $payment->num_paiement = $lineData["number"] ?? "";
         } else {
-            $payment->num_payment = $lineData["number"];
+            $payment->num_payment = $lineData["number"] ?? "";
         }
         //====================================================================//
         // Setup Payment Amount
         $payment->amounts[$payment->facid] = self::parsePrice($lineData["amount"]);
-
+        //====================================================================//
+        // Take Care of Payment Currency
+        if (property_exists($payment, "multicurrency_code")) {
+            $payment->multicurrency_code[$payment->facid] = $this->object->multicurrency_code;
+        }
         //====================================================================//
         // Create Payment Line
         if ($payment->create($user) <= 0) {

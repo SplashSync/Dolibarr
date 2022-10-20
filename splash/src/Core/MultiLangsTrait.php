@@ -101,7 +101,7 @@ trait MultiLangsTrait
         //====================================================================//
         // Update Contents
         //====================================================================//
-        if ($this->object->multilangs[$isoCode][$fieldName] != $content) {
+        if ($this->object->multilangs[$isoCode][$fieldName] ?? null != $content) {
             $this->object->multilangs[$isoCode][$fieldName] = $content;
             $this->needUpdate();
         }

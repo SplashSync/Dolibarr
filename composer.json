@@ -42,7 +42,7 @@
 
     "require": {
         "php":                              "^7.4|^8.0",
-        "splash/phpcore":                   "~1.7"
+        "splash/phpcore":                   "1.0.x-dev"
     },
     
     "require-dev": {

@@ -17,6 +17,7 @@ namespace Splash\Local\Tests;
 
 use Exception;
 use Splash\Client\Splash;
+use Splash\Components\FieldsManager;
 use Splash\Local\Local;
 use Splash\Local\Services\MultiCompany;
 use Splash\Tests\Tools\ObjectsCase;
@@ -244,6 +245,6 @@ class L20MarketPlaceModeTest extends ObjectsCase
         //   Verify Entity Data
         $this->assertEquals($this->currentEntity->id, $currentData["entity_id"]);
         $this->assertEquals($this->currentEntity->code, $currentData["entity_code"]);
-        $this->assertEquals($this->currentEntity->name, $currentData["entity_name"]);
+        $this->assertEquals($this->currentEntity->label, $currentData["entity_label"]);
     }
 }

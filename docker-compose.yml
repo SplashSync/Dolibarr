@@ -201,8 +201,8 @@ services:
     ################################################################################
     # Dolibarr V12
     dol-12:
-        image: monogramm/docker-dolibarr:12.0
-        container_name: dolibarr-v12
+        image: monogramm/docker-dolibarr:12
+        container_name: v12.dolibarr.local
         depends_on:
             - mysql
         environment:

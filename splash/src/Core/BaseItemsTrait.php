@@ -21,6 +21,7 @@ use Product;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
+use stdClass;
 use SupplierInvoiceLine;
 
 /**
@@ -395,7 +396,7 @@ trait BaseItemsTrait
      */
     private function setItemSimpleData($itemData, $fieldName)
     {
-        if (!array_key_exists($fieldName, $itemData) || is_null($this->currentItem)) {
+        if (!isset($itemData[$fieldName]) || is_null($this->currentItem)) {
             return;
         }
         if ($this->currentItem->{$fieldName} !== $itemData[$fieldName]) {
@@ -413,7 +414,7 @@ trait BaseItemsTrait
      */
     private function setItemPrice($itemData)
     {
-        if (!array_key_exists("price", $itemData) || is_null($this->currentItem)) {
+        if (!isset($itemData["price"]) || is_null($this->currentItem)) {
             return;
         }
         //====================================================================//
@@ -499,7 +500,7 @@ trait BaseItemsTrait
      *
      * @param null|string $vatSrcCode
      *
-     * @return null|FactureLigne|OrderLine
+     * @return null|stdClass
      */
     private function getVatIdBySrcCode($vatSrcCode = null)
     {
@@ -602,7 +603,7 @@ trait BaseItemsTrait
         global $db, $conf;
         //====================================================================//
         // Product Id is Given
-        if (array_key_exists("fk_product", $itemData)) {
+        if (isset($itemData["fk_product"])) {
             //====================================================================//
             // Decode Splash Id String
             $fkProduct = self::objects()->Id($itemData["fk_product"]);
@@ -612,7 +613,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Search for Product SKU from Item Description
-        if (!empty($conf->global->SPLASH_DECTECT_ITEMS_BY_SKU) && array_key_exists("desc", $itemData)) {
+        if (!empty($conf->global->SPLASH_DECTECT_ITEMS_BY_SKU) && isset($itemData["desc"])) {
             //====================================================================//
             // Ensure Product Class is Loaded
             include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
@@ -682,9 +683,7 @@ trait BaseItemsTrait
             0,
             "HT",
             $this->currentItem->info_bits,
-            ($this->currentItem instanceof SupplierInvoiceLine)
-                ? $this->currentItem->product_type
-                : $this->currentItem->type,
+            $this->currentItem->product_type,
             $mysoc,
             $localtaxType
         );
