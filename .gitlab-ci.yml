@@ -134,41 +134,23 @@ Dol-15-Variants:
 Dol-14-Basics:
     image:          tuxgasy/dolibarr:14
     <<: *functionnal-basic
-Dol-14-Advanced:
-    image:          tuxgasy/dolibarr:14
-    <<: *functionnal-advanced
-Dol-14-Variants:
-    image:          tuxgasy/dolibarr:14
-    <<: *functionnal-variants
 
 ################################################################
 # Dolibarr V13
 Dol-13-Basics:
     image:          tuxgasy/dolibarr:13
     <<: *functionnal-basic
-Dol-13-Advanced:
-    image:          tuxgasy/dolibarr:13
-    <<: *functionnal-advanced
-Dol-13-Variants:
-    image:          tuxgasy/dolibarr:13
-    <<: *functionnal-variants
 
 ################################################################
-# Dolibarr V10
-Dol-10-Basics:
-    image:          tuxgasy/dolibarr:13
+# Dolibarr V12
+Dol-12-Basics:
+    image:          tuxgasy/dolibarr:12
     <<: *functionnal-basic
-
-################################################################
-# Dolibarr V9
-Dol-9-Basics:
-    image:          tuxgasy/dolibarr:9
-    <<: *functionnal-basic
-Dol-9-Advanced:
-    image:          tuxgasy/dolibarr:9
+Dol-12-Advanced:
+    image:          tuxgasy/dolibarr:12
     <<: *functionnal-advanced
-Dol-9-Variants:
-    image:          tuxgasy/dolibarr:9
+Dol-12-Variants:
+    image:          tuxgasy/dolibarr:12
     <<: *functionnal-variants
 
 ################################################################
