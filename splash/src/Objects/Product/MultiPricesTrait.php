@@ -52,12 +52,13 @@ trait MultiPricesTrait
             //====================================================================//
             // Product Selling Multi-Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("price_level_".$level)
-                ->Name(
+                ->identifier("price_level_".$level)
+                ->name(
                     "[".$code."] ".$langs->trans("SellingPrice")." (".$conf->global->MAIN_MONNAIE.")"
                 )
-                ->MicroData("http://schema.org/Product", "price".$code)
-                ->isLogged();
+                ->microData("http://schema.org/Product", "price".$code)
+                ->isLogged()
+            ;
         }
     }
 
@@ -89,25 +90,25 @@ trait MultiPricesTrait
             }
             //====================================================================//
             // Read Price for this Level
-            $priceType = $this->object->multiprices_base_type[$level];
-            $priceHT = (double) $this->object->multiprices[$level];
-            $priceTTC = (double) $this->object->multiprices_ttc[$level];
-            $priceVAT = (double) $this->object->multiprices_tva_tx[$level];
+            $priceType = $this->object->multiprices_base_type[$level] ?? 0;
+            $priceHT = (double) $this->object->multiprices[$level] ?? 0;
+            $priceTTC = (double) $this->object->multiprices_ttc[$level] ?? 0;
+            $priceVAT = (double) $this->object->multiprices_tva_tx[$level] ?? 0;
             if ($this->isVariant() && !empty($this->baseProduct)) {
-                $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$level];
+                $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$level] ?? 0;
             }
 
             //====================================================================//
             // Encode Price for this Level
             if ('TTC' === $priceType) {
-                $this->out[$fieldName] = self::prices()->Encode(
+                $this->out[$fieldName] = self::prices()->encode(
                     null,
                     $priceVAT,
                     $priceTTC,
                     $conf->global->MAIN_MONNAIE
                 );
             } else {
-                $this->out[$fieldName] = self::prices()->Encode(
+                $this->out[$fieldName] = self::prices()->encode(
                     $priceHT,
                     $priceVAT,
                     null,
