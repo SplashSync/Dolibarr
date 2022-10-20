@@ -193,9 +193,9 @@ trait PricesTrait
             ;
             $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
             $priceType = $this->object->multiprices_base_type[$priceLevel] ?? 0;
+            $priceVAT = (double) $this->object->multiprices_tva_tx[$priceLevel] ?? 0;
             $priceHT = (double) $this->object->multiprices[$priceLevel] ?? 0;
             $priceTTC = (double) $this->object->multiprices_ttc[$priceLevel] ?? 0;
-            $priceVAT = (double) $this->object->multiprices_tva_tx[$priceLevel] ?? 0;
             if ($this->isVariant() && !empty($this->baseProduct)) {
                 $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$priceLevel] ?? 0;
             }
