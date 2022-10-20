@@ -22,7 +22,7 @@
         "bin-dir":                          "splash/vendor/bin",
         "preferred-install":                "dist",
         "platform": {
-            "php":                          "7.2.0"
+            "php":                          "7.4.0"
         },
         "allow-plugins": {
             "phpro/grumphp": true
@@ -41,7 +41,7 @@
     },
 
     "require": {
-        "php":                              "^7.2|^8.0",
+        "php":                              "^7.4|^8.0",
         "splash/phpcore":                   "~1.7"
     },
     

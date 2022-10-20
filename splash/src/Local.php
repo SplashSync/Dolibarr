@@ -431,10 +431,10 @@ class Local implements LocalClassInterface
         }
 
         //====================================================================//
-        // Check Version is Above 4.0
-        if (self::dolVersionCmp("4.0.0") < 0) {
+        // Check Version is Above 12.0
+        if (self::dolVersionCmp("12.0.0") < 0) {
             return Splash::log()->err(
-                "Splash Module for Dolibarr require Dolibarr Version Above 4.0. "
+                "Splash Module for Dolibarr require Dolibarr Version Above 12.0. "
                     ."Please update your system before using Splash."
             );
         }

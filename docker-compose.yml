@@ -24,9 +24,6 @@
 #
 # To us different PS Version configured, you need to add hosts to /etc/hosts
 # 
-# 172.100.0.09        v09.dolibarr.local
-# 172.100.0.10        v10.dolibarr.local
-# 172.100.0.11        v11.dolibarr.local
 # 172.100.0.12        v12.dolibarr.local
 # 172.100.0.13        v13.dolibarr.local
 # 172.100.0.14        v14.dolibarr.local
@@ -201,89 +198,33 @@ services:
 #             dolibarr:      { ipv4_address: 172.100.0.13 }
 #             splashsync:    { aliases: [ v13.dolibarr.local ] }
 
-#    ################################################################################
-#    # Dolibarr V12
-#    dol-12:
-#        image: monogramm/docker-dolibarr:12.0
-#        container_name: dolibarr-v12
-#        depends_on:
-#            - mysql
-#        environment:
-#            - "DOLI_DB_TYPE=mysqli"
-#            - "DOLI_DB_HOST=mysql"
-#            - "DOLI_DB_NAME=dolibarr12"
-#            - "DOLI_DB_USER=root"
-#            - "DOLI_DB_PASSWORD=dolibarr"
-#            - "DOLI_ADMIN_LOGIN=Admin"
-#            - "DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture"
-#            - "PHP_MEMORY_LIMIT=-1"
-#            - SPLASH_WS_ID=ThisIsDol12Key
-#            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-#            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
-#        volumes:
-#            - "./:/var/www/html/custom/"
-#        command: sh /var/www/html/custom/docker/docker-entrypoint.sh
-#        hostname: v12.dolibarr.local
-#        networks:
-#            dolibarr:      { ipv4_address: 172.100.0.12 }
-#            splashsync:    { aliases: [ v12.dolibarr.local ] }
-
-#    ################################################################################
-#    # Dolibarr V11     
-#    dol-11:
-#        image: monogramm/docker-dolibarr
-#        container_name: dolibarr-v11
-#        depends_on:
-#            - mysql
-#        environment:
-#            - "DOLI_VERSION=11.0.0"
-#            - "DOLI_DB_TYPE=mysqli"
-#            - "DOLI_DB_HOST=mysql"
-#            - "DOLI_DB_NAME=dolibarr11"
-#            - "DOLI_DB_USER=root"
-#            - "DOLI_DB_PASSWORD=dolibarr"
-#            - "DOLI_ADMIN_LOGIN=Admin"
-#            - "DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture"
-#            - "PHP_MEMORY_LIMIT=-1"
-#            - SPLASH_WS_ID=ThisIsDol11Key
-#            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-#            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap            
-#        volumes:
-#            - "./:/var/www/html/custom/"
-#        command: sh /var/www/html/custom/docker/docker-entrypoint.sh
-#        hostname: v11.dolibarr.local
-#        networks:
-#            dolibarr:      { ipv4_address: 172.100.0.11 }
-#            splashsync:    { aliases: [ v11.dolibarr.local ] }  
-           
     ################################################################################
-    # Dolibarr V10
-    dol-10:
-        image: tuxgasy/dolibarr:10
-        container_name: dolibarr-v10
+    # Dolibarr V12
+    dol-12:
+        image: monogramm/docker-dolibarr:12.0
+        container_name: dolibarr-v12
         depends_on:
             - mysql
         environment:
             - "DOLI_DB_TYPE=mysqli"
             - "DOLI_DB_HOST=mysql"
-            - "DOLI_DB_NAME=dolibarr10"
+            - "DOLI_DB_NAME=dolibarr12"
             - "DOLI_DB_USER=root"
             - "DOLI_DB_PASSWORD=dolibarr"
             - "DOLI_ADMIN_LOGIN=Admin"
             - "DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture"
             - "PHP_MEMORY_LIMIT=-1"
-            - SPLASH_WS_ID=ThisIsDol10Key
+            - SPLASH_WS_ID=ThisIsDol12Key
             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
         volumes:
             - "./:/var/www/html/custom/"
-            - "./.git/:/var/www/html/custom/.git/"
-        entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
-        hostname: v10.dolibarr.local
+        command: sh /var/www/html/custom/docker/docker-entrypoint.sh
+        hostname: v12.dolibarr.local
         networks:
-            dolibarr:      { ipv4_address: 172.100.0.10 }
-            splashsync:    { aliases: [ v10.dolibarr.local ] }
-           
+            dolibarr:      { ipv4_address: 172.100.0.12 }
+            splashsync:    { aliases: [ v12.dolibarr.local ] }
+
     ################################################################################
     # Splash Toolkit Container   
     toolkit:
