@@ -187,7 +187,10 @@ trait PricesTrait
         //====================================================================//
         // If multi-prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $cfgPriceLevel = $conf->global->SPLASH_MULTIPRICE_LEVEL ?? null;
+            $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
+                ? $conf->global->SPLASH_MULTIPRICE_LEVEL
+                : null
+            ;
             $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
             $priceType = $this->object->multiprices_base_type[$priceLevel] ?? 0;
             $priceHT = (double) $this->object->multiprices[$priceLevel] ?? 0;
