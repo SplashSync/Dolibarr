@@ -182,20 +182,20 @@ trait PaymentsTrait
                     $value = $paymentLine->method;
 
                     break;
-                //====================================================================//
-                // Payment Line - Payment Date
+                    //====================================================================//
+                    // Payment Line - Payment Date
                 case 'date@payments':
                     $value = !empty($paymentLine->date)?dol_print_date($paymentLine->date, '%Y-%m-%d'):null;
 
                     break;
-                //====================================================================//
-                // Payment Line - Payment Identification Number
+                    //====================================================================//
+                    // Payment Line - Payment Identification Number
                 case 'number@payments':
                     $value = $paymentLine->number;
 
                     break;
-                //====================================================================//
-                // Payment Line - Payment Amount
+                    //====================================================================//
+                    // Payment Line - Payment Amount
                 case 'amount@payments':
                     $value = self::parsePrice($paymentLine->amount);
 

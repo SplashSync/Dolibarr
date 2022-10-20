@@ -223,34 +223,34 @@ trait BaseItemsTrait
                 return ($line instanceof SupplierInvoiceLine) ? "" : $line->desc;
             case 'description':
                 return $line->description;
-            //====================================================================//
-            // Order Line Product Id
+                //====================================================================//
+                // Order Line Product Id
             case 'fk_product':
                 return ($line->fk_product)
                     ? self::objects()->encode("Product", (string) $line->fk_product)
                     : null
                 ;
-            //====================================================================//
-            // Order Line Quantity
+                //====================================================================//
+                // Order Line Quantity
             case 'qty':
                 return (int) $line->qty;
-            //====================================================================//
-            // Order Line Discount Percentile
+                //====================================================================//
+                // Order Line Discount Percentile
             case "remise_percent":
                 return  (double) $line->remise_percent;
-            //====================================================================//
-            // Order Line Price
+                //====================================================================//
+                // Order Line Price
             case 'price':
                 $price = (double) self::parsePrice($line->subprice);
                 $vat = (double) $line->tva_tx;
 
                 return  self::prices()->encode($price, $vat, null, $conf->global->MAIN_MONNAIE);
-            //====================================================================//
-            // Order Line Tax Name
+                //====================================================================//
+                // Order Line Tax Name
             case 'vat_src_code':
                 return  $line->vat_src_code;
-            //====================================================================//
-            // Extra Field or Null
+                //====================================================================//
+                // Extra Field or Null
             default:
                 return LinesExtraFieldsParser::fromSplashObject($this)
                     ->getExtraField($line, $fieldId)

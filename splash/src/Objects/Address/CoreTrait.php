@@ -96,8 +96,8 @@ trait CoreTrait
                 $this->out[$fieldName] = self::objects()->Encode("ThirdParty", $this->object->socid);
 
                 break;
-            //====================================================================//
-            // Direct Readings
+                //====================================================================//
+                // Direct Readings
             case 'name':
             case 'firstname':
             case 'lastname':
@@ -132,8 +132,8 @@ trait CoreTrait
                 $this->setSimple($fieldName, self::objects()->Id($fieldData));
 
                 break;
-            //====================================================================//
-            // Direct Writings
+                //====================================================================//
+                // Direct Writings
             case 'name':
             case 'firstname':
             case 'lastname':

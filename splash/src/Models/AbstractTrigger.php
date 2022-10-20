@@ -111,6 +111,7 @@ class AbstractTrigger extends DolibarrTriggers
      * @param Conf      $conf   Object conf
      *
      * @throws Exception
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return int

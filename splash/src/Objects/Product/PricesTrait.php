@@ -76,9 +76,9 @@ trait PricesTrait
 
                 break;
             case 'cost_price':
-                    $priceHT = (double) $this->object->cost_price;
-                    $this->out[$fieldName] = self::prices()
-                        ->encode($priceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
+                $priceHT = (double) $this->object->cost_price;
+                $this->out[$fieldName] = self::prices()
+                    ->encode($priceHT, (double)$this->object->tva_tx, null, $conf->global->MAIN_MONNAIE);
 
                 break;
             default:

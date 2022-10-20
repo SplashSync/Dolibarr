@@ -166,8 +166,8 @@ trait StockTrait
                 $this->out[$fieldName] = ($this->object->stock_reel < $this->object->seuil_stock_alerte);
 
                 break;
-            //====================================================================//
-            // Stock Direct Reading
+                //====================================================================//
+                // Stock Direct Reading
             case 'stock_reel':
             case 'seuil_stock_alerte':
             case 'desiredstock':
@@ -175,15 +175,15 @@ trait StockTrait
                 $this->getSimple($fieldName, "object", 0);
 
                 break;
-            //====================================================================//
-            // Virtual Stock Reading
+                //====================================================================//
+                // Virtual Stock Reading
             case 'stock_theorique':
                 $this->object->load_virtual_stock();
                 $this->getSimple($fieldName, "object", 0);
 
                 break;
-            //====================================================================//
-            // Default Stock Location
+                //====================================================================//
+                // Default Stock Location
             case 'fk_default_warehouse':
                 $this->out[$fieldName] = $this->getDefaultLocation();
 
@@ -250,16 +250,16 @@ trait StockTrait
                 $this->setProductStock($fieldData);
 
                 break;
-            //====================================================================//
-            // Direct Writtings
+                //====================================================================//
+                // Direct Writtings
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
                 $this->setSimple($fieldName, $fieldData);
 
                 break;
-            //====================================================================//
-            // Default Stock Location
+                //====================================================================//
+                // Default Stock Location
             case 'fk_default_warehouse':
                 $this->setSimple('fk_default_warehouse', $this->detectDefaultLocation($fieldData));
 

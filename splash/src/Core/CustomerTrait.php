@@ -174,8 +174,8 @@ trait CustomerTrait
                 $this->setSimple($fieldName, $this->getGuestCustomer($this->in));
 
                 break;
-            //====================================================================//
-            // Customer Email
+                //====================================================================//
+                // Customer Email
             case 'email':
                 if (!$this->isAllowedGuest() || !$this->isAllowedEmailDetection()) {
                     break;

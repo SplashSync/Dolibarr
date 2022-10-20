@@ -100,8 +100,8 @@ trait CoreTrait
                 $this->getSimple($fieldName);
 
                 break;
-            //====================================================================//
-            // Order Official Date
+                //====================================================================//
+                // Order Official Date
             case 'date':
                 $date = $this->object->date;
                 $this->out[$fieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
@@ -146,8 +146,8 @@ trait CoreTrait
                 }
 
                 break;
-            //====================================================================//
-            // Order Official Date
+                //====================================================================//
+                // Order Official Date
             case 'date':
                 $dateTime = new DateTime($fieldData);
                 $this->setSimple('date', $dateTime->getTimestamp());

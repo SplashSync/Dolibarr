@@ -45,7 +45,7 @@ trait StatusTrait
             ->AddChoice(Status::PROCESSING, $langs->trans("StatusOrderSentShort"))
             ->AddChoice(Status::DELIVERED, $langs->trans("StatusOrderProcessed"))
             ->isNotTested()
-                ;
+        ;
     }
 
     /**

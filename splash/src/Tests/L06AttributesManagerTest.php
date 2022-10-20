@@ -92,7 +92,7 @@ class L06AttributesManagerTest extends ObjectsCase
         foreach ($values as $valueCode => $value) {
             //====================================================================//
             //   Delete Attribute Value
-            $this->assertTrue($value instanceof ProductAttributeValue);
+            $this->assertInstanceOf(ProductAttributeValue::class, $value);
             $this->assertTrue(AttrManager::removeAttributeValue($value));
 
             //====================================================================//

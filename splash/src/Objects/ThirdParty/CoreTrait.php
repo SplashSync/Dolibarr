@@ -117,8 +117,8 @@ trait CoreTrait
                     : null;
 
                 break;
-            //====================================================================//
-            // Direct Readings
+                //====================================================================//
+                // Direct Readings
             case 'code_client':
                 $this->getSimple($fieldName);
 
@@ -151,8 +151,8 @@ trait CoreTrait
                 $this->{$fieldName} = $fieldData;
 
                 break;
-            //====================================================================//
-            // Direct Writtings
+                //====================================================================//
+                // Direct Writtings
             case 'code_client':
                 $this->setSimple($fieldName, $fieldData);
 

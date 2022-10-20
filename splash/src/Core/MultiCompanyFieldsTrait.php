@@ -110,6 +110,7 @@ trait MultiCompanyFieldsTrait
      * @param mixed  $fieldData Field Data
      *
      * @return void
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function setMultiCompanyFields($fieldName, $fieldData)

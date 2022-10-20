@@ -240,31 +240,31 @@ class modSplash extends DolibarrModules
         $index = 0;
 
         $rights[$index][0] = 9201; // id de la permission
-            $rights[$index][1] = 'Lire les Données'; // libelle de la permission
-            $rights[$index][2] = 'r'; // type de la permission (deprecie a ce jour)
-            $rights[$index][3] = 1; // La permission est-elle une permission par defaut
-            $rights[$index][4] = 'lire';
+        $rights[$index][1] = 'Lire les Données'; // libelle de la permission
+        $rights[$index][2] = 'r'; // type de la permission (deprecie a ce jour)
+        $rights[$index][3] = 1; // La permission est-elle une permission par defaut
+        $rights[$index][4] = 'lire';
         $index++;
 
         $rights[$index][0] = 9202; // id de la permission
-            $rights[$index][1] = 'Creer/modifier des données'; // libelle de la permission
-            $rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
-            $rights[$index][3] = 0; // La permission est-elle une permission par defaut
-            $rights[$index][4] = 'creer';
+        $rights[$index][1] = 'Creer/modifier des données'; // libelle de la permission
+        $rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
+        $rights[$index][3] = 0; // La permission est-elle une permission par defaut
+        $rights[$index][4] = 'creer';
         $index++;
 
         $rights[$index][0] = 9203; // id de la permission
-            $rights[$index][1] = 'Modifier les paramètres du Module'; // libelle de la permission
-            $rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
-            $rights[$index][3] = 0; // La permission est-elle une permission par defaut
-            $rights[$index][4] = 'creer';
+        $rights[$index][1] = 'Modifier les paramètres du Module'; // libelle de la permission
+        $rights[$index][2] = 'w'; // type de la permission (deprecie a ce jour)
+        $rights[$index][3] = 0; // La permission est-elle une permission par defaut
+        $rights[$index][4] = 'creer';
         $index++;
 
         $rights[$index][0] = 9204; // id de la permission
-            $rights[$index][1] = 'Supprimer des données'; // libelle de la permission
-            $rights[$index][2] = 'd'; // type de la permission (deprecie a ce jour)
-            $rights[$index][3] = 0; // La permission est-elle une permission par defaut
-            $rights[$index][4] = 'supprimer';
+        $rights[$index][1] = 'Supprimer des données'; // libelle de la permission
+        $rights[$index][2] = 'd'; // type de la permission (deprecie a ce jour)
+        $rights[$index][3] = 0; // La permission est-elle une permission par defaut
+        $rights[$index][4] = 'supprimer';
         $index++;
 
         return $rights;
