@@ -201,7 +201,7 @@ services:
     ################################################################################
     # Dolibarr V12
     dol-12:
-        image: monogramm/docker-dolibarr:12
+        image: tuxgasy/dolibarr:13
         container_name: v12.dolibarr.local
         depends_on:
             - mysql
@@ -212,7 +212,6 @@ services:
             - "DOLI_DB_USER=root"
             - "DOLI_DB_PASSWORD=dolibarr"
             - "DOLI_ADMIN_LOGIN=Admin"
-            - "DOLI_MODULES=modSplash,modCommande,modProduct,modCategorie,modStock,modBanque,modSociete,modFacture"
             - "PHP_MEMORY_LIMIT=-1"
             - SPLASH_WS_ID=ThisIsDol12Key
             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt

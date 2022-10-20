@@ -170,6 +170,8 @@ trait CRUDTrait
      * @param string $objectId Object Id.  If NULL, Object needs to be created.
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function delete($objectId = null)
     {
