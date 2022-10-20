@@ -55,7 +55,7 @@ trait ExtraFieldsPhpUnitTrait
 
         //====================================================================//
         // Load Existing Types for this Element
-        $existingTypes = $extraFields->attributes[$elementType]['type'];
+        $existingTypes = $extraFields->attributes[$elementType]['type'] ?? null;
         if (empty($existingTypes)) {
             $existingTypes = array();
         }

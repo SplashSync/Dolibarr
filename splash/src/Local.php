@@ -136,7 +136,7 @@ class Local implements LocalClassInterface
         //====================================================================//
         // When Library is called in server mode ONLY
         //====================================================================//
-        if (!empty(SPLASH_SERVER_MODE)) {
+        if (!empty(SPLASH_SERVER_MODE) && !defined("NOCSRFCHECK")) {
             // This is Webservice Access. We must be able to go on it from outside.
             define('NOCSRFCHECK', 1);
         }
