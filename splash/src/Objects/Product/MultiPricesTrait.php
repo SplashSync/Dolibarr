@@ -91,11 +91,11 @@ trait MultiPricesTrait
             //====================================================================//
             // Read Price for this Level
             $priceType = $this->object->multiprices_base_type[$level] ?? 0;
-            $priceHT = (double) $this->object->multiprices[$level] ?? 0;
-            $priceTTC = (double) $this->object->multiprices_ttc[$level] ?? 0;
-            $priceVAT = (double) $this->object->multiprices_tva_tx[$level] ?? 0;
+            $priceHT = (double) ($this->object->multiprices[$level] ?? 0);
+            $priceTTC = (double) ($this->object->multiprices_ttc[$level] ?? 0);
+            $priceVAT = (double) ($this->object->multiprices_tva_tx[$level] ?? 0);
             if ($this->isVariant() && !empty($this->baseProduct)) {
-                $priceVAT = (double) $this->baseProduct->multiprices_tva_tx[$level] ?? 0;
+                $priceVAT = (double) ($this->baseProduct->multiprices_tva_tx[$level] ?? 0);
             }
 
             //====================================================================//
