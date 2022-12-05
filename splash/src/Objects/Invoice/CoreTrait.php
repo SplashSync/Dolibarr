@@ -35,32 +35,32 @@ trait CoreTrait
         //====================================================================//
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("date")
-            ->Name($langs->trans("OrderDate"))
-            ->MicroData("http://schema.org/Order", "orderDate")
+            ->identifier("date")
+            ->name($langs->trans("OrderDate"))
+            ->microData("http://schema.org/Order", "orderDate")
             ->isRequired()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref")
-            ->Name($langs->trans("InvoiceRef"))
-            ->MicroData("http://schema.org/Invoice", "name")
+            ->identifier("ref")
+            ->name($langs->trans("InvoiceRef"))
+            ->microData("http://schema.org/Invoice", "name")
             ->isReadOnly()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Customer Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_client")
-            ->Name($langs->trans("RefCustomer"))
-            ->MicroData("http://schema.org/Invoice", "confirmationNumber")
-            ->isListed();
-
+            ->identifier("ref_client")
+            ->name($langs->trans("RefCustomer"))
+            ->microData("http://schema.org/Invoice", "confirmationNumber")
+            ->isListed()
+        ;
         //====================================================================//
         // Internal Reference
-        /** @deprecated V13.0 */
+        /** @deprecated Internal Reference Deprecated Since V13.0 */
         if (Local::dolVersionCmp("13.0.0") < 0) {
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
                 ->identifier("ref_int")
@@ -68,14 +68,14 @@ trait CoreTrait
                 ->microData("http://schema.org/Invoice", "description")
             ;
         }
-
         //====================================================================//
         // External Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_ext")
-            ->Name($langs->trans("ExternalRef"))
+            ->identifier("ref_ext")
+            ->name($langs->trans("ExternalRef"))
+            ->microData("http://schema.org/Invoice", "alternateName")
             ->isListed()
-            ->MicroData("http://schema.org/Invoice", "alternateName");
+        ;
     }
 
     /**

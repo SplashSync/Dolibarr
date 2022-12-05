@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Order;
 
 use DateTime;
+use Splash\Local\Local;
 
 /**
  * Dolibarr Customer Orders Fields (Required)
@@ -34,43 +35,47 @@ trait CoreTrait
         //====================================================================//
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("date")
-            ->Name($langs->trans("OrderDate"))
-            ->MicroData("http://schema.org/Order", "orderDate")
+            ->identifier("date")
+            ->name($langs->trans("OrderDate"))
+            ->microData("http://schema.org/Order", "orderDate")
             ->isRequired()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref")
-            ->Name($langs->trans("RefOrder"))
-            ->MicroData("http://schema.org/Order", "name")
+            ->identifier("ref")
+            ->name($langs->trans("RefOrder"))
+            ->microData("http://schema.org/Order", "name")
             ->isReadOnly()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Customer Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_client")
-            ->Name($langs->trans("RefCustomerOrder"))
+            ->identifier("ref_client")
+            ->name($langs->trans("RefCustomerOrder"))
+            ->microData("http://schema.org/Order", "orderNumber")
             ->isListed()
-            ->MicroData("http://schema.org/Order", "orderNumber");
-
+        ;
         //====================================================================//
         // Internal Reference
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_int")
-            ->Name($langs->trans("InternalRef"))
-            ->MicroData("http://schema.org/Order", "description");
-
+        /** @deprecated Internal Reference Deprecated Since V13.0 */
+        if (Local::dolVersionCmp("13.0.0") < 0) {
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->identifier("ref_int")
+                ->name($langs->trans("InternalRef"))
+                ->microData("http://schema.org/Order", "description")
+            ;
+        }
         //====================================================================//
         // External Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_ext")
-            ->Name($langs->trans("RefExt"))
+            ->identifier("ref_ext")
+            ->name($langs->trans("RefExt"))
+            ->microData("http://schema.org/Order", "alternateName")
             ->isListed()
-            ->MicroData("http://schema.org/Order", "alternateName");
+        ;
     }
 
     /**

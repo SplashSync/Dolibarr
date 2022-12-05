@@ -50,7 +50,6 @@ trait ObjectsListTrait
         $sql .= " f.entity as entity_id,";          // Entity ID
         $sql .= " ".$refColumn." as ref,";          // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
-        $sql .= " f.ref_int as ref_int,";           // Internal Reference
         $sql .= " f.ref_client as ref_client,";     // Customer Reference
         $sql .= " ".$totalHtColumn." as total_ht,"; // Total net of tax
         $sql .= " f.total_ttc as total_ttc,";       // Total with tax
@@ -73,9 +72,6 @@ trait ObjectsListTrait
             //====================================================================//
             // Search in Invoice Ref.
             $sql .= " LOWER( ".$refColumn." ) LIKE LOWER( '%".$filter."%') ";
-            //====================================================================//
-            // Search in Invoice Internal Ref
-            $sql .= " OR LOWER( f.ref_int ) LIKE LOWER( '%".$filter."%') ";
             //====================================================================//
             // Search in Invoice External Ref
             $sql .= " OR LOWER( f.ref_ext ) LIKE LOWER( '%".$filter."%') ";
