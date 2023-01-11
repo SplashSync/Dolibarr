@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,54 +27,55 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function buildCoreFields()
+    protected function buildCoreFields(): void
     {
         global $langs;
 
         //====================================================================//
         // Firstname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("firstname")
-            ->Name($langs->trans("Firstname"))
-            ->MicroData("http://schema.org/Person", "familyName")
+            ->identifier("firstname")
+            ->name($langs->trans("Firstname"))
+            ->microData("http://schema.org/Person", "familyName")
             ->isListed()
             ->isLogged()
-            ->isRequired();
-
+            ->isRequired()
+        ;
         //====================================================================//
         // Lastname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("lastname")
-            ->Name($langs->trans("Lastname"))
-            ->MicroData("http://schema.org/Person", "givenName")
+            ->identifier("lastname")
+            ->name($langs->trans("Lastname"))
+            ->microData("http://schema.org/Person", "givenName")
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Job Title
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("poste")
-            ->Name($langs->trans("PostOrFunction"))
+            ->identifier("poste")
+            ->name($langs->trans("PostOrFunction"))
             ->description("The job title of the person (for example, Financial Manager).")
-            ->MicroData("http://schema.org/Person", "jobTitle")
-            ->isLogged();
-
+            ->microData("http://schema.org/Person", "jobTitle")
+            ->isLogged()
+        ;
         //====================================================================//
         // Customer
-        $this->fieldsFactory()->create((string) self::objects()->Encode("ThirdParty", SPL_T_ID))
-            ->Identifier("socid")
-            ->Name($langs->trans("Company"))
-            ->MicroData("http://schema.org/Organization", "ID");
-
+        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+            ->identifier("socid")
+            ->name($langs->trans("Company"))
+            ->microData("http://schema.org/Organization", "ID")
+        ;
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref_ext")
-            ->Name($langs->trans("CustomerCode"))
-            ->Description($langs->trans("CustomerCodeDesc"))
+            ->identifier("ref_ext")
+            ->name($langs->trans("CustomerCode"))
+            ->description($langs->trans("CustomerCodeDesc"))
+            ->microData("http://schema.org/PostalAddress", "name")
             ->isListed()
             ->isLogged()
-            ->MicroData("http://schema.org/PostalAddress", "name");
+        ;
     }
 
     /**
@@ -93,7 +94,9 @@ trait CoreTrait
             //====================================================================//
             // Contact ThirdParty Id
             case 'socid':
-                $this->out[$fieldName] = self::objects()->Encode("ThirdParty", $this->object->socid);
+                $this->out[$fieldName] = self::objects()
+                    ->encode("ThirdParty", (string) $this->object->socid)
+                ;
 
                 break;
                 //====================================================================//
@@ -116,12 +119,12 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setCoreFields(string $fieldName, $fieldData): void
+    protected function setCoreFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -129,7 +132,7 @@ trait CoreTrait
             //====================================================================//
             // Contact Company Id
             case 'socid':
-                $this->setSimple($fieldName, self::objects()->Id($fieldData));
+                $this->setSimple($fieldName, self::objects()->id((string) $fieldData));
 
                 break;
                 //====================================================================//
