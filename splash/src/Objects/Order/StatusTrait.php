@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,22 +28,22 @@ trait StatusTrait
      *
      * @return void
      */
-    protected function buildStatusFields()
+    protected function buildStatusFields(): void
     {
         global $langs;
 
         //====================================================================//
         // Order Current Status
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("status")
-            ->Name($langs->trans("Status"))
-            ->Group(html_entity_decode($langs->trans("Status")))
-            ->MicroData("http://schema.org/Order", "orderStatus")
-            ->AddChoice(Status::CANCELED, $langs->trans("StatusOrderCanceled"))
-            ->AddChoice(Status::DRAFT, $langs->trans("StatusOrderDraftShort"))
-            ->AddChoice(Status::IN_TRANSIT, $langs->trans("StatusOrderSent"))
-            ->AddChoice(Status::PROCESSING, $langs->trans("StatusOrderSentShort"))
-            ->AddChoice(Status::DELIVERED, $langs->trans("StatusOrderProcessed"))
+            ->identifier("status")
+            ->name($langs->trans("Status"))
+            ->group(html_entity_decode($langs->trans("Status")))
+            ->microData("http://schema.org/Order", "orderStatus")
+            ->addChoice(Status::CANCELED, $langs->trans("StatusOrderCanceled"))
+            ->addChoice(Status::DRAFT, $langs->trans("StatusOrderDraftShort"))
+            ->addChoice(Status::IN_TRANSIT, $langs->trans("StatusOrderSent"))
+            ->addChoice(Status::PROCESSING, $langs->trans("StatusOrderSentShort"))
+            ->addChoice(Status::DELIVERED, $langs->trans("StatusOrderProcessed"))
             ->isNotTested()
         ;
     }
@@ -56,7 +56,7 @@ trait StatusTrait
      *
      * @return void
      */
-    protected function getStatusFields($key, $fieldName)
+    protected function getStatusFields(string $key, string $fieldName): void
     {
         if ('status' != $fieldName) {
             return;
@@ -82,15 +82,15 @@ trait StatusTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return bool
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function setStatusFields($fieldName, $fieldData)
+    protected function setStatusFields(string $fieldName, ?string $fieldData): bool
     {
         global $conf, $langs;
 

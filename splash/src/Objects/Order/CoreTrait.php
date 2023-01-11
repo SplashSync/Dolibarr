@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\Order;
 
 use DateTime;
-use Splash\Local\Local;
+use Exception;
 
 /**
  * Dolibarr Customer Orders Fields (Required)
@@ -28,7 +28,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function buildCoreFields()
+    protected function buildCoreFields(): void
     {
         global $langs;
 
@@ -59,16 +59,6 @@ trait CoreTrait
             ->isListed()
         ;
         //====================================================================//
-        // Internal Reference
-        /** @deprecated Internal Reference Deprecated Since V13.0 */
-        if (Local::dolVersionCmp("13.0.0") < 0) {
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->identifier("ref_int")
-                ->name($langs->trans("InternalRef"))
-                ->microData("http://schema.org/Order", "description")
-            ;
-        }
-        //====================================================================//
         // External Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("ref_ext")
@@ -86,7 +76,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getCoreFields($key, $fieldName)
+    protected function getCoreFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -95,7 +85,6 @@ trait CoreTrait
             // Direct Readings
             case 'ref':
             case 'ref_client':
-            case 'ref_int':
             case 'ref_ext':
                 $this->getSimple($fieldName);
 
@@ -117,12 +106,14 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
+     *
+     * @throws Exception
      *
      * @return void
      */
-    protected function setCoreFields($fieldName, $fieldData)
+    protected function setCoreFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -135,23 +126,14 @@ trait CoreTrait
                 $this->setSimple($fieldName, $fieldData);
 
                 break;
-            case 'ref_int':
-                //====================================================================//
-                //  Compare Field Data
-                if ($this->object->{$fieldName} != $fieldData) {
-                    //====================================================================//
-                    //  Update Field Data
-                    $this->object->setValueFrom($fieldName, $fieldData);
-                    $this->needUpdate();
-                }
-
-                break;
                 //====================================================================//
                 // Order Official Date
             case 'date':
-                $dateTime = new DateTime($fieldData);
-                $this->setSimple('date', $dateTime->getTimestamp());
-                $this->setSimple('date_commande', $dateTime->getTimestamp());
+                if ($fieldData) {
+                    $dateTime = new DateTime($fieldData);
+                    $this->setSimple('date', $dateTime->getTimestamp());
+                    $this->setSimple('date_commande', $dateTime->getTimestamp());
+                }
 
                 break;
             default:
