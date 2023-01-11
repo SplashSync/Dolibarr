@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -70,7 +70,7 @@ class Product extends AbstractObject
     /**
      * @var string
      */
-    public static $extraFieldsType = "product";
+    public static string $extraFieldsType = "product";
 
     //====================================================================//
     // Object Definition Parameters
@@ -81,21 +81,21 @@ class Product extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Product";
+    protected static string $name = "Product";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Product Object";
+    protected static string $description = "Dolibarr Product Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-product-hunt";
+    protected static string $ico = "fa fa-product-hunt";
 
     //====================================================================//
     // Class Constructor
@@ -104,15 +104,15 @@ class Product extends AbstractObject
     /**
      * @var BaseProduct
      */
-    protected $object;
+    protected object $object;
 
     /**
-     * @var BaseProduct
+     * @var null|BaseProduct
      */
-    protected $baseProduct;
+    protected ?BaseProduct $baseProduct;
 
     /**
-     * Class Constructor (Used only if localy necessary)
+     * Class Constructor (Used only if locally necessary)
      */
     public function __construct()
     {
@@ -131,6 +131,6 @@ class Product extends AbstractObject
         $langs->load("stocks");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("Products");
+        static::$name = $langs->trans("Products");
     }
 }

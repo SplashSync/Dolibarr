@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
 namespace   Splash\Local\Objects;
 
+use Contact;
 use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ObjectsTrait;
@@ -56,7 +57,7 @@ class Address extends AbstractObject
     /**
      * @var string
      */
-    public static $extraFieldsType = "socpeople";
+    public static string $extraFieldsType = "socpeople";
 
     //====================================================================//
     // Object Definition Parameters
@@ -67,25 +68,30 @@ class Address extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Contact Address";
+    protected static string $name = "Contact Address";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Contact Object";
+    protected static string $description = "Dolibarr Contact Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-envelope-o";
+    protected static string $ico = "fa fa-envelope-o";
 
     //====================================================================//
     // Class Constructor
     //====================================================================//
+
+    /**
+     * @var Contact
+     */
+    protected object $object;
 
     /**
      * Class Constructor (Used only if localy necessary)
@@ -106,6 +112,6 @@ class Address extends AbstractObject
         $langs->load("other");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("Address");
+        static::$name = $langs->trans("Address");
     }
 }

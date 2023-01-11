@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -69,14 +69,14 @@ class Invoice extends AbstractObject
      *
      * @var string
      */
-    public static $extraFieldsType = "facture";
+    public static string $extraFieldsType = "facture";
 
     /**
      * Type for Lines Extra Fields
      *
      * @var string
      */
-    public static $extraLineFieldsType = "facturedet";
+    public static string $extraLineFieldsType = "facturedet";
 
     //====================================================================//
     // Dolibarr Type
@@ -90,12 +90,12 @@ class Invoice extends AbstractObject
     /**
      * @var array
      */
-    public static $dolibarrTypes = array(0, 1);
+    public static array $dolibarrTypes = array(0, 1);
 
     /**
      * @var Facture
      */
-    protected $object;
+    protected object $object;
 
     //====================================================================//
     // Object Definition Parameters
@@ -106,21 +106,21 @@ class Invoice extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Customer Invoice";
+    protected static string $name = "Customer Invoice";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Customers Invoice Object";
+    protected static string $description = "Dolibarr Customers Invoice Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-money";
+    protected static string $ico = "fa fa-money";
 
     //====================================================================//
     // Class Constructor
@@ -150,6 +150,6 @@ class Invoice extends AbstractObject
         Splash::translator()->Load("objects@local");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("CustomersInvoices");
+        static::$name = $langs->trans("CustomersInvoices");
     }
 }

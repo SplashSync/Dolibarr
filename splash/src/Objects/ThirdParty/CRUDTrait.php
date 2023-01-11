@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,9 +31,9 @@ trait CRUDTrait
      *
      * @param string $objectId Object id
      *
-     * @return false|Societe
+     * @return null|Societe
      */
-    public function load($objectId)
+    public function load(string $objectId): ?Societe
     {
         global $db;
         //====================================================================//
@@ -50,12 +50,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->errTrace("Unable to load ThirdParty (".$objectId.").");
+            return Splash::log()->errNull("Unable to load ThirdParty (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace("Unable to load ThirdParty (".$objectId."). MC");
+            return Splash::log()->errNull("Unable to load ThirdParty (".$objectId."). MC");
         }
         //====================================================================//
         // Restore Multi-Company Module Global
@@ -67,9 +67,9 @@ trait CRUDTrait
     /**
      * Create Request Object
      *
-     * @return false|Societe
+     * @return null|Societe
      */
-    public function create()
+    public function create(): ?Societe
     {
         global $db, $user;
         //====================================================================//
@@ -77,8 +77,8 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Check Customer Required Fields are given
-        if (false == $this->isReadyForCreate()) {
-            return false;
+        if (!$this->isReadyForCreate()) {
+            return null;
         }
         //====================================================================//
         // Init Object
@@ -91,7 +91,7 @@ trait CRUDTrait
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace("Unable to create new ThirdParty.");
+            return Splash::log()->errNull("Unable to create new ThirdParty.");
         }
 
         return $this->object;
@@ -102,9 +102,9 @@ trait CRUDTrait
      *
      * @param bool $needed Is This Update Needed
      *
-     * @return false|string Object Id
+     * @return null|string Object ID
      */
-    public function update($needed)
+    public function update(bool $needed): ?string
     {
         global $user;
         //====================================================================//
@@ -118,16 +118,15 @@ trait CRUDTrait
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
-        if (empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+        if (!($user instanceof User) || empty($user->login)) {
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Update Object
         if ($this->object->update($this->object->id, $user, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()
-                ->errTrace("Unable to Update ThirdParty (".$this->object->id.")");
+            return Splash::log()->errNull("Unable to Update ThirdParty (".$this->object->id.")");
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -139,21 +138,14 @@ trait CRUDTrait
     }
 
     /**
-     * Delete requested Object
-     *
-     * @param null|string $objectId Object Id.  If NULL, Object needs to be created.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function delete($objectId = null)
+    public function delete(string $objectId): bool
     {
-        global $db,$user;
+        global $db, $user;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace();
-        if (null === $objectId) {
-            return false;
-        }
         //====================================================================//
         // Load Object
         $object = new Societe($db);
@@ -183,10 +175,10 @@ trait CRUDTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
-        if (!isset($this->object->id)) {
-            return false;
+        if (empty($this->object->id)) {
+            return null;
         }
 
         return (string) $this->object->id;
@@ -197,7 +189,7 @@ trait CRUDTrait
      *
      * @return bool
      */
-    private function isReadyForCreate()
+    private function isReadyForCreate(): bool
     {
         global $user;
         //====================================================================//
@@ -236,7 +228,7 @@ trait CRUDTrait
      *
      * @return void
      */
-    private function setupBeforeCreate()
+    private function setupBeforeCreate(): void
     {
         //====================================================================//
         // Pre-Setup of Dolibarr infos
@@ -251,7 +243,7 @@ trait CRUDTrait
         $this->object->code_fournisseur = "auto";   // If not erased, will be created by system
 
         //====================================================================//
-        // Optionnal Mandatory Fields
+        // Optional Mandatory Fields
         //====================================================================//
 
         //====================================================================//

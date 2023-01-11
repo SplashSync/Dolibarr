@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
 namespace   Splash\Local\Objects;
 
+use Societe;
 use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ObjectsTrait;
@@ -58,7 +59,7 @@ class ThirdParty extends AbstractObject
     /**
      * @var string
      */
-    public static $extraFieldsType = "societe";
+    public static string $extraFieldsType = "societe";
 
     //====================================================================//
     // Object Definition Parameters
@@ -69,21 +70,26 @@ class ThirdParty extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Company";
+    protected static string $name = "Company";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Company Object";
+    protected static string $description = "Dolibarr Company Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-user";
+    protected static string $ico = "fa fa-user";
+
+    /**
+     * @var Societe
+     */
+    protected object $object;
 
     //====================================================================//
     // Class Constructor
@@ -104,6 +110,6 @@ class ThirdParty extends AbstractObject
         $langs->load("other");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("Module1Name");
+        static::$name = $langs->trans("Module1Name");
     }
 }
