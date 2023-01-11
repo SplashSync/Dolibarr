@@ -55,7 +55,7 @@ foreach ($form->cache_types_paiements as $PaymentType) {
     echo '  <tr class="pair">';
     echo '      <td>'.$langs->trans("SPL_BankAccountFor", $PaymentType["label"], $PaymentType["code"]).'</td>';
     echo '      <td>';
-    $form->select_comptes($conf->global->{$ParameterName}, $PaymentType["id"]);
+    $form->select_comptes($conf->global->{$ParameterName} ?? null, $PaymentType["id"]);
     echo '      </td>';
     echo '  </tr>';
 }

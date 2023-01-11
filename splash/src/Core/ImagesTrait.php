@@ -158,7 +158,7 @@ trait ImagesTrait
         }
         //====================================================================//
         // Load Object Files Path
-        $entity = $this->object->entity ? $this->object->entity : $conf->entity;
+        $entity = $this->object->entity ?: $conf->entity;
         $element = $this->object->element;
         $this->dolFilesDir = $conf->{$element}->multidir_output[$entity];
 

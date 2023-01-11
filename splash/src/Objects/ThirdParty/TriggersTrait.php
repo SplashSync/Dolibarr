@@ -18,7 +18,7 @@ namespace Splash\Local\Objects\ThirdParty;
 use Societe;
 
 /**
- * TrirdParty Dolibarr Trigger trait
+ * ThirdParty Dolibarr Trigger trait
  */
 trait TriggersTrait
 {

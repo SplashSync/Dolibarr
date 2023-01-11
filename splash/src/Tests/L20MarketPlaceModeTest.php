@@ -118,7 +118,10 @@ class L20MarketPlaceModeTest extends ObjectsCase
             $this->currentEntity = $companyInfo;
             //====================================================================//
             //   Execute Core CRUD Tests
-            $this->coreTestSetSingleFieldFromService($objectType, array());
+            $this->coreTestSetSingleFieldFromService($objectType, array(
+                "id" => "none",
+                "notest" => false
+            ));
         }
     }
 

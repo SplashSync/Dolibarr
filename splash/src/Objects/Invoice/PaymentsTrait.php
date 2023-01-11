@@ -642,7 +642,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Default Payment Account Id
-        return $conf->global->SPLASH_BANK;
+        return (int) $conf->global->SPLASH_BANK;
     }
 
     /**
