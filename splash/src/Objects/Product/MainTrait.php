@@ -177,7 +177,7 @@ trait MainTrait
                 break;
             case 'surface':
                 if ((string) $fieldData !== (string) $this->convertSurface(
-                    $this->object->surface,
+                    (float) $this->object->surface ?: 0.0,
                     $this->object->surface_units
                 )) {
                     $normalized = $this->normalizeSurface((float) $fieldData);
@@ -189,7 +189,7 @@ trait MainTrait
                 break;
             case 'volume':
                 if ((string) $fieldData !== (string) $this->convertVolume(
-                    $this->object->volume,
+                    (float) $this->object->volume ?: 0.0,
                     $this->object->volume_units
                 )) {
                     $normalized = $this->normalizeVolume((float) $fieldData);
@@ -225,7 +225,7 @@ trait MainTrait
             case 'height':
             case 'length':
                 if ((string)$fieldData !== (string) $this->convertLength(
-                    $this->object->{ $fieldName },
+                    (float) $this->object->{ $fieldName } ?: 0.0,
                     $this->object->length_units
                 )) {
                     $nomalized = $this->normalizeLength((float) $fieldData);
