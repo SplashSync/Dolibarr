@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +27,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function buildCoreFields()
+    protected function buildCoreFields(): void
     {
         global $langs;
 
@@ -42,52 +42,55 @@ trait CoreTrait
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("ref")
-            ->Name($langs->trans("ProductRef"))
+            ->identifier("ref")
+            ->name($langs->trans("ProductRef"))
+            ->microData("http://schema.org/Product", "model")
             ->isListed()
-            ->MicroData("http://schema.org/Product", "model")
             ->isLogged()
-            ->isRequired();
+            ->isRequired()
+        ;
 
         foreach ($this->getAvailableLanguages() as $isoCode) {
             //====================================================================//
             // Full Name (Label with Options)
-            $this->fieldsFactory()->Create(SPL_T_VARCHAR)
-                ->Identifier("label")
-                ->Name($langs->trans("ProductLabel").$withVariants)
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->identifier("label")
+                ->name($langs->trans("ProductLabel").$withVariants)
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "name")
+                ->setMultilang($isoCode)
                 ->isListed(self::isDefaultLanguage($isoCode))
                 ->isLogged()
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "name")
-                ->setMultilang($isoCode)
                 //====================================================================//
                 // If Product Variation Module is Active => Read Only
                 ->isReadOnly(self::isVariantEnabled())
                 //====================================================================//
                 // If Product Variation Module is Active => Required in Default Language
-                ->isRequired(!self::isVariantEnabled() && self::isDefaultLanguage($isoCode));
+                ->isRequired(!self::isVariantEnabled() && self::isDefaultLanguage($isoCode))
+            ;
 
             //====================================================================//
             // Product Description
-            $this->fieldsFactory()
-                ->Create(SPL_T_VARCHAR)
-                ->Identifier("description")
-                ->Name($langs->trans("Description"))
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->identifier("description")
+                ->name($langs->trans("Description"))
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "description")
+                ->setMultilang($isoCode)
                 ->isListed(self::isDefaultLanguage($isoCode))
                 ->isLogged()
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "description")
-                ->setMultilang($isoCode);
+            ;
         }
 
         //====================================================================//
         // Note
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->Identifier("note")
-            ->Name($langs->trans("Note"))
-            ->Group($groupName)
+            ->identifier("note")
+            ->name($langs->trans("Note"))
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "privatenote")
             ->addOption('language', $langs->getDefaultLang())
-            ->MicroData("http://schema.org/Product", "privatenote");
+        ;
     }
 
     /**
@@ -98,7 +101,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getCoreFields($key, $fieldName)
+    protected function getCoreFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -106,9 +109,6 @@ trait CoreTrait
             //====================================================================//
             // Direct Readings
             case 'ref':
-                $this->getSimple($fieldName);
-
-                break;
             case 'label':
             case 'description':
             case 'note':
@@ -125,12 +125,12 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setCoreFields($fieldName, $fieldData)
+    protected function setCoreFields(string $fieldName, ?string $fieldData): void
     {
         global $langs;
 
@@ -141,7 +141,7 @@ trait CoreTrait
             // Direct Writings
             case 'ref':
                 // Update Path of Object Documents In Database
-                $this->updateFilesPath("produit", $this->object->ref, $fieldData);
+                $this->updateFilesPath("produit", $this->object->ref, (string) $fieldData);
                 $this->setSimple($fieldName, $fieldData);
 
                 break;
@@ -152,13 +152,13 @@ trait CoreTrait
                     return;
                 }
                 $this->setSimple($fieldName, $fieldData);
-                $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), $fieldData);
+                $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), (string) $fieldData);
 
                 break;
             case 'description':
             case 'note':
                 $this->setSimple($fieldName, $fieldData);
-                $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), $fieldData);
+                $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), (string) $fieldData);
 
                 break;
             default:

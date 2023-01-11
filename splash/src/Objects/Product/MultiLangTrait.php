@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -56,18 +56,18 @@ trait MultiLangTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string  $fieldName Field Identifier / Name
+     * @param ?string $fieldData Field Data
      *
      * @return void
      */
-    protected function setMultiLangFields(string $fieldName, $fieldData): void
+    protected function setMultiLangFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // Write Multi-lang Label
         if (0 === strpos($fieldName, 'label_')) {
             $langCode = substr($fieldName, strlen('label_'));
-            $this->setMultiLangContent("label", $langCode, $fieldData);
+            $this->setMultiLangContent("label", $langCode, (string) $fieldData);
             unset($this->in[$fieldName]);
         }
 
@@ -75,7 +75,7 @@ trait MultiLangTrait
         // Write Multi-lang Description
         if (0 === strpos($fieldName, 'description_')) {
             $langCode = substr($fieldName, strlen('description_'));
-            $this->setMultiLangContent('description', $langCode, $fieldData);
+            $this->setMultiLangContent('description', $langCode, (string) $fieldData);
             unset($this->in[$fieldName]);
         }
     }

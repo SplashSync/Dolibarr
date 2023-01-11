@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -124,12 +124,12 @@ trait MultiPricesTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      */
-    protected function setMultiPricesFields(string $fieldName, $fieldData): void
+    protected function setMultiPricesFields(string $fieldName, ?array $fieldData): void
     {
         global $conf, $user;
 
@@ -163,6 +163,7 @@ trait MultiPricesTrait
 
             //====================================================================//
             // Update Based on TTC Price
+            /** @var array $fieldData */
             if ($fieldData["base"]) {
                 $price = $fieldData["ttc"];
                 $priceBase = "TTC";

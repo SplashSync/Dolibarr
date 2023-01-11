@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,9 +15,7 @@
 
 namespace Splash\Local\Objects\Product\Variants;
 
-use ArrayObject;
 use Product;
-use ProductCombination;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Services\VariantsManager;
 
@@ -46,21 +44,21 @@ trait CoreTrait
         //====================================================================//
         // Product Variation Parent Link
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("fk_product_parent")
-            ->Name("Parent Product Id")
-            ->Group("Meta")
-            ->MicroData("http://schema.org/Product", "isVariationOf")
-            ->isReadOnly();
-
+            ->identifier("fk_product_parent")
+            ->name("Parent Product Id")
+            ->group("Meta")
+            ->microData("http://schema.org/Product", "isVariationOf")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Product Variation Parent Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("parent_ref")
-            ->Name("Parent SKU")
-            ->Group("Meta")
-            ->MicroData("http://schema.org/Product", "isVariationOfName")
-            ->isNotTested();
-
+            ->identifier("parent_ref")
+            ->name("Parent SKU")
+            ->group("Meta")
+            ->microData("http://schema.org/Product", "isVariationOfName")
+            ->isNotTested()
+        ;
         //====================================================================//
         // CHILD PRODUCTS INFORMATIONS
         //====================================================================//
@@ -68,20 +66,21 @@ trait CoreTrait
         //====================================================================//
         // Product Variation List - Product Link
         $this->fieldsFactory()->Create((string) self::objects()->Encode("Product", SPL_T_ID))
-            ->Identifier("id")
-            ->Name("Variants")
-            ->InList("variants")
-            ->MicroData("http://schema.org/Product", "Variants")
-            ->isNotTested();
-
+            ->identifier("id")
+            ->name("Variants")
+            ->inList("variants")
+            ->microData("http://schema.org/Product", "Variants")
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Variation List - Product SKU
         $this->fieldsFactory()->Create(SPL_T_VARCHAR)
-            ->Identifier("sku")
-            ->Name("Variant SKU")
-            ->InList("variants")
-            ->MicroData("http://schema.org/Product", "VariationName")
-            ->isReadOnly();
+            ->identifier("sku")
+            ->name("Variant SKU")
+            ->inList("variants")
+            ->microData("http://schema.org/Product", "VariationName")
+            ->isReadOnly()
+        ;
     }
 
     //====================================================================//
@@ -96,7 +95,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getVariantsCoreFields($key, $fieldName)
+    protected function getVariantsCoreFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -106,10 +105,9 @@ trait CoreTrait
 
                 break;
             case 'parent_ref':
-                if (!$this->isVariant()) {
-                    $this->out[$fieldName] = "";
-                }
-                $this->out[$fieldName] = $this->baseProduct->ref;
+                $this->out[$fieldName] = isset($this->baseProduct)
+                    ? $this->baseProduct->ref : ""
+                ;
 
                 break;
             default:
@@ -127,7 +125,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getVariantsListFields($key, $fieldName)
+    protected function getVariantsListFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
@@ -146,12 +144,11 @@ trait CoreTrait
         // Load Product Variants
         $variants = VariantsManager::getProductVariants($this->combination->fk_product_parent);
 
-        /** @var ProductCombination $combination */
         foreach ($variants as $index => $combination) {
             //====================================================================//
             // SKIP Current Variant When in PhpUnit/Travis Mode
             // Only Existing Variant will be Returned
-            if (!empty(Splash::input('SPLASH_TRAVIS')) && ($combination->fk_product_child == $this->object->id)) {
+            if (Splash::isTravisMode() && ($combination->fk_product_child == $this->object->id)) {
                 continue;
             }
 
@@ -181,7 +178,9 @@ trait CoreTrait
         unset($this->in[$key]);
         //====================================================================//
         // Sort Attributes by Code
-        ksort($this->out["variants"]);
+        if (is_array($this->out["variants"])) {
+            ksort($this->out["variants"]);
+        }
     }
 
     //====================================================================//
@@ -196,13 +195,13 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function setVariantsCoreFields($fieldName, $fieldData)
+    protected function setVariantsCoreFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'parent_ref':
                 if ($this->isVariant() && !empty($fieldData)) {
                     $this->setSimple("ref", $fieldData, "baseProduct");
@@ -218,14 +217,14 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function setVariantsListFields($fieldName, $fieldData)
+    protected function setVariantsListFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -240,15 +239,13 @@ trait CoreTrait
         }
         //====================================================================//
         // Ensure Variants Field data is Iterable
-        if (!is_array($fieldData) && !is_a($fieldData, ArrayObject::class)) {
-            $fieldData = array();
-        }
+        $fieldData = $fieldData ?? array();
         //====================================================================//
-        // Check if Product has Additionnal Variants
+        // Check if Product has Additional Variants
         if (!VariantsManager::hasAdditionnalVariants($this->combination->fk_product_parent, $fieldData)) {
             return;
         }
-        Splash::log()->war("Additionnal Variants Detected! Ref:".$this->object->ref);
+        Splash::log()->war("Additional Variants Detected! Ref:".$this->object->ref);
         //====================================================================//
         // Check System Uses Strict Variants Mode
         if (empty(Splash::configuration()->StrictVariantsMode)) {
@@ -261,11 +258,11 @@ trait CoreTrait
     /**
      * Create a New Product Parent and Move All Variants to this New One
      *
-     * @param array|ArrayObject $variants Product Variants List
+     * @param array $variants Product Variants List
      *
      * @return void
      */
-    protected function updateVariantsParent($variants)
+    protected function updateVariantsParent(array $variants)
     {
         global $db;
         //====================================================================//
@@ -275,7 +272,14 @@ trait CoreTrait
         }
         //====================================================================//
         // Create a New Parent Product
-        $newParentProduct = $this->createSimpleProduct($this->object->ref."_base", $this->in["base_label"], false);
+        $newParentProduct = null;
+        if (!empty($this->in["base_label"]) && is_string($this->in["base_label"])) {
+            $newParentProduct = $this->createSimpleProduct(
+                $this->object->ref."_base",
+                $this->in["base_label"],
+                false
+            );
+        }
         //====================================================================//
         // Create New Parent Product Failed
         if (!$newParentProduct) {
@@ -283,7 +287,7 @@ trait CoreTrait
         }
         //====================================================================//
         // Update All Product Combinations Parents
-        VariantsManager::moveAdditionnalVariants(
+        VariantsManager::moveAdditionalVariants(
             $this->combination->fk_product_parent,
             $variants,
             $newParentProduct->id

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,12 +25,12 @@ trait ObjectsListTrait
     /**
      * Build Object Listing Base Sql Query
      *
-     * @param string $filter Filters/Search String for Contact List.
-     * @param array  $params Search parameters for result List.
+     * @param null|string $filter Filters/Search String for Contact List.
+     * @param array       $params Search parameters for result List.
      *
      * @return string
      */
-    protected function getSqlBaseRequest($filter = null, $params = null)
+    protected function getSqlBaseRequest(string $filter = null, array $params = array()): string
     {
         //====================================================================//
         // Prepare SQL request for reading in Database

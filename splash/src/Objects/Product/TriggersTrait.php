@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,7 +31,7 @@ trait TriggersTrait
      *
      * @var array
      */
-    private static $productActions = array(
+    private static array $productActions = array(
         'PRODUCT_CREATE',
         'PRODUCT_MODIFY',
         'PRODUCT_DELETE',
@@ -77,7 +77,7 @@ trait TriggersTrait
     {
         //====================================================================//
         // Filter on Event Action
-        if (!in_array($action, static::$productActions, true)) {
+        if (!in_array($action, self::$productActions, true)) {
             return false;
         }
 
