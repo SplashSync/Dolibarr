@@ -1,11 +1,10 @@
-
 includes:
     - '../splash/vendor/phpstan/phpstan-phpunit/extension.neon'
     - '../splash/vendor/phpstan/phpstan-phpunit/rules.neon'
 
 parameters:
     bootstrapFiles:
-        - "./phpstan.php"
+        - %currentWorkingDirectory%/grumphp/phpstan.php
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true 
@@ -14,8 +13,6 @@ parameters:
             - ArrayObject
             - FactureStats
             - CommandeStats
-            - FactureLigne
-            - OrderLine
 
     ignoreErrors: 
         - '#Function completeFileArrayWithDatabaseInfo not found.#'
@@ -26,7 +23,6 @@ parameters:
         - '#Access to an undefined property object::\$global.#'
         - '#Access to an undefined property object::\$facture.#'
         - '#Access to an undefined property Product::\$fk_default_warehouse.#'
-
 
         # Wrong Comments in Dolibarr Class
         - '#Parameter \#2 \$type_contact of method CommonObject\:\:add_contact\(\) expects int\, string given.#'

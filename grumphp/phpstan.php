@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,7 +24,7 @@ global $db, $langs, $conf, $user, $hookmanager;
 //====================================================================//
 // Initiate Dolibarr Global Environment Variables
 define("NOLOGIN", "1");
-require_once(dirname(dirname(__DIR__))."/main.inc.php");
+require_once(dirname(dirname(__DIR__))."/master.inc.php");
 
 //====================================================================//
 // Functions Dolibarr
@@ -36,6 +36,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
 require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
 require_once(DOL_DOCUMENT_ROOT."/core/triggers/dolibarrtriggers.class.php");
+require_once(DOL_DOCUMENT_ROOT."/core/class/extrafields.class.php");
 
 //====================================================================//
 // Objects Classes
@@ -77,4 +78,23 @@ include_once dirname(__DIR__).'/splash/core/triggers/interface_50_modSplash_Spla
 // Include Splash Constants Definitions
 require_once(dirname(dirname(__FILE__))."/splash/vendor/splash/phpcore/inc/Splash.Inc.php");
 require_once(dirname(dirname(__FILE__))."/splash/vendor/splash/phpcore/inc/defines.inc.php");
-define("SPLASH_SERVER_MODE", 0);
+
+/**
+ * Header empty
+ *
+ * @return void
+ */
+function llxHeader(string $head = '', string $title = '')
+{
+    echo $head.$title;
+}
+
+/**
+ * Footer empty
+ *
+ * @return void
+ */
+function llxFooter(string $comment = '')
+{
+    echo $comment;
+}
