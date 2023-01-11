@@ -454,7 +454,7 @@ trait BaseItemsTrait
      *
      * @return void
      */
-    private function setItemVatSrcCode($itemData)
+    private function setItemVatSrcCode(array $itemData): void
     {
         global $conf;
 
@@ -474,7 +474,7 @@ trait BaseItemsTrait
         //====================================================================//
         // No Changes On Item? => Exit
         // Feature is Disabled? => Exit
-        if (!$this->itemUpdate || !$conf->global->SPLASH_DETECT_TAX_NAME) {
+        if (!$this->itemUpdate || empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
             return;
         }
         //====================================================================//
@@ -649,7 +649,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
-        if ($conf->global->SPLASH_DETECT_TAX_NAME) {
+        if (!empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
             $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
             if ($identifiedVat) {
                 $vatRateOrId = $identifiedVat->rowid;
@@ -658,9 +658,9 @@ trait BaseItemsTrait
         }
 
         //====================================================================//
-        // Calcul du total TTC et de la TVA pour la ligne a partir de
+        // Calcul du total TTC et de la TVA pour la ligne à partir de
         // qty, pu, remise_percent et txtva
-        $localtaxType = getLocalTaxesFromRate(
+        $localTaxType = getLocalTaxesFromRate(
             (string) $vatRateOrId,
             0,
             $this->object->fetch_thirdparty(),
@@ -682,7 +682,7 @@ trait BaseItemsTrait
             $this->currentItem->info_bits,
             $this->currentItem->product_type,
             $mysoc,
-            $localtaxType
+            $localTaxType
         );
 
         $this->currentItem->total_ht = $tabPrice[0];
