@@ -18,6 +18,7 @@ namespace Splash\Local\Core;
 use FactureLigne;
 use OrderLine;
 use Product;
+use PropaleLigne;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
@@ -165,7 +166,7 @@ trait BaseItemsTrait
     /**
      * Insert an Item to Order or Invoice
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $item
+     * @param FactureLigne|OrderLine|PropaleLigne|SupplierInvoiceLine $item
      *
      * @return bool
      */
