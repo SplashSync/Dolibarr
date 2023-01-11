@@ -96,7 +96,9 @@ trait MultiLangsTrait
         //====================================================================//
         // Create This Translation if empty
         if (!isset($this->object->multilangs[$isoCode])) {
-            $this->object->multilangs[$isoCode] = array();
+            $this->object->multilangs[$isoCode] = array(
+                "label" => "", "description" => ""
+            );
         }
         //====================================================================//
         // Update Contents

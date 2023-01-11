@@ -341,11 +341,11 @@ class MultiCompany
     {
         self::loadMultiCompanyInfos($reload);
 
-        return isset(self::$entityInfos) ? self::$entityInfos : array();
+        return self::$entityInfos ?? array();
     }
 
     /**
-     * Load Multi-company Informations Cache
+     * Load Multi-company Information Cache
      *
      * @return void
      */

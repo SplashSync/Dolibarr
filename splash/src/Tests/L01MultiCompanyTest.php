@@ -209,7 +209,7 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         // Switch Entity
-        $conf->entity = (int)   $entityId;
+        $conf->entity = $entityId;
         $conf->setValues($db);
         $user->entity = $conf->entity;
 
