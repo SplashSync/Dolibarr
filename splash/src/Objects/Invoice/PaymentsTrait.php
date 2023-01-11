@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +15,7 @@
 
 namespace Splash\Local\Objects\Invoice;
 
-use ArrayObject;
+use Exception;
 use Paiement;
 use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
@@ -34,14 +34,14 @@ trait PaymentsTrait
     /**
      * @var array
      */
-    protected $payments = array();
+    protected array $payments = array();
 
     /**
      * Build Address Fields using FieldFactory
      *
      * @return void
      */
-    protected function buildPaymentsFields()
+    protected function buildPaymentsFields(): void
     {
         global $langs;
 
@@ -94,12 +94,12 @@ trait PaymentsTrait
     /**
      * Fetch Invoice Payments List (Done after Load)
      *
-     * @param mixed $invoiceId
-     * @param bool  $isSupplier
+     * @param int  $invoiceId
+     * @param bool $isSupplier
      *
      * @return bool
      */
-    protected function loadPayments($invoiceId, bool $isSupplier = false): bool
+    protected function loadPayments(int $invoiceId, bool $isSupplier = false): bool
     {
         global $db;
 
@@ -214,12 +214,12 @@ trait PaymentsTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      */
-    protected function setPaymentLineFields(string $fieldName, $fieldData)
+    protected function setPaymentLineFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -228,10 +228,8 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Verify Lines List & Update if Needed
-        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
-            foreach ($fieldData as $lineData) {
-                $this->setPaymentLineData($lineData);
-            }
+        foreach ($fieldData ?? array() as $lineData) {
+            $this->setPaymentLineData($lineData);
         }
         //====================================================================//
         // Delete Remaining Lines
@@ -291,11 +289,11 @@ trait PaymentsTrait
     /**
      * Update a Payment line Data
      *
-     * @param array|ArrayObject $lineData Line Data Array
+     * @param array $lineData Line Data Array
      *
      * @return bool
      */
-    private function setPaymentLineData($lineData): bool
+    private function setPaymentLineData(array $lineData): bool
     {
         //====================================================================//
         // Read Next Payment Line
@@ -332,12 +330,12 @@ trait PaymentsTrait
     /**
      * Update an Exiting Payment
      *
-     * @param int               $paymentId Payment Item ID
-     * @param array|ArrayObject $lineData  Line Data Array
+     * @param int   $paymentId Payment Item ID
+     * @param array $lineData  Line Data Array
      *
      * @return bool Re-Create Payment Item or Exit?
      */
-    private function updatePaymentItem(int $paymentId, $lineData): bool
+    private function updatePaymentItem(int $paymentId, array $lineData): bool
     {
         //====================================================================//
         // Load Payment Item
@@ -382,11 +380,11 @@ trait PaymentsTrait
      * Update an Exiting Payment Datas
      *
      * @param Paiement|PaiementFourn $payment  Payment Item ID
-     * @param array|ArrayObject      $lineData Line Data Array
+     * @param array                  $lineData Line Data Array
      *
      * @return void
      */
-    private function updatePaymentItemDatas($payment, $lineData)
+    private function updatePaymentItemDatas($payment, array $lineData): void
     {
         //====================================================================//
         // Update Payment Date
@@ -424,11 +422,13 @@ trait PaymentsTrait
     /**
      * Update an Exiting Payment
      *
-     * @param array|ArrayObject $lineData Line Data Array
+     * @param array $lineData Line Data Array
+     *
+     * @throws Exception
      *
      * @return bool Re-Create Payment Item or Exit?
      */
-    private function createPaymentItem($lineData)
+    private function createPaymentItem(array $lineData): bool
     {
         global $user;
         //====================================================================//
@@ -524,7 +524,7 @@ trait PaymentsTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function identifySplashPaymentMethod(string $methodType)
+    private function identifySplashPaymentMethod(string $methodType): string
     {
         //====================================================================//
         // Detect Payment Method Type from Default Payment "known" methods
@@ -558,7 +558,7 @@ trait PaymentsTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function identifyPaymentMethod(string $methodType)
+    private function identifyPaymentMethod(string $methodType): int
     {
         global $conf;
 
@@ -596,7 +596,7 @@ trait PaymentsTrait
      *
      * @return int
      */
-    private function identifyPaymentType(string $paymentTypeCode)
+    private function identifyPaymentType(string $paymentTypeCode): int
     {
         global $db;
 
@@ -629,7 +629,7 @@ trait PaymentsTrait
      *
      * @return int
      */
-    private function identifyBankAccountId(int $paymentTypeId)
+    private function identifyBankAccountId(int $paymentTypeId): int
     {
         global $conf;
 
@@ -652,7 +652,7 @@ trait PaymentsTrait
      *
      * @return null|Paiement
      */
-    private function identifyExistingPayment($lineData): ?Paiement
+    private function identifyExistingPayment(array $lineData): ?Paiement
     {
         //====================================================================//
         // Search for Similar Payment in Database

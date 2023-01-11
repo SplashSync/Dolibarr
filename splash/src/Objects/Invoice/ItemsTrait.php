@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,9 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use FactureLigne;
-use OrderLine;
 use Splash\Core\SplashCore      as Splash;
-use SupplierInvoiceLine;
 
 /**
  * Dolibarr Customer Invoice Items Fields
@@ -28,9 +26,9 @@ trait ItemsTrait
     /**
      * Create a New Line Item
      *
-     * @return null|FactureLigne|OrderLine|SupplierInvoiceLine
+     * @return null|FactureLigne
      */
-    protected function createItem()
+    protected function createItem(): ?FactureLigne
     {
         global $db;
 
@@ -42,7 +40,7 @@ trait ItemsTrait
 
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
-        return $this->insertItem($item);
+        return $this->insertItem($item) ? $item : null;
     }
 
     /**
@@ -52,7 +50,7 @@ trait ItemsTrait
      *
      * @return bool
      */
-    protected function deleteItem($factureLigne)
+    protected function deleteItem(FactureLigne $factureLigne): bool
     {
         //====================================================================//
         // Debug Mode => Force Allow Delete

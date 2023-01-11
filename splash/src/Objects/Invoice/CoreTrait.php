@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,7 +16,6 @@
 namespace Splash\Local\Objects\Invoice;
 
 use DateTime;
-use Splash\Local\Local;
 
 /**
  * Dolibarr Customer Invoice Fields (Required)
@@ -28,7 +27,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function buildCoreFields()
+    protected function buildCoreFields(): void
     {
         global $langs;
 
@@ -59,16 +58,6 @@ trait CoreTrait
             ->isListed()
         ;
         //====================================================================//
-        // Internal Reference
-        /** @deprecated Internal Reference Deprecated Since V13.0 */
-        if (Local::dolVersionCmp("13.0.0") < 0) {
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->identifier("ref_int")
-                ->name($langs->trans("RefCustomer")." ".$langs->trans("Internal"))
-                ->microData("http://schema.org/Invoice", "description")
-            ;
-        }
-        //====================================================================//
         // External Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("ref_ext")
@@ -86,7 +75,7 @@ trait CoreTrait
      *
      * @return void
      */
-    protected function getCoreFields($key, $fieldName)
+    protected function getCoreFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -95,7 +84,6 @@ trait CoreTrait
             // Direct Readings
             case 'ref':
             case 'ref_client':
-            case 'ref_int':
             case 'ref_ext':
                 $this->getSimple($fieldName);
 
@@ -117,12 +105,14 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
+     *
+     * @throws \Exception
      *
      * @return void
      */
-    protected function setCoreFields($fieldName, $fieldData)
+    protected function setCoreFields(string $fieldName, ?string $fieldData)
     {
         //====================================================================//
         // WRITE Field
@@ -135,7 +125,6 @@ trait CoreTrait
 
                 break;
             case 'ref_ext':
-            case 'ref_int':
                 //====================================================================//
                 //  Compare Field Data
                 if ($this->object->{$fieldName} != $fieldData) {
@@ -149,7 +138,7 @@ trait CoreTrait
                 //====================================================================//
                 // Order Official Date
             case 'date':
-                $dateTime = new DateTime($fieldData);
+                $dateTime = new DateTime((string) $fieldData);
                 $this->setSimple('date', $dateTime->getTimestamp());
                 $this->setSimple('date_commande', $dateTime->getTimestamp());
 
