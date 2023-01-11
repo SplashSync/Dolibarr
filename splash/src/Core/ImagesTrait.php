@@ -134,6 +134,9 @@ trait ImagesTrait
      * @param string $fieldName Field Identifier / Name
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function getImagesFields(string $key, string $fieldName): void
     {
@@ -160,8 +163,10 @@ trait ImagesTrait
         // Load Object Files Path
         $entity = $this->object->entity ?: $conf->entity;
         $element = $this->object->element;
-        $this->dolFilesDir = $conf->{$element}->multidir_output[$entity];
-
+        $this->dolFilesDir = "";
+        if ($conf->{$element}->multidir_output ?? false) {
+            $this->dolFilesDir = $conf->{$element}->multidir_output[$entity] ?? "";
+        }
         //====================================================================//
         // For backward compatibility
         if ('product' == $element && !empty($conf->global->PRODUCT_USE_OLD_PATH_FOR_PHOTO)) {
