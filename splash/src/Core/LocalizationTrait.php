@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,11 +26,11 @@ trait LocalizationTrait
     /**
      * Search for a Country by Code
      *
-     * @param mixed $code
+     * @param string $code
      *
-     * @return false|int Country Dolibarr Id, else 0
+     * @return false|int Country Dolibarr ID, else 0
      */
-    protected function getCountryByCode($code)
+    protected function getCountryByCode(string $code)
     {
         global $db;
         require_once DOL_DOCUMENT_ROOT.'/core/class/ccountry.class.php';
@@ -43,7 +43,7 @@ trait LocalizationTrait
     }
 
     /**
-     * Search For State Dolibarr Id using State Code & Country Id
+     * Search For State Dolibarr ID using State Code & Country ID
      *
      * @param string $stateCode State Iso Code
      * @param mixed  $countryId

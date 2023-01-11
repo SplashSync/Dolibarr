@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,26 +24,26 @@ use Splash\Models\Helpers\InlineHelper;
 trait ExtraFieldsTrait
 {
     /**
-     * @var ExtraFields
+     * @var null|ExtraFields
      */
-    private $extraFields;
+    private ?ExtraFields $extraFields;
 
     /**
      * ExtraFields Attributes
      *
      * @var array<string, array<string, mixed>>
      */
-    private $extraFieldsAttrs;
+    private array $extraFieldsAttrs;
 
     /**
      * @var string
      */
-    private $extraPrefix = "options_";
+    private string $extraPrefix = "options_";
 
     /**
      * @var null|string
      */
-    private $extraInList;
+    private ?string $extraInList;
 
     //====================================================================//
     // Generic Splash Fields Access Functions
@@ -75,8 +75,8 @@ trait ExtraFieldsTrait
                 ->name($this->getLabel($fieldId))
                 ->group("Extra")
                 ->addOption('maxLength', '14')
-                ->microData("http://meta.schema.org/additionalType", $fieldId);
-
+                ->microData("http://meta.schema.org/additionalType", $fieldId)
+            ;
             if ($this->isRequired($fieldId)) {
                 $this->fieldsFactory()->isRequired();
             }
@@ -87,7 +87,9 @@ trait ExtraFieldsTrait
                 $this->fieldsFactory()->inList($this->extraInList);
             }
             if (in_array($fieldType, array('select', "checkbox"), true)) {
-                $this->fieldsFactory()->addChoices($this->getChoices($fieldType, $fieldId));
+                $this->fieldsFactory()
+                    ->addChoices($this->getChoices($fieldType, $fieldId))
+                ;
             }
         }
     }
@@ -139,22 +141,22 @@ trait ExtraFieldsTrait
 
                 break;
             case SPL_T_INT:
-                $this->out[$fieldName] = (int) $fieldData;
+                $this->out[$fieldName] = is_scalar($fieldData)  ? (int) $fieldData : null;
 
                 break;
             case SPL_T_DOUBLE:
-                $this->out[$fieldName] = (double) $fieldData;
+                $this->out[$fieldName] = is_scalar($fieldData)  ? (double) $fieldData : null;
 
                 break;
             case SPL_T_BOOL:
-                $this->out[$fieldName] = (bool) $fieldData;
+                $this->out[$fieldName] = is_scalar($fieldData)  ? (bool) $fieldData : null;
 
                 break;
             case SPL_T_INLINE:
                 $fieldType = (string) $this->decodeType($fieldName);
                 //====================================================================//
                 // Explode Storage Value
-                $value = explode(",", $fieldData);
+                $value = is_scalar($fieldData) ? explode(",", (string) $fieldData) : array();
                 //====================================================================//
                 // Build Intersection Value
                 $this->out[$fieldName] = InlineHelper::fromArray(
@@ -164,7 +166,7 @@ trait ExtraFieldsTrait
                 break;
             case SPL_T_PRICE:
                 $this->out[$fieldName] = self::prices()->Encode(
-                    (double) $fieldData,
+                    is_scalar($fieldData) ? (double) $fieldData : 0.0,
                     0.0,
                     null,
                     $conf->global->MAIN_MONNAIE
@@ -216,6 +218,7 @@ trait ExtraFieldsTrait
             case SPL_T_DOUBLE:
             case SPL_T_BOOL:
                 if ($currentData != $fieldData) {
+                    /** @phpstan-ignore-next-line  */
                     $this->object->array_options[$fieldName] = $fieldData;
                     $this->needUpdate();
                 }
@@ -223,6 +226,7 @@ trait ExtraFieldsTrait
                 break;
             case SPL_T_INLINE:
                 $fieldType = (string) $this->decodeType($fieldName);
+                $fieldData = is_scalar($fieldData) ? (string) $fieldData : null;
                 //====================================================================//
                 // Build Storage Value
                 $fieldDataStorage = implode(',', array_keys(
@@ -231,6 +235,7 @@ trait ExtraFieldsTrait
                 //====================================================================//
                 // Compare with Current
                 if ($currentData != $fieldDataStorage) {
+                    /** @phpstan-ignore-next-line  */
                     $this->object->array_options[$fieldName] = $fieldDataStorage;
                     $this->needUpdate();
                 }
@@ -239,14 +244,16 @@ trait ExtraFieldsTrait
             case SPL_T_DATETIME:
                 if ($currentData != $fieldData) {
                     date_default_timezone_set('UTC');
+                    /** @phpstan-ignore-next-line  */
                     $this->object->array_options[$fieldName] = $fieldData;
                     $this->needUpdate();
                 }
 
                 break;
             case SPL_T_PRICE:
-                $priceHT = self::prices()->TaxExcluded($fieldData);
+                $priceHT = is_array($fieldData) ? self::prices()->taxExcluded($fieldData) : 0.0;
                 if ($currentData != $priceHT) {
+                    /** @phpstan-ignore-next-line  */
                     $this->object->array_options[$fieldName] = $priceHT;
                     $this->needUpdate();
                 }
@@ -264,7 +271,7 @@ trait ExtraFieldsTrait
      *
      * @param string $fieldName Field Identifier / Name
      *
-     * @return mixed
+     * @return null|array|scalar
      */
     protected function getExtraData(string $fieldName)
     {
@@ -280,6 +287,7 @@ trait ExtraFieldsTrait
             try {
                 $object = $this->object;
 
+                /** @phpstan-ignore-next-line */
                 return dol_eval((string) $computeSource, 1, 0);
             } catch (\Throwable $ex) {
                 return null;
@@ -287,7 +295,8 @@ trait ExtraFieldsTrait
         }
         //====================================================================//
         // Extract Generic Field Data
-        if (isset($this->object->array_options) && array_key_exists($fieldName, $this->object->array_options)) {
+        if (is_array($this->object->array_options ?? null)
+            && array_key_exists($fieldName, $this->object->array_options)) {
             return $this->object->array_options[$fieldName];
         }
 
@@ -311,20 +320,22 @@ trait ExtraFieldsTrait
      *
      * @param null|string $elementType
      *
-     * @return void
+     * @return ExtraFields
      */
-    private function loadExtraFields(string $elementType = null)
+    private function loadExtraFields(string $elementType = null): ExtraFields
     {
         global $db;
         //====================================================================//
         // Load ExtraFields List
-        if (null == $this->extraFields) {
+        if (!isset($this->extraFields)) {
             require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
             $this->extraFields = new ExtraFields($db);
             $key = is_null($elementType) ? static::$extraFieldsType : $elementType;
             $this->extraFields->fetch_name_optionals_label($key, true);
             $this->extraFieldsAttrs = $this->extraFields->attributes[$key] ?? array();
         }
+
+        return $this->extraFields;
     }
 
     /**
@@ -368,11 +379,11 @@ trait ExtraFieldsTrait
     /**
      * Check if is Dolibarr ExtraFields Types
      *
-     * @param mixed $fieldType
+     * @param string $fieldType
      *
      * @return bool
      */
-    private function isExtraType($fieldType): bool
+    private function isExtraType(string $fieldType): bool
     {
         if (empty($this->getExtraTypes())) {
             return false;
@@ -553,6 +564,7 @@ trait ExtraFieldsTrait
     {
         $this->loadExtraFields();
 
+        /** @phpstan-ignore-next-line */
         return $this->extraFieldsAttrs[$attrType][$fieldType] ?? null;
     }
 }

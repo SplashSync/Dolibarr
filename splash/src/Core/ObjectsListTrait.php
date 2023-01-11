@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@ trait ObjectsListTrait
     /**
      * {@inheritdoc}
      */
-    public function objectsList($filter = null, $params = null)
+    public function objectsList(?string $filter = null, array $params = array()): array
     {
         global $db;
 
@@ -45,7 +45,7 @@ trait ObjectsListTrait
 
         //====================================================================//
         // Setup limits
-        $sql .= $this->getSqlPagination(is_null($params) ? array() : $params);
+        $sql .= $this->getSqlPagination($params);
 
         //====================================================================//
         // Execute final request

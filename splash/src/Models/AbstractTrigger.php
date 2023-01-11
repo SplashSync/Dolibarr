@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +27,7 @@ include_once(dirname(dirname(dirname(__FILE__)))."/_conf/defines.inc.php");
 
 use Conf;
 use DolibarrTriggers;
+use DoliDB;
 use Exception;
 use Splash\Client\Splash;
 use Splash\Components\Logger;
@@ -74,21 +75,21 @@ class AbstractTrigger extends DolibarrTriggers
      *
      * @var string
      */
-    protected $login = "Unknown User";
+    protected string $login = "Unknown User";
 
     /**
      * Event Comment
      *
      * @var null|string
      */
-    protected $comment = "Dolibarr Commit";
+    protected ?string $comment = "Dolibarr Commit";
 
     /**
      * Class Constructor.
      *
-     * @param mixed $db Dolibarr Database Object
+     * @param DoliDB $db Dolibarr Database Object
      */
-    public function __construct($db)
+    public function __construct(DoliDB $db)
     {
         global $langs;
 
@@ -251,7 +252,7 @@ class AbstractTrigger extends DolibarrTriggers
     {
         //====================================================================//
         // When Library is called in server mode, no Message Storage
-        if (!empty(SPLASH_SERVER_MODE)) {
+        if (Splash::isServerMode()) {
             return;
         }
 
