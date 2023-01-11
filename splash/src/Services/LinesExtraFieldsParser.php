@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,29 +34,29 @@ class LinesExtraFieldsParser
     /**
      * @var string
      */
-    public static $extraFieldsType;
-
-    /**
-     * Static Storage for Caching
-     *
-     * @var LinesExtraFieldsParser
-     */
-    private static $instance;
-
-    /**
-     * @var FieldsFactory
-     */
-    private static $factory;
+    public static string $extraFieldsType;
 
     /**
      * @var FactureLigne|OrderLine|SupplierInvoiceLine
      */
-    private $object;
+    protected $object;
 
     /**
      * @var array
      */
-    private $in = array();
+    protected array $in = array();
+
+    /**
+     * Static Storage for Caching
+     *
+     * @var null|LinesExtraFieldsParser
+     */
+    private static ?LinesExtraFieldsParser $instance = null;
+
+    /**
+     * @var FieldsFactory
+     */
+    private static FieldsFactory $factory;
 
     /**
      * @var array
@@ -66,7 +66,7 @@ class LinesExtraFieldsParser
     /**
      * @var bool
      */
-    private $needUpdate = false;
+    private bool $needUpdate = false;
 
     /**
      * Constructor
@@ -97,7 +97,6 @@ class LinesExtraFieldsParser
         if (!isset(self::$instance)) {
             self::$instance = new self(
                 $splashObject::fieldsFactory(),
-                // @phpstan-ignore-next-line
                 $splashObject::$extraLineFieldsType ?? ""
             );
         }
