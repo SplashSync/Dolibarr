@@ -36,7 +36,7 @@ trait BaseItemsTrait
     /**
      * @var bool
      */
-    private $itemUpdate = false;
+    private bool $itemUpdate = false;
 
     /**
      * @var null|FactureLigne|OrderLine|SupplierInvoiceLine
@@ -113,17 +113,15 @@ trait BaseItemsTrait
         ;
         //====================================================================//
         // Order Line Tax Name
-        if (Local::dolVersionCmp("5.0.0") >= 0) {
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->identifier("vat_src_code")
-                ->inList("lines")
-                ->name($langs->trans("VATRate"))
-                ->microData("http://schema.org/PriceSpecification", "valueAddedTaxName")
-                ->group($groupName)
-                ->addOption('maxLength', '10')
-                ->association($descFieldName."@lines", "qty@lines", "price@lines")
-            ;
-        }
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("vat_src_code")
+            ->inList("lines")
+            ->name($langs->trans("VATRate"))
+            ->microData("http://schema.org/PriceSpecification", "valueAddedTaxName")
+            ->group($groupName)
+            ->addOption('maxLength', '10')
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
 
         //====================================================================//
         // Order Line Extra Fields

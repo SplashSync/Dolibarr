@@ -43,7 +43,7 @@ trait ExtraFieldsTrait
     /**
      * @var null|string
      */
-    private ?string $extraInList;
+    private ?string $extraInList = null;
 
     //====================================================================//
     // Generic Splash Fields Access Functions

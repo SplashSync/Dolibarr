@@ -95,7 +95,7 @@ trait CRUDTrait
         //====================================================================//
         // Safety Check
         if (!isset($this->baseProduct)) {
-            return false;
+            return true;
         }
         //====================================================================//
         // Update Base Product

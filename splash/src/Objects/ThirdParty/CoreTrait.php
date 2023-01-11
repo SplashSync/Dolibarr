@@ -25,17 +25,17 @@ trait CoreTrait
     /**
      * @var null|string
      */
-    private ?string $firstName;
+    private ?string $firstName = null;
 
     /**
      * @var null|string
      */
-    private ?string $lastName;
+    private ?string $lastName = null;
 
     /**
      * @var null|string
      */
-    private ?string $companyName;
+    private ?string $companyName = null;
 
     /**
      * Build Core Fields using FieldFactory
