@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,7 +40,7 @@ class Demo extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_XL
     );
 
@@ -53,28 +53,28 @@ class Demo extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $DISABLED = true;
+    protected static bool $disabled = true;
 
     /**
      * Widget Name (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Demo Widget";
+    protected static string $name = "Demo Widget";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "TEST & DEMONSTRATION WIDGET";
+    protected static string $description = "TEST & DEMONSTRATION WIDGET";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-magic";
+    protected static string $ico = "fa fa-magic";
 
     //====================================================================//
     // Class Main Functions
@@ -83,31 +83,31 @@ class Demo extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("text_input")
-            ->Name("Text Input")
-            ->Description("Widget Specific Custom text Input");
-
+            ->identifier("text_input")
+            ->name("Text Input")
+            ->description("Widget Specific Custom text Input")
+        ;
         //====================================================================//
         // Reference
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("integer_input")
-            ->Name("Numeric Input")
-            ->Description("Widget Specific Custom Numeric Input");
-
+            ->identifier("integer_input")
+            ->name("Numeric Input")
+            ->description("Widget Specific Custom Numeric Input")
+        ;
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->publish();
+        return $this->fieldsFactory()->publish() ?? array();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = null)
+    public function get(array $parameters = array()): array
     {
         //====================================================================//
         // Stack Trace
@@ -159,7 +159,7 @@ class Demo extends AbstractWidget
      *
      * @return void
      */
-    private function buildIntroBlock()
+    private function buildIntroBlock(): void
     {
         //====================================================================//
         // Into Text Block
@@ -170,20 +170,12 @@ class Demo extends AbstractWidget
     /**
      * Block Building - Inputs Parameters
      *
-     * @param mixed $inputs
+     * @param array $inputs
      *
      * @return void
      */
-    private function buildParametersBlock($inputs = array())
+    private function buildParametersBlock(array $inputs = array()): void
     {
-        //====================================================================//
-        // verify Inputs
-        if (!is_array($inputs) && !is_a($inputs, "ArrayObject")) {
-            $this->blocksFactory()->addNotificationsBlock(
-                array("warning" => "Inputs is not an Array! Is ".get_class($inputs))
-            );
-        }
-
         //====================================================================//
         // Parameters Table Block
         $tableContents = array();
@@ -200,7 +192,7 @@ class Demo extends AbstractWidget
      *
      * @return void
      */
-    private function buildNotificationsBlock()
+    private function buildNotificationsBlock(): void
     {
         //====================================================================//
         // Notifications Block

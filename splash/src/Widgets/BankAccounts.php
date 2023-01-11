@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,7 +29,7 @@ class BankAccounts extends AbstractWidget
     //====================================================================//
     // Define Standard Options for this Widget
     // Override this array to change default options for your widget
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_M,
         "Header" => true,
         "Footer" => false,
@@ -46,21 +46,21 @@ class BankAccounts extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "BoxCurrentAccounts";
+    protected static string $name = "BoxCurrentAccounts";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "BoxTitleCurrentAccounts";
+    protected static string $description = "BoxTitleCurrentAccounts";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-money";
+    protected static string $ico = "fa fa-money";
 
     //====================================================================//
     // General Class Variables
@@ -69,7 +69,7 @@ class BankAccounts extends AbstractWidget
     /**
      * @var int
      */
-    private $maxItems = 10;
+    private int $maxItems = 10;
 
     //====================================================================//
     // Class Main Functions
@@ -86,11 +86,9 @@ class BankAccounts extends AbstractWidget
     }
 
     /**
-     * Return Widget Customs Parameters
-     *
-     * @return array|false
+     * {@inheritDoc}
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         global $langs;
         $langs->load("admin");
@@ -98,18 +96,18 @@ class BankAccounts extends AbstractWidget
         //====================================================================//
         // Use Compact Mode
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("compact")
-            ->Name($langs->trans("Compact Mode"));
-
+            ->identifier("compact")
+            ->name($langs->trans("Compact Mode"))
+        ;
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->publish();
+        return $this->fieldsFactory()->publish() ?? array();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = array())
+    public function get(array $parameters = array()): array
     {
         //====================================================================//
         // Stack Trace
@@ -159,23 +157,23 @@ class BankAccounts extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         global $langs;
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$NAME));
+        return html_entity_decode($langs->trans(static::$name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDesc()
+    public function getDesc(): string
     {
         global $langs;
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        return html_entity_decode($langs->trans(static::$description));
     }
 
     //====================================================================//
@@ -187,7 +185,7 @@ class BankAccounts extends AbstractWidget
      *
      * @return void
      */
-    private function buildDisabledBlock()
+    private function buildDisabledBlock(): void
     {
         global $langs, $user;
 
@@ -205,7 +203,7 @@ class BankAccounts extends AbstractWidget
      *
      * @return array
      */
-    private function getData()
+    private function getData(): array
     {
         global $langs, $user, $db, $conf;
 
@@ -313,7 +311,7 @@ class BankAccounts extends AbstractWidget
      *
      * @return void
      */
-    private function buildSparkBlock()
+    private function buildSparkBlock(): void
     {
         global $langs, $db;
 

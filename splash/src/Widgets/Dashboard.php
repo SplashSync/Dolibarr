@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,7 +41,7 @@ class Dashboard extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_SM,
         "Header" => true,
         "Footer" => true,
@@ -58,21 +58,21 @@ class Dashboard extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "DolibarrWorkBoard";
+    protected static string $name = "DolibarrWorkBoard";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "DolibarrWorkBoard";
+    protected static string $description = "DolibarrWorkBoard";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-briefcase";
+    protected static string $ico = "fa fa-briefcase";
 
     //====================================================================//
     // Class Main Functions
@@ -93,7 +93,7 @@ class Dashboard extends AbstractWidget
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function get($parameters = null)
+    public function get(array $parameters = array()): array
     {
         //====================================================================//
         // Stack Trace
@@ -133,37 +133,25 @@ class Dashboard extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$NAME));
+        return html_entity_decode($langs->trans(static::$name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDesc()
+    public function getDesc(): string
     {
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getIsDisabled()
-    {
-        if (Local::dolVersionCmp("3.9.0") >= 0) {
-            return static::$DISABLED;
-        }
-
-        return false;
+        return html_entity_decode($langs->trans(static::$description));
     }
 
     //====================================================================//
@@ -175,36 +163,36 @@ class Dashboard extends AbstractWidget
      *
      * @return array
      */
-    private function getData()
+    private function getData(): array
     {
-        //Array that contains all WorkboardResponse classes to process them
-        $dashboardlines = array();
+        //Array that contains all Work board Response classes to process them
+        $dashboardLines = array();
 
         require DOL_DOCUMENT_ROOT.'/core/class/workboardresponse.class.php';
 
-        $this->getLateActions($dashboardlines);
-        $this->getCustomerOrders($dashboardlines);
-        $this->getSupplierOrders($dashboardlines);
-        $this->getOpenPropals($dashboardlines);
-        $this->getDelayedServices($dashboardlines);
-        $this->getCustomersInvoices($dashboardlines);
-        $this->getSupplierInvoices($dashboardlines);
-        $this->getTransactionsDashboard($dashboardlines);
-        $this->getBankWire($dashboardlines);
-        $this->getMembers($dashboardlines);
-        $this->getExpenesDashboard($dashboardlines);
+        $this->getLateActions($dashboardLines);
+        $this->getCustomerOrders($dashboardLines);
+        $this->getSupplierOrders($dashboardLines);
+        $this->getOpenQuotes($dashboardLines);
+        $this->getDelayedServices($dashboardLines);
+        $this->getCustomersInvoices($dashboardLines);
+        $this->getSupplierInvoices($dashboardLines);
+        $this->getTransactionsDashboard($dashboardLines);
+        $this->getBankWire($dashboardLines);
+        $this->getMembers($dashboardLines);
+        $this->getExpenesDashboard($dashboardLines);
 
-        return $dashboardlines;
+        return $dashboardLines;
     }
 
     /**
      * Read Late Actions Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getLateActions(&$dashboardlines)
+    private function getLateActions(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -213,18 +201,18 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
             $board = new \ActionComm($db);
 
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Customers Orders Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getCustomerOrders(&$dashboardlines)
+    private function getCustomerOrders(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -233,18 +221,18 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
             $board = new \Commande($db);
 
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Suppliers Orders Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getSupplierOrders(&$dashboardlines)
+    private function getSupplierOrders(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -253,18 +241,18 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
             $board = new \CommandeFournisseur($db);
 
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Suppliers Orders Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getOpenPropals(&$dashboardlines)
+    private function getOpenQuotes(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -272,21 +260,21 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->propal->enabled) && $user->rights->propale->lire) {
             include_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
             $board = new \Propal($db);
-            $dashboardlines[] = $board->load_board($user, "opened");
+            $dashboardLines[] = $board->load_board($user, "opened");
 
             // Number of commercial proposals CLOSED signed (billed)
-            $dashboardlines[] = $board->load_board($user, "signed");
+            $dashboardLines[] = $board->load_board($user, "signed");
         }
     }
 
     /**
      * Read Suppliers Orders Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getDelayedServices(&$dashboardlines)
+    private function getDelayedServices(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -294,21 +282,21 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->contrat->enabled) && $user->rights->contrat->lire) {
             include_once DOL_DOCUMENT_ROOT.'/contrat/class/contrat.class.php';
             $board = new \Contrat($db);
-            $dashboardlines[] = $board->load_board($user, "inactives");
+            $dashboardLines[] = $board->load_board($user, "inactives");
 
             // Number of active services (expired)
-            $dashboardlines[] = $board->load_board($user, "expired");
+            $dashboardLines[] = $board->load_board($user, "expired");
         }
     }
 
     /**
      * Read Customers Invoices Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getCustomersInvoices(&$dashboardlines)
+    private function getCustomersInvoices(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -316,18 +304,18 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->facture->enabled) && $user->rights->facture->lire) {
             include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
             $board = new \Facture($db);
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Supplier Invoices Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getSupplierInvoices(&$dashboardlines)
+    private function getSupplierInvoices(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -335,18 +323,18 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->fournisseur->enabled) && ! empty($conf->facture->enabled) && $user->rights->facture->lire) {
             include_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
             $board = new \FactureFournisseur($db);
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Transactions Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getTransactionsDashboard(&$dashboardlines)
+    private function getTransactionsDashboard(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -354,18 +342,18 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
             $board = new \Account($db);
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Bank Wire Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getBankWire(&$dashboardlines)
+    private function getBankWire(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -373,18 +361,18 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->banque->enabled) && $user->rights->banque->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/compta/paiement/cheque/class/remisecheque.class.php';
             $board = new \RemiseCheque($db);
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
     /**
      * Read Bank Wire Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getMembers(&$dashboardlines)
+    private function getMembers(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -392,18 +380,18 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->adherent->enabled) && $user->rights->adherent->lire && ! $user->societe_id) {
             include_once DOL_DOCUMENT_ROOT.'/adherents/class/adherent.class.php';
             $board = new \Adherent($db);
-            $dashboardlines[] = $board->load_board($user, "expired");
+            $dashboardLines[] = $board->load_board($user, "expired");
         }
     }
 
     /**
      * Read Expenses Dashboard
      *
-     * @param array $dashboardlines
+     * @param array $dashboardLines
      *
      * @return void
      */
-    private function getExpenesDashboard(&$dashboardlines)
+    private function getExpenesDashboard(array &$dashboardLines): void
     {
         global $user, $db, $conf;
 
@@ -412,7 +400,7 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/expensereport/class/expensereport.class.php';
             $board = new \ExpenseReport($db);
 
-            $dashboardlines[] = $board->load_board($user);
+            $dashboardLines[] = $board->load_board($user);
         }
     }
 
@@ -421,7 +409,7 @@ class Dashboard extends AbstractWidget
      *
      * @return void
      */
-    private function buildTableBlock()
+    private function buildTableBlock(): void
     {
         global $langs;
 
