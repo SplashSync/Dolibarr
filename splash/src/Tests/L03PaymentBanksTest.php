@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,13 +34,13 @@ class L03PaymentBanksTest extends ObjectsCase
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
 
     /** @var array */
-    protected $in;
+    protected array $in;
 
     /** @var array */
-    protected $out;
+    protected array $out;
 
     /** @var Facture */
-    protected $object;
+    protected Facture $object;
 
     /**
      * @dataProvider paymentsTypesProvider
@@ -88,16 +88,18 @@ class L03PaymentBanksTest extends ObjectsCase
             ->get($objectId, array("mode@payments", "number@payments", "amount@payments"));
         $this->assertNotEmpty($objectData);
         $this->assertIsArray($objectData);
+        $this->assertIsArray($objectData["payments"]);
 
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData["payments"] as $data) {
+            $this->assertIsArray($data);
             $this->assertEquals($splashMethod, $data["mode"]);
         }
 
         //====================================================================//
         //   Load Invoice Payments
-        $this->loadPayments($objectId, ("SupplierInvoice" == $objectType));
+        $this->loadPayments((int) $objectId, ("SupplierInvoice" == $objectType));
 
         //====================================================================//
         //   Verify Payments Are in Correct Bank Account

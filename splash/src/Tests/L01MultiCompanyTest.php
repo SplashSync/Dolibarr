@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,12 +30,12 @@ class L01MultiCompanyTest extends ObjectsCase
     /**
      * @var array
      */
-    private $objectList = array();
+    private array $objectList = array();
 
     /**
      * @var array
      */
-    private $objectCount = array();
+    private array $objectCount = array();
 
     /**
      * Test Loading of Object that are not on Selected Entity
@@ -73,7 +73,7 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         //   Execute Action Directly on Module
-        $allowed = Splash::object($objectType)->Get($objectId, $fields);
+        $allowed = Splash::object($objectType)->get($objectId, $fields);
 
         //====================================================================//
         //   Verify Response
@@ -85,11 +85,11 @@ class L01MultiCompanyTest extends ObjectsCase
 
         //====================================================================//
         //   Execute Action Directly on Module
-        $rejected = Splash::object($objectType)->Get($objectId, $fields);
+        $rejected = Splash::object($objectType)->get($objectId, $fields);
 
         //====================================================================//
         //   Verify Response
-        $this->assertFalse($rejected);
+        $this->assertNull($rejected);
 
         //====================================================================//
         //   Simulate Logged on Main Entity
