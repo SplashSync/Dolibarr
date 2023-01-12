@@ -143,7 +143,7 @@ trait PricesTrait
         //====================================================================//
         // If multi-prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
+            $parentPrice = (double) ($this->baseProduct->multiprices[$priceLevel] ?? 0.0);
         } else {
             $parentPrice = (double) $this->baseProduct->price;
         }
@@ -301,7 +301,7 @@ trait PricesTrait
         //====================================================================//
         // If Multi-Prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
+            $parentPrice = (double) ($this->baseProduct->multiprices[$priceLevel] ?? 0.0);
         } else {
             $parentPrice = (double) $this->baseProduct->price;
         }
