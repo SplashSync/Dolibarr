@@ -149,21 +149,21 @@ Dol-13-Variants:
 
 ################################################################
 # Dolibarr DEV
-# Dol-Dev-Basics:
-#     image:          tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     retry:          0
-#     <<: *functionnal-basic
-# Dol-Dev-Advanced:
-#     image:          tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     retry:          0
-#     <<: *functionnal-advanced
-# Dol-Dev-Variants:
-#     image:          tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     retry:          0
-#     <<: *functionnal-variants
+Dol-Dev-Basics:
+    image:          tuxgasy/dolibarr:develop
+    allow_failure:  true
+    retry:          0
+    <<: *functionnal-basic
+Dol-Dev-Advanced:
+    image:          tuxgasy/dolibarr:develop
+    allow_failure:  true
+    retry:          0
+    <<: *functionnal-advanced
+Dol-Dev-Variants:
+    image:          tuxgasy/dolibarr:develop
+    allow_failure:  true
+    retry:          0
+    <<: *functionnal-variants
 
 
 ################################################################
@@ -206,18 +206,18 @@ Dol-16-Quality:
     image:      tuxgasy/dolibarr:16
     <<: *code_quality
 
-# Dol-14-Quality:
-#     image:      tuxgasy/dolibarr:14
-#     <<: *code_quality
-#
-# Dol-13-Quality:
-#     image:      tuxgasy/dolibarr:13
-#     <<: *code_quality
-#
-# Dol-Dev-Quality:
-#     image:      tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     <<: *code_quality
+Dol-14-Quality:
+    image:      tuxgasy/dolibarr:14
+    <<: *code_quality
+
+Dol-13-Quality:
+    image:      tuxgasy/dolibarr:13
+    <<: *code_quality
+
+Dol-Dev-Quality:
+    image:      tuxgasy/dolibarr:develop
+    allow_failure:  true
+    <<: *code_quality
 
 #################################################################
 ## Build Documentation
