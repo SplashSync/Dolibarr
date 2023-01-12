@@ -140,17 +140,11 @@ Dol-14-Basics:
 Dol-13-Basics:
     image:          tuxgasy/dolibarr:13
     <<: *functionnal-basic
-
-################################################################
-# Dolibarr V12
-Dol-12-Basics:
-    image:          tuxgasy/dolibarr:12
-    <<: *functionnal-basic
-Dol-12-Advanced:
-    image:          tuxgasy/dolibarr:12
+Dol-13-Advanced:
+    image:          tuxgasy/dolibarr:13
     <<: *functionnal-advanced
-Dol-12-Variants:
-    image:          tuxgasy/dolibarr:12
+Dol-13-Variants:
+    image:          tuxgasy/dolibarr:13
     <<: *functionnal-variants
 
 ################################################################
@@ -216,8 +210,8 @@ Dol-16-Quality:
 #     image:      tuxgasy/dolibarr:14
 #     <<: *code_quality
 #
-# Dol-12-Quality:
-#     image:      tuxgasy/dolibarr:12
+# Dol-13-Quality:
+#     image:      tuxgasy/dolibarr:13
 #     <<: *code_quality
 #
 # Dol-Dev-Quality:
