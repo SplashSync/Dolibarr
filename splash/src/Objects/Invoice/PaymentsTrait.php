@@ -235,7 +235,9 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Setup Invoice Payment Method
-        $this->setSimple('mode_reglement_id', $firstMethodId);
+        if (!Splash::isTravisMode()) {
+            $this->setSimple('mode_reglement_id', $firstMethodId);
+        }
         //====================================================================//
         // Delete Remaining Lines
         foreach ($this->payments as $paymentData) {
