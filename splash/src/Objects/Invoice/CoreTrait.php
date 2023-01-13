@@ -47,6 +47,7 @@ trait CoreTrait
             ->name($langs->trans("InvoiceRef"))
             ->microData("http://schema.org/Invoice", "name")
             ->isReadOnly()
+            ->isIndexed()
             ->isListed()
         ;
         //====================================================================//
@@ -55,6 +56,7 @@ trait CoreTrait
             ->identifier("ref_client")
             ->name($langs->trans("RefCustomer"))
             ->microData("http://schema.org/Invoice", "confirmationNumber")
+            ->isIndexed()
             ->isListed()
         ;
         //====================================================================//
@@ -63,6 +65,7 @@ trait CoreTrait
             ->identifier("ref_ext")
             ->name($langs->trans("ExternalRef"))
             ->microData("http://schema.org/Invoice", "alternateName")
+            ->isIndexed()
             ->isListed()
         ;
     }

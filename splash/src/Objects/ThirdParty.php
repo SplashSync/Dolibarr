@@ -20,6 +20,7 @@ use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
+use Splash\Models\Objects\PrimaryKeysAwareInterface;
 use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
@@ -27,7 +28,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
-class ThirdParty extends AbstractObject
+class ThirdParty extends AbstractObject implements PrimaryKeysAwareInterface
 {
     // Splash Php Core Traits
     use SimpleFieldsTrait;
@@ -46,6 +47,7 @@ class ThirdParty extends AbstractObject
     // Dolibarr ThirdParty Traits
     use ThirdParty\ObjectsListTrait;
     use ThirdParty\CRUDTrait;
+    use ThirdParty\PrimaryTrait;
     use ThirdParty\CoreTrait;
     use ThirdParty\MainTrait;
     use ThirdParty\AddressTrait;

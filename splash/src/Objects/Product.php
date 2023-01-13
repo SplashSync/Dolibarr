@@ -22,6 +22,7 @@ use Splash\Models\Objects\ImagesTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\ObjectsTrait;
 use Splash\Models\Objects\PricesTrait;
+use Splash\Models\Objects\PrimaryKeysAwareInterface;
 use Splash\Models\Objects\SimpleFieldsTrait;
 
 /**
@@ -29,7 +30,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
-class Product extends AbstractObject
+class Product extends AbstractObject implements PrimaryKeysAwareInterface
 {
     // Splash Php Core Traits
     use SimpleFieldsTrait;
@@ -52,6 +53,7 @@ class Product extends AbstractObject
     // Dolibarr Products Traits
     use Product\ObjectsListTrait;                   // Objects List Readings Product Specifiers
     use Product\CRUDTrait;                          // Local Products CRUD Functions
+    use Product\PrimaryTrait;                       // Search Products by Primary Key
     use Product\CoreTrait;                          // Access to Required Fields
     use Product\MultiLangTrait;                     // Access to Multi-lang Fields
     use Product\MainTrait;                          // Access to Dimensions, Weights & more...

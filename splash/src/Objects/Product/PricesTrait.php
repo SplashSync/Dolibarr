@@ -39,7 +39,6 @@ trait PricesTrait
             ->name($langs->trans("SellingPrice")." (".$conf->global->MAIN_MONNAIE.")")
             ->microData("http://schema.org/Product", "price")
             ->isLogged()
-            ->isListed()
         ;
         if (Local::dolVersionCmp("4.0.0") >= 0) {
             //====================================================================//

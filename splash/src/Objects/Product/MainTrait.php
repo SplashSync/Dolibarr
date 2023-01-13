@@ -40,6 +40,7 @@ trait MainTrait
             ->name("Customs HS Code")
             ->description($langs->trans("CustomCode"))
             ->microData("http://schema.org/Product", "customsHsCode")
+            ->isIndexed()
         ;
         //====================================================================//
         // Weight

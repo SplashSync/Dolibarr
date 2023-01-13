@@ -48,6 +48,7 @@ trait CoreTrait
             ->name($langs->trans("RefOrder"))
             ->microData("http://schema.org/Order", "name")
             ->isReadOnly()
+            ->isIndexed()
             ->isListed()
         ;
         //====================================================================//
@@ -56,6 +57,7 @@ trait CoreTrait
             ->identifier("ref_client")
             ->name($langs->trans("RefCustomerOrder"))
             ->microData("http://schema.org/Order", "orderNumber")
+            ->isIndexed()
             ->isListed()
         ;
         //====================================================================//
@@ -64,6 +66,7 @@ trait CoreTrait
             ->identifier("ref_ext")
             ->name($langs->trans("RefExt"))
             ->microData("http://schema.org/Order", "alternateName")
+            ->isIndexed()
             ->isListed()
         ;
     }

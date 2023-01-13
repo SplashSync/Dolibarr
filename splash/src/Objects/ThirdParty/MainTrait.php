@@ -38,6 +38,7 @@ trait MainTrait
             ->name($langs->trans("Phone"))
             ->isLogged()
             ->microData("http://schema.org/Person", "telephone")
+            ->isIndexed()
             ->isListed()
         ;
         //====================================================================//
@@ -45,9 +46,11 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_EMAIL)
             ->identifier("email")
             ->name($langs->trans("Email"))
+            ->microData("http://schema.org/ContactPoint", "email")
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired(self::isEmailRequired())
-            ->microData("http://schema.org/ContactPoint", "email")
+            ->isPrimary((bool) Local::getParameter("SOCIETE_EMAIL_UNIQUE"))
+            ->isIndexed()
             ->isLogged()
             ->isListed()
         ;
@@ -59,7 +62,27 @@ trait MainTrait
             ->microData("http://schema.org/Organization", "url")
         ;
         //====================================================================//
-        // Id Professionnal 1 SIREN
+        // VAT Number
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("tva_intra")
+            ->name($langs->trans("VATIntra"))
+            ->group("ID")
+            ->addOption('maxLength', "20")
+            ->microData("http://schema.org/Organization", "vatID")
+        ;
+    }
+
+    /**
+     * Build Address Fields using FieldFactory
+     *
+     * @return void
+     */
+    protected function buildMainIdsFields()
+    {
+        global $langs;
+
+        //====================================================================//
+        // Id Professional 1 SIREN
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("idprof1")
             ->group("ID")
@@ -67,6 +90,7 @@ trait MainTrait
             ->microData("http://schema.org/Organization", "duns")
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF1_MANDATORY"))
+            ->isIndexed()
         ;
         //====================================================================//
         // Id Professional 2 SIRET
@@ -77,6 +101,7 @@ trait MainTrait
             ->microData("http://schema.org/Organization", "taxID")
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF2_MANDATORY"))
+            ->isIndexed()
         ;
 
         //====================================================================//
@@ -113,15 +138,6 @@ trait MainTrait
             ->name($langs->trans("ProfId6Short"))
             ->group("ID")
             ->microData("http://splashync.com/schemas", "ObjectId")
-        ;
-        //====================================================================//
-        // VAT Number
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->identifier("tva_intra")
-            ->name($langs->trans("VATIntra"))
-            ->group("ID")
-            ->addOption('maxLength', "20")
-            ->microData("http://schema.org/Organization", "vatID")
         ;
     }
 

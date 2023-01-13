@@ -43,11 +43,12 @@ trait CoreTrait
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("ref")
-            ->name($langs->trans("ProductRef"))
+            ->name(html_entity_decode($langs->trans("ProductRef")))
             ->microData("http://schema.org/Product", "model")
             ->isListed()
             ->isLogged()
             ->isRequired()
+            ->isPrimary()
         ;
 
         foreach ($this->getAvailableLanguages() as $isoCode) {
