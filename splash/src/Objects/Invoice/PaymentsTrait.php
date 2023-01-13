@@ -15,11 +15,13 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use DateTime;
 use Exception;
 use Paiement;
 use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\BankAccounts;
 use Splash\Local\Services\PaymentManager;
 use Splash\Local\Services\PaymentMethods;
 
@@ -224,9 +226,16 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Verify Lines List & Update if Needed
+        $firstMethodId = null;
         foreach ($fieldData ?? array() as $lineData) {
             $this->setPaymentLineData($lineData);
+            //====================================================================//
+            // Detect First Valid Payment Method
+            $firstMethodId = $firstMethodId ?: PaymentMethods::getDoliId($lineData["mode"] ?? "");
         }
+        //====================================================================//
+        // Setup Invoice Payment Method
+        $this->setSimple('mode_reglement_id', $firstMethodId);
         //====================================================================//
         // Delete Remaining Lines
         foreach ($this->payments as $paymentData) {
@@ -392,10 +401,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Update Payment Number
-        /** @since V13.0 Field Renamed  */
-        $number = (Local::dolVersionCmp("13.0.0") < 0)
-            ? $payment->num_paiement
-            : $payment->num_payment;
+        $number = $payment->num_payment;
         if (isset($lineData["number"]) && ($number !== $lineData["number"])) {
             $payment->update_num($lineData["number"]);
             $this->catchDolibarrErrors($payment);
@@ -416,11 +422,9 @@ trait PaymentsTrait
     }
 
     /**
-     * Update an Exiting Payment
+     * Create a NEW Payment Item
      *
      * @param array $lineData Line Data Array
-     *
-     * @throws Exception
      *
      * @return bool Re-Create Payment Item or Exit?
      */
@@ -441,7 +445,11 @@ trait PaymentsTrait
         $payment->facid = $this->object->id;
         //====================================================================//
         // Setup Payment Date
-        $payment->datepaye = (new \DateTime($lineData["date"]))->getTimestamp();
+        try {
+            $payment->datepaye = (new DateTime($lineData["date"]))->getTimestamp();
+        } catch (Exception $e) {
+            Splash::log()->report($e);
+        }
         //====================================================================//
         // Setup Payment Method
         $payment->paiementid = PaymentMethods::getDoliId($lineData["mode"]);
@@ -464,8 +472,23 @@ trait PaymentsTrait
             return $this->catchDolibarrErrors($payment);
         }
         //====================================================================//
+        // Setup Payment Account Id
+        return $this->addPaymentItemToBank($payment, $lineData);
+    }
+
+    /**
+     * Update an Exiting Payment
+     *
+     * @param array $lineData Line Data Array
+     *
+     * @return bool Re-Create Payment Item or Exit?
+     */
+    private function addPaymentItemToBank(Paiement $payment, array $lineData): bool
+    {
+        global $user;
+        //====================================================================//
         // Detect Account Id
-        $accountId = $this->identifyBankAccountId(PaymentMethods::getDoliId($lineData["mode"]));
+        $accountId = BankAccounts::getDoliIdFromMethodId(PaymentMethods::getDoliId($lineData["mode"]));
         if (!$accountId) {
             return Splash::log()->err("Unable to detect Invoice Payment Account ID.");
         }
@@ -500,29 +523,6 @@ trait PaymentsTrait
         }
 
         return is_a($this, Local::CLASS_SUPPLIER_INVOICE) ? new PaiementFourn($db) : new Paiement($db);
-    }
-
-    /**
-     * Identify Bank Account ID using Splash Configuration
-     *
-     * @param null|int $paymentTypeId Payment Method ID
-     *
-     * @return int
-     */
-    private function identifyBankAccountId(?int $paymentTypeId): int
-    {
-        global $conf;
-        //====================================================================//
-        // Safety Check
-        $parameterName = "SPLASH_BANK_FOR_".((string) $paymentTypeId);
-        if (!$paymentTypeId || empty($conf->global->{$parameterName})) {
-            //====================================================================//
-            // Default Payment Account Id
-            return (int) ($conf->global->SPLASH_BANK ?? 0);
-        }
-        //====================================================================//
-        // Detect Bank Account Id From Method Code
-        return $conf->global->{$parameterName};
     }
 
     /**

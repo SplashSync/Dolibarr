@@ -37,7 +37,7 @@ class PaymentMethods
     );
 
     /**
-     * @var null|array
+     * @var null|array<int|string, MethodDef>
      */
     private static ?array $methods;
 

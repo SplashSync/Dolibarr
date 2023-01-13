@@ -16,7 +16,7 @@
 namespace   Splash\Local\Objects;
 
 use Facture;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ListsTrait;
@@ -51,6 +51,10 @@ class Invoice extends AbstractObject
     use Core\MarketplaceModeTrait;
     use Core\DownloadUrlsTrait;
 
+    // Dolibarr Common Fields Traits
+    use Common\PaymentMethodTrait;
+    use Common\BankAccountTrait;
+
     // Dolibarr Invoices Traits
     use Invoice\ObjectsListTrait;
     use Invoice\CRUDTrait;
@@ -59,7 +63,6 @@ class Invoice extends AbstractObject
     use Invoice\ItemsTrait;
     use Invoice\PaymentsTrait;
     use Invoice\StatusTrait;
-    use Invoice\OptionsTrait;
 
     //====================================================================//
     // ExtraFields Type
@@ -142,6 +145,7 @@ class Invoice extends AbstractObject
         $langs->load("main");
         $langs->load("admin");
         $langs->load("companies");
+        $langs->load("banks");
         $langs->load("orders");
         $langs->load("bills");
         $langs->load("other");

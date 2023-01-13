@@ -32,6 +32,7 @@ class L03PaymentBanksTest extends ObjectsCase
     use \Splash\Models\Objects\ListsTrait;
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\CreditModeTrait;
+    use \Splash\Models\Objects\SimpleFieldsTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
 
     /** @var array */

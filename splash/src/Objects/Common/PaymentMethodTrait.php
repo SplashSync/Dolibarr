@@ -13,26 +13,24 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Local\Objects\Invoice;
+namespace Splash\Local\Objects\Common;
 
 use Splash\Local\Services\PaymentMethods;
 
 /**
- * Access to Order & Invoices Options
+ * Access to Order & Invoices Payment Method
  */
-trait OptionsTrait
+trait PaymentMethodTrait
 {
     /**
      * Build Address Fields using FieldFactory
      *
      * @return void
      */
-    protected function buildOptionsFields(): void
+    protected function buildPaymentMethodFields(): void
     {
         global $langs;
 
-        //====================================================================//
-        // Payment Main Payment Method
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("mode_reglement_id")
             ->name($langs->trans("PaymentMode"))
@@ -49,7 +47,7 @@ trait OptionsTrait
      *
      * @return void
      */
-    protected function getOptionsFields(string $key, string $fieldName): void
+    protected function getPaymentMethodFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -73,7 +71,7 @@ trait OptionsTrait
      *
      * @return void
      */
-    protected function setOptionsFields(string $fieldName, ?string $fieldData): void
+    protected function setPaymentMethodFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field

@@ -53,6 +53,10 @@ class Order extends AbstractObject
     use Core\MarketplaceModeTrait;
     use Core\DownloadUrlsTrait;
 
+    // Dolibarr Common Fields Traits
+    use Common\PaymentMethodTrait;
+    use Common\BankAccountTrait;
+
     // Dolibarr Orders Traits
     use Order\ObjectsListTrait;
     use Order\CRUDTrait;
@@ -130,6 +134,7 @@ class Order extends AbstractObject
         $langs->load("companies");
         $langs->load("orders");
         $langs->load("other");
+        $langs->load("banks");
         $langs->load("stocks");
         //====================================================================//
         //  Translate Object Name
