@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  tuxgasy/dolibarr:14
+image:  tuxgasy/dolibarr:16
 ################################################################
 # Set any variables we need
 variables:
@@ -149,21 +149,21 @@ Dol-13-Variants:
 
 ################################################################
 # Dolibarr DEV
-Dol-Dev-Basics:
-    image:          tuxgasy/dolibarr:develop
-    allow_failure:  true
-    retry:          0
-    <<: *functionnal-basic
-Dol-Dev-Advanced:
-    image:          tuxgasy/dolibarr:develop
-    allow_failure:  true
-    retry:          0
-    <<: *functionnal-advanced
-Dol-Dev-Variants:
-    image:          tuxgasy/dolibarr:develop
-    allow_failure:  true
-    retry:          0
-    <<: *functionnal-variants
+# Dol-Dev-Basics:
+#     image:          tuxgasy/dolibarr:develop
+#     allow_failure:  true
+#     retry:          0
+#     <<: *functionnal-basic
+# Dol-Dev-Advanced:
+#     image:          tuxgasy/dolibarr:develop
+#     allow_failure:  true
+#     retry:          0
+#     <<: *functionnal-advanced
+# Dol-Dev-Variants:
+#     image:          tuxgasy/dolibarr:develop
+#     allow_failure:  true
+#     retry:          0
+#     <<: *functionnal-variants
 
 
 ################################################################

@@ -31,11 +31,14 @@ trait BankAccountTrait
     {
         global $langs;
 
+        $bankChoices = BankAccounts::getChoices();
+
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("fk_account")
             ->name($langs->trans("BankAccount"))
             ->microData("http://schema.org/Invoice", "paymentMethodId")
-            ->addChoices(BankAccounts::getChoices())
+            ->addChoices($bankChoices)
+            ->isNotTested(empty($bankChoices))
         ;
     }
 

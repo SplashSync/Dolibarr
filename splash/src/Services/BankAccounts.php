@@ -157,7 +157,9 @@ class BankAccounts
                 while ($inc < $num) {
                     /** @var AccountDef $account */
                     $account = (array)  $db->fetch_object($result);
-                    self::$accounts[$account['id']] = $account;
+                    if (!empty($account['ref'])) {
+                        self::$accounts[$account['id']] = $account;
+                    }
 
                     $inc++;
                 }
