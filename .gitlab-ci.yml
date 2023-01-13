@@ -47,9 +47,9 @@ stages:
 # Functional Tests
 ################################################################
 .functionnal:   &functionnal
-    when:       manual
+#     when:       manual
     tags:       ['Dedicated']
-#     retry:      2
+    retry:      2
     services:
         - mysql:5.7
     artifacts:
@@ -170,11 +170,10 @@ Dol-13-Variants:
 # Code Quality Verifications 
 ################################################################
 .code_quality:   &code_quality
-    when:       manual
+#     when:       manual
     image:      tuxgasy/dolibarr:14
     stage:      quality
     tags:       ['Dedicated']
-    retry:      2
     services:
         - mysql:5.7
     ################################################################
