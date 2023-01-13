@@ -80,6 +80,7 @@ trait BankAccountTrait
                 $fkAccount = BankAccounts::getDoliId((string) $fieldData);
                 if ($fkAccount && ($fkAccount != $this->object->fk_account)) {
                     $this->object->setValueFrom('fk_account', $fkAccount);
+                    $this->setSimple($fieldName, $fkAccount);
                 }
 
                 break;
