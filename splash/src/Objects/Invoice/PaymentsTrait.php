@@ -21,6 +21,7 @@ use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\PaymentManager;
+use Splash\Local\Services\PaymentMethods;
 
 /**
  * Dolibarr Customer/Supplier Invoice Payments Fields
@@ -54,12 +55,7 @@ trait PaymentsTrait
             ->inList("payments")
             ->name($listName.$langs->trans("PaymentMode"))
             ->microData("http://schema.org/Invoice", "PaymentMethod")
-            ->addChoice("ByBankTransferInAdvance", "By bank transfer in advance")
-            ->addChoice("CheckInAdvance", "Check in advance")
-            ->addChoice("COD", "Cash On Delivery")
-            ->addChoice("Cash", "Cash")
-            ->addChoice("PayPal", "Online Payments (PayPal, more..)")
-            ->addChoice("DirectDebit", "Credit Card")
+            ->addChoices(PaymentMethods::getChoices())
             ->association("date@payments", "mode@payments", "amount@payments")
         ;
         //====================================================================//
@@ -147,7 +143,7 @@ trait PaymentsTrait
             $this->payments[$index] = $db->fetch_object($result);
             //====================================================================//
             // Detect Payment Method Type from Default Payment "known" methods
-            $this->payments[$index]->method = $this->identifySplashPaymentMethod($this->payments[$index]->code);
+            $this->payments[$index]->method = PaymentMethods::getSplashCode($this->payments[$index]->code);
             $index ++;
         }
         $db->free($result);
@@ -410,8 +406,8 @@ trait PaymentsTrait
         if (isset($lineData["mode"])) {
             //====================================================================//
             // Detect Payment Method Id
-            $newMethodId = $this->identifyPaymentMethod($lineData["mode"]);
-            $currentMethodId = $this->identifyPaymentType($payment->type_code);
+            $newMethodId = PaymentMethods::getDoliId($lineData["mode"]);
+            $currentMethodId = PaymentMethods::getDoliId($payment->type_code);
             if ($newMethodId && ($currentMethodId !== $newMethodId)) {
                 $payment->setValueFrom("fk_paiement", $newMethodId);
                 $this->catchDolibarrErrors($payment);
@@ -448,15 +444,10 @@ trait PaymentsTrait
         $payment->datepaye = (new \DateTime($lineData["date"]))->getTimestamp();
         //====================================================================//
         // Setup Payment Method
-        $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
+        $payment->paiementid = PaymentMethods::getDoliId($lineData["mode"]);
         //====================================================================//
         // Setup Payment Reference
-        /** @since V13.0 Field Renamed  */
-        if (Local::dolVersionCmp("13.0.0") < 0) {
-            $payment->num_paiement = $lineData["number"] ?? "";
-        } else {
-            $payment->num_payment = $lineData["number"] ?? "";
-        }
+        $payment->num_payment = $lineData["number"] ?? "";
         //====================================================================//
         // Setup Payment Amount
         $payment->amounts[$payment->facid] = self::parsePrice($lineData["amount"]);
@@ -472,19 +463,15 @@ trait PaymentsTrait
 
             return $this->catchDolibarrErrors($payment);
         }
-
+        //====================================================================//
+        // Detect Account Id
+        $accountId = $this->identifyBankAccountId(PaymentMethods::getDoliId($lineData["mode"]));
+        if (!$accountId) {
+            return Splash::log()->err("Unable to detect Invoice Payment Account ID.");
+        }
         //====================================================================//
         // Setup Payment Account Id
-        $result = $payment->addPaymentToBank(
-            $user,
-            'payment',
-            '(Payment)',
-            $this->identifyBankAccountId($this->identifyPaymentMethod($lineData["mode"])),
-            "",
-            ""
-        );
-
-        if ($result < 0) {
+        if ($payment->addPaymentToBank($user, 'payment', '(Payment)', $accountId, "", "") < 0) {
             Splash::log()->errTrace("Unable to add Invoice Payment to Bank Account.");
 
             return $this->catchDolibarrErrors($payment);
@@ -516,133 +503,26 @@ trait PaymentsTrait
     }
 
     /**
-     * Write Given Fields
-     *
-     * @param string $methodType
-     *
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function identifySplashPaymentMethod(string $methodType): string
-    {
-        //====================================================================//
-        // Detect Payment Method Type from Default Payment "known" methods
-        switch ($methodType) {
-            case "PRE":
-            case "PRO":
-            case "TIP":
-            case "VIR":
-                return "ByBankTransferInAdvance";
-            case "CHQ":
-                return "CheckInAdvance";
-            case "FAC":
-                return "COD";
-            case "LIQ":
-                return "Cash";
-            case "CB":
-                return "DirectDebit";
-            case "VAD":
-                return "PayPal";
-            default:
-                return "Unknown";
-        }
-    }
-
-    /**
-     * Write Given Fields
-     *
-     * @param string $methodType
-     *
-     * @return int
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function identifyPaymentMethod(string $methodType): int
-    {
-        global $conf;
-
-        //====================================================================//
-        // Detect Payment Method Type from Default Payment "known/standard" methods
-        switch ($methodType) {
-            case "ByBankTransferInAdvance":
-                return $this->identifyPaymentType("VIR");
-            case "CheckInAdvance":
-                return $this->identifyPaymentType("CHQ");
-            case "COD":
-                return $this->identifyPaymentType("FAC");
-            case "Cash":
-                return $this->identifyPaymentType("LIQ");
-            case "PayPal":
-                return $this->identifyPaymentType("VAD");
-            case "CreditCard":
-            case "DirectDebit":
-                return $this->identifyPaymentType("CB");
-        }
-
-        //====================================================================//
-        // Return Default Payment Method or 0 (Default)
-        if (isset($conf->global->SPLASH_DEFAULT_PAYMENT) && !empty($conf->global->SPLASH_DEFAULT_PAYMENT)) {
-            return $this->identifyPaymentType($conf->global->SPLASH_DEFAULT_PAYMENT);
-        }
-
-        return $this->identifyPaymentType("VAD");
-    }
-
-    /**
-     * Identify Payment Method ID using Payment Method Code
-     *
-     * @param string $paymentTypeCode Payment Method Code
-     *
-     * @return int
-     */
-    private function identifyPaymentType(string $paymentTypeCode): int
-    {
-        global $db;
-
-        //====================================================================//
-        // Include Object Dolibarr Class
-        require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
-        $form = new \Form($db);
-        $form->load_cache_types_paiements();
-        //====================================================================//
-        // Safety Check
-        if (empty($form->cache_types_paiements)) {
-            return 0;
-        }
-        //====================================================================//
-        // Detect Payment Method Id From Method Code
-        foreach ($form->cache_types_paiements as $key => $paymentMethod) {
-            if ($paymentMethod["code"] === $paymentTypeCode) {
-                return $key;
-            }
-        }
-        //====================================================================//
-        // Default Payment Method Id
-        return 0;
-    }
-
-    /**
      * Identify Bank Account ID using Splash Configuration
      *
-     * @param int $paymentTypeId Payment Method ID
+     * @param null|int $paymentTypeId Payment Method ID
      *
      * @return int
      */
-    private function identifyBankAccountId(int $paymentTypeId): int
+    private function identifyBankAccountId(?int $paymentTypeId): int
     {
         global $conf;
-
+        //====================================================================//
+        // Safety Check
+        $parameterName = "SPLASH_BANK_FOR_".((string) $paymentTypeId);
+        if (!$paymentTypeId || empty($conf->global->{$parameterName})) {
+            //====================================================================//
+            // Default Payment Account Id
+            return (int) ($conf->global->SPLASH_BANK ?? 0);
+        }
         //====================================================================//
         // Detect Bank Account Id From Method Code
-        $parameterName = "SPLASH_BANK_FOR_".$paymentTypeId;
-        if (isset($conf->global->{$parameterName}) && !empty($conf->global->{$parameterName})) {
-            return $conf->global->{$parameterName};
-        }
-
-        //====================================================================//
-        // Default Payment Account Id
-        return (int) $conf->global->SPLASH_BANK;
+        return $conf->global->{$parameterName};
     }
 
     /**
@@ -710,13 +590,17 @@ trait PaymentsTrait
             || empty($lineData["amount"])) {
             return null;
         }
+        $methodId = PaymentMethods::getDoliId($lineData["mode"]);
+        if (!$methodId) {
+            return null;
+        }
         //====================================================================//
         // Return Identified Payment
         return PaymentManager::searchForSimilarPayment(
             $lineData["date"],
             $lineData["number"],
             (float) $lineData["amount"],
-            $this->identifyPaymentMethod($lineData["mode"])
+            $methodId
         );
     }
 }

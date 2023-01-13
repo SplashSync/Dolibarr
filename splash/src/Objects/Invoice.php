@@ -59,6 +59,7 @@ class Invoice extends AbstractObject
     use Invoice\ItemsTrait;
     use Invoice\PaymentsTrait;
     use Invoice\StatusTrait;
+    use Invoice\OptionsTrait;
 
     //====================================================================//
     // ExtraFields Type
