@@ -23,7 +23,7 @@ if [ ! -d "${SPLASH_MODULE_DIR}" ]; then
   export SPLASH_MODULE_DIR='/var/www/html/custom'
 fi
 if [ -z ${SPLASH_MODULE_VERSION} ]; then
-  export SPLASH_MODULE_VERSION='2.0.x-dev'
+  export SPLASH_MODULE_VERSION='@stable'
 fi
 echo "Install Splash Module ${SPLASH_MODULE_VERSION} to ${SPLASH_MODULE_DIR}"
 
