@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +23,7 @@
 
 namespace   Splash\Local\Widgets;
 
+use Exception;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
@@ -38,7 +39,7 @@ class CustomerInvoicesStats extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_M,
         "Header" => true,
         "Footer" => true,
@@ -55,28 +56,28 @@ class CustomerInvoicesStats extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $DISABLED = true;
+    protected static bool $disabled = true;
 
     /**
      * Widget Name (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "CustomersInvoices";
+    protected static string $name = "CustomersInvoices";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "CustomersInvoices";
+    protected static string $description = "CustomersInvoices";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-line-chart";
+    protected static string $ico = "fa fa-line-chart";
 
     //====================================================================//
     // Class Main Functions
@@ -95,7 +96,7 @@ class CustomerInvoicesStats extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = array())
+    public function get(array $parameters = array()): array
     {
         //====================================================================//
         // Stack Trace
@@ -138,25 +139,25 @@ class CustomerInvoicesStats extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName():string
     {
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$NAME));
+        return html_entity_decode($langs->trans(static::$name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDesc()
+    public function getDesc(): string
     {
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        return html_entity_decode($langs->trans(static::$description));
     }
 
     //====================================================================//
@@ -166,9 +167,11 @@ class CustomerInvoicesStats extends AbstractWidget
     /**
      * Read Widget Datas
      *
+     * @throws Exception
+     *
      * @return array
      */
-    private function getData()
+    private function getData(): array
     {
         global $db;
 
@@ -180,10 +183,10 @@ class CustomerInvoicesStats extends AbstractWidget
         // Execute SQL Query
         //====================================================================//
 
-        $sql = "SELECT date_format(f.datef,'%".$this->GroupBy."') as step,";
+        $sql = "SELECT date_format(f.datef,'%".$this->groupBy."') as step,";
         $sql .= " COUNT(*) as nb, SUM(f.total) as total";
         $sql .= " FROM ".$stats->from;
-        $sql .= " WHERE f.datef BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql .= " WHERE f.datef BETWEEN '".$this->dateStart."' AND '".$this->dateEnd."'";
         $sql .= " AND ".$stats->where;
         $sql .= " GROUP BY step";
         $sql .= $db->order('step', 'ASC');
@@ -204,9 +207,11 @@ class CustomerInvoicesStats extends AbstractWidget
     /**
      * Block Building - Morris Bar Graph
      *
+     * @throws Exception
+     *
      * @return void
      */
-    private function buildMorrisBarBlock()
+    private function buildMorrisBarBlock(): void
     {
         global $langs;
 

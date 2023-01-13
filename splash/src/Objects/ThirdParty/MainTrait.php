@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,93 +34,111 @@ trait MainTrait
         //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
-            ->Identifier("phone")
-            ->Name($langs->trans("Phone"))
+            ->identifier("phone")
+            ->name($langs->trans("Phone"))
             ->isLogged()
-            ->MicroData("http://schema.org/Person", "telephone")
-            ->isListed();
-
+            ->microData("http://schema.org/Person", "telephone")
+            ->isIndexed()
+            ->isListed()
+        ;
         //====================================================================//
         // Email
         $this->fieldsFactory()->create(SPL_T_EMAIL)
-            ->Identifier("email")
-            ->Name($langs->trans("Email"))
+            ->identifier("email")
+            ->name($langs->trans("Email"))
+            ->microData("http://schema.org/ContactPoint", "email")
             // Set Required when Set As Mandatory in Dolibarr Config
             ->isRequired(self::isEmailRequired())
-            ->MicroData("http://schema.org/ContactPoint", "email")
+            ->isPrimary((bool) Local::getParameter("SOCIETE_EMAIL_UNIQUE"))
+            ->isIndexed()
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // WebSite
         $this->fieldsFactory()->create(SPL_T_URL)
-            ->Identifier("url")
-            ->Name($langs->trans("PublicUrl"))
-            ->MicroData("http://schema.org/Organization", "url");
-
-        //====================================================================//
-        // Id Professionnal 1 SIREN
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("idprof1")
-            ->Group("ID")
-            ->Name($langs->trans("ProfId1Short"))
-            // Set Required when Set As Mandatory in Dolibarr Config
-            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF1_MANDATORY"))
-            ->MicroData("http://schema.org/Organization", "duns");
-
-        //====================================================================//
-        // Id Professionnal 2 SIRET
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("idprof2")
-            ->Group("ID")
-            ->Name($langs->trans("ProfId2Short"))
-            // Set Required when Set As Mandatory in Dolibarr Config
-            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF2_MANDATORY"))
-            ->MicroData("http://schema.org/Organization", "taxID");
-
-        //====================================================================//
-        // Id Professionnal 3 APE
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("idprof3")
-            ->Group("ID")
-            ->Name($langs->trans("ProfId3Short"))
-            // Set Required when Set As Mandatory in Dolibarr Config
-            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF3_MANDATORY"))
-            ->MicroData("http://schema.org/Organization", "naics");
-
-        //====================================================================//
-        // Id Professionnal 4 RCS
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("idprof4")
-            ->Group("ID")
-            ->Name($langs->trans("ProfId4Short"))
-            // Set Required when Set As Mandatory in Dolibarr Config
-            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF4_MANDATORY"))
-            ->MicroData("http://schema.org/Organization", "isicV4");
-
-        //====================================================================//
-        // Id Professionnal 5
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("idprof5")
-            ->Group("ID")
-            ->Name($langs->trans("ProfId5Short"));
-
-        //====================================================================//
-        // Id Professionnal 6
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("idprof6")
-            ->Name($langs->trans("ProfId6Short"))
-            ->Group("ID")
-            ->MicroData("http://splashync.com/schemas", "ObjectId");
-
+            ->identifier("url")
+            ->name($langs->trans("PublicUrl"))
+            ->microData("http://schema.org/Organization", "url")
+        ;
         //====================================================================//
         // VAT Number
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("tva_intra")
-            ->Name($langs->trans("VATIntra"))
-            ->Group("ID")
+            ->identifier("tva_intra")
+            ->name($langs->trans("VATIntra"))
+            ->group("ID")
             ->addOption('maxLength', "20")
-            ->MicroData("http://schema.org/Organization", "vatID");
+            ->microData("http://schema.org/Organization", "vatID")
+        ;
+    }
+
+    /**
+     * Build Address Fields using FieldFactory
+     *
+     * @return void
+     */
+    protected function buildMainIdsFields()
+    {
+        global $langs;
+
+        //====================================================================//
+        // Id Professional 1 SIREN
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("idprof1")
+            ->group("ID")
+            ->name($langs->trans("ProfId1Short"))
+            ->microData("http://schema.org/Organization", "duns")
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF1_MANDATORY"))
+            ->isIndexed()
+        ;
+        //====================================================================//
+        // Id Professional 2 SIRET
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("idprof2")
+            ->group("ID")
+            ->name($langs->trans("ProfId2Short"))
+            ->microData("http://schema.org/Organization", "taxID")
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF2_MANDATORY"))
+            ->isIndexed()
+        ;
+
+        //====================================================================//
+        // Id Professional 3 APE
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("idprof3")
+            ->group("ID")
+            ->name($langs->trans("ProfId3Short"))
+            ->microData("http://schema.org/Organization", "naics")
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF3_MANDATORY"))
+        ;
+        //====================================================================//
+        // Id Professional 4 RCS
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("idprof4")
+            ->group("ID")
+            ->name($langs->trans("ProfId4Short"))
+            ->microData("http://schema.org/Organization", "isicV4")
+            // Set Required when Set As Mandatory in Dolibarr Config
+            ->isRequired((bool) Local::getParameter("SOCIETE_IDPROF4_MANDATORY"))
+        ;
+        //====================================================================//
+        // Id Professional 5
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("idprof5")
+            ->group("ID")
+            ->name($langs->trans("ProfId5Short"))
+        ;
+        //====================================================================//
+        // Id Professional 6
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("idprof6")
+            ->name($langs->trans("ProfId6Short"))
+            ->group("ID")
+            ->microData("http://splashync.com/schemas", "ObjectId")
+        ;
     }
 
     /**
@@ -133,7 +151,7 @@ trait MainTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function getMainFields($key, $fieldName)
+    protected function getMainFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -170,13 +188,13 @@ trait MainTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function setMainFields($fieldName, $fieldData)
+    protected function setMainFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'phone':
             case 'email':
             case 'url':

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,10 +30,10 @@ class MultiCompany
     /**
      * @var int
      */
-    private static $defaultEntity = 1;
+    private static int $defaultEntity = 1;
 
     /**
-     * Cache for Entities Informations
+     * Cache for Entities Information
      *
      * @var null|stdClass[]
      */
@@ -59,7 +59,7 @@ class MultiCompany
         //====================================================================//
         // Detect Required to Switch Entity
         $entityId = Splash::input("Entity", INPUT_GET);
-        if (empty($entityId) || ($entityId == static::$defaultEntity)) {
+        if (empty($entityId) || ($entityId == self::$defaultEntity)) {
             return null;
         }
         //====================================================================//
@@ -125,7 +125,7 @@ class MultiCompany
         if (self::isMarketplaceMode()) {
             //====================================================================//
             // Force Current Entity
-            if (isset($subject->entity) && !empty($subject->entity)) {
+            if (!empty($subject->entity)) {
                 self::forceEntity((int) $subject->entity);
             }
 
@@ -138,7 +138,7 @@ class MultiCompany
         }
         //====================================================================//
         // Load Object Entity
-        if (isset($subject->entity) && !empty($subject->entity)) {
+        if (!empty($subject->entity)) {
             $entityId = $subject->entity;
         } else {
             $entityId = $subject->getValueFrom($subject->table_element, $subject->id, "entity");
@@ -151,7 +151,7 @@ class MultiCompany
 
             return  Splash::log()->err(
                 "ErrLocalTpl",
-                $trace["class"],
+                $trace["class"] ?? "",
                 $trace["function"],
                 html_entity_decode($langs->trans('ErrorForbidden'))
             );
@@ -167,7 +167,7 @@ class MultiCompany
      */
     public static function isDefault(): bool
     {
-        return self::isMultiCompany() && (self::getCurrentId() == static::$defaultEntity);
+        return self::isMultiCompany() && (self::getCurrentId() == self::$defaultEntity);
     }
 
     /**
@@ -177,7 +177,7 @@ class MultiCompany
      */
     public static function isMultiCompanyChildEntity(): bool
     {
-        return self::isMultiCompany() && (self::getCurrentId() != static::$defaultEntity);
+        return self::isMultiCompany() && (self::getCurrentId() != self::$defaultEntity);
     }
 
     /**
@@ -245,7 +245,10 @@ class MultiCompany
      */
     public static function getServerPath(): ?string
     {
-        $serverRoot = (string) realpath((string) Splash::input("DOCUMENT_ROOT"));
+        $serverRoot = realpath((string) Splash::input("DOCUMENT_ROOT"));
+        if (empty($serverRoot)) {
+            return  null;
+        }
         $prefix = self::isMultiCompanyChildEntity() ? ("?Entity=".self::getCurrentId()) : "";
         $fullPath = dirname(dirname(__DIR__))."/vendor/splash/phpcore/soap.php".$prefix;
         $relativePath = explode($serverRoot, $fullPath);
@@ -338,11 +341,11 @@ class MultiCompany
     {
         self::loadMultiCompanyInfos($reload);
 
-        return isset(self::$entityInfos) ? self::$entityInfos : array();
+        return self::$entityInfos ?? array();
     }
 
     /**
-     * Load Multi-company Informations Cache
+     * Load Multi-company Information Cache
      *
      * @return void
      */

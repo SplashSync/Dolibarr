@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,28 +28,28 @@ trait PricesTrait
      *
      * @return void
      */
-    protected function buildPricesFields()
+    protected function buildPricesFields(): void
     {
         global $conf,$langs;
 
         //====================================================================//
         // Product Selling Price
         $this->fieldsFactory()->create(SPL_T_PRICE)
-            ->Identifier("price")
-            ->Name($langs->trans("SellingPrice")." (".$conf->global->MAIN_MONNAIE.")")
-            ->MicroData("http://schema.org/Product", "price")
+            ->identifier("price")
+            ->name($langs->trans("SellingPrice")." (".$conf->global->MAIN_MONNAIE.")")
+            ->microData("http://schema.org/Product", "price")
             ->isLogged()
-            ->isListed();
-
+        ;
         if (Local::dolVersionCmp("4.0.0") >= 0) {
             //====================================================================//
             // WholeSale Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("cost_price")
-                ->Name($langs->trans("CostPrice")." (".$conf->global->MAIN_MONNAIE.")")
-                ->Description($langs->trans("CostPriceDescription"))
+                ->identifier("cost_price")
+                ->name($langs->trans("CostPrice")." (".$conf->global->MAIN_MONNAIE.")")
+                ->description($langs->trans("CostPriceDescription"))
+                ->microData("http://schema.org/Product", "wholesalePrice")
                 ->isLogged()
-                ->MicroData("http://schema.org/Product", "wholesalePrice");
+            ;
         }
     }
 
@@ -61,7 +61,7 @@ trait PricesTrait
      *
      * @return void
      */
-    protected function getPricesFields($key, $fieldName)
+    protected function getPricesFields(?string $key, string $fieldName): void
     {
         global $conf;
 
@@ -94,11 +94,11 @@ trait PricesTrait
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param array  $fieldData Field Data
      *
      * @return void
      */
-    protected function setPricesFields($fieldName, $fieldData)
+    protected function setPricesFields(string $fieldName, array $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -127,15 +127,22 @@ trait PricesTrait
      * @param int   $priceLevel MultiPrice Level
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function setVariantVariationPrice($price, $priceLevel)
+    protected function setVariantVariationPrice(float $price, int $priceLevel): void
     {
         global $conf;
-
+        //====================================================================//
+        // Safety Check
+        if (!isset($this->baseProduct)) {
+            return;
+        }
         //====================================================================//
         // If multi-prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
+            $parentPrice = (double) ($this->baseProduct->multiprices[$priceLevel] ?? 0.0);
         } else {
             $parentPrice = (double) $this->baseProduct->price;
         }
@@ -178,19 +185,16 @@ trait PricesTrait
     /**
      * Read Product Price
      *
-     * @return array|string
+     * @return null|array
      */
-    protected function getProductPrice()
+    protected function getProductPrice(): ?array
     {
         global $conf;
 
         //====================================================================//
         // If multi-prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $cfgPriceLevel = isset($conf->global->SPLASH_MULTIPRICE_LEVEL)
-                ? $conf->global->SPLASH_MULTIPRICE_LEVEL
-                : null
-            ;
+            $cfgPriceLevel = $conf->global->SPLASH_MULTIPRICE_LEVEL ?? null;
             $priceLevel = !empty($cfgPriceLevel) ? $cfgPriceLevel : 1;
             $priceType = $this->object->multiprices_base_type[$priceLevel] ?? 0;
             $priceVAT = (double) ($this->object->multiprices_tva_tx[$priceLevel] ?? 0);
@@ -221,7 +225,7 @@ trait PricesTrait
      *
      * @return bool
      */
-    private function setProductPrice($newPrice)
+    private function setProductPrice(array $newPrice): bool
     {
         global $conf, $user;
 
@@ -230,7 +234,7 @@ trait PricesTrait
         $this->getPricesFields(null, "price");
         //====================================================================//
         // Compare Prices
-        if (self::prices()->Compare($this->out["price"], $newPrice, $conf->global->MAIN_MAX_DECIMALS_UNIT)) {
+        if (self::prices()->compare($this->out["price"], $newPrice, $conf->global->MAIN_MAX_DECIMALS_UNIT)) {
             return true;
         }
 
@@ -251,7 +255,7 @@ trait PricesTrait
         }
 
         //====================================================================//
-        // If multiprices are enabled
+        // If multi-prices are enabled
         $priceLevel = ConfigManager::getDefaultPriceLevel();
 
         //====================================================================//
@@ -285,20 +289,29 @@ trait PricesTrait
      *
      * @return bool
      */
-    private function setVariantPrice($price, $priceVat, $priceBase, $priceLevel)
+    private function setVariantPrice(float $price, float $priceVat, string $priceBase, int $priceLevel): bool
     {
         global $conf, $user;
-
         //====================================================================//
-        // If multi-prices are enabled
+        // Safety Check
+        if (!isset($this->baseProduct)) {
+            return false;
+        }
+        //====================================================================//
+        // If Multi-Prices are enabled
         if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
-            $parentPrice = (double) $this->baseProduct->multiprices[$priceLevel];
+            $parentPrice = (double) ($this->baseProduct->multiprices[$priceLevel] ?? 0.0);
         } else {
             $parentPrice = (double) $this->baseProduct->price;
         }
         //====================================================================//
         // Update Price on Product Combination
         $this->setVariantVariationPrice($price, $priceLevel);
+        //====================================================================//
+        // Safety Check
+        if (!isset($this->baseProduct)) {
+            return false;
+        }
         //====================================================================//
         // Commit Price Update on Parent Product (Only To Update Taxes Rates)
         $result = $this->baseProduct->updatePrice($parentPrice, $priceBase, $user, $priceVat, 0.0, $priceLevel);

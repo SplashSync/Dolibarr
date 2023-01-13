@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +15,7 @@
 
 namespace Splash\Local\Services;
 
-use ArrayObject;
+use Exception;
 use Product;
 use ProductCombination;
 use ProductCombination2ValuePair;
@@ -34,28 +34,28 @@ class VariantsManager
      *
      * @var ProductCombination
      */
-    private static $combinations;
+    private static ProductCombination $combinations;
 
     /**
      * Products Combinations Values Pairs Static Instance
      *
      * @var ProductCombination2ValuePair
      */
-    private static $valuePair;
+    private static ProductCombination2ValuePair $valuePair;
 
     /**
-     * Array Of Products Conbinations Arrays
+     * Array Of Products Combination Arrays
      *
      * @var array
      */
-    private static $combinationsCache = array();
+    private static array $combinationsCache = array();
 
     /**
      * Array Of Products Attributes to Value Arrays
      *
      * @var array
      */
-    private static $attr2ValuesCache = array();
+    private static array $attr2ValuesCache = array();
 
     /**
      * Service Constructor
@@ -66,53 +66,53 @@ class VariantsManager
     {
         global $db;
 
-        if (isset(static::$combinations)) {
+        if (isset(self::$combinations)) {
             return;
         }
 
         //====================================================================//
         // Load Required Dolibarr Product Variants Classes
         dol_include_once("/variants/class/ProductCombination.class.php");
-        static::$combinations = new ProductCombination($db);
+        self::$combinations = new ProductCombination($db);
 
         dol_include_once("/variants/class/ProductCombination2ValuePair.class.php");
-        static::$valuePair = new ProductCombination2ValuePair($db);
+        self::$valuePair = new ProductCombination2ValuePair($db);
     }
 
     /**
      * Fetch Product Combinations Array
      *
-     * @param int $fkParent Rowid of parent product
+     * @param int $fkParent RowId of parent product
      *
      * @return ProductCombination[]
      */
-    public static function getProductVariants($fkParent)
+    public static function getProductVariants(int $fkParent): array
     {
         //====================================================================//
         // Ensure Service Init
         self::init();
         //====================================================================//
         // Load from cache
-        if (isset(static::$combinationsCache[$fkParent])) {
-            return static::$combinationsCache[$fkParent];
+        if (isset(self::$combinationsCache[$fkParent])) {
+            return self::$combinationsCache[$fkParent];
         }
 
         //====================================================================//
         // Load from Db
-        $variants = static::$combinations->fetchAllByFkProductParent($fkParent);
-        static::$combinationsCache[$fkParent] = is_array($variants) ? $variants : array();
+        $variants = self::$combinations->fetchAllByFkProductParent($fkParent);
+        self::$combinationsCache[$fkParent] = is_array($variants) ? $variants : array();
 
-        return static::$combinationsCache[$fkParent];
+        return self::$combinationsCache[$fkParent];
     }
 
     /**
      * Check if Product has Combinations
      *
-     * @param int $fkParent Rowid of parent product
+     * @param int $fkParent RowId of parent product
      *
      * @return bool
      */
-    public static function hasProductVariants($fkParent)
+    public static function hasProductVariants(int $fkParent): bool
     {
         return !empty(self::getProductVariants($fkParent));
     }
@@ -120,11 +120,11 @@ class VariantsManager
     /**
      * Fetch Product Combination Object
      *
-     * @param int $productId Rowid of Product
+     * @param int $productId RowId of Product
      *
      * @return null|ProductCombination
      */
-    public static function getProductCombination($productId)
+    public static function getProductCombination(int $productId): ?ProductCombination
     {
         global $db;
 
@@ -140,9 +140,9 @@ class VariantsManager
 
         //====================================================================//
         // Load Combination Attributes from Db if First Loading
-        if (!isset(static::$attr2ValuesCache[$productId])) {
-            $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
-            static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
+        if (!isset(self::$attr2ValuesCache[$productId])) {
+            $attr2Values = self::$valuePair->fetchByFkCombination($combination->id);
+            self::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
         }
 
         return $combination;
@@ -156,7 +156,7 @@ class VariantsManager
      *
      * @return null|ProductCombination
      */
-    public static function addProductCombination(Product $parentProduct, Product $childProduct)
+    public static function addProductCombination(Product $parentProduct, Product $childProduct): ?ProductCombination
     {
         global $db, $user, $conf;
 
@@ -186,7 +186,7 @@ class VariantsManager
 
         //====================================================================//
         // Setup Combination Attributes
-        static::$attr2ValuesCache[$childProduct->id] = array();
+        self::$attr2ValuesCache[$childProduct->id] = array();
 
         return $combination;
     }
@@ -194,11 +194,11 @@ class VariantsManager
     /**
      * Get Fetch Product Combination Attributes Array
      *
-     * @param int $productId Rowid of Product
+     * @param int $productId RowId of Product
      *
      * @return array
      */
-    public static function getProductAttributes($productId)
+    public static function getProductAttributes(int $productId): array
     {
         //====================================================================//
         // Ensure Service Init
@@ -211,14 +211,14 @@ class VariantsManager
         }
         //====================================================================//
         // Safety Check
-        if (!isset(static::$attr2ValuesCache[$productId])) {
+        if (!isset(self::$attr2ValuesCache[$productId])) {
             return array();
         }
 
         //====================================================================//
         // Parse Combination Attributes to Details Array
         $result = array();
-        foreach (static::$attr2ValuesCache[$productId] as $valuePair) {
+        foreach (self::$attr2ValuesCache[$productId] as $valuePair) {
             //====================================================================//
             // Load Attribute Class
             $attribute = AttributesManager::getAttributeById($valuePair->fk_prod_attr);
@@ -244,12 +244,12 @@ class VariantsManager
     /**
      * Update Product Combination Attributes from Ids Array
      *
-     * @param int   $productId  Rowid of Product
+     * @param int   $productId  RowId of Product
      * @param array $attributes Array of Attributes->id => Value->id
      *
      * @return bool
      */
-    public static function setProductAttributes($productId, $attributes)
+    public static function setProductAttributes(int $productId, array $attributes): bool
     {
         //====================================================================//
         // Ensure Service Init
@@ -259,7 +259,7 @@ class VariantsManager
         $combination = self::getProductCombination($productId);
         //====================================================================//
         // Safety Check
-        if ((null === $combination) || !isset(static::$attr2ValuesCache[$productId])) {
+        if ((null === $combination) || !isset(self::$attr2ValuesCache[$productId])) {
             return false;
         }
         //====================================================================//
@@ -268,41 +268,43 @@ class VariantsManager
         foreach ($attributes as $attributeId => $valueId) {
             //====================================================================//
             // Update Combination Attribute
-            $updated |= (bool) self::setProductAttribute(
+            $updated |= self::setProductAttribute(
                 $combination,
-                array_shift(static::$attr2ValuesCache[$productId]),
+                array_shift(self::$attr2ValuesCache[$productId]),
                 $attributeId,
                 $valueId
             );
         }
         //====================================================================//
         // Delete Others Combination Attributes
-        if (!empty(static::$attr2ValuesCache[$productId])) {
-            foreach (static::$attr2ValuesCache[$productId] as $index => $attr2Value) {
+        if (!empty(self::$attr2ValuesCache[$productId])) {
+            foreach (self::$attr2ValuesCache[$productId] as $index => $attr2Value) {
                 //====================================================================//
                 // Delete Combination Attribute
-                $updated |= (bool) self::deleteProductAttribute($attr2Value);
-                unset(static::$attr2ValuesCache[$productId][$index]);
+                $updated |= self::deleteProductAttribute($attr2Value);
+                unset(self::$attr2ValuesCache[$productId][$index]);
             }
         }
         //====================================================================//
         // Reload Load Product Combination Class
-        $attr2Values = static::$valuePair->fetchByFkCombination($combination->id);
-        static::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
+        $attr2Values = self::$valuePair->fetchByFkCombination($combination->id);
+        self::$attr2ValuesCache[$productId] = is_array($attr2Values) ? $attr2Values : array();
 
         return (bool) $updated;
     }
 
     /**
      * Check if Product is Locked by Splash
-     * - If has Combinations
+     * - Has Combinations
      * - If is Combination & is On Update
      *
-     * @param int $productId Rowid of the upated product
+     * @param int $productId RowId of the updated product
+     *
+     * @throws Exception
      *
      * @return bool
      */
-    public static function isProductLocked($productId)
+    public static function isProductLocked(int $productId): bool
     {
         global $db;
         //====================================================================//
@@ -345,12 +347,12 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param int               $parentId Rowid of Parent Product
-     * @param array|ArrayObject $variants Array of Variants Ids
+     * @param int   $parentId RowId of Parent Product
+     * @param array $variants Array of Variants Ids
      *
      * @return bool
      */
-    public static function hasAdditionnalVariants($parentId, $variants)
+    public static function hasAdditionnalVariants(int $parentId, array $variants): bool
     {
         //====================================================================//
         // Extract All Variants Product Ids from Given Inputs
@@ -369,13 +371,13 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param int               $parentId    Rowid of Current Parent Product
-     * @param array|ArrayObject $variants    Array of Variants Ids
-     * @param int               $newParentId Rowid of New Parent Product
+     * @param int   $parentId    RowId of Current Parent Product
+     * @param array $variants    Array of Variants Ids
+     * @param int   $newParentId RowId of New Parent Product
      *
      * @return bool
      */
-    public static function moveAdditionnalVariants($parentId, $variants, $newParentId)
+    public static function moveAdditionalVariants(int $parentId, array $variants, int $newParentId): bool
     {
         //====================================================================//
         // Extract All Variants Product Ids from Given Inputs
@@ -394,11 +396,11 @@ class VariantsManager
             }
             //====================================================================//
             // Delete Potential Caches
-            if (isset(static::$combinationsCache[$combination->fk_product_parent])) {
-                unset(static::$combinationsCache[$combination->fk_product_parent]);
+            if (isset(self::$combinationsCache[$combination->fk_product_parent])) {
+                unset(self::$combinationsCache[$combination->fk_product_parent]);
             }
-            if (isset(static::$attr2ValuesCache[$combination->fk_product_child])) {
-                unset(static::$attr2ValuesCache[$combination->fk_product_child]);
+            if (isset(self::$attr2ValuesCache[$combination->fk_product_child])) {
+                unset(self::$attr2ValuesCache[$combination->fk_product_child]);
             }
             //====================================================================//
             // Update Product Parent
@@ -413,13 +415,17 @@ class VariantsManager
      *
      * @param ProductCombination                $combination Product Combination
      * @param null|ProductCombination2ValuePair $attr2Value  Combination Attribute 2 Value Pair if Existing
-     * @param int                               $attributeId Product Attribute Id
-     * @param int                               $valueId     Product Attribute Id
+     * @param int                               $attributeId Product Attribute ID
+     * @param int                               $valueId     Product Attribute ID
      *
      * @return bool
      */
-    private static function setProductAttribute($combination, $attr2Value, $attributeId, $valueId)
-    {
+    private static function setProductAttribute(
+        ProductCombination            $combination,
+        ?ProductCombination2ValuePair $attr2Value,
+        int $attributeId,
+        int $valueId
+    ): bool {
         global $db;
 
         //====================================================================//
@@ -443,8 +449,8 @@ class VariantsManager
             //====================================================================//
             // Delete Attribute Value from Db
             $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val";
-            $sql .= " WHERE fk_prod_combination = ".(int) $attr2Value->fk_prod_combination;
-            $sql .= " AND fk_prod_attr = ".(int) $attr2Value->fk_prod_attr;
+            $sql .= " WHERE fk_prod_combination = ".$attr2Value->fk_prod_combination;
+            $sql .= " AND fk_prod_attr = ".$attr2Value->fk_prod_attr;
             $db->query($sql);
             //====================================================================//
             // Update Attribute Value Parameters
@@ -470,13 +476,13 @@ class VariantsManager
      *
      * @return bool
      */
-    private static function deleteProductAttribute($attr2Value)
+    private static function deleteProductAttribute(ProductCombination2ValuePair $attr2Value): bool
     {
         global $db;
 
         //====================================================================//
         // Delete Attribute Value from Db
-        $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val WHERE rowid = ".(int) $attr2Value->id;
+        $sql = "DELETE FROM ".MAIN_DB_PREFIX."product_attribute_combination2val WHERE rowid = ".$attr2Value->id;
         if ($db->query($sql)) {
             return true;
         }
@@ -487,11 +493,11 @@ class VariantsManager
     /**
      * Check if All Given Product Variants Exists on this System
      *
-     * @param array|ArrayObject $variants Array of Variants Ids
+     * @param array $variants Array of Variants Ids
      *
      * @return null|array
      */
-    private static function extractVariantsProductIds($variants)
+    private static function extractVariantsProductIds(array $variants): ?array
     {
         $productIds = array();
         //====================================================================//
@@ -499,7 +505,7 @@ class VariantsManager
         foreach ($variants as $index => $variant) {
             //====================================================================//
             // Check if Variant Item has Variant Product Id
-            if (!isset($variant["id"]) || empty($variant["id"])) {
+            if (empty($variant["id"])) {
                 return null;
             }
             //====================================================================//
@@ -520,21 +526,21 @@ class VariantsManager
     }
 
     /**
-     * Update Product Combination Parent Product Id
+     * Update Product Combination Parent Product ID
      *
      * @param ProductCombination $combination Product Combination
      * @param int                $parentId    New Parent Product
      *
      * @return bool
      */
-    private static function updateCombinationParent($combination, $parentId)
+    private static function updateCombinationParent(ProductCombination $combination, int $parentId): bool
     {
         global $db;
 
         //====================================================================//
         // Update Combination Product Id
         $sql = "UPDATE ".MAIN_DB_PREFIX."product_attribute_combination "
-            ." SET fk_product_parent = ".(int) $parentId." WHERE rowid = ".(int) $combination->id;
+            ." SET fk_product_parent = ".$parentId." WHERE rowid = ".$combination->id;
         if (!$db->query($sql)) {
             return false;
         }

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,7 +21,7 @@ use Splash\Models\Objects\IntelParserTrait;
 trait MarketplaceModeTrait
 {
     use IntelParserTrait{
-        set as protected coreSet;
+        IntelParserTrait::set as protected coreSet;
     }
 
     //====================================================================//
@@ -31,12 +31,12 @@ trait MarketplaceModeTrait
     /**
      * {@inheritdoc}
      */
-    public function set($objectId = null, $list = null)
+    public function set(?string $objectId, array $objectData): ?string
     {
         //====================================================================//
         // Detect & Force Entity
-        MultiCompany::setupForMarketplace($list);
+        MultiCompany::setupForMarketplace($objectData);
 
-        return $this->coreSet($objectId, $list);
+        return $this->coreSet($objectId, $objectData);
     }
 }

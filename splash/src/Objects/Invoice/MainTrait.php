@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +27,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function buildMainFields()
+    protected function buildMainFields(): void
     {
         global $langs,$conf;
 
@@ -122,7 +122,7 @@ trait MainTrait
             // Order Delivery Date
             case 'date_lim_reglement':
             case 'date_echeance':
-                $date = $this->object->{$fieldName};
+                $date = $this->object->{$fieldName} ?? null;
                 $this->out[$fieldName] = !empty($date) ? dol_print_date($date, '%Y-%m-%d') : null;
 
                 break;
@@ -180,19 +180,19 @@ trait MainTrait
             //====================================================================//
 
             case 'isDraft':
-                $this->out[$fieldName] = (0 == $this->object->statut)    ?   true:false;
+                $this->out[$fieldName] = (0 == $this->object->statut);
 
                 break;
             case 'isCanceled':
-                $this->out[$fieldName] = (3 == $this->object->statut)   ?   true:false;
+                $this->out[$fieldName] = (3 == $this->object->statut);
 
                 break;
             case 'isValidated':
-                $this->out[$fieldName] = (1 == $this->object->statut)    ?   true:false;
+                $this->out[$fieldName] = (1 == $this->object->statut);
 
                 break;
             case 'isPaid':
-                $this->out[$fieldName] = (2 == $this->object->statut)    ?   true:false;
+                $this->out[$fieldName] = (2 == $this->object->statut);
 
                 break;
             default:
@@ -219,7 +219,7 @@ trait MainTrait
             // Invoice Payment Due Date
             case 'date_lim_reglement':
             case 'date_echeance':
-                if (dol_print_date($this->object->{$fieldName}, 'standard') === $fieldData) {
+                if (dol_print_date($this->object->{$fieldName} ?? null, 'standard') === $fieldData) {
                     break;
                 }
                 $this->setSimple($fieldName, $fieldData);

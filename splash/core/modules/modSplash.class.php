@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,9 +36,9 @@ class modSplash extends DolibarrModules
     /**
      * Constructor. Define names, constants, directories, boxes, permissions
      *
-     * @param mixed $db
+     * @param DoliDB $db
      */
-    public function __construct($db)
+    public function __construct(DoliDB $db)
     {
         global $langs;
         parent::__construct($db);
@@ -103,7 +103,7 @@ class modSplash extends DolibarrModules
         // List of modules id to disable if this one is disabled
         $this->requiredby = array();
         $this->phpmin = array(7,4);                                 // Min version of PHP required by module
-        $this->need_dolibarr_version = array(12,0);                 // Min version of Dolibarr required by module
+        $this->need_dolibarr_version = array(13,0);                 // Min version of Dolibarr required by module
         $this->langfiles = array(SPL_MOD_NAME."@".SPL_MOD_NAME);
 
         //====================================================================//
@@ -125,11 +125,11 @@ class modSplash extends DolibarrModules
      * and menus (defined in constructor) into Dolibarr database.
      * It also creates data directories.
      *
-     * @param mixed $options
+     * @param string $options
      *
      * @return int 1 if OK, 0 if KO
      */
-    public function init($options = '')
+    public function init($options = ''): int
     {
         global $langs;
 
@@ -150,11 +150,11 @@ class modSplash extends DolibarrModules
      * Remove from database constants, boxes and permissions from Dolibarr database.
      * Data directories are not deleted.
      *
-     * @param mixed $options
+     * @param string $options
      *
      * @return int 1 if OK, 0 if KO
      */
-    public function remove($options = '')
+    public function remove($options = ''): int
     {
         $sql = array();
 

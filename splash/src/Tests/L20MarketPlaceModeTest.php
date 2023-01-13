@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,7 +36,7 @@ class L20MarketPlaceModeTest extends ObjectsCase
     /**
      * @var stdClass
      */
-    private $currentEntity;
+    private stdClass $currentEntity;
 
     /**
      * Init Setup for Marketplace Tests
@@ -118,7 +118,10 @@ class L20MarketPlaceModeTest extends ObjectsCase
             $this->currentEntity = $companyInfo;
             //====================================================================//
             //   Execute Core CRUD Tests
-            $this->coreTestSetSingleFieldFromService($objectType, array());
+            $this->coreTestSetSingleFieldFromService($objectType, array(
+                "id" => "none",
+                "notest" => false
+            ));
         }
     }
 
@@ -221,16 +224,20 @@ class L20MarketPlaceModeTest extends ObjectsCase
      * Verify Client Object Set Response.
      *
      * @param string $objectType
-     * @param mixed  $objectId
+     * @param string $objectId
      * @param string $action
      * @param array  $expectedData
      *
-     * @throws Exception
+     *@throws Exception
      *
      * @return void
      */
-    protected function verifySetResponse(string $objectType, $objectId, string $action, array $expectedData): void
-    {
+    protected function verifySetResponse(
+        string $objectType,
+        string $objectId,
+        string $action,
+        array $expectedData
+    ): void {
         //====================================================================//
         //   Execute Core Data Verifications
         $this->coreVerifySetResponse($objectType, $objectId, $action, $expectedData);

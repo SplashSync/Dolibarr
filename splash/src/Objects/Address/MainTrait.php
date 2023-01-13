@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,77 +25,79 @@ trait MainTrait
      *
      * @return void
      */
-    protected function buildMainFields()
+    protected function buildMainFields(): void
     {
         global $conf,$langs;
 
         $groupName = $langs->trans("CompanyAddress");
         //====================================================================//
-        // Addess
+        // Address
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("address")
-            ->Name($langs->trans("CompanyAddress"))
-            ->Group($groupName)
+            ->identifier("address")
+            ->name($langs->trans("CompanyAddress"))
+            ->group($groupName)
+            ->microData("http://schema.org/PostalAddress", "streetAddress")
             ->isLogged()
-            ->MicroData("http://schema.org/PostalAddress", "streetAddress");
-
+        ;
         //====================================================================//
         // Zip Code
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("zip")
-            ->Name($langs->trans("CompanyZip"))
-            ->MicroData("http://schema.org/PostalAddress", "postalCode")
-            ->Group($groupName)
-            ->AddOption('maxLength', "18")
+            ->identifier("zip")
+            ->name($langs->trans("CompanyZip"))
+            ->microData("http://schema.org/PostalAddress", "postalCode")
+            ->group($groupName)
+            ->addOption('maxLength', "18")
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // City Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("town")
-            ->Name($langs->trans("CompanyTown"))
-            ->MicroData("http://schema.org/PostalAddress", "addressLocality")
-            ->Group($groupName)
+            ->identifier("town")
+            ->name($langs->trans("CompanyTown"))
+            ->microData("http://schema.org/PostalAddress", "addressLocality")
+            ->group($groupName)
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Country Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("country")
-            ->Name($langs->trans("CompanyCountry"))
+            ->identifier("country")
+            ->name($langs->trans("CompanyCountry"))
+            ->group($groupName)
             ->isReadOnly()
-            ->Group($groupName)
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Country ISO Code
         $this->fieldsFactory()->create(SPL_T_COUNTRY)
-            ->Identifier("country_code")
-            ->Name($langs->trans("CountryCode"))
-            ->Group($groupName)
+            ->identifier("country_code")
+            ->name($langs->trans("CountryCode"))
+            ->group($groupName)
+            ->microData("http://schema.org/PostalAddress", "addressCountry")
             ->isLogged()
-            ->MicroData("http://schema.org/PostalAddress", "addressCountry");
+        ;
 
         if (empty($conf->global->SOCIETE_DISABLE_STATE)) {
             //====================================================================//
             // State Name
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("state")
-                ->Name($langs->trans("State"))
-                ->Group($groupName)
-                ->isReadOnly();
-
+                ->identifier("state")
+                ->name($langs->trans("State"))
+                ->group($groupName)
+                ->isReadOnly()
+            ;
             //====================================================================//
             // State code
             $this->fieldsFactory()->create(SPL_T_STATE)
-                ->Identifier("state_code")
-                ->Name($langs->trans("State Code"))
-                ->MicroData("http://schema.org/PostalAddress", "addressRegion")
-                ->Group($groupName)
+                ->identifier("state_code")
+                ->name($langs->trans("State Code"))
+                ->microData("http://schema.org/PostalAddress", "addressRegion")
+                ->group($groupName)
                 ->isLogged()
-                ->isNotTested();
+                ->isNotTested()
+            ;
         }
     }
 
@@ -111,44 +113,45 @@ trait MainTrait
         //====================================================================//
         // Phone Pro
         $this->fieldsFactory()->create(SPL_T_PHONE)
-            ->Identifier("phone_pro")
-            ->Name($langs->trans("PhonePro"))
-            ->MicroData("http://schema.org/Organization", "telephone")
+            ->identifier("phone_pro")
+            ->name($langs->trans("PhonePro"))
+            ->microData("http://schema.org/Organization", "telephone")
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Phone Perso
         $this->fieldsFactory()->create(SPL_T_PHONE)
-            ->Identifier("phone_perso")
-            ->Name($langs->trans("PhonePerso"))
+            ->identifier("phone_perso")
+            ->name($langs->trans("PhonePerso"))
             ->isLogged()
-            ->MicroData("http://schema.org/PostalAddress", "telephone");
-
+            ->microData("http://schema.org/PostalAddress", "telephone")
+        ;
         //====================================================================//
         // Mobile Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
-            ->Identifier("phone_mobile")
-            ->Name($langs->trans("PhoneMobile"))
-            ->MicroData("http://schema.org/Person", "telephone")
+            ->identifier("phone_mobile")
+            ->name($langs->trans("PhoneMobile"))
+            ->microData("http://schema.org/Person", "telephone")
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Email
         $this->fieldsFactory()->create(SPL_T_EMAIL)
-            ->Identifier("email")
-            ->Name($langs->trans("Email"))
-            ->MicroData("http://schema.org/ContactPoint", "email")
+            ->identifier("email")
+            ->name($langs->trans("Email"))
+            ->microData("http://schema.org/ContactPoint", "email")
             ->isLogged()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Active
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("statut")
-            ->Name($langs->trans("Active"))
-            ->MicroData("http://schema.org/Person", "active");
+            ->identifier("statut")
+            ->name($langs->trans("Active"))
+            ->microData("http://schema.org/Person", "active")
+        ;
     }
 
     /**
@@ -161,7 +164,7 @@ trait MainTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function getMainFields($key, $fieldName)
+    protected function getMainFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -196,20 +199,20 @@ trait MainTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function setMainFields($fieldName, $fieldData)
+    protected function setMainFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'address':
             case 'zip':
             case 'town':
@@ -221,12 +224,12 @@ trait MainTrait
 
                 break;
             case 'state_code':
-                $stateId = $this->getStateByCode($fieldData, $this->object->country_id);
+                $stateId = $this->getStateByCode((string) $fieldData, $this->object->country_id);
                 $this->setSimple("state_id", $stateId);
 
                 break;
             case 'country_code':
-                $countryId = $this->getCountryByCode($fieldData);
+                $countryId = $this->getCountryByCode((string) $fieldData);
                 $this->setSimple("country_id", $countryId);
 
                 break;

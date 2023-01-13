@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,9 +15,7 @@
 
 namespace Splash\Local\Objects\Order;
 
-use FactureLigne;
 use OrderLine;
-use SupplierInvoiceLine;
 
 /**
  * Dolibarr Customer Orders Items Fields
@@ -27,9 +25,9 @@ trait ItemsTrait
     /**
      * Create a New Line Item
      *
-     * @return null|FactureLigne|OrderLine|SupplierInvoiceLine
+     * @return null|OrderLine
      */
-    protected function createItem()
+    protected function createItem(): ?OrderLine
     {
         global $db;
 
@@ -41,7 +39,7 @@ trait ItemsTrait
 
         //====================================================================//
         // Pre-Setup of Item with Common Values & Insert
-        return $this->insertItem($item);
+        return $this->insertItem($item) ? $item : null;
     }
 
     /**
@@ -51,7 +49,7 @@ trait ItemsTrait
      *
      * @return bool
      */
-    protected function deleteItem($orderLine)
+    protected function deleteItem(OrderLine $orderLine): bool
     {
         global $user;
         //====================================================================//

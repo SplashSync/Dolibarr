@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,6 +18,7 @@ namespace Splash\Local\Core;
 use FactureLigne;
 use OrderLine;
 use Product;
+use PropaleLigne;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
@@ -36,7 +37,7 @@ trait BaseItemsTrait
     /**
      * @var bool
      */
-    private $itemUpdate = false;
+    private bool $itemUpdate = false;
 
     /**
      * @var null|FactureLigne|OrderLine|SupplierInvoiceLine
@@ -113,17 +114,15 @@ trait BaseItemsTrait
         ;
         //====================================================================//
         // Order Line Tax Name
-        if (Local::dolVersionCmp("5.0.0") >= 0) {
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->identifier("vat_src_code")
-                ->inList("lines")
-                ->name($langs->trans("VATRate"))
-                ->microData("http://schema.org/PriceSpecification", "valueAddedTaxName")
-                ->group($groupName)
-                ->addOption('maxLength', '10')
-                ->association($descFieldName."@lines", "qty@lines", "price@lines")
-            ;
-        }
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("vat_src_code")
+            ->inList("lines")
+            ->name($langs->trans("VATRate"))
+            ->microData("http://schema.org/PriceSpecification", "valueAddedTaxName")
+            ->group($groupName)
+            ->addOption('maxLength', '10')
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
 
         //====================================================================//
         // Order Line Extra Fields
@@ -167,11 +166,11 @@ trait BaseItemsTrait
     /**
      * Insert an Item to Order or Invoice
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $item
+     * @param FactureLigne|OrderLine|PropaleLigne|SupplierInvoiceLine $item
      *
-     * @return null|FactureLigne|OrderLine|SupplierInvoiceLine
+     * @return bool
      */
-    protected function insertItem($item)
+    protected function insertItem(object $item): bool
     {
         if (!$item instanceof SupplierInvoiceLine) {
             $item->subprice = 0;
@@ -195,10 +194,10 @@ trait BaseItemsTrait
         if ($item->insert() <= 0) {
             $this->catchDolibarrErrors($item);
 
-            return null;
+            return false;
         }
 
-        return $item;
+        return true;
     }
 
     /**
@@ -223,9 +222,9 @@ trait BaseItemsTrait
             case 'desc':
                 return ($line instanceof SupplierInvoiceLine) ? "" : $line->desc;
             case 'description':
-                return $line->description;
+                return $line->description ?? "";
                 //====================================================================//
-                // Order Line Product Id
+                // Order Line Product ID
             case 'fk_product':
                 return ($line->fk_product)
                     ? self::objects()->encode("Product", (string) $line->fk_product)
@@ -262,12 +261,12 @@ trait BaseItemsTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      */
-    private function setItemsFields(string $fieldName, $fieldData): void
+    private function setItemsFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -276,16 +275,14 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Verify Lines List & Update if Needed
-        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
-            foreach ($fieldData as $itemData) {
-                $this->itemUpdate = false;
-                //====================================================================//
-                // Read Next Item Line
-                $this->currentItem = array_shift($this->object->lines);
-                //====================================================================//
-                // Update Item Line
-                $this->setItem($itemData);
-            }
+        foreach ($fieldData ?? array() as $itemData) {
+            $this->itemUpdate = false;
+            //====================================================================//
+            // Read Next Item Line
+            $this->currentItem = array_shift($this->object->lines);
+            //====================================================================//
+            // Update Item Line
+            $this->setItem($itemData);
         }
         //====================================================================//
         // Delete Remaining Lines
@@ -457,7 +454,7 @@ trait BaseItemsTrait
      *
      * @return void
      */
-    private function setItemVatSrcCode($itemData)
+    private function setItemVatSrcCode(array $itemData): void
     {
         global $conf;
 
@@ -477,7 +474,7 @@ trait BaseItemsTrait
         //====================================================================//
         // No Changes On Item? => Exit
         // Feature is Disabled? => Exit
-        if (!$this->itemUpdate || !$conf->global->SPLASH_DETECT_TAX_NAME) {
+        if (!$this->itemUpdate || empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
             return;
         }
         //====================================================================//
@@ -652,7 +649,7 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
-        if ($conf->global->SPLASH_DETECT_TAX_NAME) {
+        if (!empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
             $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
             if ($identifiedVat) {
                 $vatRateOrId = $identifiedVat->rowid;
@@ -661,9 +658,9 @@ trait BaseItemsTrait
         }
 
         //====================================================================//
-        // Calcul du total TTC et de la TVA pour la ligne a partir de
+        // Calcul du total TTC et de la TVA pour la ligne à partir de
         // qty, pu, remise_percent et txtva
-        $localtaxType = getLocalTaxesFromRate(
+        $localTaxType = getLocalTaxesFromRate(
             (string) $vatRateOrId,
             0,
             $this->object->fetch_thirdparty(),
@@ -685,7 +682,7 @@ trait BaseItemsTrait
             $this->currentItem->info_bits,
             $this->currentItem->product_type,
             $mysoc,
-            $localtaxType
+            $localTaxType
         );
 
         $this->currentItem->total_ht = $tabPrice[0];

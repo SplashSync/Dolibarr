@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@ trait CreditModeTrait
      *
      * @var bool
      */
-    private static $isCredit = false;
+    private static bool $isCredit = false;
 
     /**
      * Indicate Parser we are in Credit Notes Modes
@@ -33,9 +33,9 @@ trait CreditModeTrait
      *
      * @return $this
      */
-    protected function setCreditMode()
+    protected function setCreditMode(): self
     {
-        static::$isCredit = true;
+        self::$isCredit = true;
 
         return $this;
     }
@@ -46,20 +46,20 @@ trait CreditModeTrait
      *
      * @return bool
      */
-    protected static function isCreditMode()
+    protected static function isCreditMode(): bool
     {
-        return static::$isCredit;
+        return self::$isCredit;
     }
 
     /**
      * Convert a Price to Inverted if Credit Mode is Enabled
      *
-     * @param mixed $price
+     * @param float $price
      *
-     * @return float|int
+     * @return float
      */
-    protected static function parsePrice($price)
+    protected static function parsePrice(float $price): float
     {
-        return static::$isCredit ? (-1 * $price) : $price;
+        return self::$isCredit ? (-1 * $price) : $price;
     }
 }

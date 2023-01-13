@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -68,14 +68,14 @@ class CreditNote extends AbstractObject
      *
      * @var string
      */
-    public static $extraFieldsType = "facture";
+    public static string $extraFieldsType = "facture";
 
     /**
      * Type for Lines Extra Fields
      *
      * @var string
      */
-    public static $extraLineFieldsType = "facturedet";
+    public static string $extraLineFieldsType = "facturedet";
 
     //====================================================================//
     // Dolibarr Type
@@ -89,12 +89,12 @@ class CreditNote extends AbstractObject
     /**
      * @var array
      */
-    public static $dolibarrTypes = array(2);
+    public static array $dolibarrTypes = array(2);
 
     /**
      * @var Facture
      */
-    protected $object;
+    protected object $object;
 
     //====================================================================//
     // Object Definition Parameters
@@ -105,28 +105,28 @@ class CreditNote extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $DISABLED = true;
+    protected static bool $disabled = true;
 
     /**
      * Object Name (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Customer Credit Note";
+    protected static string $name = "Customer Credit Note";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Customers Credit Note Object";
+    protected static string $description = "Dolibarr Customers Credit Note Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-eur";
+    protected static string $ico = "fa fa-eur";
 
     //====================================================================//
     // Class Constructor
@@ -156,7 +156,7 @@ class CreditNote extends AbstractObject
         Splash::translator()->Load("objects@local");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("CreditNotes");
+        static::$name = $langs->trans("CreditNotes");
         //====================================================================//
         //  Enable Credit Notes Mode for Prices
         self::setCreditMode();
@@ -165,12 +165,12 @@ class CreditNote extends AbstractObject
     /**
      * {@inheritdoc}
      */
-    public static function getIsDisabled()
+    public static function isDisabled(): bool
     {
         if (Splash::isDebugMode()) {
             return false;
         }
 
-        return static::$DISABLED;
+        return static::$disabled;
     }
 }

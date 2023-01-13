@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,23 +25,24 @@ trait ContactsTrait
      *
      * @return void
      */
-    protected function buildContactsFields()
+    protected function buildContactsFields(): void
     {
         global $langs;
 
         //====================================================================//
         // Billing Address
-        $this->fieldsFactory()->create((string) self::objects()->Encode("Address", SPL_T_ID))
-            ->Identifier("BILLING")
-            ->Name($langs->trans("TypeContact_commande_external_BILLING"))
-            ->MicroData("http://schema.org/Order", "billingAddress");
-
+        $this->fieldsFactory()->create((string) self::objects()->encode("Address", SPL_T_ID))
+            ->identifier("BILLING")
+            ->name($langs->trans("TypeContact_commande_external_BILLING"))
+            ->microData("http://schema.org/Order", "billingAddress")
+        ;
         //====================================================================//
         // Shipping Address
-        $this->fieldsFactory()->create((string) self::objects()->Encode("Address", SPL_T_ID))
-            ->Identifier("SHIPPING")
-            ->Name($langs->trans("TypeContact_commande_external_SHIPPING"))
-            ->MicroData("http://schema.org/Order", "orderDelivery");
+        $this->fieldsFactory()->create((string) self::objects()->encode("Address", SPL_T_ID))
+            ->identifier("SHIPPING")
+            ->name($langs->trans("TypeContact_commande_external_SHIPPING"))
+            ->microData("http://schema.org/Order", "orderDelivery")
+        ;
     }
 
     /**
@@ -52,7 +53,7 @@ trait ContactsTrait
      *
      * @return void
      */
-    protected function getContactsFields($key, $fieldName)
+    protected function getContactsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -61,7 +62,10 @@ trait ContactsTrait
             case 'BILLING':
                 $contactsArray = $this->object->liste_contact(-1, 'external', 1, $fieldName);
                 if (is_array($contactsArray) && !empty($contactsArray)) {
-                    $this->out[$fieldName] = self::objects()->Encode("Address", array_shift($contactsArray));
+                    /** @var int[] $contactsArray  */
+                    $this->out[$fieldName] = self::objects()
+                        ->encode("Address", (string) array_shift($contactsArray))
+                    ;
                 } else {
                     $this->out[$fieldName] = null;
                 }
@@ -77,12 +81,12 @@ trait ContactsTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setContactsFields($fieldName, $fieldData)
+    protected function setContactsFields(string $fieldName, ?string $fieldData)
     {
         if (!in_array($fieldName, array('SHIPPING', 'BILLING'), true)) {
             return;
@@ -93,13 +97,14 @@ trait ContactsTrait
         // Load Current Contact
         $contactsArray = $this->object->liste_contact(-1, 'external', 0, $fieldName);
         if (is_array($contactsArray) && !empty($contactsArray)) {
+            /** @var array[] $contactsArray  */
             $current = array_shift($contactsArray);
         } else {
             $current = null;
         }
         //====================================================================//
         // Compare to Expected
-        $expected = self::objects()->Id($fieldData);
+        $expected = self::objects()->id((string) $fieldData);
         if ($current && ($current["id"] == $expected)) {
             return;
         }

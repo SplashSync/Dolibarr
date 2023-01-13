@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,29 +29,29 @@ trait CustomerTrait
      *
      * @var null|int
      */
-    private $socId;
+    private ?int $socId;
 
     /**
      * Build Fields using FieldFactory
      *
      * @return void
      */
-    protected function buildCustomerFields()
+    protected function buildCustomerFields(): void
     {
         global $langs;
 
         //====================================================================//
         // Customer Object Link
-        $this->fieldsFactory()->create((string) self::objects()->Encode("ThirdParty", SPL_T_ID))
-            ->Identifier("socid")
-            ->Name($langs->trans("Company"));
-
+        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+            ->identifier("socid")
+            ->name($langs->trans("Company"))
+        ;
         //====================================================================//
         // Metadata are Specific to Object Type (Order/Invoice)
         if ($this instanceof Order) {
-            $this->fieldsFactory()->MicroData("http://schema.org/Organization", "ID");
+            $this->fieldsFactory()->microData("http://schema.org/Organization", "ID");
         } else {
-            $this->fieldsFactory()->MicroData("http://schema.org/Invoice", "customer");
+            $this->fieldsFactory()->microData("http://schema.org/Invoice", "customer");
         }
 
         //====================================================================//
@@ -91,24 +91,24 @@ trait CustomerTrait
     /**
      * Init Customer SocId with Guest Mode Management
      *
-     * @param array|arrayObject $receivedData Received Data
+     * @param array $receivedData Received Data
      *
      * @return void
      */
-    protected function doCustomerDetection($receivedData)
+    protected function doCustomerDetection(array $receivedData): void
     {
         //====================================================================//
         // Order/Invoice Create Mode => Init SocId detection
         $this->initCustomerDetection();
-
         //====================================================================//
         // Standard Mode => A SocId is Given
-        if (isset($receivedData["socid"]) && !empty(self::objects()->id($receivedData["socid"]))) {
-            $this->setSimple("socid", self::objects()->id($receivedData["socid"]));
+        /** @var null|scalar $socId */
+        $socId = $receivedData["socid"] ?? null;
+        if ($socId && !empty(self::objects()->id((string) $socId))) {
+            $this->setSimple("socid", self::objects()->id((string) $socId));
 
             return;
         }
-
         //====================================================================//
         // Guest Mode is Disabled => Error
         if (!$this->isAllowedGuest()) {
@@ -116,7 +116,6 @@ trait CustomerTrait
 
             return;
         }
-
         //====================================================================//
         // Guest Mode => Detect SocId in Guest Mode
         $this->setSimple("socid", $this->getGuestCustomer($receivedData));
@@ -138,7 +137,9 @@ trait CustomerTrait
             //====================================================================//
             // ThirdParty Id
             case 'socid':
-                $this->out[$fieldName] = self::objects()->Encode("ThirdParty", $this->object->{$fieldName});
+                $this->out[$fieldName] = self::objects()
+                    ->encode("ThirdParty", (string) $this->object->socid)
+                ;
 
                 break;
             default:
@@ -151,12 +152,12 @@ trait CustomerTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setCustomerFields($fieldName, $fieldData)
+    protected function setCustomerFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -167,7 +168,7 @@ trait CustomerTrait
                 //====================================================================//
                 // Standard Mode => A SocId is Required
                 if (!$this->isAllowedGuest()) {
-                    $this->setSimple($fieldName, self::objects()->Id($fieldData));
+                    $this->setSimple($fieldName, self::objects()->id((string) $fieldData));
 
                     break;
                 }

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,45 +37,46 @@ trait MetaTrait
         //====================================================================//
         // Active
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("status")
-            ->Name($langs->trans("Active"))
-            ->Group("Meta")
-            ->MicroData("http://schema.org/Organization", "active")
-            ->isListed();
-
+            ->identifier("status")
+            ->name($langs->trans("Active"))
+            ->group("Meta")
+            ->microData("http://schema.org/Organization", "active")
+            ->isListed()
+        ;
         if (Local::dolVersionCmp("3.6.0") >= 0) {
             //====================================================================//
             // isProspect
             $this->fieldsFactory()->create(SPL_T_BOOL)
-                ->Identifier("prospect")
-                ->Name($langs->trans("Prospect"))
-                ->Group("Meta")
-                ->MicroData("http://schema.org/Organization", "prospect");
+                ->identifier("prospect")
+                ->name($langs->trans("Prospect"))
+                ->group("Meta")
+                ->microData("http://schema.org/Organization", "prospect")
+            ;
         }
-
         //====================================================================//
         // isCustomer
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("client")
-            ->Name($langs->trans("Customer"))
-            ->Group("Meta")
-            ->MicroData("http://schema.org/Organization", "customer");
-
+            ->identifier("client")
+            ->name($langs->trans("Customer"))
+            ->group("Meta")
+            ->microData("http://schema.org/Organization", "customer")
+        ;
         //====================================================================//
         // isSupplier
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("fournisseur")
-            ->Name($langs->trans("Supplier"))
-            ->Group("Meta")
-            ->MicroData("http://schema.org/Organization", "supplier");
-
+            ->identifier("fournisseur")
+            ->name($langs->trans("Supplier"))
+            ->group("Meta")
+            ->microData("http://schema.org/Organization", "supplier")
+        ;
         //====================================================================//
         // isVAT
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("tva_assuj")
-            ->Name($langs->trans("VATIsUsed"))
-            ->Group("Meta")
-            ->MicroData("http://schema.org/Organization", "UseVAT");
+            ->identifier("tva_assuj")
+            ->name($langs->trans("VATIsUsed"))
+            ->group("Meta")
+            ->microData("http://schema.org/Organization", "UseVAT")
+        ;
     }
 
     /**
@@ -86,7 +87,7 @@ trait MetaTrait
      *
      * @return void
      */
-    private function getMetaFields($key, $fieldName)
+    private function getMetaFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -125,13 +126,13 @@ trait MetaTrait
      *
      * @return void
      */
-    private function setMetaFields($fieldName, $fieldData)
+    private function setMetaFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'status':
             case 'tva_assuj':
                 $this->setSimple($fieldName, $fieldData);

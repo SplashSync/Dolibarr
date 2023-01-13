@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,14 +25,14 @@ trait BarcodeTrait
     /**
      * @var string
      */
-    private $defaultBarcodeType;
+    private string $defaultBarcodeType;
 
     /**
      * List of Integer barcodes Types
      *
-     * @var array
+     * @var string[]
      */
-    private static $intBarcodes = array(
+    private static array $intBarcodes = array(
         "EAN8", "EAN13", "UPC",
         "ISBN", "C39",
     );
@@ -40,9 +40,9 @@ trait BarcodeTrait
     /**
      * List of Known Barcodes Schemas
      *
-     * @var array
+     * @var array<string, string>
      */
-    private static $knownBarcodes = array(
+    private static array $knownBarcodes = array(
         "EAN8" => "gtin8",
         "EAN13" => "gtin13",
         "UPC" => "gtin12",
@@ -65,6 +65,7 @@ trait BarcodeTrait
             ->name($langs->trans("BarcodeValue"))
             ->description($langs->trans("BarcodeValue")." (".$this->getDefaultBarcodeType().")")
             ->microData("http://schema.org/Product", $this->getBarcodeSchema())
+            ->isIndexed()
         ;
     }
 
@@ -76,7 +77,7 @@ trait BarcodeTrait
      *
      * @return void
      */
-    protected function getBarcodeFields($key, $fieldName)
+    protected function getBarcodeFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -97,18 +98,18 @@ trait BarcodeTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setBarcodeFields($fieldName, $fieldData)
+    protected function setBarcodeFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'barcode':
                 $this->setSimple($fieldName, $fieldData);
 
@@ -124,7 +125,7 @@ trait BarcodeTrait
      *
      * @return string
      */
-    private function getDefaultBarcodeType()
+    private function getDefaultBarcodeType(): string
     {
         global $db, $conf;
         //====================================================================//
@@ -155,14 +156,14 @@ trait BarcodeTrait
      *
      * @return string
      */
-    private function getBarcodeFormat()
+    private function getBarcodeFormat(): string
     {
         //====================================================================//
         // Get Default Bar Code Type Name
         $dfType = $this->getDefaultBarcodeType();
         //====================================================================//
         // Check if Int Barcode Type
-        if (empty($dfType) || !in_array($dfType, static::$intBarcodes, true)) {
+        if (empty($dfType) || !in_array($dfType, self::$intBarcodes, true)) {
             return SPL_T_VARCHAR;
         }
 
@@ -174,17 +175,17 @@ trait BarcodeTrait
      *
      * @return string
      */
-    private function getBarcodeSchema()
+    private function getBarcodeSchema(): string
     {
         //====================================================================//
         // Get Default Bar Code Type Name
         $dfType = $this->getDefaultBarcodeType();
         //====================================================================//
         // Check if Int Barcode Type
-        if (empty($dfType) || !isset(static::$knownBarcodes[$dfType])) {
+        if (empty($dfType) || !isset(self::$knownBarcodes[$dfType])) {
             return "qrcode";
         }
 
-        return static::$knownBarcodes[$dfType];
+        return self::$knownBarcodes[$dfType];
     }
 }

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use DateTime;
+use Exception;
 use Facture;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Objects\CreditNote;
@@ -32,9 +33,9 @@ trait CRUDTrait
      *
      * @param string $objectId Object id
      *
-     * @return Facture|false
+     * @return null|Facture
      */
-    public function load($objectId)
+    public function load(string $objectId): ?Facture
     {
         global $db, $user, $conf;
         //====================================================================//
@@ -43,7 +44,7 @@ trait CRUDTrait
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Init Object
@@ -54,20 +55,20 @@ trait CRUDTrait
             $this->catchDolibarrErrors($object);
             Splash::log()->errTrace("Current Entity is : ".$conf->entity);
 
-            return Splash::log()->errTrace("Unable to load Customer Invoice (".$objectId.").");
+            return Splash::log()->errNull("Unable to load Customer Invoice (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace("Unable to load Customer Invoice (".$objectId.").");
+            return Splash::log()->errNull("Unable to load Customer Invoice (".$objectId.").");
         }
         //====================================================================//
         // Check Object Type Access (Invoices| Credit Notes)
         if (!in_array((int) $object->type, static::$dolibarrTypes, true)) {
-            return Splash::log()->errTrace("Wrong Invoice Object Type.");
+            return Splash::log()->errNull("Wrong Invoice Object Type.");
         }
         $object->fetch_lines();
-        $this->loadPayments($objectId);
+        $this->loadPayments((int) $objectId);
         $this->initCustomerDetection();
 
         return $object;
@@ -76,9 +77,11 @@ trait CRUDTrait
     /**
      * Create Request Object
      *
-     * @return Facture|false
+     * @throws Exception
+     *
+     * @return null|Facture
      */
-    public function create()
+    public function create(): ?Facture
     {
         global $db, $user;
         //====================================================================//
@@ -86,13 +89,13 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Check Order Date is given
-        if (empty($this->in["date"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
+        if (empty($this->in["date"]) || !is_string($this->in["date"])) {
+            return Splash::log()->errNull("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Init Object
@@ -118,7 +121,7 @@ trait CRUDTrait
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace("Unable to create new Customer Invoice.");
+            return Splash::log()->errNull("Unable to create new Customer Invoice.");
         }
 
         return $this->object;
@@ -129,9 +132,9 @@ trait CRUDTrait
      *
      * @param bool $needed Is This Update Needed
      *
-     * @return false|string Object Id
+     * @return null|string Object ID
      */
-    public function update($needed)
+    public function update(bool $needed): ?string
     {
         global $user;
         //====================================================================//
@@ -143,14 +146,14 @@ trait CRUDTrait
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Update Object
         if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace("Unable to Update Customer Invoice (".$this->object->id.")") ;
+            return Splash::log()->errNull("Unable to Update Customer Invoice (".$this->object->id.")") ;
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -165,15 +168,11 @@ trait CRUDTrait
     }
 
     /**
-     * Delete requested Object
-     *
-     * @param string $objectId Object Id.  If NULL, Object needs to be created.
-     *
-     * @return bool
+     * {@inheritDoc}
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function delete($objectId = null)
+    public function delete(string $objectId): bool
     {
         global $db,$user,$conf;
         //====================================================================//
@@ -229,10 +228,10 @@ trait CRUDTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
-        if (!isset($this->object->id)) {
-            return false;
+        if (empty($this->object->id)) {
+            return null;
         }
 
         return (string) $this->object->id;
@@ -243,7 +242,7 @@ trait CRUDTrait
      *
      * @return void
      */
-    public function updateObjectPdf()
+    public function updateObjectPdf(): void
     {
         global $conf, $langs;
         //====================================================================//

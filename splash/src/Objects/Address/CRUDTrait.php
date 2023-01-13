@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,9 +30,9 @@ trait CRUDTrait
      *
      * @param string $objectId Object id
      *
-     * @return Contact|false
+     * @return null|Contact
      */
-    public function load($objectId)
+    public function load(string $objectId): ?Contact
     {
         global $db;
         //====================================================================//
@@ -46,18 +46,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->errTrace("Unable to load Contact Address (".$objectId.").");
+            return Splash::log()->errNull("Unable to load Contact Address (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace("Unable to load Contact Address (".$objectId.").");
-        }
-
-        //====================================================================//
-        // Fix V11
-        if (!isset($object->socid)) {
-            $object->socid = 0;
+            return Splash::log()->errNull("Unable to load Contact Address (".$objectId.").");
         }
 
         return $object;
@@ -66,9 +60,9 @@ trait CRUDTrait
     /**
      * Create Request Object
      *
-     * @return Contact|false
+     * @return null|Contact
      */
-    public function create()
+    public function create(): ?Contact
     {
         global $db, $user;
         //====================================================================//
@@ -77,12 +71,12 @@ trait CRUDTrait
         //====================================================================//
         // Check Customer Name is given
         if (empty($this->in["firstname"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "firstname");
+            return Splash::log()->errNull("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "firstname");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Init Object
@@ -95,12 +89,7 @@ trait CRUDTrait
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                "Unable to create new Contact Address. "
-            );
+            return Splash::log()->errNull("Unable to create new Contact Address.");
         }
 
         return $this->object;
@@ -111,9 +100,9 @@ trait CRUDTrait
      *
      * @param bool $needed Is This Update Needed
      *
-     * @return false|string Object Id
+     * @return null|string Object ID
      */
-    public function update($needed)
+    public function update(bool $needed): ?string
     {
         global $user;
         //====================================================================//
@@ -125,19 +114,14 @@ trait CRUDTrait
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Update Object
         if ($this->object->update($this->object->id, $user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to Update Contact Address (".$this->object->id.")"
-            ) ;
+            return Splash::log()->errNull(" Unable to Update Contact Address (".$this->object->id.")");
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -149,13 +133,9 @@ trait CRUDTrait
     }
 
     /**
-     * Delete requested Object
-     *
-     * @param string $objectId Object Id.  If NULL, Object needs to be created.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function delete($objectId = null)
+    public function delete(string $objectId): bool
     {
         global $db,$user;
         //====================================================================//
@@ -176,12 +156,7 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Unable to delete Product (".$objectId.")."
-            );
+            return Splash::log()->err(" Unable to delete Product (".$objectId.").");
         }
         //====================================================================//
         // Delete Object
@@ -195,10 +170,10 @@ trait CRUDTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
         if (!isset($this->object->id)) {
-            return false;
+            return null;
         }
 
         return (string) $this->object->id;

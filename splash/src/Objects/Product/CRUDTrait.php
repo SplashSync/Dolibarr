@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,9 +32,9 @@ trait CRUDTrait
      * @param string $objectId Dolibarr Product Id
      * @param bool   $force    Force Loading of Variant Base Product
      *
-     * @return false|Product
+     * @return null|Product
      */
-    public function load($objectId, $force = false)
+    public function load(string $objectId, bool $force = false): ?Product
     {
         global $db;
         //====================================================================//
@@ -43,7 +43,7 @@ trait CRUDTrait
         //====================================================================//
         // Loading Variant Parent Product is Forbidden!
         if (!$force && VariantsManager::hasProductVariants((int) $objectId)) {
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, Splash::trans("ProductIsVariantBase"));
+            return Splash::log()->errNull(Splash::trans("ProductIsVariantBase"));
         }
         //====================================================================//
         // Init Object
@@ -53,12 +53,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->errTrace("Unable to load Product (".$objectId.").");
+            return Splash::log()->errNull("Unable to load Product (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace("Unable to load Product (".$objectId.").");
+            return Splash::log()->errNull("Unable to load Product (".$objectId.").");
         }
         //====================================================================//
         // Load Product Combinations
@@ -74,9 +74,11 @@ trait CRUDTrait
     /**
      * Create Request Object
      *
-     * @return false|Product
+     * @return null|Product
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function create()
+    public function create(): ?Product
     {
         global $user, $langs;
         //====================================================================//
@@ -84,19 +86,33 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Check Product Ref is given
-        if (empty($this->in["ref"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, $langs->trans("ProductRef"));
+        if (empty($this->in["ref"]) || !is_string($this->in["ref"])) {
+            return Splash::log()->errNull(
+                "ErrLocalFieldMissing",
+                __CLASS__,
+                __FUNCTION__,
+                $langs->trans("ProductRef")
+            );
         }
         //====================================================================//
         // Check Product Label is given
         $labelKey = self::isVariantEnabled() ? "base_label" : "label";
-        if (empty($this->in[$labelKey])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, $langs->trans("ProductLabel"));
+        if (empty($this->in[$labelKey]) || !is_string($this->in[$labelKey])) {
+            return Splash::log()->errNull(
+                "ErrLocalFieldMissing",
+                __CLASS__,
+                __FUNCTION__,
+                $langs->trans("ProductLabel")
+            );
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull(
+                "ErrLocalUserMissing",
+                __CLASS__,
+                __FUNCTION__
+            );
         }
 
         //====================================================================//
@@ -111,57 +127,9 @@ trait CRUDTrait
     }
 
     /**
-     * Update Request Object
-     *
-     * @param bool $needed Is This Update Needed
-     *
-     * @return false|string Object Id
+     * {@inheritDoc}
      */
-    public function update($needed)
-    {
-        global $user;
-        //====================================================================//
-        // Stack Trace
-        Splash::log()->trace();
-        if (!$needed) {
-            Splash::log()->deb("Product Update not Needed");
-
-            return $this->getObjectIdentifier();
-        }
-        //====================================================================//
-        // LOAD USER FROM DATABASE
-        if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
-        }
-        //====================================================================//
-        // Update Product Object
-        if ($this->object->update($this->object->id, $user) <= 0) {
-            $this->catchDolibarrErrors();
-
-            return Splash::log()->errTrace("Unable to Update Product (".$this->object->id.")");
-        }
-        //====================================================================//
-        // Update Variant Product Specific Objects & Return Object Id
-        if (false == $this->updateVariantProduct()) {
-            return false;
-        }
-        //====================================================================//
-        // Update Object Extra Fields
-        if ($this->object->insertExtraFields() <= 0) {
-            $this->catchDolibarrErrors();
-        }
-
-        return $this->getObjectIdentifier();
-    }
-
-    /**
-     * Delete requested Object
-     *
-     * @param string $objectId Object Id.  If NULL, Object needs to be created.
-     *
-     * @return bool
-     */
-    public function delete($objectId = null)
+    public function delete(string $objectId): bool
     {
         global $db,$user;
         //====================================================================//
@@ -182,7 +150,7 @@ trait CRUDTrait
         // Check Object Entity Access (MultiCompany)
         $object->entity = 0;
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace("Unable to Delete Product (".$objectId.").");
+            return Splash::log()->err("Unable to Delete Product (".$objectId.").");
         }
         //====================================================================//
         // Load Product Combination
@@ -217,13 +185,53 @@ trait CRUDTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
-        if (!isset($this->object->id)) {
-            return false;
+        if (empty($this->object->id)) {
+            return null;
         }
 
         return (string) $this->object->id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function update(bool $needed): ?string
+    {
+        global $user;
+        //====================================================================//
+        // Stack Trace
+        Splash::log()->trace();
+        if (!$needed) {
+            Splash::log()->deb("Product Update not Needed");
+
+            return $this->getObjectIdentifier();
+        }
+        //====================================================================//
+        // LOAD USER FROM DATABASE
+        if (!($user instanceof User) || empty($user->login)) {
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+        }
+        //====================================================================//
+        // Update Product Object
+        if ($this->object->update($this->object->id, $user) <= 0) {
+            $this->catchDolibarrErrors();
+
+            return Splash::log()->errNull("Unable to Update Product (".$this->object->id.")");
+        }
+        //====================================================================//
+        // Update Variant Product Specific Objects & Return Object Id
+        if (!$this->updateVariantProduct()) {
+            return null;
+        }
+        //====================================================================//
+        // Update Object Extra Fields
+        if ($this->object->insertExtraFields() <= 0) {
+            $this->catchDolibarrErrors();
+        }
+
+        return $this->getObjectIdentifier();
     }
 
     /**
@@ -233,9 +241,9 @@ trait CRUDTrait
      * @param string $label    Product Label
      * @param bool   $triggers Product Label
      *
-     * @return false|Product
+     * @return null|Product
      */
-    protected function createSimpleProduct($ref, $label, $triggers = true)
+    protected function createSimpleProduct(string $ref, string $label, bool $triggers = true): ?Product
     {
         global $db, $user;
         //====================================================================//
@@ -264,7 +272,7 @@ trait CRUDTrait
         if ($product->create($user, $triggers ? 0 : 1) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->err("ErrLocalTpl", __CLASS__, __FUNCTION__, "Unable to create new Product. ");
+            return Splash::log()->errNull("Unable to create new Product.");
         }
 
         return $product;

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,35 +30,35 @@ class AttributesManager
     /**
      * Array Of Products Attributes
      *
-     * @var array
+     * @var null|array
      */
-    private static $attributesCache;
+    private static ?array $attributesCache;
 
     /**
      * Array Of Products Attributes Values
      *
      * @var array
      */
-    private static $attributesValuesCache = array();
+    private static array $attributesValuesCache = array();
 
     /**
      * Service Constructor
      *
-     * @return void
+     * @return ProductAttribute[]
      */
-    public static function init(): void
+    public static function init(): array
     {
         global $db;
 
-        if (isset(static::$attributesCache)) {
-            return;
+        if (!isset(self::$attributesCache)) {
+            //====================================================================//
+            // Load Attributes Cache
+            dol_include_once("/variants/class/ProductAttribute.class.php");
+            dol_include_once("/variants/class/ProductAttributeValue.class.php");
+            self::$attributesCache = (new ProductAttribute($db))->fetchAll();
         }
 
-        //====================================================================//
-        // Load Attributes Cache
-        dol_include_once("/variants/class/ProductAttribute.class.php");
-        dol_include_once("/variants/class/ProductAttributeValue.class.php");
-        static::$attributesCache = (new ProductAttribute($db))->fetchAll();
+        return self::$attributesCache;
     }
 
     /**
@@ -73,12 +73,12 @@ class AttributesManager
         global $db;
         //====================================================================//
         // Ensure Service Init
-        self::init();
+        $attributes = self::init();
         //====================================================================//
         // Load Attributes Values Cache
         $attributeValue = new ProductAttributeValue($db);
-        foreach (static::$attributesCache as $attribute) {
-            static::$attributesValuesCache[$attribute->id] = $attributeValue->fetchAllByProductAttribute($attributeId);
+        foreach ($attributes as $attribute) {
+            self::$attributesValuesCache[$attribute->id] = $attributeValue->fetchAllByProductAttribute($attributeId);
         }
     }
 
@@ -93,11 +93,10 @@ class AttributesManager
     {
         //====================================================================//
         // Ensure Service Init
-        self::init();
-
+        $attributes = self::init();
         //====================================================================//
         // Walk on Attributes Cache
-        foreach (static::$attributesCache as $attribute) {
+        foreach ($attributes as $attribute) {
             if ($attributeId == $attribute->id) {
                 return $attribute;
             }
@@ -117,11 +116,10 @@ class AttributesManager
     {
         //====================================================================//
         // Ensure Service Init
-        self::init();
-
+        $attributes = self::init();
         //====================================================================//
         // Walk on Attributes Cache
-        foreach (static::$attributesCache as $attribute) {
+        foreach ($attributes as $attribute) {
             if (strtolower($attributeCode) == strtolower($attribute->ref)) {
                 return $attribute;
             }
@@ -143,10 +141,6 @@ class AttributesManager
         global $db, $user;
 
         //====================================================================//
-        // Ensure Service Init
-        self::init();
-
-        //====================================================================//
         // Ensure Attribute Code Doesnt' Already Exists
         $existingAttribute = self::getAttributeByCode($attributeCode);
         if (null !== $existingAttribute) {
@@ -165,7 +159,7 @@ class AttributesManager
 
         //====================================================================//
         // Reload Load Attributes Cache
-        static::$attributesCache = $attribute->fetchAll();
+        self::$attributesCache = $attribute->fetchAll();
 
         return $attribute;
     }
@@ -257,7 +251,7 @@ class AttributesManager
         }
         //====================================================================//
         // Reload Load Attributes Cache
-        static::$attributesCache = $attribute->fetchAll();
+        self::$attributesCache = $attribute->fetchAll();
 
         return true;
     }
@@ -277,12 +271,12 @@ class AttributesManager
         self::loadAttributeValues($attribute->id);
         //====================================================================//
         // Safety Check
-        if (!is_array(static::$attributesValuesCache[$attribute->id])) {
+        if (!is_array(self::$attributesValuesCache[$attribute->id])) {
             return null;
         }
         //====================================================================//
         // Walk on Attributes Cache
-        foreach (static::$attributesValuesCache[$attribute->id] as $value) {
+        foreach (self::$attributesValuesCache[$attribute->id] as $value) {
             if ($valueId == $value->id) {
                 return $value;
             }
@@ -306,12 +300,12 @@ class AttributesManager
         self::loadAttributeValues($attribute->id);
         //====================================================================//
         // Safety Check
-        if (!is_array(static::$attributesValuesCache[$attribute->id])) {
+        if (!is_array(self::$attributesValuesCache[$attribute->id])) {
             return null;
         }
         //====================================================================//
         // Walk on Attributes Cache
-        foreach (static::$attributesValuesCache[$attribute->id] as $value) {
+        foreach (self::$attributesValuesCache[$attribute->id] as $value) {
             if (strtolower($valueName) == strtolower($value->value)) {
                 return $value;
             }

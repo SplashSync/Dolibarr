@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +15,6 @@
 
 namespace   Splash\Local\Core;
 
-use ArrayObject;
 use EcmFiles;
 use EcmfilesLine;
 use Exception;
@@ -30,12 +29,12 @@ trait ImagesTrait
     /**
      * @var string
      */
-    private $minVersion = "6.0.0";
+    private string $minVersion = "6.0.0";
 
     /**
-     * @var array
+     * @var array<string, string>
      */
-    private $elementPath = array(
+    private array $elementPath = array(
         "product" => "produit",
         "commande" => "commande"
     );
@@ -43,29 +42,29 @@ trait ImagesTrait
     /**
      * @var array
      */
-    private $extensions = array( "gif", "jpg", "jpeg", "png", "bmp" );
+    private array $extensions = array( "gif", "jpg", "jpeg", "png", "bmp" );
 
     /**
      * @var string
      */
-    private $dolFilesDir;
+    private string $dolFilesDir;
 
     /**
      * @var string
      */
-    private $relFilesDir;
+    private string $relFilesDir;
 
     /**
      * @var bool
      */
-    private $imgUpdated;
+    private bool $imgUpdated = false;
 
     /**
      * Build Images FieldFactory
      *
      * @return void
      */
-    protected function buildImagesFields()
+    protected function buildImagesFields(): void
     {
         global $langs;
 
@@ -135,15 +134,18 @@ trait ImagesTrait
      * @param string $fieldName Field Identifier / Name
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function getImagesFields(string $key, string $fieldName)
+    protected function getImagesFields(string $key, string $fieldName): void
     {
         global $conf;
 
         //====================================================================//
         // Safety Check
         if (!isset($this->out)) {
-            $this->out = new ArrayObject();
+            $this->out = array();
         }
         //====================================================================//
         // Check if List field & Init List Array
@@ -159,10 +161,12 @@ trait ImagesTrait
         }
         //====================================================================//
         // Load Object Files Path
-        $entity = $this->object->entity ? $this->object->entity : $conf->entity;
+        $entity = $this->object->entity ?: $conf->entity;
         $element = $this->object->element;
-        $this->dolFilesDir = $conf->{$element}->multidir_output[$entity];
-
+        $this->dolFilesDir = "";
+        if ($conf->{$element}->multidir_output ?? false) {
+            $this->dolFilesDir = $conf->{$element}->multidir_output[$entity] ?? "";
+        }
         //====================================================================//
         // For backward compatibility
         if ('product' == $element && !empty($conf->global->PRODUCT_USE_OLD_PATH_FOR_PHOTO)) {
@@ -243,12 +247,12 @@ trait ImagesTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      */
-    protected function setImagesFields($fieldName, $fieldData)
+    protected function setImagesFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -270,21 +274,19 @@ trait ImagesTrait
         //====================================================================//
         // Verify Images List & Update if Needed
         $position = 1;
-        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
-            foreach ($fieldData as $imageData) {
-                //====================================================================//
-                // Check if Visible Image
-                if (isset($imageData['visible']) && empty($imageData['visible'])) {
-                    continue;
-                }
-                //====================================================================//
-                // Check if Cover Image
-                $isCover = isset($imageData['cover']) ? $imageData['cover'] : false;
-                //====================================================================//
-                // Update Item Line
-                $this->setImage($position, $imageData['image'], $isCover);
-                $position++;
+        foreach ($fieldData ?? array() as $imageData) {
+            //====================================================================//
+            // Check if Visible Image
+            if (isset($imageData['visible']) && empty($imageData['visible'])) {
+                continue;
             }
+            //====================================================================//
+            // Check if Cover Image
+            $isCover = $imageData['cover'] ?? false;
+            //====================================================================//
+            // Update Item Line
+            $this->setImage($position, $imageData['image'], $isCover);
+            $position++;
         }
 
         //====================================================================//
@@ -303,7 +305,7 @@ trait ImagesTrait
      *
      * @return void
      */
-    protected function updateFilesPath(string $element, $oldRef, $newRef)
+    protected function updateFilesPath(string $element, string $oldRef, string $newRef)
     {
         global $db;
 
@@ -348,6 +350,8 @@ trait ImagesTrait
      * @param string $fieldName
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getImagesArrayFromDir(string $fieldName)
     {
@@ -412,7 +416,9 @@ trait ImagesTrait
 
         //====================================================================//
         // Sort Image Array to Update Images Positions
-        ksort($this->out["images"]);
+        if (is_array($this->out["images"])) {
+            ksort($this->out["images"]);
+        }
     }
 
     /**
@@ -422,7 +428,7 @@ trait ImagesTrait
      *
      * @return void
      */
-    private function detectCoverImage(&$fileArray)
+    private function detectCoverImage(array &$fileArray): void
     {
         $hasCover = false;
         //====================================================================//
@@ -469,7 +475,7 @@ trait ImagesTrait
      *
      * @return bool
      */
-    private function setImage($position, $imageData, $isCover = false)
+    private function setImage(int $position, array $imageData, bool $isCover = false): bool
     {
         global $db;
 
@@ -507,7 +513,7 @@ trait ImagesTrait
             $newImageFile = Splash::file()->getFile($imageData["file"], $imageData["md5"]);
             //====================================================================//
             // File Imported => Write it Here
-            if (false == $newImageFile) {
+            if (!$newImageFile) {
                 return false;
             }
             //====================================================================//
@@ -539,10 +545,21 @@ trait ImagesTrait
      *
      * @return void
      */
-    private function deleteRemainingImages()
+    private function deleteRemainingImages(): void
     {
         global $db, $user;
 
+        //====================================================================//
+        // Safety Check
+        if (!is_array($this->out["images"])) {
+            return;
+        }
+        //====================================================================//
+        // Walk on Remaining Images
+        /**
+         * @var string $key
+         * @var array  $image
+         */
         foreach ($this->out["images"] as $key => $image) {
             $ecmImage = new EcmFiles($db);
             $ecmImage->fetch(0, '', $this->relFilesDir."/".$image["image"]["filename"]);
@@ -567,8 +584,19 @@ trait ImagesTrait
      *
      * @return void
      */
-    private function identifyImage(&$ecmImage, $imageData)
+    private function identifyImage(EcmFiles &$ecmImage, array $imageData): void
     {
+        //====================================================================//
+        // Safety Check
+        if (!is_array($this->out["images"])) {
+            return;
+        }
+        //====================================================================//
+        // Walk on Current Images
+        /**
+         * @var string $key
+         * @var array  $currentImage
+         */
         foreach ($this->out["images"] as $key => $currentImage) {
             if (($currentImage["image"]["md5"] === $imageData["md5"])
                 && ($currentImage["image"]["filename"] === $imageData["filename"])) {
@@ -590,7 +618,7 @@ trait ImagesTrait
      *
      * @return void
      */
-    private function setEcmFileData($ecmImage, $position, $imageData, $isCover)
+    private function setEcmFileData(EcmFiles $ecmImage, int $position, array $imageData, bool $isCover): void
     {
         global $user, $conf;
 
@@ -630,7 +658,7 @@ trait ImagesTrait
      *
      * @return bool
      */
-    private function saveEcmFile($ecmImage, $position)
+    private function saveEcmFile(EcmFiles $ecmImage, int $position): bool
     {
         global $user;
 
@@ -671,7 +699,7 @@ trait ImagesTrait
      *
      * @return bool
      */
-    private function isExistingEcmFile($fullPath)
+    private function isExistingEcmFile(string $fullPath): bool
     {
         global $db, $user;
         $ecmFile = new EcmFiles($db);

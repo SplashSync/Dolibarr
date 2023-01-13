@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,7 +32,7 @@ class UpdatedCustomers extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_M,
         "Header" => true,
         "Footer" => false
@@ -47,21 +47,21 @@ class UpdatedCustomers extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "BoxLastCustomers";
+    protected static string $name = "BoxLastCustomers";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "BoxTitleLastModifiedCustomers";
+    protected static string $description = "BoxTitleLastModifiedCustomers";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-users";
+    protected static string $ico = "fa fa-users";
 
     //====================================================================//
     // General Class Variables
@@ -70,7 +70,7 @@ class UpdatedCustomers extends AbstractWidget
     /**
      * @var int
      */
-    private $maxItems = 10;
+    private int $maxItems = 10;
 
     //====================================================================//
     // Class Main Functions
@@ -89,7 +89,7 @@ class UpdatedCustomers extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         global $langs;
         $langs->load("admin");
@@ -97,19 +97,19 @@ class UpdatedCustomers extends AbstractWidget
         //====================================================================//
         // Max Number of Entities
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("max")
-            ->Name($langs->trans("MaxNbOfLinesForBoxes"))
-            ->Description($langs->trans("BoxTitleLastModifiedCustomers"));
-
+            ->identifier("max")
+            ->name($langs->trans("MaxNbOfLinesForBoxes"))
+            ->description($langs->trans("BoxTitleLastModifiedCustomers"))
+        ;
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->publish();
+        return $this->fieldsFactory()->publish() ?? array();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = null)
+    public function get(array $parameters = null): ?array
     {
         //====================================================================//
         // Stack Trace
@@ -154,23 +154,23 @@ class UpdatedCustomers extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         global $langs;
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$NAME));
+        return html_entity_decode($langs->trans(static::$name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDesc()
+    public function getDesc(): string
     {
         global $langs;
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        return html_entity_decode($langs->trans(static::$description));
     }
 
     //====================================================================//

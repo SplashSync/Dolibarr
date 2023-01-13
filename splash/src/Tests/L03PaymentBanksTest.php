@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +21,7 @@ use Facture;
 use Splash\Client\Splash;
 use Splash\Components\FieldsFactory;
 use Splash\Local\Local;
+use Splash\Local\Services\PaymentMethods;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
@@ -31,16 +32,17 @@ class L03PaymentBanksTest extends ObjectsCase
     use \Splash\Models\Objects\ListsTrait;
     use \Splash\Local\Core\ErrorParserTrait;
     use \Splash\Local\Core\CreditModeTrait;
+    use \Splash\Models\Objects\SimpleFieldsTrait;
     use \Splash\Local\Objects\Invoice\PaymentsTrait;
 
     /** @var array */
-    protected $in;
+    protected array $in;
 
     /** @var array */
-    protected $out;
+    protected array $out;
 
     /** @var Facture */
-    protected $object;
+    protected Facture $object;
 
     /**
      * @dataProvider paymentsTypesProvider
@@ -88,21 +90,23 @@ class L03PaymentBanksTest extends ObjectsCase
             ->get($objectId, array("mode@payments", "number@payments", "amount@payments"));
         $this->assertNotEmpty($objectData);
         $this->assertIsArray($objectData);
+        $this->assertIsArray($objectData["payments"]);
 
         //====================================================================//
         //   verify Tax Values
         foreach ($objectData["payments"] as $data) {
+            $this->assertIsArray($data);
             $this->assertEquals($splashMethod, $data["mode"]);
         }
 
         //====================================================================//
         //   Load Invoice Payments
-        $this->loadPayments($objectId, ("SupplierInvoice" == $objectType));
+        $this->loadPayments((int) $objectId, ("SupplierInvoice" == $objectType));
 
         //====================================================================//
         //   Verify Payments Are in Correct Bank Account
         foreach ($this->payments as $payment) {
-            $this->assertEquals($account->rowid, $payment->baid);
+            $this->assertEquals($account->id, $payment->baid);
             $this->assertEquals($paymentType, $payment->code);
         }
     }
@@ -125,7 +129,7 @@ class L03PaymentBanksTest extends ObjectsCase
         $account = new Account($db);
 
         $account->fetch(0, $paymentType);
-        if ($account->rowid) {
+        if ($account->id) {
             $this->assertNotEmpty($account);
             $this->assertEquals($paymentType, $account->ref);
             $this->assertEquals($paymentType, $account->label);
@@ -147,7 +151,7 @@ class L03PaymentBanksTest extends ObjectsCase
         $this->assertGreaterThan(0, $account->create($user, 0));
         $this->assertEquals($paymentType, $account->ref);
         $this->assertEquals($paymentType, $account->label);
-        $account->rowid = $account->id;
+        $account->id = $account->id;
 
         return $account;
     }
@@ -166,11 +170,11 @@ class L03PaymentBanksTest extends ObjectsCase
 
         require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
 
-        $this->assertNotEmpty($account->rowid);
+        $this->assertNotEmpty($account->id);
 
         //====================================================================//
         //   Identify Payment Method Id
-        $paymentMethodId = $this->identifyPaymentType($paymentType);
+        $paymentMethodId = PaymentMethods::getDoliId($paymentType);
         $this->assertNotEmpty($paymentMethodId);
 
         //====================================================================//
@@ -186,11 +190,12 @@ class L03PaymentBanksTest extends ObjectsCase
         //====================================================================//
         //   Map Payment Method to Dedicated Account
         $parameterName = "SPLASH_BANK_FOR_".$paymentMethodId;
-        dolibarr_set_const($db, $parameterName, (string) $account->rowid, 'chaine', 0, '', $conf->entity);
+        dolibarr_set_const($db, $parameterName, (string) $account->id, 'chaine', 0, '', $conf->entity);
 
         $this->assertEquals(
-            $account->rowid,
-            $conf->global->{$parameterName}
+            $account->id,
+            $conf->global->{$parameterName},
+            $db->lasterror()
         );
     }
 
@@ -214,6 +219,8 @@ class L03PaymentBanksTest extends ObjectsCase
             array("CB",     "DirectDebit"),
             array("VAD",    "PayPal"),
             array("FAC",    "COD"),
+            array("PRE",    "ByInvoice"),
+            array("LCR",    "LCR"),
         );
 
         $paymentTypes = array();

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,14 +27,14 @@ use Splash\Local\Services\VariantsManager;
 trait CRUDTrait
 {
     /**
-     * @var Product
+     * @var null|Product
      */
-    protected $parent;
+    protected ?Product $parent = null;
 
     /**
      * @var null|ProductCombination
      */
-    protected $combination;
+    protected ?ProductCombination $combination = null;
 
     //====================================================================//
     // Variants CRUD Functions
@@ -43,13 +43,18 @@ trait CRUDTrait
     /**
      * Create Variant Product
      *
-     * @return false|Product
+     * @return null|Product
      */
-    protected function createVariantProduct()
+    protected function createVariantProduct(): ?Product
     {
         //====================================================================//
         // Stack Trace
         Splash::log()->trace();
+        //====================================================================//
+        // Safety Checks
+        if (!is_string($this->in["ref"] ?? null) || !is_string($this->in["base_label"] ?? null)) {
+            return null;
+        }
         //====================================================================//
         // Identify Parent Product using Given Variants Ids
         $parentProduct = $this->identifyParent();
@@ -61,7 +66,7 @@ trait CRUDTrait
         //====================================================================//
         // Create New Parent Product Failed
         if (!$parentProduct) {
-            return false;
+            return null;
         }
         //====================================================================//
         // Create New Variant Product
@@ -83,10 +88,15 @@ trait CRUDTrait
      *
      * @return bool
      */
-    protected function updateVariantProduct()
+    protected function updateVariantProduct(): bool
     {
         global $user;
 
+        //====================================================================//
+        // Safety Check
+        if (!isset($this->baseProduct)) {
+            return true;
+        }
         //====================================================================//
         // Update Base Product
         if ($this->isToUpdate("baseProduct")) {
@@ -124,7 +134,7 @@ trait CRUDTrait
      *
      * @return bool
      */
-    protected static function isVariantEnabled()
+    protected static function isVariantEnabled(): bool
     {
         return (bool) Local::getParameter("MAIN_MODULE_VARIANTS");
     }
@@ -134,28 +144,35 @@ trait CRUDTrait
      *
      * @return bool
      */
-    protected function isVariant()
+    protected function isVariant(): bool
     {
-        return (null !== $this->combination);
+        return isset($this->combination);
+    }
+
+    /**
+     * Get Product or Variant Product
+     *
+     * @return Product
+     */
+    protected function getVariant(): Product
+    {
+        return $this->baseProduct ?? $this->object;
     }
 
     /**
      * Identify Parent Product Id
      *
-     * @return false|Product
+     * @return null|Product
      */
-    private function identifyParent()
+    private function identifyParent(): ?Product
     {
         //====================================================================//
         // Stack Trace
         Splash::log()->trace();
         //====================================================================//
         // Check Variant Products Array
-//        if (!isset($this->in["variants"]) || !is_iterable($this->in["variants"])) {
-//            return false;
-//        }
-        if (!is_array($this->in["variants"]) && !is_a($this->in["variants"], "ArrayObject")) {
-            return false;
+        if (!is_array($this->in["variants"] ?? null)) {
+            return null;
         }
         //====================================================================//
         // Walk on Variant Products
@@ -175,14 +192,14 @@ trait CRUDTrait
         }
         //====================================================================//
         // No Variant Products Id Given
-        if (false == $variantProductId) {
-            return false;
+        if (!$variantProductId) {
+            return null;
         }
         //====================================================================//
         // Load Product Combinations
         $combination = VariantsManager::getProductCombination((int) $variantProductId);
         if (null == $combination) {
-            return false;
+            return null;
         }
         //====================================================================//
         // Load Base Product (Jedi Mode => Force Loading)

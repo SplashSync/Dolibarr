@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,7 +34,7 @@ class StatGraphs extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_M,
         "Header" => true,
         "Footer" => true,
@@ -51,21 +51,21 @@ class StatGraphs extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Statistics";
+    protected static string $name = "Statistics";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Statistics";
+    protected static string $description = "Statistics";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-line-chart";
+    protected static string $ico = "fa fa-line-chart";
 
     //====================================================================//
     // General Class Variables
@@ -75,22 +75,22 @@ class StatGraphs extends AbstractWidget
     private $stats;
 
     /** @var string */
-    private $select;
+    private string $select;
 
     /** @var string */
-    private $where;
+    private string $where;
 
     /** @var string */
-    private $title;
+    private string $title;
 
     /** @var array */
-    private $labels;
+    private array $labels;
 
     /** @var string */
-    private $mode = "CustomerInvoices";
+    private string $mode = "CustomerInvoices";
 
     /** @var string */
-    private $chartType = "Line";
+    private string $chartType = "Line";
 
     //====================================================================//
     // Class Main Functions
@@ -109,7 +109,7 @@ class StatGraphs extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         global $langs;
         Local::loadDefaultLanguage();
@@ -140,13 +140,13 @@ class StatGraphs extends AbstractWidget
 
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->publish();
+        return $this->fieldsFactory()->publish() ?? array();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = null)
+    public function get(array $parameters = null): array
     {
         //====================================================================//
         // Stack Trace
@@ -194,29 +194,29 @@ class StatGraphs extends AbstractWidget
     }
 
     //====================================================================//
-    // Overide Splash Functions
+    // Override Splash Functions
     //====================================================================//
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         global $langs;
         $langs->load("main");
 
-        return html_entity_decode($langs->trans(static::$NAME));
+        return html_entity_decode($langs->trans(static::$name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDesc()
+    public function getDesc(): string
     {
         global $langs;
         $langs->load("main");
 
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        return html_entity_decode($langs->trans(static::$description));
     }
 
     //====================================================================//
@@ -226,7 +226,7 @@ class StatGraphs extends AbstractWidget
     /**
      * @return void
      */
-    private function setupMode()
+    private function setupMode(): void
     {
         global $db, $langs;
 
@@ -239,7 +239,7 @@ class StatGraphs extends AbstractWidget
                 $this->stats = new \FactureStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total) as total";
+                $this->select = "date_format(f.datef,'%".$this->groupBy."') as step, SUM(f.total) as total";
                 $this->where = "f.datef ";
                 $this->title = $langs->trans("SalesTurnover");
                 $this->labels = array($langs->trans("AmountTTCShort"));
@@ -254,7 +254,7 @@ class StatGraphs extends AbstractWidget
                 $this->stats = new \FactureStats($db, 0, 'supplier', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select = "date_format(f.datef,'%".$this->GroupBy."') as step, SUM(f.total_ht) as total";
+                $this->select = "date_format(f.datef,'%".$this->groupBy."') as step, SUM(f.total_ht) as total";
                 $this->where = "f.datef ";
                 $this->title = $langs->trans("BillsSuppliers");
                 $this->labels = array($langs->trans("AmountHTShort"));
@@ -268,7 +268,7 @@ class StatGraphs extends AbstractWidget
                 $this->stats = new \CommandeStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
-                $this->select = "date_format(c.date_commande,'%".$this->GroupBy."') "
+                $this->select = "date_format(c.date_commande,'%".$this->groupBy."') "
                         ."as step, SUM(c.total_ht) as total";
                 $this->where = "c.date_commande ";
                 $this->title = $langs->trans("OrderStats");
@@ -283,7 +283,7 @@ class StatGraphs extends AbstractWidget
      *
      * @return array
      */
-    private function getData()
+    private function getData(): array
     {
         global $db;
 
@@ -293,7 +293,7 @@ class StatGraphs extends AbstractWidget
 
         $sql = "SELECT ".$this->select;
         $sql .= " FROM ".$this->stats->from;
-        $sql .= " WHERE ".$this->where." BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql .= " WHERE ".$this->where." BETWEEN '".$this->dateStart."' AND '".$this->dateEnd."'";
         $sql .= " AND ".$this->stats->where;
         $sql .= " GROUP BY step";
         $sql .= $db->order('step', 'ASC');
@@ -317,7 +317,7 @@ class StatGraphs extends AbstractWidget
      *
      * @return void
      */
-    private function buildMorrisBarBlock()
+    private function buildMorrisBarBlock(): void
     {
         global $langs;
 

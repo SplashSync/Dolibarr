@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function buildMainFields()
+    protected function buildMainFields(): void
     {
         global $langs;
 
@@ -40,6 +40,7 @@ trait MainTrait
             ->name("Customs HS Code")
             ->description($langs->trans("CustomCode"))
             ->microData("http://schema.org/Product", "customsHsCode")
+            ->isIndexed()
         ;
         //====================================================================//
         // Weight
@@ -101,7 +102,7 @@ trait MainTrait
      *
      * @return void
      */
-    protected function getMainFields(string $key, string $fieldName)
+    protected function getMainFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -154,12 +155,12 @@ trait MainTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setMainFields(string $fieldName, $fieldData)
+    protected function setMainFields(string $fieldName, ?string $fieldData)
     {
         //====================================================================//
         // WRITE Field
@@ -172,29 +173,29 @@ trait MainTrait
 
                 break;
             case 'weight':
-                $this->updateProductWeight($fieldData);
+                $this->updateProductWeight((float) $fieldData);
 
                 break;
             case 'surface':
-                if ((string)$fieldData !== (string) $this->convertSurface(
-                    $this->object->surface,
+                if ((string) $fieldData !== (string) $this->convertSurface(
+                    (float) $this->object->surface ?: 0.0,
                     $this->object->surface_units
                 )) {
-                    $nomalized = $this->normalizeSurface($fieldData);
-                    $this->object->surface = $nomalized->surface;
-                    $this->object->surface_units = $nomalized->surface_units;
+                    $normalized = $this->normalizeSurface((float) $fieldData);
+                    $this->object->surface = $normalized->surface;
+                    $this->object->surface_units = $normalized->surface_units;
                     $this->needUpdate();
                 }
 
                 break;
             case 'volume':
-                if ((string)$fieldData !== (string) $this->convertVolume(
-                    $this->object->volume,
+                if ((string) $fieldData !== (string) $this->convertVolume(
+                    (float) $this->object->volume ?: 0.0,
                     $this->object->volume_units
                 )) {
-                    $nomalized = $this->normalizeVolume($fieldData);
-                    $this->object->volume = $nomalized->volume;
-                    $this->object->volume_units = $nomalized->volume_units;
+                    $normalized = $this->normalizeVolume((float) $fieldData);
+                    $this->object->volume = $normalized->volume;
+                    $this->object->volume_units = $normalized->volume_units;
                     $this->needUpdate();
                 }
 
@@ -208,12 +209,12 @@ trait MainTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setDimFields(string $fieldName, $fieldData)
+    protected function setDimFields(string $fieldName, ?string $fieldData)
     {
         //====================================================================//
         // WRITE Field
@@ -225,14 +226,12 @@ trait MainTrait
             case 'height':
             case 'length':
                 if ((string)$fieldData !== (string) $this->convertLength(
-                    $this->object->{ $fieldName },
+                    (float) $this->object->{ $fieldName } ?: 0.0,
                     $this->object->length_units
-                    // $this->object->{ $fieldName."_units" }
                 )) {
-                    $nomalized = $this->normalizeLength($fieldData);
+                    $nomalized = $this->normalizeLength((float) $fieldData);
                     $this->object->{ $fieldName } = $nomalized->length;
                     $this->object->length_units = $nomalized->length_units;
-                    // $this->object->{ $fieldName."_units" } = $nomalized->length_units;
                     $this->needUpdate();
                 }
 
@@ -255,7 +254,7 @@ trait MainTrait
      *
      * @return void
      */
-    private function updateProductWeight($fieldData)
+    private function updateProductWeight(float $fieldData)
     {
         //====================================================================//
         // Check if Product Weight Updated => NO CHANGES
@@ -265,9 +264,9 @@ trait MainTrait
         }
         //====================================================================//
         // Update Current Product Weight (With Variant Detection)
-        $nomalized = $this->normalizeWeight($fieldData);
-        $this->object->weight = $nomalized->weight;
-        $this->object->weight_units = $nomalized->weight_units;
+        $normalized = $this->normalizeWeight($fieldData);
+        $this->object->weight = $normalized->weight;
+        $this->object->weight_units = $normalized->weight_units;
         $this->needUpdate();
         //====================================================================//
         // Update Current Product Weight
@@ -275,11 +274,9 @@ trait MainTrait
             // Update Combination Weight Impact
             $this->setSimple(
                 "variation_weight",
-                $nomalized->weight - $this->baseProduct->weight,
+                $normalized->weight - $this->baseProduct->weight,
                 "combination"
             );
-
-            return;
         }
     }
 }

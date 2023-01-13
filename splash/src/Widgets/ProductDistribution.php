@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,7 +34,7 @@ class ProductDistribution extends AbstractWidget
      *
      * @var array
      */
-    public static $OPTIONS = array(
+    public static array $options = array(
         "Width" => self::SIZE_M,
         "Header" => true,
         "Footer" => true,
@@ -51,21 +51,21 @@ class ProductDistribution extends AbstractWidget
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "BoxProductDistribution";
+    protected static string $name = "BoxProductDistribution";
 
     /**
      * Widget Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "BoxProductDistribution";
+    protected static string $description = "BoxProductDistribution";
 
     /**
      * Widget Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-pie-chart";
+    protected static string $ico = "fa fa-pie-chart";
 
     //====================================================================//
     // General Class Variables
@@ -75,25 +75,25 @@ class ProductDistribution extends AbstractWidget
     private $stats;
 
     /** @var string */
-    private $select;
+    private string $select;
 
     /** @var string */
-    private $where;
+    private string $where;
 
     /** @var string */
-    private $from;
+    private string $from;
 
     /** @var string */
-    private $title;
+    private string $title;
 
     /** @var array */
-    private $labels;
+    private array $labels;
 
     /** @var string */
-    private $mode = "Invoices";
+    private string $mode = "Invoices";
 
     /** @var string */
-    private $chartType = "Line";
+    private string $chartType = "Line";
 
     //====================================================================//
     // Class Main Functions
@@ -112,7 +112,7 @@ class ProductDistribution extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         global $langs;
         Local::loadDefaultLanguage();
@@ -161,13 +161,13 @@ class ProductDistribution extends AbstractWidget
 
         //====================================================================//
         // Publish Fields
-        return $this->fieldsFactory()->publish();
+        return $this->fieldsFactory()->publish() ?? array();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($parameters = array())
+    public function get(array $parameters = array()): ?array
     {
         //====================================================================//
         // Stack Trace
@@ -224,25 +224,25 @@ class ProductDistribution extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$NAME));
+        return html_entity_decode($langs->trans(static::$name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDesc()
+    public function getDesc(): string
     {
         global $langs;
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$DESCRIPTION));
+        return html_entity_decode($langs->trans(static::$description));
     }
 
     //====================================================================//
@@ -252,7 +252,7 @@ class ProductDistribution extends AbstractWidget
     /**
      * @return void
      */
-    private function setupMode()
+    private function setupMode(): void
     {
         global $db, $langs;
         $langs->load("main");
@@ -356,7 +356,7 @@ class ProductDistribution extends AbstractWidget
      *
      * @return array
      */
-    private function getData($limit = null)
+    private function getData(int $limit = null): array
     {
         global $db;
 
@@ -364,7 +364,7 @@ class ProductDistribution extends AbstractWidget
         // Execute SQL Query
         //====================================================================//
         $sql = "SELECT ".$this->select." FROM ".$this->from;
-        $sql .= " WHERE ".$this->where." BETWEEN '".$this->DateStart."' AND '".$this->DateEnd."'";
+        $sql .= " WHERE ".$this->where." BETWEEN '".$this->dateStart."' AND '".$this->dateEnd."'";
         $sql .= " AND ".$this->stats->where;
         $sql .= " GROUP BY label";
         $sql .= $db->order('value', 'DESC');
@@ -389,7 +389,7 @@ class ProductDistribution extends AbstractWidget
      *
      * @return void
      */
-    private function buildMorrisDonutBlock()
+    private function buildMorrisDonutBlock(): void
     {
         global $langs;
 
@@ -430,7 +430,7 @@ class ProductDistribution extends AbstractWidget
      *
      * @return void
      */
-    private function buildMorrisBarBlock()
+    private function buildMorrisBarBlock(): void
     {
         global $langs;
 

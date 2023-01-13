@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,7 +29,7 @@ trait BaseLabelTrait
      *
      * @return void
      */
-    protected function buildVariantsLabelFields()
+    protected function buildVariantsLabelFields(): void
     {
         global $langs;
 
@@ -49,15 +49,15 @@ trait BaseLabelTrait
         foreach ($this->getAvailableLanguages() as $isoCode) {
             //====================================================================//
             // Base Name (Label)
-            $this->fieldsFactory()
-                ->Create(SPL_T_VARCHAR)
-                ->Identifier("base_label")
-                ->Name($langs->trans("ProductLabel"))
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "alternateName")
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->identifier("base_label")
+                ->name($langs->trans("ProductLabel"))
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "alternateName")
                 ->setMultilang($isoCode)
                 ->isRequired(self::isDefaultLanguage($isoCode))
-                ->isLogged();
+                ->isLogged()
+            ;
         }
     }
 
@@ -78,7 +78,7 @@ trait BaseLabelTrait
         //====================================================================//
         // Read Default Lang Base Label
         if ('base_label' == $fieldName) {
-            $this->out["base_label"] = self::isVariant() ? $this->baseProduct->label : $this->object->label;
+            $this->out["base_label"] = self::getVariant()->label;
             unset($this->in[$key]);
         }
 
@@ -98,12 +98,12 @@ trait BaseLabelTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setVariantsLabelFields(string $fieldName, $fieldData): void
+    protected function setVariantsLabelFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // Write Default Lang Base Label
@@ -116,7 +116,7 @@ trait BaseLabelTrait
         // Write Multi-langs Label
         if (0 === strpos($fieldName, 'base_label_')) {
             $langCode = substr($fieldName, strlen('base_label_'));
-            $this->setMultiLangContent("label", $langCode, $fieldData);
+            $this->setMultiLangContent("label", $langCode, (string) $fieldData);
             unset($this->in[$fieldName]);
         }
     }

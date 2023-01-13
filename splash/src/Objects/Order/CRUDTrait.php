@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,9 +32,9 @@ trait CRUDTrait
      *
      * @param string $objectId Object id
      *
-     * @return Commande|false
+     * @return null|Commande
      */
-    public function load($objectId)
+    public function load(string $objectId): ?Commande
     {
         global $db, $user;
         //====================================================================//
@@ -43,7 +43,7 @@ trait CRUDTrait
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Init Object
@@ -53,12 +53,12 @@ trait CRUDTrait
         if (1 != $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
-            return Splash::log()->errTrace(" Unable to load Customer Order (".$objectId.").");
+            return Splash::log()->errNull(" Unable to load Customer Order (".$objectId.").");
         }
         //====================================================================//
         // Check Object Entity Access (MultiCompany)
         if (!MultiCompany::isAllowed($object)) {
-            return Splash::log()->errTrace(" Unable to load Customer Order (".$objectId.").");
+            return Splash::log()->errNull(" Unable to load Customer Order (".$objectId.").");
         }
         $object->fetch_lines();
         $this->initCustomerDetection();
@@ -71,9 +71,9 @@ trait CRUDTrait
      *
      * @throws Exception
      *
-     * @return Commande|false
+     * @return null|Commande
      */
-    public function create()
+    public function create(): ?Commande
     {
         global $db, $user;
         //====================================================================//
@@ -81,13 +81,13 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Check Invoice Date is given
-        if (empty($this->in["date"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
+        if (empty($this->in["date"]) || !is_string($this->in["date"])) {
+            return Splash::log()->errNull("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "date");
         }
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Init Object
@@ -106,7 +106,7 @@ trait CRUDTrait
         if ($this->object->create($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace("Unable to create new Customer Order. ");
+            return Splash::log()->errNull("Unable to create new Customer Order. ");
         }
 
         return $this->object;
@@ -117,9 +117,9 @@ trait CRUDTrait
      *
      * @param bool $needed Is This Update Needed
      *
-     * @return false|string Object ID
+     * @return null|string Object ID
      */
-    public function update(bool $needed)
+    public function update(bool $needed): ?string
     {
         global $user;
         //====================================================================//
@@ -131,14 +131,14 @@ trait CRUDTrait
         //====================================================================//
         // LOAD USER FROM DATABASE
         if (!($user instanceof User) || empty($user->login)) {
-            return Splash::log()->err("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
+            return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
         // Update Product Object
         if ($this->object->update($user) <= 0) {
             $this->catchDolibarrErrors();
 
-            return Splash::log()->errTrace(" Unable to Update Customer Order (".$this->object->id.")") ;
+            return Splash::log()->errNull(" Unable to Update Customer Order (".$this->object->id.")") ;
         }
         //====================================================================//
         // Update Object Extra Fields
@@ -150,13 +150,9 @@ trait CRUDTrait
     }
 
     /**
-     * Delete requested Object
-     *
-     * @param string $objectId Object ID.  If NULL, Object needs to be created.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function delete($objectId = null): bool
+    public function delete(string $objectId): bool
     {
         global $db,$user;
         //====================================================================//
@@ -194,10 +190,10 @@ trait CRUDTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
-        if (!isset($this->object->id)) {
-            return false;
+        if (empty($this->object->id)) {
+            return null;
         }
 
         return (string) $this->object->id;

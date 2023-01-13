@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -53,6 +53,10 @@ class Order extends AbstractObject
     use Core\MarketplaceModeTrait;
     use Core\DownloadUrlsTrait;
 
+    // Dolibarr Common Fields Traits
+    use Common\PaymentMethodTrait;
+    use Common\BankAccountTrait;
+
     // Dolibarr Orders Traits
     use Order\ObjectsListTrait;
     use Order\CRUDTrait;
@@ -70,14 +74,14 @@ class Order extends AbstractObject
      *
      * @var string
      */
-    public static $extraFieldsType = "commande";
+    public static string $extraFieldsType = "commande";
 
     /**
      * Type for Lines Extra Fields
      *
      * @var string
      */
-    public static $extraLineFieldsType = "commandedet";
+    public static string $extraLineFieldsType = "commandedet";
 
     //====================================================================//
     // Object Definition Parameters
@@ -88,21 +92,21 @@ class Order extends AbstractObject
      *
      * {@inheritdoc}
      */
-    protected static $NAME = "Customer Order";
+    protected static string $name = "Customer Order";
 
     /**
      * Object Description (Translated by Module)
      *
      * {@inheritdoc}
      */
-    protected static $DESCRIPTION = "Dolibarr Customers Order Object";
+    protected static string $description = "Dolibarr Customers Order Object";
 
     /**
      * Object Icon (FontAwesome or Glyph ico tag)
      *
      * {@inheritdoc}
      */
-    protected static $ICO = "fa fa-shopping-cart ";
+    protected static string $ico = "fa fa-shopping-cart ";
 
     //====================================================================//
     // Class Constructor
@@ -111,7 +115,7 @@ class Order extends AbstractObject
     /**
      * @var Commande
      */
-    protected $object;
+    protected object $object;
 
     /**
      * Class Constructor (Used only if localy necessary)
@@ -130,9 +134,10 @@ class Order extends AbstractObject
         $langs->load("companies");
         $langs->load("orders");
         $langs->load("other");
+        $langs->load("banks");
         $langs->load("stocks");
         //====================================================================//
         //  Translate Object Name
-        static::$NAME = $langs->trans("Module25Name");
+        static::$name = $langs->trans("Module25Name");
     }
 }

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +15,6 @@
 
 namespace Splash\Local\Objects\Product\Variants;
 
-use ArrayObject;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Services\AttributesManager;
 use Splash\Local\Services\VariantsManager;
@@ -34,7 +33,7 @@ trait AttributesTrait
      *
      * @return void
      */
-    protected function buildVariantsAttributesFields()
+    protected function buildVariantsAttributesFields(): void
     {
         global $langs;
 
@@ -49,33 +48,34 @@ trait AttributesTrait
         //====================================================================//
         // Product Variation List - Variation Attribute Code
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("code")
-            ->Name("Code")
-            ->InList("attributes")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "VariantAttributeCode")
-            ->addOption("isUpperCase", true)
-            ->isNotTested();
-
+            ->identifier("code")
+            ->name("Code")
+            ->inList("attributes")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "VariantAttributeCode")
+            ->addOption("isUpperCase")
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Variation List - Variation Attribute Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("name")
-            ->Name("Name")
-            ->InList("attributes")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "VariantAttributeName")
-            ->isNotTested();
-
+            ->identifier("name")
+            ->name("Name")
+            ->inList("attributes")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "VariantAttributeName")
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Variation List - Variation Attribute Value
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("value")
-            ->Name("Value")
-            ->InList("attributes")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "VariantAttributeValue")
-            ->isNotTested();
+            ->identifier("value")
+            ->name("Value")
+            ->inList("attributes")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "VariantAttributeValue")
+            ->isNotTested()
+        ;
     }
 
     //====================================================================//
@@ -90,7 +90,7 @@ trait AttributesTrait
      *
      * @return void
      */
-    protected function getVariantsAttributesFields($key, $fieldName)
+    protected function getVariantsAttributesFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
@@ -128,22 +128,24 @@ trait AttributesTrait
         unset($this->in[$key]);
         //====================================================================//
         // Sort Attributes by Code
-        ksort($this->out["attributes"]);
+        if (is_array($this->out["attributes"])) {
+            ksort($this->out["attributes"]);
+        }
     }
 
     //====================================================================//
-    // Fields Writting Functions
+    // Fields Writing Functions
     //====================================================================//
 
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      */
-    protected function setVariantsAttributesFields($fieldName, $fieldData)
+    protected function setVariantsAttributesFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -153,8 +155,7 @@ trait AttributesTrait
         //====================================================================//
         // Update Products Attributes Ids
         $attributes = array();
-        $attrList = empty($fieldData) ? array() : $fieldData;
-        foreach ($attrList as $attrItem) {
+        foreach ($fieldData ?? array() as $attrItem) {
             //====================================================================//
             // Check Product Attributes is Valid & Not More than 3 Options!
             if (!$this->isValidAttributeDefinition($attrItem)) {
@@ -190,26 +191,16 @@ trait AttributesTrait
     /**
      * Check if Attribute Array is Valid for Writing
      *
-     * @param mixed $attrData Attribute Array
+     * @param array $attrData Attribute Array
      *
      * @return bool
      */
-    private function isValidAttributeDefinition($attrData)
+    private function isValidAttributeDefinition(array $attrData): bool
     {
         //====================================================================//
-        // Check Attribute is Array
-        if (!is_array($attrData) && !is_a($attrData, "ArrayObject")) {
-            return false;
-        }
-        //====================================================================//
         // Check Attributes Code is Given
-        if (!isset($attrData["code"]) || !is_string($attrData["code"]) || empty($attrData["code"])) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Product Attribute Code is Not Valid."
-            );
+        if (empty($attrData["code"]) || !is_string($attrData["code"])) {
+            return Splash::log()->err(" Product Attribute Code is Not Valid.");
         }
         //====================================================================//
         // Check Attributes Names are Given
@@ -228,23 +219,18 @@ trait AttributesTrait
     /**
      * Check if Attribute Array is Valid for Writing
      *
-     * @param array|ArrayObject $attrData Attribute Array
-     * @param string            $key      Data Key on Array
-     * @param string            $name     Data Name
+     * @param array  $attrData Attribute Array
+     * @param string $key      Data Key on Array
+     * @param string $name     Data Name
      *
      * @return bool
      */
-    private function isValidScalarData($attrData, $key, $name)
+    private function isValidScalarData(array $attrData, string $key, string $name): bool
     {
         //====================================================================//
         // Check Attributes Values are Given
-        if (!isset($attrData[$key]) || !is_scalar($attrData[$key]) || empty($attrData[$key])) {
-            return Splash::log()->err(
-                "ErrLocalTpl",
-                __CLASS__,
-                __FUNCTION__,
-                " Product Attribute ".$name." is Not Valid."
-            );
+        if (empty($attrData[$key]) || !is_scalar($attrData[$key])) {
+            return Splash::log()->err("Product Attribute ".$name." is Not Valid.");
         }
 
         return true;

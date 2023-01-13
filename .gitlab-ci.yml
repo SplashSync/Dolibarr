@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  tuxgasy/dolibarr:14
+image:  tuxgasy/dolibarr:16
 ################################################################
 # Set any variables we need
 variables:
@@ -47,7 +47,7 @@ stages:
 # Functional Tests
 ################################################################
 .functionnal:   &functionnal
-#    when:       manual
+#     when:       manual
     tags:       ['Dedicated']
     retry:      2
     services:
@@ -140,47 +140,40 @@ Dol-14-Basics:
 Dol-13-Basics:
     image:          tuxgasy/dolibarr:13
     <<: *functionnal-basic
-
-################################################################
-# Dolibarr V12
-Dol-12-Basics:
-    image:          tuxgasy/dolibarr:12
-    <<: *functionnal-basic
-Dol-12-Advanced:
-    image:          tuxgasy/dolibarr:12
+Dol-13-Advanced:
+    image:          tuxgasy/dolibarr:13
     <<: *functionnal-advanced
-Dol-12-Variants:
-    image:          tuxgasy/dolibarr:12
+Dol-13-Variants:
+    image:          tuxgasy/dolibarr:13
     <<: *functionnal-variants
 
 ################################################################
 # Dolibarr DEV
-Dol-Dev-Basics:
-    image:          tuxgasy/dolibarr:develop
-    allow_failure:  true
-    retry:          0
-    <<: *functionnal-basic
-Dol-Dev-Advanced:
-    image:          tuxgasy/dolibarr:develop
-    allow_failure:  true
-    retry:          0
-    <<: *functionnal-advanced
-Dol-Dev-Variants:
-    image:          tuxgasy/dolibarr:develop
-    allow_failure:  true
-    retry:          0
-    <<: *functionnal-variants
+# Dol-Dev-Basics:
+#     image:          tuxgasy/dolibarr:develop
+#     allow_failure:  true
+#     retry:          0
+#     <<: *functionnal-basic
+# Dol-Dev-Advanced:
+#     image:          tuxgasy/dolibarr:develop
+#     allow_failure:  true
+#     retry:          0
+#     <<: *functionnal-advanced
+# Dol-Dev-Variants:
+#     image:          tuxgasy/dolibarr:develop
+#     allow_failure:  true
+#     retry:          0
+#     <<: *functionnal-variants
 
 
 ################################################################
 # Code Quality Verifications 
 ################################################################
 .code_quality:   &code_quality
-#    when:       manual
+#     when:       manual
     image:      tuxgasy/dolibarr:14
     stage:      quality
     tags:       ['Dedicated']
-    retry:      2
     services:
         - mysql:5.7
     ################################################################
@@ -216,8 +209,8 @@ Dol-14-Quality:
     image:      tuxgasy/dolibarr:14
     <<: *code_quality
 
-Dol-12-Quality:
-    image:      tuxgasy/dolibarr:12
+Dol-13-Quality:
+    image:      tuxgasy/dolibarr:13
     <<: *code_quality
 
 Dol-Dev-Quality:

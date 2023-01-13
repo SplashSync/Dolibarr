@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,9 +27,9 @@ trait StockTrait
     /**
      * Cache for Products Stocks Locations Ids
      *
-     * @var array
+     * @var null|array<string, int>
      */
-    private static $locationIds;
+    private static ?array $locationIds;
 
     /**
      * Build Fields using FieldFactory
@@ -234,24 +234,24 @@ trait StockTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */
-    protected function setStockFields(string $fieldName, $fieldData): void
+    protected function setStockFields(string $fieldName, ?string $fieldData): void
     {
         //====================================================================//
         // WRITE Field
         switch ($fieldName) {
             //====================================================================//
-            // Direct Writtings
+            // Direct Writings
             case 'stock_reel':
-                $this->setProductStock($fieldData);
+                $this->setProductStock((int) $fieldData);
 
                 break;
                 //====================================================================//
-                // Direct Writtings
+                // Direct Writings
             case 'seuil_stock_alerte':
             case 'desiredstock':
             case 'pmp':
@@ -370,7 +370,7 @@ trait StockTrait
      *
      * @return bool
      */
-    private function setProductStock($newStock)
+    private function setProductStock(int $newStock): bool
     {
         global $langs, $user;
 
@@ -397,7 +397,7 @@ trait StockTrait
         // Update Product Stock
         $result = $this->object->correct_stock(
             $user,                                      // Current User Object
-            $locationId,                                // Impacted Stock Id
+            $locationId,                                // Impacted Stock ID
             abs($delta),                                // Quantity to Move
             ($delta > 0)?1:0,                           // Direction 0 = add, 1 = remove
             $langs->trans("Updated by Splash Module"),  // Operation Comment
@@ -419,7 +419,7 @@ trait StockTrait
      *
      * @return string
      */
-    private function getDefaultLocation()
+    private function getDefaultLocation(): string
     {
         //====================================================================//
         // Check If Field Exists
@@ -441,11 +441,11 @@ trait StockTrait
     }
 
     /**
-     * Read Id of Product Stock Location to Impact
+     * Read ID of Product Stock Location to Impact
      *
      * @return int
      */
-    private function getStockLocationId()
+    private function getStockLocationId(): int
     {
         //====================================================================//
         // Check If Location Field Exists (Dolibarr > 7)
@@ -464,9 +464,9 @@ trait StockTrait
     /**
      * Build List of Stock Location
      *
-     * @return array
+     * @return array<string, string>
      */
-    private function getStockLocations()
+    private function getStockLocations(): array
     {
         global $db;
 
@@ -479,17 +479,16 @@ trait StockTrait
         $sql .= " AND e.statut = 1";
         //====================================================================//
         // Execute Query
-        dol_syslog(get_class($this).'::splashLoadWarehouses', LOG_DEBUG);
-        $resql = $db->query($sql);
-        if (!$resql) {
+        $resSql = $db->query($sql);
+        if (!$resSql) {
             return $locations;
         }
         //====================================================================//
         // Parse Results
         $index = 0;
-        while ($index < $db->num_rows($resql)) {
-            $obj = $db->fetch_object($resql);
-            $locations[$obj->ref] = $obj->ref.": ".$obj->lieu;
+        while ($index < $db->num_rows($resSql)) {
+            $obj = $db->fetch_object($resSql);
+            $locations[(string) $obj->ref] = $obj->ref.": ".$obj->lieu;
             $index++;
         }
 
@@ -499,16 +498,16 @@ trait StockTrait
     /**
      * Build List of Stock Location (RowId Indexed)
      *
-     * @return array
+     * @return array<string, int>
      */
-    private function getStockLocationsIds()
+    private function getStockLocationsIds(): array
     {
         global $db;
 
         //====================================================================//
         // Load to Cache
-        if (!isset(static::$locationIds)) {
-            static::$locationIds = array();
+        if (!isset(self::$locationIds)) {
+            self::$locationIds = array();
             //====================================================================//
             // Prepare SQL Query
             $sql = "SELECT e.rowid, e.ref, e.lieu, e.description";
@@ -517,30 +516,29 @@ trait StockTrait
             $sql .= " AND e.statut = 1";
             //====================================================================//
             // Execute Query
-            dol_syslog(get_class($this).'::splashLoadWarehouses', LOG_DEBUG);
-            $resql = $db->query($sql);
-            if (!$resql) {
-                return static::$locationIds;
+            $resSql = $db->query($sql);
+            if (!$resSql) {
+                return self::$locationIds;
             }
             //====================================================================//
             // Parse Results
             $index = 0;
-            while ($index < $db->num_rows($resql)) {
-                $obj = $db->fetch_object($resql);
-                static::$locationIds[$obj->ref] = $obj->rowid;
+            while ($index < $db->num_rows($resSql)) {
+                $obj = $db->fetch_object($resSql);
+                self::$locationIds[(string) $obj->ref] = (int) $obj->rowid;
                 $index++;
             }
         }
 
-        return static::$locationIds;
+        return self::$locationIds;
     }
 
     /**
      * Get product Price Used for Pmp Calculation
      *
-     * @return float|int
+     * @return float
      */
-    private function getStockPriceForPmp()
+    private function getStockPriceForPmp(): float
     {
         //====================================================================//
         // USE Product Cost price for Pmp Calculation
@@ -548,6 +546,6 @@ trait StockTrait
             return (double) $this->object->cost_price;
         }
 
-        return 0;
+        return 0.0;
     }
 }

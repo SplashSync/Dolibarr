@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,12 +15,15 @@
 
 namespace Splash\Local\Objects\Invoice;
 
-use ArrayObject;
+use DateTime;
+use Exception;
 use Paiement;
 use PaiementFourn;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
+use Splash\Local\Services\BankAccounts;
 use Splash\Local\Services\PaymentManager;
+use Splash\Local\Services\PaymentMethods;
 
 /**
  * Dolibarr Customer/Supplier Invoice Payments Fields
@@ -34,14 +37,14 @@ trait PaymentsTrait
     /**
      * @var array
      */
-    protected $payments = array();
+    protected array $payments = array();
 
     /**
      * Build Address Fields using FieldFactory
      *
      * @return void
      */
-    protected function buildPaymentsFields()
+    protected function buildPaymentsFields(): void
     {
         global $langs;
 
@@ -54,12 +57,7 @@ trait PaymentsTrait
             ->inList("payments")
             ->name($listName.$langs->trans("PaymentMode"))
             ->microData("http://schema.org/Invoice", "PaymentMethod")
-            ->addChoice("ByBankTransferInAdvance", "By bank transfer in advance")
-            ->addChoice("CheckInAdvance", "Check in advance")
-            ->addChoice("COD", "Cash On Delivery")
-            ->addChoice("Cash", "Cash")
-            ->addChoice("PayPal", "Online Payments (PayPal, more..)")
-            ->addChoice("DirectDebit", "Credit Card")
+            ->addChoices(PaymentMethods::getChoices())
             ->association("date@payments", "mode@payments", "amount@payments")
         ;
         //====================================================================//
@@ -94,12 +92,12 @@ trait PaymentsTrait
     /**
      * Fetch Invoice Payments List (Done after Load)
      *
-     * @param mixed $invoiceId
-     * @param bool  $isSupplier
+     * @param int  $invoiceId
+     * @param bool $isSupplier
      *
      * @return bool
      */
-    protected function loadPayments($invoiceId, bool $isSupplier = false): bool
+    protected function loadPayments(int $invoiceId, bool $isSupplier = false): bool
     {
         global $db;
 
@@ -147,7 +145,7 @@ trait PaymentsTrait
             $this->payments[$index] = $db->fetch_object($result);
             //====================================================================//
             // Detect Payment Method Type from Default Payment "known" methods
-            $this->payments[$index]->method = $this->identifySplashPaymentMethod($this->payments[$index]->code);
+            $this->payments[$index]->method = PaymentMethods::getSplashCode($this->payments[$index]->code);
             $index ++;
         }
         $db->free($result);
@@ -214,12 +212,12 @@ trait PaymentsTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      *
      * @return void
      */
-    protected function setPaymentLineFields(string $fieldName, $fieldData)
+    protected function setPaymentLineFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // Safety Check
@@ -228,10 +226,17 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Verify Lines List & Update if Needed
-        if (is_array($fieldData) || is_a($fieldData, "ArrayObject")) {
-            foreach ($fieldData as $lineData) {
-                $this->setPaymentLineData($lineData);
-            }
+        $firstMethodId = null;
+        foreach ($fieldData ?? array() as $lineData) {
+            $this->setPaymentLineData($lineData);
+            //====================================================================//
+            // Detect First Valid Payment Method
+            $firstMethodId = $firstMethodId ?: PaymentMethods::getDoliId($lineData["mode"] ?? "");
+        }
+        //====================================================================//
+        // Setup Invoice Payment Method
+        if (!Splash::isTravisMode()) {
+            $this->setSimple('mode_reglement_id', $firstMethodId);
         }
         //====================================================================//
         // Delete Remaining Lines
@@ -291,11 +296,11 @@ trait PaymentsTrait
     /**
      * Update a Payment line Data
      *
-     * @param array|ArrayObject $lineData Line Data Array
+     * @param array $lineData Line Data Array
      *
      * @return bool
      */
-    private function setPaymentLineData($lineData): bool
+    private function setPaymentLineData(array $lineData): bool
     {
         //====================================================================//
         // Read Next Payment Line
@@ -332,12 +337,12 @@ trait PaymentsTrait
     /**
      * Update an Exiting Payment
      *
-     * @param int               $paymentId Payment Item ID
-     * @param array|ArrayObject $lineData  Line Data Array
+     * @param int   $paymentId Payment Item ID
+     * @param array $lineData  Line Data Array
      *
      * @return bool Re-Create Payment Item or Exit?
      */
-    private function updatePaymentItem(int $paymentId, $lineData): bool
+    private function updatePaymentItem(int $paymentId, array $lineData): bool
     {
         //====================================================================//
         // Load Payment Item
@@ -382,11 +387,11 @@ trait PaymentsTrait
      * Update an Exiting Payment Datas
      *
      * @param Paiement|PaiementFourn $payment  Payment Item ID
-     * @param array|ArrayObject      $lineData Line Data Array
+     * @param array                  $lineData Line Data Array
      *
      * @return void
      */
-    private function updatePaymentItemDatas($payment, $lineData)
+    private function updatePaymentItemDatas($payment, array $lineData): void
     {
         //====================================================================//
         // Update Payment Date
@@ -398,10 +403,7 @@ trait PaymentsTrait
 
         //====================================================================//
         // Update Payment Number
-        /** @since V13.0 Field Renamed  */
-        $number = (Local::dolVersionCmp("13.0.0") < 0)
-            ? $payment->num_paiement
-            : $payment->num_payment;
+        $number = $payment->num_payment;
         if (isset($lineData["number"]) && ($number !== $lineData["number"])) {
             $payment->update_num($lineData["number"]);
             $this->catchDolibarrErrors($payment);
@@ -412,8 +414,8 @@ trait PaymentsTrait
         if (isset($lineData["mode"])) {
             //====================================================================//
             // Detect Payment Method Id
-            $newMethodId = $this->identifyPaymentMethod($lineData["mode"]);
-            $currentMethodId = $this->identifyPaymentType($payment->type_code);
+            $newMethodId = PaymentMethods::getDoliId($lineData["mode"]);
+            $currentMethodId = PaymentMethods::getDoliId($payment->type_code);
             if ($newMethodId && ($currentMethodId !== $newMethodId)) {
                 $payment->setValueFrom("fk_paiement", $newMethodId);
                 $this->catchDolibarrErrors($payment);
@@ -422,13 +424,13 @@ trait PaymentsTrait
     }
 
     /**
-     * Update an Exiting Payment
+     * Create a NEW Payment Item
      *
-     * @param array|ArrayObject $lineData Line Data Array
+     * @param array $lineData Line Data Array
      *
      * @return bool Re-Create Payment Item or Exit?
      */
-    private function createPaymentItem($lineData)
+    private function createPaymentItem(array $lineData): bool
     {
         global $user;
         //====================================================================//
@@ -445,18 +447,17 @@ trait PaymentsTrait
         $payment->facid = $this->object->id;
         //====================================================================//
         // Setup Payment Date
-        $payment->datepaye = (new \DateTime($lineData["date"]))->getTimestamp();
+        try {
+            $payment->datepaye = (new DateTime($lineData["date"]))->getTimestamp();
+        } catch (Exception $e) {
+            Splash::log()->report($e);
+        }
         //====================================================================//
         // Setup Payment Method
-        $payment->paiementid = $this->identifyPaymentMethod($lineData["mode"]);
+        $payment->paiementid = PaymentMethods::getDoliId($lineData["mode"]);
         //====================================================================//
         // Setup Payment Reference
-        /** @since V13.0 Field Renamed  */
-        if (Local::dolVersionCmp("13.0.0") < 0) {
-            $payment->num_paiement = $lineData["number"] ?? "";
-        } else {
-            $payment->num_payment = $lineData["number"] ?? "";
-        }
+        $payment->num_payment = $lineData["number"] ?? "";
         //====================================================================//
         // Setup Payment Amount
         $payment->amounts[$payment->facid] = self::parsePrice($lineData["amount"]);
@@ -472,19 +473,30 @@ trait PaymentsTrait
 
             return $this->catchDolibarrErrors($payment);
         }
-
         //====================================================================//
         // Setup Payment Account Id
-        $result = $payment->addPaymentToBank(
-            $user,
-            'payment',
-            '(Payment)',
-            $this->identifyBankAccountId($this->identifyPaymentMethod($lineData["mode"])),
-            "",
-            ""
-        );
+        return $this->addPaymentItemToBank($payment, $lineData);
+    }
 
-        if ($result < 0) {
+    /**
+     * Update an Exiting Payment
+     *
+     * @param array $lineData Line Data Array
+     *
+     * @return bool Re-Create Payment Item or Exit?
+     */
+    private function addPaymentItemToBank(Paiement $payment, array $lineData): bool
+    {
+        global $user;
+        //====================================================================//
+        // Detect Account Id
+        $accountId = BankAccounts::getDoliIdFromMethodId(PaymentMethods::getDoliId($lineData["mode"]));
+        if (!$accountId) {
+            return Splash::log()->err("Unable to detect Invoice Payment Account ID.");
+        }
+        //====================================================================//
+        // Setup Payment Account Id
+        if ($payment->addPaymentToBank($user, 'payment', '(Payment)', $accountId, "", "") < 0) {
             Splash::log()->errTrace("Unable to add Invoice Payment to Bank Account.");
 
             return $this->catchDolibarrErrors($payment);
@@ -516,143 +528,13 @@ trait PaymentsTrait
     }
 
     /**
-     * Write Given Fields
-     *
-     * @param string $methodType
-     *
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function identifySplashPaymentMethod(string $methodType)
-    {
-        //====================================================================//
-        // Detect Payment Method Type from Default Payment "known" methods
-        switch ($methodType) {
-            case "PRE":
-            case "PRO":
-            case "TIP":
-            case "VIR":
-                return "ByBankTransferInAdvance";
-            case "CHQ":
-                return "CheckInAdvance";
-            case "FAC":
-                return "COD";
-            case "LIQ":
-                return "Cash";
-            case "CB":
-                return "DirectDebit";
-            case "VAD":
-                return "PayPal";
-            default:
-                return "Unknown";
-        }
-    }
-
-    /**
-     * Write Given Fields
-     *
-     * @param string $methodType
-     *
-     * @return int
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function identifyPaymentMethod(string $methodType)
-    {
-        global $conf;
-
-        //====================================================================//
-        // Detect Payment Method Type from Default Payment "known/standard" methods
-        switch ($methodType) {
-            case "ByBankTransferInAdvance":
-                return $this->identifyPaymentType("VIR");
-            case "CheckInAdvance":
-                return $this->identifyPaymentType("CHQ");
-            case "COD":
-                return $this->identifyPaymentType("FAC");
-            case "Cash":
-                return $this->identifyPaymentType("LIQ");
-            case "PayPal":
-                return $this->identifyPaymentType("VAD");
-            case "CreditCard":
-            case "DirectDebit":
-                return $this->identifyPaymentType("CB");
-        }
-
-        //====================================================================//
-        // Return Default Payment Method or 0 (Default)
-        if (isset($conf->global->SPLASH_DEFAULT_PAYMENT) && !empty($conf->global->SPLASH_DEFAULT_PAYMENT)) {
-            return $this->identifyPaymentType($conf->global->SPLASH_DEFAULT_PAYMENT);
-        }
-
-        return $this->identifyPaymentType("VAD");
-    }
-
-    /**
-     * Identify Payment Method ID using Payment Method Code
-     *
-     * @param string $paymentTypeCode Payment Method Code
-     *
-     * @return int
-     */
-    private function identifyPaymentType(string $paymentTypeCode)
-    {
-        global $db;
-
-        //====================================================================//
-        // Include Object Dolibarr Class
-        require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
-        $form = new \Form($db);
-        $form->load_cache_types_paiements();
-        //====================================================================//
-        // Safety Check
-        if (empty($form->cache_types_paiements)) {
-            return 0;
-        }
-        //====================================================================//
-        // Detect Payment Method Id From Method Code
-        foreach ($form->cache_types_paiements as $key => $paymentMethod) {
-            if ($paymentMethod["code"] === $paymentTypeCode) {
-                return $key;
-            }
-        }
-        //====================================================================//
-        // Default Payment Method Id
-        return 0;
-    }
-
-    /**
-     * Identify Bank Account ID using Splash Configuration
-     *
-     * @param int $paymentTypeId Payment Method ID
-     *
-     * @return int
-     */
-    private function identifyBankAccountId(int $paymentTypeId)
-    {
-        global $conf;
-
-        //====================================================================//
-        // Detect Bank Account Id From Method Code
-        $parameterName = "SPLASH_BANK_FOR_".$paymentTypeId;
-        if (isset($conf->global->{$parameterName}) && !empty($conf->global->{$parameterName})) {
-            return $conf->global->{$parameterName};
-        }
-
-        //====================================================================//
-        // Default Payment Account Id
-        return $conf->global->SPLASH_BANK;
-    }
-
-    /**
      * Identify Bank Account ID using Splash Configuration
      *
      * @param array $lineData Payment Line data
      *
      * @return null|Paiement
      */
-    private function identifyExistingPayment($lineData): ?Paiement
+    private function identifyExistingPayment(array $lineData): ?Paiement
     {
         //====================================================================//
         // Search for Similar Payment in Database
@@ -710,13 +592,17 @@ trait PaymentsTrait
             || empty($lineData["amount"])) {
             return null;
         }
+        $methodId = PaymentMethods::getDoliId($lineData["mode"]);
+        if (!$methodId) {
+            return null;
+        }
         //====================================================================//
         // Return Identified Payment
         return PaymentManager::searchForSimilarPayment(
             $lineData["date"],
             $lineData["number"],
             (float) $lineData["amount"],
-            $this->identifyPaymentMethod($lineData["mode"])
+            $methodId
         );
     }
 }

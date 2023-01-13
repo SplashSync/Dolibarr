@@ -94,6 +94,7 @@ services:
             - mysql
         links:
             - mysql
+        working_dir:    /var/www/html/custom
         environment:
             - "DOLI_DB_TYPE=mysqli"
             - "DOLI_DB_HOST=mysql"

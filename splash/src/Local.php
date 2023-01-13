@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,6 +15,7 @@
 
 namespace Splash\Local;
 
+use ArrayObject;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Core\ExtraFieldsPhpUnitTrait;
 use Splash\Local\Services\ConfigManager;
@@ -38,6 +39,8 @@ class Local implements LocalClassInterface
 
     /**
      * @var class-string
+     *
+     * @phpstan-var string
      */
     const CLASS_QUOTE = 'Splash\Local\Objects\Quote';
 
@@ -53,6 +56,8 @@ class Local implements LocalClassInterface
 
     /**
      * @var class-string
+     *
+     * @phpstan-var string
      */
     const CLASS_SUPPLIER_INVOICE = 'Splash\Local\Objects\SupplierInvoice';
 
@@ -65,7 +70,7 @@ class Local implements LocalClassInterface
     /**
      * {@inheritdoc}
      */
-    public function parameters()
+    public function parameters(): array
     {
         global $langs;
 
@@ -131,12 +136,12 @@ class Local implements LocalClassInterface
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
-    public function includes()
+    public function includes(): bool
     {
         //====================================================================//
         // When Library is called in server mode ONLY
         //====================================================================//
-        if (!empty(SPLASH_SERVER_MODE) && !defined("NOCSRFCHECK")) {
+        if (Splash::isServerMode() && !defined("NOCSRFCHECK")) {
             // This is Webservice Access. We must be able to go on it from outside.
             define('NOCSRFCHECK', 1);
         }
@@ -183,7 +188,7 @@ class Local implements LocalClassInterface
     /**
      * {@inheritdoc}
      */
-    public function selfTest()
+    public function selfTest(): bool
     {
         global $langs;
 
@@ -216,7 +221,7 @@ class Local implements LocalClassInterface
     /**
      * {@inheritdoc}
      */
-    public function informations($informations)
+    public function informations(ArrayObject $informations): ArrayObject
     {
         //====================================================================//
         // Init Response Object
@@ -260,7 +265,7 @@ class Local implements LocalClassInterface
     /**
      * {@inheritdoc}
      */
-    public function testSequences($name = null)
+    public function testSequences(string $name = null): array
     {
         \Splash\Local\Services\SequencesManager::init();
 
@@ -280,7 +285,7 @@ class Local implements LocalClassInterface
     /**
      * {@inheritdoc}
      */
-    public function testParameters()
+    public function testParameters(): array
     {
         //====================================================================//
         // Init Parameters Array

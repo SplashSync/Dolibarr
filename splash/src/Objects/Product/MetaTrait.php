@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2021 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,20 +34,21 @@ trait MetaTrait
         //====================================================================//
         // On Sell
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("status_buy")
-            ->Name($langs->trans("Status").' ('.$langs->trans("Buy").')')
-            ->MicroData("http://schema.org/Product", "ordered")
-            ->Group("Meta")
-            ->isListed();
-
+            ->identifier("status_buy")
+            ->name($langs->trans("Status").' ('.$langs->trans("Buy").')')
+            ->microData("http://schema.org/Product", "ordered")
+            ->group("Meta")
+            ->isListed()
+        ;
         //====================================================================//
         // On Buy
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("status")
-            ->Name($langs->trans("Status").' ('.$langs->trans("Sell").')')
-            ->MicroData("http://schema.org/Product", "offered")
-            ->Group("Meta")
-            ->isListed();
+            ->identifier("status")
+            ->name($langs->trans("Status").' ('.$langs->trans("Sell").')')
+            ->microData("http://schema.org/Product", "offered")
+            ->group("Meta")
+            ->isListed()
+        ;
     }
 
     /**
@@ -58,7 +59,7 @@ trait MetaTrait
      *
      * @return void
      */
-    private function getMetaFields(string $key, string $fieldName): void
+    protected function getMetaFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields
@@ -84,7 +85,7 @@ trait MetaTrait
      *
      * @return void
      */
-    private function setMetaFields(string $fieldName, $fieldData): void
+    protected function setMetaFields(string $fieldName, $fieldData): void
     {
         //====================================================================//
         // WRITE Field
