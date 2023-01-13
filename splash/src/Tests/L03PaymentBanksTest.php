@@ -190,11 +190,12 @@ class L03PaymentBanksTest extends ObjectsCase
         //====================================================================//
         //   Map Payment Method to Dedicated Account
         $parameterName = "SPLASH_BANK_FOR_".$paymentMethodId;
-        dolibarr_set_const($db, $parameterName, (string) $account->rowid, 'chaine', 0, '', $conf->entity);
+        dolibarr_set_const($db, $parameterName, (string) $account->id, 'chaine', 0, '', $conf->entity);
 
         $this->assertEquals(
             $account->id,
-            $conf->global->{$parameterName}
+            $conf->global->{$parameterName},
+            $db->lasterror()
         );
     }
 
