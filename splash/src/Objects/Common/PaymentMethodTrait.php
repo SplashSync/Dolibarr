@@ -77,7 +77,14 @@ trait PaymentMethodTrait
         // WRITE Field
         switch ($fieldName) {
             case 'mode_reglement_id':
-                $this->setSimple($fieldName, PaymentMethods::getDoliId((string) $fieldData));
+                $fkModePayment = PaymentMethods::getDoliId((string) $fieldData);
+                if ($this instanceof \FactureFournisseur) {
+                    if ($fkModePayment && ($fkModePayment != $this->object->mode_reglement_id)) {
+                        $this->object->setValueFrom('fk_mode_reglement', $fkModePayment);
+                    }
+                } else {
+                    $this->setSimple($fieldName, $fkModePayment);
+                }
 
                 break;
             default:
