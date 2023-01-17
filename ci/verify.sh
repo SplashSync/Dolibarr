@@ -20,7 +20,7 @@ set -e
 
 ################################################################################
 # Docker Compose Container you want to check
-CONTAINERS="dolibarr,dol-14"
+CONTAINERS="dol-16,dol-14"
 WORKDIR="/var/www/html/custom"
 ################################################################################
 # Start Docker Compose Stack
