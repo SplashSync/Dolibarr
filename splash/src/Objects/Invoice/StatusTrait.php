@@ -102,7 +102,7 @@ trait StatusTrait
         }
         //====================================================================//
         // Verify Stock Is Defined if Required
-        // If stock is incremented on validate invoice, we must provide warehouse id
+        // Stock is incremented on validate invoice, we must provide warehouse id
         if (!empty($conf->stock->enabled) && 1 == $conf->global->STOCK_CALCULATE_ON_BILL) {
             if (empty($conf->global->SPLASH_STOCK)) {
                 return Splash::log()->errTrace($langs->trans("WarehouseSourceNotDefined"));

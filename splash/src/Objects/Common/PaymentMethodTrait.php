@@ -23,6 +23,13 @@ use Splash\Local\Services\PaymentMethods;
 trait PaymentMethodTrait
 {
     /**
+     * Also Update Payment Mode on Db, in parallel of Object
+     *
+     * @var bool
+     */
+    private static bool $forcePaymentModeToDb = false;
+
+    /**
      * Build Address Fields using FieldFactory
      *
      * @return void
@@ -78,18 +85,27 @@ trait PaymentMethodTrait
         switch ($fieldName) {
             case 'mode_reglement_id':
                 $fkModePayment = PaymentMethods::getDoliId((string) $fieldData);
-                if ($this instanceof \FactureFournisseur) {
-                    if ($fkModePayment && ($fkModePayment != $this->object->mode_reglement_id)) {
+                if (self::$forcePaymentModeToDb && $fkModePayment) {
+                    if ($fkModePayment != $this->object->mode_reglement_id) {
                         $this->object->setValueFrom('fk_mode_reglement', $fkModePayment);
                     }
-                } else {
-                    $this->setSimple($fieldName, $fkModePayment);
                 }
+                $this->setSimple($fieldName, $fkModePayment);
 
                 break;
             default:
                 return;
         }
         unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Force Direct Update of Payment Mode on Database
+     *
+     * @return void
+     */
+    protected function forcePaymentModeToDb(): void
+    {
+        self::$forcePaymentModeToDb = true;
     }
 }
