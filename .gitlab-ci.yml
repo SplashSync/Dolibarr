@@ -37,12 +37,11 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
-    - deploy
     - quality
     - basic
     - advanced
     - variants
-#     - deploy
+    - deploy
 
 ################################################################
 # Functional Tests
@@ -234,25 +233,7 @@ pages:
         paths:
             - public
 
-#     image:      registry.gitlab.com/splashsync/php-console:pages
-#     stage:      deploy
-#     tags:       ['Dedicated']
-#     retry:      2
-#     services:
-#         - docker:dind
-#     ################################################################################
-#     # Run Test Script
-#     script:
-#         # Run Composer to Build deps
-#         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
-#         # Build Documentation
-#         - php splash/vendor/bin/grumphp run --tasks=build-docs
-#     artifacts:
-#         paths:
-#             - public
-
-
-#################################################################
+################################################################
 ## Build Documentation
 #################################################################
 module:

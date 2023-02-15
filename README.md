@@ -18,8 +18,8 @@ It provides access to multiples Objects for automated synchronization though Spl
 
 ## Requirements
 
-* PHP 7.2+
-* Dolibarr 9.0+
+* PHP 7.4 | 8.0+
+* Dolibarr 13.0+
 * An active Splash Sync User Account
 
 ## Documentation
