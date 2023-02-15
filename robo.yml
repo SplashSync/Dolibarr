@@ -1,0 +1,23 @@
+################################################################################
+#
+# Copyright (C) BadPixxel <www.badpixxel.com>
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+#
+################################################################################
+
+################################################################################
+# Jekyll Website / Documentation Builder Config.
+################################################################################
+task:
+    jekyll:
+        settings:
+            # Relative Path to your Site Contents (Default: src/Resources/jekyll)
+            source:               'splash/resources/docs'
+            # generic Content Directory to Add
+            generic_contents:    ["splash-faq", "php-docker"]
