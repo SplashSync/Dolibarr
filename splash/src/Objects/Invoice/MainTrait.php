@@ -257,7 +257,7 @@ trait MainTrait
         }
         //====================================================================//
         // If Status Is Not Validated | Closed => Cannot Update This Flag
-        if (!in_array($this->object->statut, array(Facture::STATUS_VALIDATED, Facture::STATUS_CLOSED))) {
+        if (!in_array((int) $this->object->statut, array(Facture::STATUS_VALIDATED, Facture::STATUS_CLOSED), false)) {
             return true;
         }
         //====================================================================//

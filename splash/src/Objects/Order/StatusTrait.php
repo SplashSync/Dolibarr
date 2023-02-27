@@ -313,7 +313,8 @@ trait StatusTrait
 
         //====================================================================//
         // If Previously Validated => Close
-        if (in_array((int) $this->object->statut, array(Commande::STATUS_VALIDATED, Commande::STATUS_SHIPMENTONPROCESS))) {
+        $validatedStatuses = array(Commande::STATUS_VALIDATED, Commande::STATUS_SHIPMENTONPROCESS);
+        if (in_array((int) $this->object->statut, $validatedStatuses, false)) {
             if (1 != $this->object->cloture($user)) {
                 return Splash::log()->errTrace($langs->trans($this->object->error));
             }

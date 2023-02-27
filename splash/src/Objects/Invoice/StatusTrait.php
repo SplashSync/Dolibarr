@@ -133,7 +133,8 @@ trait StatusTrait
                 //====================================================================//
                 // If Already Paid => Set Draft
                 // If Already Canceled => Set Draft
-                if (in_array((int) $this->object->statut, array(Facture::STATUS_ABANDONED, Facture::STATUS_CLOSED))) {
+                $draftStatuses = array(Facture::STATUS_ABANDONED, Facture::STATUS_CLOSED);
+                if (in_array((int) $this->object->statut, $draftStatuses, false)) {
                     if (!$this->setStatusDraft()) {
                         return false;
                     }
