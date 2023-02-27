@@ -523,7 +523,7 @@ trait ExtraFieldsTrait
     private function getOptions(string $fieldType): array
     {
         $param = $this->getExtraFieldAttr($fieldType, "param");
-        if (!is_array($param) || empty($param["options"]) || !is_array($param["options"])) {
+        if (!is_array($param) || !is_array($param["options"])) {
             return array();
         }
 
@@ -558,7 +558,7 @@ trait ExtraFieldsTrait
      * @param string $fieldType Dolibarr Extra field Type Name
      * @param string $attrType  Dolibarr Extra field Attribute Code
      *
-     * @return null|bool|string|string[]
+     * @return null|bool|string|string[]|array[]
      */
     private function getExtraFieldAttr(string $fieldType, string $attrType)
     {

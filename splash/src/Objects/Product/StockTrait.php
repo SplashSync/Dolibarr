@@ -422,13 +422,8 @@ trait StockTrait
     private function getDefaultLocation(): string
     {
         //====================================================================//
-        // Check If Field Exists
-        if (!isset($this->object->fk_default_warehouse)) {
-            return "";
-        }
-        //====================================================================//
-        // Check If Field is Empty
-        if (!is_scalar($this->object->fk_default_warehouse)) {
+        // Check If Field Exists and is NOT Empty
+        if (empty($this->object->fk_default_warehouse)) {
             return "";
         }
         //====================================================================//
