@@ -558,7 +558,7 @@ trait ExtraFieldsTrait
      * @param string $fieldType Dolibarr Extra field Type Name
      * @param string $attrType  Dolibarr Extra field Attribute Code
      *
-     * @return null|bool|string|string[]|array[]
+     * @return null|array[]|bool|string|string[]
      */
     private function getExtraFieldAttr(string $fieldType, string $attrType)
     {
