@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use Facture;
 use Splash\Core\SplashCore      as Splash;
 
 /**
@@ -120,7 +121,7 @@ trait StatusTrait
                 if ((0 != $this->object->statut) && (!$this->setStatusDraft())) {
                     return false;
                 }
-                $this->object->statut = \Facture::STATUS_DRAFT;
+                $this->object->statut = Facture::STATUS_DRAFT;
 
                 break;
                 //====================================================================//
@@ -132,8 +133,10 @@ trait StatusTrait
                 //====================================================================//
                 // If Already Paid => Set Draft
                 // If Already Canceled => Set Draft
-                if (in_array($this->object->statut, array(2,3), true) && (!$this->setStatusDraft())) {
-                    return false;
+                if (in_array((int) $this->object->statut, array(Facture::STATUS_ABANDONED, Facture::STATUS_CLOSED))) {
+                    if (!$this->setStatusDraft()) {
+                        return false;
+                    }
                 }
                 //====================================================================//
                 // If Not Validated => Set Validated
@@ -146,7 +149,7 @@ trait StatusTrait
                     $this->setDownloadUrlsUpdated();
                 }
                 $this->object->paye = 0;
-                $this->object->statut = \Facture::STATUS_VALIDATED;
+                $this->object->statut = Facture::STATUS_VALIDATED;
 
                 break;
                 //====================================================================//
@@ -154,8 +157,13 @@ trait StatusTrait
                 //====================================================================//
             case "PaymentComplete":
                 //====================================================================//
+                // If Previously Canceled => Locked
+                if ((Facture::STATUS_ABANDONED == $this->object->statut)) {
+                    return Splash::log()->err("You cannot Validate a Canceled Invoice!");
+                }
+                //====================================================================//
                 // If Draft => Set Validated
-                if (0 == $this->object->statut) {
+                if (Facture::STATUS_DRAFT == $this->object->statut) {
                     if (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK)) {
                         return $this->catchDolibarrErrors();
                     }
@@ -169,7 +177,7 @@ trait StatusTrait
                     return $this->catchDolibarrErrors();
                 }
                 $this->object->paye = 1;
-                $this->object->statut = \Facture::STATUS_CLOSED;
+                $this->object->statut = Facture::STATUS_CLOSED;
 
                 break;
                 //====================================================================//
@@ -182,7 +190,7 @@ trait StatusTrait
                     return $this->catchDolibarrErrors();
                 }
                 $this->object->paye = 0;
-                $this->object->statut = \Facture::STATUS_ABANDONED;
+                $this->object->statut = Facture::STATUS_ABANDONED;
 
                 break;
         }

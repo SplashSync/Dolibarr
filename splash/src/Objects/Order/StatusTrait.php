@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects\Order;
 
+use Commande;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Models\Objects\Order\Status;
 
@@ -115,7 +116,7 @@ trait StatusTrait
 
         //====================================================================//
         // Statut Canceled
-        if (Status::isCanceled($fieldData) && (-1 != $this->object->statut)) {
+        if (Status::isCanceled($fieldData) && (Commande::STATUS_CANCELED != $this->object->statut)) {
             return $this->setStatusCancel();
         }
         //====================================================================//
@@ -135,7 +136,7 @@ trait StatusTrait
         }
         //====================================================================//
         // Statut Not Closed but Validated Only => ReOpen
-        if (!Status::isDelivered($fieldData)) {
+        if (!Status::isDelivered($fieldData) && !Status::isShipped($fieldData)) {
             //====================================================================//
             // If Previously Closed => Re-Open
             if (!$this->setStatusReOpen()) {
@@ -143,8 +144,16 @@ trait StatusTrait
             }
         }
         //====================================================================//
+        // Statut Shipped but Not Delivered
+        if (Status::isShipped($fieldData) && (Commande::STATUS_VALIDATED == $this->object->statut)) {
+            //====================================================================//
+            // Set Shipped
+            $this->object->statut = Commande::STATUS_SHIPMENTONPROCESS;
+            $this->needUpdate();
+        }
+        //====================================================================//
         // Statut Closed => Go Closed
-        if (Status::isDelivered($fieldData) && (3 != $this->object->statut)) {
+        if (Status::isDelivered($fieldData) && (Commande::STATUS_CLOSED != $this->object->statut)) {
             //====================================================================//
             // If Previously Validated => Close
             if (!$this->setStatusClosed()) {
@@ -189,7 +198,7 @@ trait StatusTrait
         if (1 != $this->object->cancel($conf->global->SPLASH_STOCK)) {
             return $this->catchDolibarrErrors();
         }
-        $this->object->statut = \Commande::STATUS_CANCELED;
+        $this->object->statut = Commande::STATUS_CANCELED;
 
         return true;
     }
@@ -240,8 +249,8 @@ trait StatusTrait
                     && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
             }
+            $this->object->statut = Commande::STATUS_DRAFT;
         }
-        $this->object->statut = \Commande::STATUS_DRAFT;
 
         return true;
     }
@@ -283,10 +292,12 @@ trait StatusTrait
 
         //====================================================================//
         // If Previously Closed => Re-Open
-        if ((3 == $this->object->statut) && (1 != $this->object->set_reopen($user))) {
-            return Splash::log()->errTrace($langs->trans($this->object->error));
+        if ((Commande::STATUS_CLOSED == $this->object->statut)) {
+            if (1 != $this->object->set_reopen($user)) {
+                return Splash::log()->errTrace($langs->trans($this->object->error));
+            }
+            $this->object->statut = Commande::STATUS_VALIDATED;
         }
-        $this->object->statut = \Commande::STATUS_VALIDATED;
 
         return true;
     }
@@ -302,10 +313,12 @@ trait StatusTrait
 
         //====================================================================//
         // If Previously Validated => Close
-        if ((1 == $this->object->statut) && (1 != $this->object->cloture($user))) {
-            return Splash::log()->errTrace($langs->trans($this->object->error));
+        if (in_array((int) $this->object->statut, array(Commande::STATUS_VALIDATED, Commande::STATUS_SHIPMENTONPROCESS))) {
+            if (1 != $this->object->cloture($user)) {
+                return Splash::log()->errTrace($langs->trans($this->object->error));
+            }
+            $this->object->statut = Commande::STATUS_CLOSED;
         }
-        $this->object->statut = \Commande::STATUS_CLOSED;
 
         return true;
     }

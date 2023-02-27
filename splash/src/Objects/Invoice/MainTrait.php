@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects\Invoice;
 
+use Facture;
 use Splash\Local\Local;
 
 /**
@@ -250,11 +251,17 @@ trait MainTrait
         global $user;
 
         //====================================================================//
-        // If Status Is Not Validated => Cannot Update This Flag
-        if (($data == $this->object->paye) || ($this->object->statut < 1)) {
+        // If Status Unchanged => Skip Update
+        if ($data == $this->object->paye) {
             return true;
         }
-
+        //====================================================================//
+        // If Status Is Not Validated | Closed => Cannot Update This Flag
+        if (!in_array($this->object->statut, array(Facture::STATUS_VALIDATED, Facture::STATUS_CLOSED))) {
+            return true;
+        }
+        //====================================================================//
+        // Update This Flag
         if ($data) {
             //====================================================================//
             // Set Paid using Dolibarr Function
@@ -268,9 +275,8 @@ trait MainTrait
                 return $this->catchDolibarrErrors();
             }
         }
-
         //====================================================================//
-        // Setup Current Object not to Override changes with Update
+        // Update Current Object not to Override changes with Update
         $this->object->paye = ($data ? 1 : 0);
 
         return true;

@@ -110,19 +110,22 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         return array(
             //====================================================================//
             //   Tests For Order Objects
-            array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "PROV"),
-            array("Order",      "OrderCanceled",    Commande::STATUS_CANCELED,  "CO"),
-            array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "CO"),
-            array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
-            //            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED),
-            array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
+            "Order: Draft"  => array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "PROV"),
+            "Order: Cancel" => array("Order",      "OrderCanceled",    Commande::STATUS_CANCELED,  "CO"),
+            "Order: ReOpen" => array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "CO"),
+            "Order: Valid"  => array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
+            "Order: Ship"   => array("Order",      "OrderInTransit",   Commande::STATUS_SHIPMENTONPROCESS, "CO"),
+            "Order: Done"   => array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
 
             //====================================================================//
             //   Tests For Invoices Objects
-            array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
-            array("Invoice",    "PaymentDue",       Facture::STATUS_VALIDATED,  "FA"),
-            array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
-            array("Invoice",    "PaymentCanceled",  Facture::STATUS_ABANDONED,  "FA"),
+            "Inv: Draft"    => array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
+            "Inv: Cancel"   => array("Invoice",    "PaymentCanceled",  Facture::STATUS_ABANDONED,  "PROV"),
+            "Inv: Valid Ko" => array("Invoice",    "PaymentComplete",  Facture::STATUS_ABANDONED,  "PROV"),
+            "Inv: Re Draft" => array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
+            "Inv: Due"      => array("Invoice",    "PaymentDue",       Facture::STATUS_VALIDATED,  "FA"),
+            "Inv: Closed"   => array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
+            "Inv: Cancel 2" => array("Invoice",    "PaymentCanceled",  Facture::STATUS_ABANDONED,  "FA"),
         );
     }
 
@@ -204,16 +207,17 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         return array(
             //====================================================================//
             //   Tests For Order Objects
-            array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "PROV"),
-            array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
-            //            array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED,  "CO"),
-            array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
+            "Order: Draft"  => array("Order",      "OrderDraft",       Commande::STATUS_DRAFT,     "PROV"),
+            "Order: Valid"  => array("Order",      "OrderProcessing",  Commande::STATUS_VALIDATED, "CO"),
+            "Order: Ship"   => array("Order",      "OrderInTransit",   Commande::STATUS_ACCEPTED,  "CO"),
+            "Order: Closed" => array("Order",      "OrderDelivered",   Commande::STATUS_CLOSED,    "CO"),
 
             //====================================================================//
             //   Tests For Invoices Objects
-            array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
-            array("Invoice",    "PaymentDue",       Facture::STATUS_VALIDATED,  "FA"),
-            array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
+            "Inv: Cancel"   => array("Invoice",    "PaymentCanceled",  Facture::STATUS_ABANDONED,      "PROV"),
+            "Inv: Draft"    => array("Invoice",    "PaymentDraft",     Facture::STATUS_DRAFT,      "PROV"),
+            "Inv: Due"      => array("Invoice",    "PaymentDue",       Facture::STATUS_VALIDATED,  "FA"),
+            "Inv: Paid"     => array("Invoice",    "PaymentComplete",  Facture::STATUS_CLOSED,     "FA"),
         );
     }
 
