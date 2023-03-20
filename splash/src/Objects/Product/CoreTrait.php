@@ -86,7 +86,7 @@ trait CoreTrait
         //====================================================================//
         // Note
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->identifier("note")
+            ->identifier("note_private")
             ->name($langs->trans("Note"))
             ->group($groupName)
             ->microData("http://schema.org/Product", "privatenote")
@@ -112,7 +112,7 @@ trait CoreTrait
             case 'ref':
             case 'label':
             case 'description':
-            case 'note':
+            case 'note_private':
                 $this->getSimple($fieldName);
 
                 break;
@@ -157,7 +157,7 @@ trait CoreTrait
 
                 break;
             case 'description':
-            case 'note':
+            case 'note_private':
                 $this->setSimple($fieldName, $fieldData);
                 $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), (string) $fieldData);
 
