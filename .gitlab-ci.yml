@@ -106,16 +106,22 @@ stages:
 ################################################################
 
 ################################################################
+# Dolibarr V17
+Dol-17-Basics:
+    image:          tuxgasy/dolibarr:17
+    <<: *functionnal-basic
+Dol-17-Advanced:
+    image:          tuxgasy/dolibarr:17
+    <<: *functionnal-advanced
+Dol-17-Variants:
+    image:          tuxgasy/dolibarr:17
+    <<: *functionnal-variants
+
+################################################################
 # Dolibarr V16
 Dol-16-Basics:
     image:          tuxgasy/dolibarr:16
     <<: *functionnal-basic
-Dol-16-Advanced:
-    image:          tuxgasy/dolibarr:16
-    <<: *functionnal-advanced
-Dol-16-Variants:
-    image:          tuxgasy/dolibarr:16
-    <<: *functionnal-variants
 
 ################################################################
 # Dolibarr V15
@@ -200,6 +206,10 @@ Dol-13-Variants:
     # Run After Script
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+
+Dol-17-Quality:
+    image:      tuxgasy/dolibarr:17
+    <<: *code_quality
 
 Dol-16-Quality:
     image:      tuxgasy/dolibarr:16

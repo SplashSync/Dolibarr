@@ -29,6 +29,7 @@
 # 172.100.0.14        v14.dolibarr.local
 # 172.100.0.15        v15.dolibarr.local
 # 172.100.0.16        v16.dolibarr.local
+# 172.100.0.17        v17.dolibarr.local
 # 172.100.0.99        latest.dolibarr.local
 # 172.100.0.100       toolkit.dolibarr.local
 # 172.100.0.101       db.dolibarr.local
@@ -114,6 +115,36 @@ services:
         networks:
             dolibarr:      { ipv4_address: 172.100.0.16 }
             splashsync:    { aliases: [ v16.dolibarr.local ] }
+
+    ################################################################################
+    # Dolibarr V17
+    dol-17:
+        image: tuxgasy/dolibarr:17
+        container_name: v17.dolibarr.local
+        depends_on:
+            - mysql
+        links:
+            - mysql
+        working_dir:    /var/www/html/custom
+        environment:
+            - "DOLI_DB_TYPE=mysqli"
+            - "DOLI_DB_HOST=mysql"
+            - "DOLI_DB_NAME=dolibarr17"
+            - "DOLI_DB_USER=root"
+            - "DOLI_DB_PASSWORD=dolibarr"
+            - "DOLI_ADMIN_LOGIN=Admin"
+            - "PHP_MEMORY_LIMIT=-1"
+            - SPLASH_WS_ID=ThisIsDol17Key
+            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
+            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
+        volumes:
+            - "./:/var/www/html/custom/"
+            - "./.git/:/var/www/html/custom/.git/"
+        entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
+        hostname: v17.dolibarr.local
+        networks:
+            dolibarr:      { ipv4_address: 172.100.0.17 }
+            splashsync:    { aliases: [ v17.dolibarr.local ] }
 
     ################################################################################
     # Dolibarr V15
