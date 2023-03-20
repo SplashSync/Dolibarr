@@ -89,7 +89,7 @@ trait CoreTrait
          *
          * @since 17.0 'note' Field Renamed to 'note_private'
          */
-        $noteFieldName = (Local::dolVersionCmp("17.0") < 0) ? "note": "note_private";
+        $noteFieldName = (Local::dolVersionCmp("17.0.0") < 0) ? "note": "note_private";
         $this->fieldsFactory()->create(SPL_T_TEXT)
             ->identifier($noteFieldName)
             ->name($langs->trans("Note"))
