@@ -426,7 +426,7 @@ class VariantsManager
         int $attributeId,
         int $valueId
     ): bool {
-        global $db;
+        global $db, $user;
 
         //====================================================================//
         // Combination Attribute Do Not Exists
@@ -435,7 +435,7 @@ class VariantsManager
             $attr2Value->fk_prod_combination = $combination->id;
             $attr2Value->fk_prod_attr = $attributeId;
             $attr2Value->fk_prod_attr_val = $valueId;
-            if ($attr2Value->create() < 0) {
+            if ($attr2Value->create($user) < 0) {
                 return Splash::log()->errTrace("Unable to Create Product Combination ValuePair.");
             }
 
@@ -459,7 +459,7 @@ class VariantsManager
             $attr2Value->fk_prod_attr_val = $valueId;
             //====================================================================//
             // Re-Create Attribute Value Parameters
-            if ($attr2Value->create() < 0) {
+            if ($attr2Value->create($user) < 0) {
                 return Splash::log()->errTrace("Unable to Update Product Combination ValuePair.");
             }
 

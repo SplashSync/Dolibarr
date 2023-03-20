@@ -67,6 +67,10 @@ trait CRUDTrait
             $this->baseProduct = new Product($db);
             $this->baseProduct->fetch($this->combination->fk_product_parent);
         }
+        //====================================================================//
+        // Since DOL 17 - Force Loading of Old Copy
+        /** @phpstan-ignore-next-line */
+        $object->oldcopy = dol_clone($object);
 
         return $object;
     }
