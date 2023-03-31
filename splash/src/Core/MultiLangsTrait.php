@@ -72,7 +72,7 @@ trait MultiLangsTrait
 
         //====================================================================//
         // If No Languages Selected
-        $extraLangs = unserialize($conf->global->SPLASH_LANGS);
+        $extraLangs = unserialize($conf->global->SPLASH_LANGS ?? "a:0:{}");
         if (!is_array($extraLangs)) {
             return array();
         }
