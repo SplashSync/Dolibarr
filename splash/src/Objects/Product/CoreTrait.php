@@ -44,7 +44,7 @@ trait CoreTrait
         // Reference
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("ref")
-            ->name(html_entity_decode($langs->trans("ProductRef")))
+            ->name($langs->trans("ProductRef"))
             ->microData("http://schema.org/Product", "model")
             ->isListed()
             ->isLogged()

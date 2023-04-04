@@ -274,7 +274,7 @@ trait CRUDTrait
         // Create Object In Database
         /** @var User $user */
         if ($product->create($user, $triggers ? 0 : 1) <= 0) {
-            $this->catchDolibarrErrors();
+            $this->catchDolibarrErrors($product);
 
             return Splash::log()->errNull("Unable to create new Product.");
         }

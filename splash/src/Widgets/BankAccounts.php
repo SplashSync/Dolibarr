@@ -162,7 +162,7 @@ class BankAccounts extends AbstractWidget
         global $langs;
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$name));
+        return $langs->trans(static::$name);
     }
 
     /**
@@ -173,7 +173,7 @@ class BankAccounts extends AbstractWidget
         global $langs;
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$description));
+        return $langs->trans(static::$description);
     }
 
     //====================================================================//

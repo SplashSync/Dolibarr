@@ -38,7 +38,7 @@ trait StatusTrait
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("status")
             ->name($langs->trans("Status"))
-            ->group(html_entity_decode($langs->trans("Status")))
+            ->group($langs->trans("Status"))
             ->microData("http://schema.org/Order", "orderStatus")
             ->addChoice(Status::CANCELED, $langs->trans("StatusOrderCanceled"))
             ->addChoice(Status::DRAFT, $langs->trans("StatusOrderDraftShort"))

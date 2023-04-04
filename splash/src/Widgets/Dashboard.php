@@ -139,7 +139,7 @@ class Dashboard extends AbstractWidget
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$name));
+        return $langs->trans(static::$name);
     }
 
     /**
@@ -151,7 +151,7 @@ class Dashboard extends AbstractWidget
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$description));
+        return $langs->trans(static::$description);
     }
 
     //====================================================================//

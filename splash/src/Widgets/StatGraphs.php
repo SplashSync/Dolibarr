@@ -205,7 +205,7 @@ class StatGraphs extends AbstractWidget
         global $langs;
         $langs->load("main");
 
-        return html_entity_decode($langs->trans(static::$name));
+        return $langs->trans(static::$name);
     }
 
     /**
@@ -216,7 +216,7 @@ class StatGraphs extends AbstractWidget
         global $langs;
         $langs->load("main");
 
-        return html_entity_decode($langs->trans(static::$description));
+        return $langs->trans(static::$description);
     }
 
     //====================================================================//

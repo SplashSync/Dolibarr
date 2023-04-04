@@ -35,15 +35,16 @@ trait StatusTrait
         //====================================================================//
         // Invoice Current Status
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("status")
-            ->Name($langs->trans("Status"))
-            ->Group(html_entity_decode($langs->trans("Status")))
-            ->MicroData("http://schema.org/Invoice", "paymentStatus")
-            ->AddChoice("PaymentDraft", $langs->trans("BillStatusDraft"))
-            ->AddChoice("PaymentDue", $langs->trans("BillStatusNotPaid"))
-            ->AddChoice("PaymentComplete", $langs->trans("BillStatusConverted"))
-            ->AddChoice("PaymentCanceled", $langs->trans("BillStatusCanceled"))
-            ->isNotTested();
+            ->identifier("status")
+            ->name($langs->trans("Status"))
+            ->group($langs->trans("Status"))
+            ->microData("http://schema.org/Invoice", "paymentStatus")
+            ->addChoice("PaymentDraft", $langs->trans("BillStatusDraft"))
+            ->addChoice("PaymentDue", $langs->trans("BillStatusNotPaid"))
+            ->addChoice("PaymentComplete", $langs->trans("BillStatusConverted"))
+            ->addChoice("PaymentCanceled", $langs->trans("BillStatusCanceled"))
+            ->isNotTested()
+        ;
     }
 
     /**

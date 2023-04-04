@@ -140,13 +140,13 @@ class ProductDistribution extends AbstractWidget
             ->identifier("mode")
             ->name($langs->trans("Model"))
             ->isRequired()
-            ->addChoice("Invoices", html_entity_decode($titleInvoices))
+            ->addChoice("Invoices", $titleInvoices)
             ->addChoice(
                 "InvoicesCount",
-                html_entity_decode($titleInvoices." (".$langs->trans("NbOfLines").")")
+                $titleInvoices." (".$langs->trans("NbOfLines").")"
             )
-            ->addChoice("Orders", html_entity_decode($titleOrders))
-            ->addChoice("OrdersCount", html_entity_decode($titleOrders." (".$langs->trans("NbOfLines").")"))
+            ->addChoice("Orders", $titleOrders)
+            ->addChoice("OrdersCount", $titleOrders." (".$langs->trans("NbOfLines").")")
         ;
 
         //====================================================================//
@@ -230,7 +230,7 @@ class ProductDistribution extends AbstractWidget
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$name));
+        return $langs->trans(static::$name);
     }
 
     /**
@@ -242,7 +242,7 @@ class ProductDistribution extends AbstractWidget
         $langs->load("main");
         $langs->load("boxes");
 
-        return html_entity_decode($langs->trans(static::$description));
+        return $langs->trans(static::$description);
     }
 
     //====================================================================//

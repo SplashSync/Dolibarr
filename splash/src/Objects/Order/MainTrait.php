@@ -45,7 +45,7 @@ trait MainTrait
         ;
 
         //====================================================================//
-        // PRICES INFORMATIONS
+        // PRICES INFORMATION
         //====================================================================//
 
         //====================================================================//
@@ -69,11 +69,12 @@ trait MainTrait
         // ORDER STATUS FLAGS
         //====================================================================//
 
+        $groupName = $langs->trans("Status");
         //====================================================================//
         // Is Draft
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("isdraft")
-            ->group(html_entity_decode($langs->trans("Status")))
+            ->group($groupName)
             ->name($langs->trans("Order")." : ".$langs->trans("Draft"))
             ->microData("http://schema.org/OrderStatus", "OrderDraft")
             ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
@@ -83,7 +84,7 @@ trait MainTrait
         // Is Canceled
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("iscanceled")
-            ->group(html_entity_decode($langs->trans("Status")))
+            ->group($groupName)
             ->name($langs->trans("Order")." : ".$langs->trans("Canceled"))
             ->microData("http://schema.org/OrderStatus", "OrderCancelled")
             ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
@@ -93,7 +94,7 @@ trait MainTrait
         // Is Validated
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("isvalidated")
-            ->group(html_entity_decode($langs->trans("Status")))
+            ->group($groupName)
             ->name($langs->trans("Order")." : ".$langs->trans("Validated"))
             ->microData("http://schema.org/OrderStatus", "OrderProcessing")
             ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
@@ -104,7 +105,7 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("isclosed")
             ->name($langs->trans("Order")." : ".$langs->trans("Closed"))
-            ->group(html_entity_decode($langs->trans("Status")))
+            ->group($groupName)
             ->microData("http://schema.org/OrderStatus", "OrderDelivered")
             ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
             ->isReadOnly()
@@ -113,7 +114,7 @@ trait MainTrait
         // Is Paid
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("billed")
-            ->group(html_entity_decode($langs->trans("Status")))
+            ->group($groupName)
             ->name($langs->trans("Order")." : ".$langs->trans("Paid"))
             ->microData("http://schema.org/OrderStatus", "OrderPaid")
             ->isNotTested()
