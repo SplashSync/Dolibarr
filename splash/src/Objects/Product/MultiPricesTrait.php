@@ -167,8 +167,8 @@ trait MultiPricesTrait
             if ($fieldData["base"]) {
                 $price = $fieldData["ttc"];
                 $priceBase = "TTC";
-            //====================================================================//
-            // Update Based on HT Price
+                //====================================================================//
+                // Update Based on HT Price
             } else {
                 $price = $fieldData["ht"];
                 $priceBase = "HT";

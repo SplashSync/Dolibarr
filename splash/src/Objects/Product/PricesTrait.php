@@ -247,8 +247,8 @@ trait PricesTrait
         if ($newPrice["base"]) {
             $price = $newPrice["ttc"];
             $priceBase = "TTC";
-        //====================================================================//
-        // Update Based on HT Price
+            //====================================================================//
+            // Update Based on HT Price
         } else {
             $price = $newPrice["ht"];
             $priceBase = "HT";

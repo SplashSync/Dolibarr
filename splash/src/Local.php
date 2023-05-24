@@ -96,11 +96,11 @@ class Local implements LocalClassInterface
         // Strict Variants Mode
         $parameters["StrictVariantsMode"] = false;
         //====================================================================//
-        // Overide Module Parameters with Local User Selected Lang
+        // Override Module Parameters with Local User Selected Lang
         if (self::getParameter("SPLASH_LANG")) {
             $parameters["DefaultLanguage"] = self::getParameter("SPLASH_LANG");
-        //====================================================================//
-        // Override Module Parameters with Local Default System Lang
+            //====================================================================//
+            // Override Module Parameters with Local Default System Lang
         } elseif (($langs) && $langs->getDefaultLang()) {
             $parameters["DefaultLanguage"] = $langs->getDefaultLang();
         }
@@ -157,8 +157,12 @@ class Local implements LocalClassInterface
         //====================================================================//
 
         if (!defined("DOL_DOCUMENT_ROOT")) {
+            //====================================================================//
+            // Register Minimal Dolibarr Global Variables
             /** @codingStandardsIgnoreStart */
-            global $db, $langs, $conf, $user, $hookmanager, $dolibarr_main_url_root, $mysoc;
+            global $db, $langs, $conf, $user, $hookmanager;
+            global $dolibarr_main_url_root, $mysoc;
+            global $dolibarr_main_instance_unique_id;
             /** @codingStandardsIgnoreEnd */
             //====================================================================//
             // Initiate Dolibarr Global Environment Variables
