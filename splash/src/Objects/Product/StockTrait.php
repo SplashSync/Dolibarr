@@ -332,7 +332,7 @@ trait StockTrait
     }
 
     /**
-     * Write Id of Product Default Stock Location
+     * Write ID of Product Default Stock Location
      *
      * @param mixed $fieldData Field Data
      *
@@ -356,7 +356,7 @@ trait StockTrait
         $defaultLocation = ConfigManager::getProductsDefaultWarehouse();
         if (is_null($locationId) && !empty($defaultLocation)) {
             if (in_array($defaultLocation, $this->getStockLocationsIds(), true)) {
-                $locationId = (int) $defaultLocation;
+                $locationId = $defaultLocation;
             }
         }
 

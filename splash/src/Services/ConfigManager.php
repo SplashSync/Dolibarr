@@ -69,9 +69,9 @@ class ConfigManager
     /**
      * Get Products Default Location ID
      *
-     * @return null|string
+     * @return null|int
      */
-    public static function getProductsDefaultWarehouse()
+    public static function getProductsDefaultWarehouse(): ?int
     {
         global $conf;
 
@@ -79,7 +79,7 @@ class ConfigManager
             return null;
         }
 
-        return (string) $conf->global->SPLASH_PRODUCT_STOCK;
+        return (int) $conf->global->SPLASH_PRODUCT_STOCK;
     }
 
     /**
