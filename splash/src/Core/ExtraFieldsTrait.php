@@ -16,6 +16,7 @@
 namespace   Splash\Local\Core;
 
 use ExtraFields;
+use Splash\Client\Splash;
 use Splash\Models\Helpers\InlineHelper;
 
 /**
@@ -286,9 +287,8 @@ trait ExtraFieldsTrait
             // Evaluate Computed Data
             try {
                 $object = $this->object;
-
                 /** @phpstan-ignore-next-line */
-                return dol_eval((string) $computeSource, 1, 0);
+                return dol_eval((string) $computeSource, 1, 0, 0);
             } catch (\Throwable $ex) {
                 return null;
             }
