@@ -228,7 +228,7 @@ class MultiCompany
         // Detect by Entity Name
         if (isset($list["entity_label"]) && is_string($list["entity_label"])) {
             foreach ($entityInfos as $entityId => $entityInfo) {
-                if ($entityInfo->label == $list["entity_label"]) {
+                if ($entityInfo->label == trim($list["entity_label"])) {
                     return self::forceEntity($entityId);
                 }
             }
