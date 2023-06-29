@@ -18,6 +18,11 @@ echo "----------------------------------------------------"
 
 ################################################################
 # Copy Contents
+echo "FIX PHP Config ..."
+rm ${PHP_INI_DIR}/conf.d/dolibarr-php.ini
+
+################################################################
+# Copy Contents
 echo "Copy Splash Module to Dolibarr folder"
 shopt -s dotglob  # for considering dot files (turn on dot files)
 cp -Rf $CI_PROJECT_DIR/*                    /var/www/html/custom/
