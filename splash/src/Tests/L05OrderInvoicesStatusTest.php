@@ -56,7 +56,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
      * @param int         $dolStatus
      * @param null|string $expectedRef
      *
-     *@throws Exception
+     * @throws Exception
      *
      * @return void
      */

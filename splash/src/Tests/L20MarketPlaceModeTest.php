@@ -228,7 +228,7 @@ class L20MarketPlaceModeTest extends ObjectsCase
      * @param string $action
      * @param array  $expectedData
      *
-     *@throws Exception
+     * @throws Exception
      *
      * @return void
      */
