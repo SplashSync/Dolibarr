@@ -25,6 +25,7 @@ rm /usr/local/etc/php/conf.d/docker-php-ext-calendar.ini
 # Php => Force Memory Limit
 echo "Composer => Force Memory Limit";
 echo "memory_limit = -1" >> /usr/local/etc/php/conf.d/memory_limit.ini;
+rm /usr/local/etc/php/conf.d/dolibarr-php.ini;
 
 ################################################################
 # Install Git

@@ -44,6 +44,7 @@ fi
 ################################################################################
 # Force Php Configuration
 echo "memory_limit = -1" >> /usr/local/etc/php/conf.d/memory_limit.ini;
+rm /usr/local/etc/php/conf.d/dolibarr-php.ini;
 
 ################################################################################
 # Setup Splash Module
