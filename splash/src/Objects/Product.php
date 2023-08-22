@@ -46,6 +46,7 @@ class Product extends AbstractObject implements PrimaryKeysAwareInterface
     use Core\UnitConverterTrait;
     use Core\ExtraFieldsTrait;
     use Core\ImagesTrait;
+    use Core\LocalizationTrait;
     use Core\ObjectsListTrait;
     use Core\MultiCompanyFieldsTrait;
     use Core\MarketplaceModeTrait;
@@ -56,7 +57,8 @@ class Product extends AbstractObject implements PrimaryKeysAwareInterface
     use Product\PrimaryTrait;                       // Search Products by Primary Key
     use Product\CoreTrait;                          // Access to Required Fields
     use Product\MultiLangTrait;                     // Access to Multi-lang Fields
-    use Product\MainTrait;                          // Access to Dimensions, Weights & more...
+    use Product\MainTrait;                          // Access to Customs Code, Country, & more...
+    use Product\DimensionsTrait;                    // Access to Dimensions, Weights & more...
     use Product\BarcodeTrait;                       // Access to Product Barcodes
     use Product\PricesTrait;                        // Access to Product Sell & Wholesale Prices
     use Product\MultiPricesTrait;                   // Access to Product Sell Multi-Prices
