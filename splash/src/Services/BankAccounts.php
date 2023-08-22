@@ -47,6 +47,7 @@ class BankAccounts
             // Default Payment Account Id
             return (int) ($conf->global->SPLASH_BANK ?? 0);
         }
+
         //====================================================================//
         // Detect Bank Account Id From Method Code
         return $conf->global->{$parameterName};

@@ -91,6 +91,7 @@ trait UnitConverterTrait
         //====================================================================//
         // Detect Splash Generic Unit Factor
         $splFactor = self::detectSplashUnit((string) $unit, "weight", Converter::MASS_KG);
+
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeWeight((float) $weight, $splFactor);
@@ -159,6 +160,7 @@ trait UnitConverterTrait
         //====================================================================//
         // Detect Splash Generic Unit Factor
         $splFactor = self::detectSplashUnit((string) $unit, "length", Converter::LENGTH_M);
+
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeLength((float) $length, $splFactor);
@@ -213,6 +215,7 @@ trait UnitConverterTrait
         //====================================================================//
         // Detect Splash Generic Unit Factor
         $splFactor = self::detectSplashUnit((string) $unit, "surface", Converter::AREA_M2);
+
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeLength((float) $surface, $splFactor);
@@ -267,6 +270,7 @@ trait UnitConverterTrait
         //====================================================================//
         // Detect Splash Generic Unit Factor
         $splFactor = self::detectSplashUnit((string) $unit, "volume", Converter::VOLUME_M3);
+
         //====================================================================//
         // Convert Value to Generic Factor
         return Converter::normalizeLength((float) $volume, $splFactor);

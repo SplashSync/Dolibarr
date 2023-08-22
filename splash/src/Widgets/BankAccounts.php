@@ -99,6 +99,7 @@ class BankAccounts extends AbstractWidget
             ->identifier("compact")
             ->name($langs->trans("Compact Mode"))
         ;
+
         //====================================================================//
         // Publish Fields
         return $this->fieldsFactory()->publish() ?? array();

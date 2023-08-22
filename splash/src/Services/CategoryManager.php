@@ -61,6 +61,7 @@ class CategoryManager
         if (!is_array($categories)) {
             return array();
         }
+
         //====================================================================//
         // Parse Categories List
         return self::toLabels($categories);

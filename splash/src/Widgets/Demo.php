@@ -99,6 +99,7 @@ class Demo extends AbstractWidget
             ->name("Numeric Input")
             ->description("Widget Specific Custom Numeric Input")
         ;
+
         //====================================================================//
         // Publish Fields
         return $this->fieldsFactory()->publish() ?? array();

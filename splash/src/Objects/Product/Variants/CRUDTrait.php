@@ -201,6 +201,7 @@ trait CRUDTrait
         if (null == $combination) {
             return null;
         }
+
         //====================================================================//
         // Load Base Product (Jedi Mode => Force Loading)
         return $this->load((string) $combination->fk_product_parent, true);

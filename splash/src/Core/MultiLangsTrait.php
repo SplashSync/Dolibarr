@@ -47,6 +47,7 @@ trait MultiLangsTrait
         if (!$conf->global->MAIN_MULTILANGS) {
             return array($langs->getDefaultLang());
         }
+
         //====================================================================//
         // We Are in Multi-langs Mode
         return array_merge(

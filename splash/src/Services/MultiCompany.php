@@ -62,6 +62,7 @@ class MultiCompany
         if (empty($entityId) || ($entityId == self::$defaultEntity)) {
             return null;
         }
+
         //====================================================================//
         // Switch Entity
         return self::forceEntity((int) $entityId);
@@ -233,6 +234,7 @@ class MultiCompany
                 }
             }
         }
+
         //====================================================================//
         // No Entity Identified
         return null;

@@ -378,6 +378,7 @@ trait PaymentsTrait
             // Unable to Delete Payment => No Recreate
             return false;
         }
+
         //====================================================================//
         // Payment Was Deleted => Recreate
         return true;
@@ -445,6 +446,7 @@ trait PaymentsTrait
         //====================================================================//
         // Setup Payment Invoice Id
         $payment->facid = $this->object->id;
+
         //====================================================================//
         // Setup Payment Date
         try {
@@ -473,6 +475,7 @@ trait PaymentsTrait
 
             return $this->catchDolibarrErrors($payment);
         }
+
         //====================================================================//
         // Setup Payment Account Id
         return $this->addPaymentItemToBank($payment, $lineData);
@@ -569,6 +572,7 @@ trait PaymentsTrait
             $this->object,
             (float) $consumed
         );
+
         //====================================================================//
         // Return Identified Payment
         return $payment;
@@ -596,6 +600,7 @@ trait PaymentsTrait
         if (!$methodId) {
             return null;
         }
+
         //====================================================================//
         // Return Identified Payment
         return PaymentManager::searchForSimilarPayment(

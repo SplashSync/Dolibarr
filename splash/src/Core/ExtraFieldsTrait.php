@@ -287,6 +287,7 @@ trait ExtraFieldsTrait
             // Evaluate Computed Data
             try {
                 $object = $this->object;
+
                 /** @phpstan-ignore-next-line */
                 return dol_eval((string) $computeSource, 1, 0, 0);
             } catch (\Throwable $ex) {

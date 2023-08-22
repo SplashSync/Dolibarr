@@ -426,6 +426,7 @@ trait StockTrait
         if (empty($this->object->fk_default_warehouse)) {
             return "";
         }
+
         //====================================================================//
         // Read Location Name from Database
         return (string) $this->object->getValueFrom(

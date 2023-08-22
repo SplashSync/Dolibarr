@@ -145,6 +145,7 @@ class PaymentManager
 
             return null;
         }
+
         //====================================================================//
         // Return Identified Payment
         return $payment;

@@ -363,6 +363,7 @@ class VariantsManager
         //====================================================================//
         // Load Parent Product Variants
         $parentVariants = VariantsManager::getProductVariants($parentId);
+
         //====================================================================//
         // Compare Variants Lists
         return (count($productIds) < count($parentVariants));

@@ -101,6 +101,7 @@ class UpdatedCustomers extends AbstractWidget
             ->name($langs->trans("MaxNbOfLinesForBoxes"))
             ->description($langs->trans("BoxTitleLastModifiedCustomers"))
         ;
+
         //====================================================================//
         // Publish Fields
         return $this->fieldsFactory()->publish() ?? array();
