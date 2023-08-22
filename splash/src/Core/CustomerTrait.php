@@ -15,7 +15,6 @@
 
 namespace Splash\Local\Core;
 
-use ArrayObject;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Objects\Order;
 
@@ -194,11 +193,11 @@ trait CustomerTrait
     /**
      * Detect Guest Customer To Use for This Order/Invoice
      *
-     * @param Array|ArrayObject $receivedData Received Data
+     * @param array $receivedData Received Data
      *
      * @return int
      */
-    protected function getGuestCustomer($receivedData)
+    protected function getGuestCustomer(array $receivedData): int
     {
         global $conf;
 
@@ -210,9 +209,9 @@ trait CustomerTrait
 
         //====================================================================//
         // Standard Mode => A SocId is Given
-        if (isset($receivedData["socid"]) && !empty(self::objects()->Id($receivedData["socid"]))) {
-            Splash::log()->deb("Customer Id Given : Id ".self::objects()->Id($receivedData["socid"]));
-            $this->socId = (int) self::objects()->Id($receivedData["socid"]);
+        if (isset($receivedData["socid"]) && !empty(self::objects()->id($receivedData["socid"]))) {
+            Splash::log()->deb("Customer Id Given : Id ".self::objects()->id($receivedData["socid"]));
+            $this->socId = (int) self::objects()->id($receivedData["socid"]);
 
             return $this->socId;
         }
@@ -237,7 +236,7 @@ trait CustomerTrait
      *
      * @return bool
      */
-    private function isAllowedGuest()
+    private function isAllowedGuest(): bool
     {
         global $conf;
         if (!isset($conf->global->SPLASH_GUEST_ORDERS_ALLOW) || empty($conf->global->SPLASH_GUEST_ORDERS_ALLOW)) {
@@ -260,7 +259,7 @@ trait CustomerTrait
      *
      * @return bool
      */
-    private function isAllowedEmailDetection()
+    private function isAllowedEmailDetection(): bool
     {
         global $conf;
         if (!$this->isAllowedGuest() || !isset($conf->global->SPLASH_GUEST_ORDERS_EMAIL)) {
@@ -275,9 +274,9 @@ trait CustomerTrait
      *
      * @param string $email Customer Email
      *
-     * @return int Customer Id
+     * @return int Customer ID
      */
-    private function getCustomerByEmail($email)
+    private function getCustomerByEmail(string $email): int
     {
         global $db;
 

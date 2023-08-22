@@ -43,6 +43,14 @@ trait MetaTrait
             ->microData("http://schema.org/Organization", "active")
             ->isListed()
         ;
+        //====================================================================//
+        // Parent ThirdParty
+        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+            ->identifier("parent")
+            ->name($langs->trans("ParentCompany"))
+            ->group("Meta")
+            ->microData("http://schema.org/Organization", "parentOrganization")
+        ;
         if (Local::dolVersionCmp("3.6.0") >= 0) {
             //====================================================================//
             // isProspect
@@ -111,6 +119,12 @@ trait MetaTrait
                 $this->getSimpleBit('prospect', 1);
 
                 break;
+            case 'parent':
+                $this->out[$fieldName] = self::objects()
+                    ->encode("ThirdParty", (string) $this->object->parent)
+                ;
+
+                break;
             default:
                 return;
         }
@@ -153,6 +167,31 @@ trait MetaTrait
                 break;
             case 'prospect':
                 $this->setSimpleBit('client', 1, $fieldData);
+
+                break;
+            default:
+                return;
+        }
+        unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Write Given Fields
+     *
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
+     *
+     * @return void
+     */
+    private function setMetaParentFields(string $fieldName, ?string $fieldData): void
+    {
+        //====================================================================//
+        // WRITE Field
+        switch ($fieldName) {
+            //====================================================================//
+            // Direct Writings
+            case 'parent':
+                $this->setSimple("parent", self::objects()->id((string) $fieldData));
 
                 break;
             default:
