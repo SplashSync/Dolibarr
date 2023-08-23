@@ -60,7 +60,7 @@ trait MainTrait
         // READ Fields
         switch ($fieldName) {
             case 'customcode':
-                $this->out[$fieldName] = str_replace(" ", "", $this->object->customcode ?? "");
+                $this->out[$fieldName] = str_replace(" ", "", $this->object->customcode ?? "" ?: "");
 
                 break;
             case 'country_code':
