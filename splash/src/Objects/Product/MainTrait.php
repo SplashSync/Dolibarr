@@ -43,6 +43,7 @@ trait MainTrait
         $this->fieldsFactory()->create(SPL_T_COUNTRY)
             ->identifier("country_code")
             ->name($langs->trans("Origin"))
+            ->microData("http://schema.org/Product", "countryOfOrigin")
         ;
     }
 

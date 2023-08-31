@@ -62,6 +62,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Load Product Combinations
+        $this->baseProduct = null;
         $this->combination = VariantsManager::getProductCombination((int) $objectId);
         if ($this->combination) {
             $this->baseProduct = new Product($db);
