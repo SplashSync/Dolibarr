@@ -177,7 +177,6 @@ Dol-13-Variants:
 ################################################################
 .code_quality:   &code_quality
 #     when:       manual
-    image:      tuxgasy/dolibarr:14
     stage:      quality
     tags:       ['Dedicated']
     services:
