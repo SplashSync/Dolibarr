@@ -18,6 +18,7 @@ namespace Splash\Local\Services;
 use ArrayObject;
 use CommonObject;
 use Exception;
+use Societe;
 use Splash\Core\SplashCore  as Splash;
 use Splash\Local\Local;
 use stdClass;
@@ -384,7 +385,7 @@ class MultiCompany
      */
     private static function forceEntity(int $entityId): int
     {
-        global $conf, $db, $user;
+        global $conf, $db, $user, $mysoc;
 
         //====================================================================//
         // Switch Entity
@@ -392,6 +393,15 @@ class MultiCompany
             $conf->entity = (int)   $entityId;
             $conf->setValues($db);
             $user->entity = $conf->entity;
+
+            //====================================================================//
+            // Switch My Soc Object
+            $mysoc = new Societe($db);
+            $mysoc->setMysoc($conf);
+            // For some countries, we need to invert our address with customer address
+            if ('DE' == $mysoc->country_code && !isset($conf->global->MAIN_INVERT_SENDER_RECIPIENT)) {
+                $conf->global->MAIN_INVERT_SENDER_RECIPIENT = 1;
+            }
         }
 
         return $conf->entity;
