@@ -16,7 +16,7 @@
 namespace   Splash\Local\Core;
 
 use EcmFiles;
-use EcmfilesLine;
+use EcmFilesLine;
 use Exception;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;

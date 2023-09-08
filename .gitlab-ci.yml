@@ -17,7 +17,7 @@
 
 ################################################################
 # Select image from https://hub.docker.com/_/php/
-image:  tuxgasy/dolibarr:16
+image:  tuxgasy/dolibarr:17
 ################################################################
 # Set any variables we need
 variables:
@@ -206,6 +206,10 @@ Dol-13-Variants:
     # Run After Script
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+
+Dol-18-Quality:
+    image:      tuxgasy/dolibarr:18
+    <<: *code_quality
 
 Dol-17-Quality:
     image:      tuxgasy/dolibarr:17
