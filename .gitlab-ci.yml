@@ -33,6 +33,7 @@ variables:
     DOLI_DB_USER:           root
     DOLI_DB_PASSWORD:       dolibarr
     DOLI_ADMIN_LOGIN:       PhpUnit
+    DOLI_INSTANCE_UNIQUE_ID: CI_JOB_ID
 
 ################################################################
 # Defined Pipeline Stages
