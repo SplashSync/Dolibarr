@@ -37,3 +37,6 @@ parameters:
 
         # Fix for Dolibarr V17
         - '#Method ProductCombination2ValuePair::create\(\) invoked with 1 parameter, 0 required#'
+
+        # Fix for Dolibarr V18
+        - '#Class EcmfilesLine referenced with incorrect case: EcmFilesLine.#'

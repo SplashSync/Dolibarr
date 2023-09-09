@@ -217,7 +217,7 @@ trait ImagesTrait
 
         //====================================================================//
         // Create Images List
-        /** @var EcmfilesLine $ecmFileLine */
+        /** @var EcmFilesLine $ecmFileLine */
         foreach ($ecmFiles->lines as $key => $ecmFileLine) {
             //====================================================================//
             // Filter No Images Files
