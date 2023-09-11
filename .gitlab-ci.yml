@@ -107,6 +107,18 @@ stages:
 ################################################################
 
 ################################################################
+# Dolibarr V18
+Dol-18-Basics:
+    image:          tuxgasy/dolibarr:18
+    <<: *functionnal-basic
+Dol-18-Advanced:
+    image:          tuxgasy/dolibarr:18
+    <<: *functionnal-advanced
+Dol-18-Variants:
+    image:          tuxgasy/dolibarr:18
+    <<: *functionnal-variants
+
+################################################################
 # Dolibarr V17
 Dol-17-Basics:
     image:          tuxgasy/dolibarr:17
@@ -223,18 +235,18 @@ Dol-16-Quality:
     <<: *code_quality
 
 Dol-14-Quality:
-    image:      tuxgasy/dolibarr:14.0.4
+    image:      tuxgasy/dolibarr:14
     <<: *code_quality
 
-Dol-13-Quality:
-    image:      tuxgasy/dolibarr:13
-    allow_failure:  true
-    <<: *code_quality
-
-Dol-Dev-Quality:
-    image:      tuxgasy/dolibarr:develop
-    allow_failure:  true
-    <<: *code_quality
+#Dol-13-Quality:
+#    image:      tuxgasy/dolibarr:13
+#    allow_failure:  true
+#    <<: *code_quality
+#
+#Dol-Dev-Quality:
+#    image:      tuxgasy/dolibarr:develop
+#    allow_failure:  true
+#    <<: *code_quality
 
 #################################################################
 ## Build Documentation
