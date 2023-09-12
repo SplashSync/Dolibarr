@@ -248,9 +248,9 @@ Dol-14-Quality:
 #    allow_failure:  true
 #    <<: *code_quality
 
-#################################################################
-## Build Documentation
-#################################################################
+################################################################
+# Build Documentation
+################################################################
 pages:
     image:      jekyll/minimal:latest
     stage:      deploy
@@ -262,3 +262,22 @@ pages:
     artifacts:
         paths:
             - public
+            -
+################################################################
+# Build Module
+################################################################
+module:
+    image:      registry.gitlab.com/splashsync/php-console:pages
+    stage:      deploy
+    tags:       ['Dedicated']
+    retry:      2
+    ################################################################################
+    # Run Test Script
+    script:
+        # Run Composer to Build deps
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+        # Build Documentation
+        - php splash/vendor/bin/grumphp run --tasks=build-module
+    artifacts:
+        paths:
+            - build
