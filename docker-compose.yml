@@ -296,9 +296,8 @@ services:
         logging: { driver: "none" }
         volumes:
             # Specify Local Configuration File
-            - './docker/toolkit/splash.yml:/app/config/packages/splash.yml:ro'
+            - './docker/toolkit/splash.yaml:/app/config/packages/splash.yaml:ro'
         hostname:           toolkit.dolibarr.local
-        command:            ["php", "/app/bin/console", "server:run", "172.100.0.100:80"]
         networks:
             dolibarr:      { ipv4_address: 172.100.0.100, aliases: [ toolkit.dolibarr.local ] }
             splashsync:    { aliases: [ toolkit.dolibarr.local ] }

@@ -254,7 +254,7 @@ Dol-14-Quality:
 pages:
     image:      jekyll/minimal:latest
     stage:      deploy
-    tags:       [ Dedicated-Docker ]
+    tags:       [ Dedicated ]
     ################################################################################
     # Run Test Script
     script:
@@ -262,24 +262,3 @@ pages:
     artifacts:
         paths:
             - public
-
-################################################################
-## Build Documentation
-#################################################################
-module:
-    image:      registry.gitlab.com/splashsync/php-console:pages
-    stage:      deploy
-    tags:       ['Dedicated']
-    retry:      2
-    services:
-        - docker:dind
-    ################################################################################
-    # Run Test Script
-    script:
-        # Run Composer to Build deps
-        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
-        # Build Documentation
-        - php splash/vendor/bin/grumphp run --tasks=build-module
-    artifacts:
-        paths:
-            - build
