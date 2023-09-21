@@ -45,12 +45,12 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
-    - Build
+    - Builds
     - quality
     - basic
     - advanced
     - variants
-#    - Build
+#    - Builds
 
 ################################################################
 # Functional Tests
