@@ -18,7 +18,6 @@
 ################################################################
 # Include Pipeline Templates
 include:
-    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/module.yaml'
     - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/pages.yaml'
 
 ################################################################
@@ -45,12 +44,11 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
-    - Builds
     - quality
     - basic
     - advanced
     - variants
-#    - Builds
+    - Builds
 
 ################################################################
 # Functional Tests
@@ -256,36 +254,21 @@ Dol-14-Quality:
 #    allow_failure:  true
 #    <<: *code_quality
 
-#################################################################
-## Build Documentation
-#################################################################
-#pages:
-#    image:      jekyll/minimal:latest
-#    stage:      deploy
-#    tags:       [ Dedicated ]
-#    ################################################################################
-#    # Run Test Script
-#    script:
-#        - wget -qO - https://gitlab.com/badpixxel-robo/jekyll/-/raw/main/scripts/gitlab-pages.sh | sh
-#    artifacts:
-#        paths:
-#            - public
-#
-#################################################################
-## Build Module
-#################################################################
-#module:
-#    image:      registry.gitlab.com/splashsync/php-console:pages
-#    stage:      deploy
-#    tags:       ['Dedicated']
-#    retry:      2
-#    ################################################################################
-#    # Run Test Script
-#    script:
-#        # Run Composer to Build deps
-#        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
-#        # Build Documentation
-#        - php splash/vendor/bin/grumphp run --tasks=build-module
-#    artifacts:
-#        paths:
-#            - build
+################################################################
+# Build Module
+################################################################
+module:
+    image:      registry.gitlab.com/splashsync/php-console:pages
+    stage:      Builds
+    tags:       ['Dedicated']
+    retry:      2
+    ################################################################################
+    # Run Test Script
+    script:
+        # Run Composer to Build deps
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+        # Build Documentation
+        - php splash/vendor/bin/grumphp run --tasks=build-module
+    artifacts:
+        paths:
+            - build
