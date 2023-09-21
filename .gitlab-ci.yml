@@ -22,8 +22,8 @@ include:
     - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/pages.yaml'
 
 ################################################################
-# Select image from https://hub.docker.com/_/php/
-image:  tuxgasy/dolibarr:17
+# Define Default Image
+image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
 
 ################################################################
 # Set any variables we need
