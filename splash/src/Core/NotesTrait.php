@@ -74,7 +74,7 @@ trait NotesTrait
      * Write Given Fields
      *
      * @param string      $fieldName Field Identifier / Name
-     * @param null|scalar $fieldData Field Data
+     * @param null|string $fieldData Field Data
      *
      * @return void
      */

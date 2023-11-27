@@ -53,7 +53,9 @@ class L06AttributesManagerTest extends ObjectsCase
         //====================================================================//
         //   Test Loading Attribute
         $this->assertInstanceOf(ProductAttribute::class, AttrManager::getAttributeById($attribute->id));
-        $this->assertInstanceOf(ProductAttribute::class, AttrManager::getAttributeByCode($attrCode));
+        /** @var null|ProductAttribute $attributeByCode */
+        $attributeByCode = AttrManager::getAttributeByCode($attrCode);
+        $this->assertInstanceOf(ProductAttribute::class, $attributeByCode);
 
         //====================================================================//
         //   Create New Attribute Values
