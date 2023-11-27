@@ -81,8 +81,8 @@ trait ExtraFieldsPhpUnitTrait
                     '0',
                     ($visible ? '0':'1')
                 );
-                //====================================================================//
-                // ExtraField Not Found = Create
+            //====================================================================//
+            // ExtraField Not Found = Create
             } else {
                 $extraFields->addExtraField(
                     $extraFieldName,

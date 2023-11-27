@@ -99,8 +99,8 @@ class Local implements LocalClassInterface
         // Override Module Parameters with Local User Selected Lang
         if (self::getParameter("SPLASH_LANG")) {
             $parameters["DefaultLanguage"] = self::getParameter("SPLASH_LANG");
-            //====================================================================//
-            // Override Module Parameters with Local Default System Lang
+        //====================================================================//
+        // Override Module Parameters with Local Default System Lang
         } elseif (($langs) && $langs->getDefaultLang()) {
             $parameters["DefaultLanguage"] = $langs->getDefaultLang();
         }
