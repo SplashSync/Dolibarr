@@ -25,7 +25,7 @@ trait MainTrait
     /**
      * @var null|bool
      */
-    private ?bool $updateBilled = false;
+    private ?bool $updateBilled = null;
 
     /**
      * Build Address Fields using FieldFactory
