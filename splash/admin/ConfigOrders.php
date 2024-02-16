@@ -106,7 +106,7 @@ if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
     echo $form->select_company(
         $conf->global->SPLASH_GUEST_ORDERS_CUSTOMER,
         'GuestCustomerid',
-        '(s.client = 1 OR s.client = 3)',
+        's.client = 1 OR s.client = 3',
         0,
         0,
         0
