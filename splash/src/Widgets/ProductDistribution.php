@@ -265,7 +265,7 @@ class ProductDistribution extends AbstractWidget
             case "Invoices":
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
-                $this->stats = new \FactureStats($db, 0, 'customer', 0);
+                $this->stats = new FactureStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
                 $this->select = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
@@ -286,7 +286,7 @@ class ProductDistribution extends AbstractWidget
             case "InvoicesCount":
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facturestats.class.php';
-                $this->stats = new \FactureStats($db, 0, 'customer', 0);
+                $this->stats = new FactureStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
                 $this->select = "product.ref as label, COUNT(product.ref) as value";
@@ -307,7 +307,7 @@ class ProductDistribution extends AbstractWidget
             case "Orders":
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
-                $this->stats = new \CommandeStats($db, 0, 'customer', 0);
+                $this->stats = new CommandeStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
                 $this->select = "product.ref as label, SUM(tl.".$this->stats->field_line.") as value";
@@ -328,7 +328,7 @@ class ProductDistribution extends AbstractWidget
             case "OrdersCount":
                 // Load Stat Class
                 include_once DOL_DOCUMENT_ROOT.'/commande/class/commandestats.class.php';
-                $this->stats = new \CommandeStats($db, 0, 'customer', 0);
+                $this->stats = new CommandeStats($db, 0, 'customer', 0);
                 //====================================================================//
                 // Setup Mode
                 $this->select = "product.ref as label, COUNT(product.ref) as value";

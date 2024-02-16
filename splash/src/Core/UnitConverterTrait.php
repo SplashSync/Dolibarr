@@ -102,7 +102,7 @@ trait UnitConverterTrait
      *
      * @param null|float $weight Weight Raw Value
      *
-     * @return arrayobject $r->weight , $r->weight_units , $r->print, $r->raw
+     * @return ArrayObject $r->weight , $r->weight_units , $r->print, $r->raw
      */
     public function normalizeWeight(?float $weight): ArrayObject
     {
@@ -121,23 +121,23 @@ trait UnitConverterTrait
             $result->weight = Converter::convertWeight((float) $weight, $splFactor);
             // Force Variant Weight Unit to Parent Unit
             $result->weight_units = $this->baseProduct->weight_units;
-        //====================================================================//
-        // Weight - Tonne
+            //====================================================================//
+            // Weight - Tonne
         } elseif ($weight >= 1e3) {
             $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_TONNE);
             $result->weight_units = self::getDolUnitId("weight", "3");
-        //====================================================================//
-        // Weight - KiloGram
+            //====================================================================//
+            // Weight - KiloGram
         } elseif ($weight >= 1) {
             $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_KILOGRAM);
             $result->weight_units = self::getDolUnitId("weight", "0");
-        //====================================================================//
-        // Weight - Gram
+            //====================================================================//
+            // Weight - Gram
         } elseif ($weight >= 1e-3) {
             $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_GRAM);
             $result->weight_units = self::getDolUnitId("weight", "-3");
-        //====================================================================//
-        // Weight - MilliGram
+            //====================================================================//
+            // Weight - MilliGram
         } elseif ($weight >= 1e-6) {
             $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_MILLIGRAM);
             $result->weight_units = self::getDolUnitId("weight", "-6");
@@ -171,7 +171,7 @@ trait UnitConverterTrait
      *
      * @param null|float $length Length Raw Value
      *
-     * @return arrayobject $r->length , $r->length_units , $r->print, $r->raw
+     * @return ArrayObject $r->length , $r->length_units , $r->print, $r->raw
      */
     public static function normalizeLength(?float $length): ArrayObject
     {
@@ -181,18 +181,18 @@ trait UnitConverterTrait
         if ($length >= 1) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_M);
             $result->length_units = self::getDolUnitId("size", "0");
-        //====================================================================//
-        // Length - DecaMeter
+            //====================================================================//
+            // Length - DecaMeter
         } elseif ($length >= 1e-1) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_DM);
             $result->length_units = self::getDolUnitId("size", "-1");
-        //====================================================================//
-        // Length - CentiMeter
+            //====================================================================//
+            // Length - CentiMeter
         } elseif ($length >= 1e-2) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_CM);
             $result->length_units = self::getDolUnitId("size", "-2");
-        //====================================================================//
-        // Length - MilliMeter
+            //====================================================================//
+            // Length - MilliMeter
         } elseif ($length >= 1e-3) {
             $result->length = Converter::convertLength((float) $length, Converter::LENGTH_MM);
             $result->length_units = self::getDolUnitId("size", "-3");
@@ -226,7 +226,7 @@ trait UnitConverterTrait
      *
      * @param null|float $surface Surface Raw Value
      *
-     * @return arrayobject $r->surface , $r->surface_units , $r->print, $r->raw
+     * @return ArrayObject $r->surface , $r->surface_units , $r->print, $r->raw
      */
     public static function normalizeSurface(?float $surface): ArrayObject
     {
@@ -236,18 +236,18 @@ trait UnitConverterTrait
         if ($surface >= 1) {
             $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_M2);
             $result->surface_units = self::getDolUnitId("surface", "0");
-        //====================================================================//
-        // Surface - DecaMeter 2
+            //====================================================================//
+            // Surface - DecaMeter 2
         } elseif ($surface >= 1e-2) {
             $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_DM2);
             $result->surface_units = self::getDolUnitId("surface", "-2");
-        //====================================================================//
-        // Surface - CentiMeter 2
+            //====================================================================//
+            // Surface - CentiMeter 2
         } elseif ($surface >= 1e-4) {
             $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_CM2);
             $result->surface_units = self::getDolUnitId("surface", "-4");
-        //====================================================================//
-        // Surface - MilliMeter 2
+            //====================================================================//
+            // Surface - MilliMeter 2
         } elseif ($surface >= 1e-6) {
             $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_MM2);
             $result->surface_units = self::getDolUnitId("surface", "-6");
@@ -281,7 +281,7 @@ trait UnitConverterTrait
      *
      * @param null|float $volume Volume Raw Value
      *
-     * @return arrayobject $r->volume , $r->volume_units , $r->print, $r->raw
+     * @return ArrayObject $r->volume , $r->volume_units , $r->print, $r->raw
      */
     public static function normalizeVolume(?float $volume): ArrayObject
     {
@@ -291,18 +291,18 @@ trait UnitConverterTrait
         if ($volume >= 1) {
             $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_M3);
             $result->volume_units = self::getDolUnitId("volume", "0");
-        //====================================================================//
-        // Volume - DecaMeter 3
+            //====================================================================//
+            // Volume - DecaMeter 3
         } elseif ($volume >= 1e-3) {
             $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_DM3);
             $result->volume_units = self::getDolUnitId("volume", "-3");
-        //====================================================================//
-        // Volume - CentiMeter 3
+            //====================================================================//
+            // Volume - CentiMeter 3
         } elseif ($volume >= 1e-6) {
             $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_CM3);
             $result->volume_units = self::getDolUnitId("volume", "-6");
-        //====================================================================//
-        // Volume - MilliMeter 3
+            //====================================================================//
+            // Volume - MilliMeter 3
         } elseif ($volume >= 1e-9) {
             $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_MM3);
             $result->volume_units = self::getDolUnitId("volume", "-9");

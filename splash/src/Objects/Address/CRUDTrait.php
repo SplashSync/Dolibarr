@@ -80,7 +80,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Init Object
-        $this->object = new \Contact($db);
+        $this->object = new Contact($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
         $this->setSimple("firstname", $this->in["firstname"]);

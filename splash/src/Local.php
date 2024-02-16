@@ -99,8 +99,8 @@ class Local implements LocalClassInterface
         // Override Module Parameters with Local User Selected Lang
         if (self::getParameter("SPLASH_LANG")) {
             $parameters["DefaultLanguage"] = self::getParameter("SPLASH_LANG");
-        //====================================================================//
-        // Override Module Parameters with Local Default System Lang
+            //====================================================================//
+            // Override Module Parameters with Local Default System Lang
         } elseif (($langs) && $langs->getDefaultLang()) {
             $parameters["DefaultLanguage"] = $langs->getDefaultLang();
         }
@@ -271,18 +271,18 @@ class Local implements LocalClassInterface
      */
     public function testSequences(string $name = null): array
     {
-        \Splash\Local\Services\SequencesManager::init();
+        Services\SequencesManager::init();
 
         switch ($name) {
             case "Basic":
-                return \Splash\Local\Services\SequencesManager::initBasic();
+                return Services\SequencesManager::initBasic();
             case "Advanced":
-                return \Splash\Local\Services\SequencesManager::initAdvanced();
+                return Services\SequencesManager::initAdvanced();
             case "Variants":
-                return \Splash\Local\Services\SequencesManager::initVariants();
+                return Services\SequencesManager::initVariants();
             default:
             case "List":
-                return \Splash\Local\Services\SequencesManager::listSequences();
+                return Services\SequencesManager::listSequences();
         }
     }
 
