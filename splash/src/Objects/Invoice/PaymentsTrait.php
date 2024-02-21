@@ -247,7 +247,9 @@ trait PaymentsTrait
             $payment->fetch($paymentData->id);
             //====================================================================//
             // Check If Payment impact another Bill
-            if (count($payment->getBillsArray()) > 1) {
+            /** @var array|int $billArray */
+            $billArray = $payment->getBillsArray();
+            if (is_array($billArray) && (count($billArray) > 1)) {
                 continue;
             }
             //====================================================================//
@@ -279,6 +281,7 @@ trait PaymentsTrait
             $payment->fetch($paymentData->id);
             //====================================================================//
             // Check If Payment impact another Bill
+            /** @var array|int $billArray */
             $billArray = $payment->getBillsArray();
             if (is_array($billArray) && count($billArray) > 1) {
                 continue;
@@ -355,7 +358,9 @@ trait PaymentsTrait
 
         //====================================================================//
         // Check If Payment impact another Bill => Too Late to Delete & recreate this payment
-        if (count($payment->getBillsArray()) > 1) {
+        /** @var array|int $billArray */
+        $billArray = $payment->getBillsArray();
+        if (is_array($billArray) && (count($billArray) > 1)) {
             // Payment is Used by Another Bill => No Recreate
             return false;
         }

@@ -38,6 +38,29 @@ class L01MultiCompanyTest extends ObjectsCase
     private array $objectCount = array();
 
     /**
+     * Ensure Minimal Modules are Enabled
+     */
+    public function testMinimalModulesEnabled(): void
+    {
+        //====================================================================//
+        //   Enable MultiCompany Mode
+        $this->changeMultiCompanyMode(true);
+        //====================================================================//
+        // Setup All Entities for Test Sequence
+        foreach (MultiCompany::getMultiCompanyInfos() as $companyInfo) {
+            //====================================================================//
+            // Simulate Logged on Main Entity
+            $this->changeEntityId($companyInfo->id);
+            //====================================================================//
+            // Enable Module on Entity
+            activateModule("modSociete");
+            activateModule("modProduct");
+            activateModule("modCommande");
+            activateModule("modFacture");
+        }
+    }
+
+    /**
      * Test Loading of Object that are not on Selected Entity
      *
      * @dataProvider ObjectTypesProvider

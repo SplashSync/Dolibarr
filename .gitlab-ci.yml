@@ -44,10 +44,10 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
-    - quality
-    - basic
-    - advanced
-    - variants
+    - Quality
+    - Basic
+    - Advanced
+    - Variants
     - Builds
 
 ################################################################
@@ -61,8 +61,10 @@ stages:
         - mysql:5.7
     artifacts:
         when: always
+        paths:
+            -       "$CI_PROJECT_DIR/*-report.html"
         reports:
-            junit: "$CI_PROJECT_DIR/*-report.xml"
+            junit:  "$CI_PROJECT_DIR/*-report.xml"
     ################################################################
     # Before Script
     before_script:
@@ -87,30 +89,45 @@ stages:
         # Show PhpUnit Version
         - splash/vendor/phpunit/phpunit/phpunit --version
         # Run PhpUnit Main Local Testsuite
-        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=Init               --log-junit $CI_PROJECT_DIR/init-report.xml
-        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=$PHPUNIT_SUITE     --log-junit $CI_PROJECT_DIR/full-report.xml
+        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=Init               --log-junit $CI_PROJECT_DIR/init-report.xml --testdox-html $CI_PROJECT_DIR/init-report.html
+        - splash/vendor/phpunit/phpunit/phpunit  --testsuite=$PHPUNIT_SUITE     --log-junit $CI_PROJECT_DIR/full-report.xml --testdox-html $CI_PROJECT_DIR/full-report.html
 
 .functionnal-basic:   &functionnal-basic
     <<: *functionnal
-    stage:          basic
+    stage:          Basic
     variables:
         PHPUNIT_SUITE:   Basic
 
 .functionnal-advanced:   &functionnal-advanced
     <<: *functionnal
-    stage:          advanced
+    stage:          Advanced
     variables:
         PHPUNIT_SUITE:   Advanced
 
 .functionnal-variants:   &functionnal-variants
     <<: *functionnal
-    stage:          variants
+    stage:          Variants
     variables:
         PHPUNIT_SUITE:   Variants
 
 ################################################################
 # Functional Tests Map
 ################################################################
+
+################################################################
+# Dolibarr V19
+Dol-19-Basics:
+    image:          tuxgasy/dolibarr:19
+    <<: *functionnal-basic
+    allow_failure: true
+Dol-19-Advanced:
+    image:          tuxgasy/dolibarr:19
+    <<: *functionnal-advanced
+    allow_failure: true
+Dol-19-Variants:
+    image:          tuxgasy/dolibarr:19
+    <<: *functionnal-variants
+    allow_failure: true
 
 ################################################################
 # Dolibarr V18
@@ -199,7 +216,7 @@ Dol-13-Variants:
 ################################################################
 .code_quality:   &code_quality
 #     when:       manual
-    stage:      quality
+    stage:      Quality
     tags:       ['Dedicated']
     services:
         - mysql:5.7
@@ -228,6 +245,11 @@ Dol-13-Variants:
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
 
+Dol-19-Quality:
+    image:      tuxgasy/dolibarr:19
+    <<: *code_quality
+    allow_failure: true
+
 Dol-18-Quality:
     image:      tuxgasy/dolibarr:18
     <<: *code_quality
@@ -243,16 +265,6 @@ Dol-16-Quality:
 Dol-14-Quality:
     image:      tuxgasy/dolibarr:14
     <<: *code_quality
-
-#Dol-13-Quality:
-#    image:      tuxgasy/dolibarr:13
-#    allow_failure:  true
-#    <<: *code_quality
-#
-#Dol-Dev-Quality:
-#    image:      tuxgasy/dolibarr:develop
-#    allow_failure:  true
-#    <<: *code_quality
 
 ################################################################
 # Build Module

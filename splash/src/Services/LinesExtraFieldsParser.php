@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Services;
 
+use Exception;
 use FactureLigne;
 use OrderLine;
 use Splash\Components\FieldsFactory;
@@ -88,13 +89,14 @@ class LinesExtraFieldsParser
     /**
      * Build Parser for a Given Object
      *
-     * @param AbstractObject $splashObject
-     *
-     * @return LinesExtraFieldsParser
+     * @throws Exception
      */
     public static function fromSplashObject(AbstractObject $splashObject): LinesExtraFieldsParser
     {
         if (!isset(self::$instance)) {
+            if (!property_exists($splashObject, "extraLineFieldsType")) {
+                throw new Exception('Line ExtraFields Parser require $extraLineFieldsType parameter');
+            }
             self::$instance = new self(
                 $splashObject::fieldsFactory(),
                 $splashObject::$extraLineFieldsType ?? ""

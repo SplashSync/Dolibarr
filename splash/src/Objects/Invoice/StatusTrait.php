@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Invoice;
 
 use Facture;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Models\Objects\Invoice\Status;
 
 /**
  * Dolibarr Customer Invoice Status Field
@@ -61,16 +62,27 @@ trait StatusTrait
             return;
         }
 
-        if (0 == $this->object->statut) {
-            $this->out[$fieldName] = "PaymentDraft";
-        } elseif (1 == $this->object->statut) {
-            $this->out[$fieldName] = "PaymentDue";
-        } elseif (2 == $this->object->statut) {
-            $this->out[$fieldName] = "PaymentComplete";
-        } elseif (3 == $this->object->statut) {
-            $this->out[$fieldName] = "PaymentCanceled";
-        } else {
-            $this->out[$fieldName] = "Unknown";
+        switch ($this->getInvoiceStatus()) {
+            case Facture::STATUS_DRAFT:
+                $this->out[$fieldName] = Status::DRAFT;
+
+                break;
+            case Facture::STATUS_VALIDATED:
+                $this->out[$fieldName] = Status::PAYMENT_DUE;
+
+                break;
+            case Facture::STATUS_CLOSED:
+                $this->out[$fieldName] = Status::COMPLETE;
+
+                break;
+            case Facture::STATUS_ABANDONED:
+                $this->out[$fieldName] = Status::CANCELED;
+
+                break;
+            default:
+                $this->out[$fieldName] = Status::UNKNOWN;
+
+                break;
         }
 
         unset($this->in[$key]);
@@ -110,7 +122,7 @@ trait StatusTrait
                 return Splash::log()->errTrace($langs->trans("WarehouseSourceNotDefined"));
             }
         }
-        $initialStatut = $this->object->statut;
+        $initialStatut = $this->getInvoiceStatus();
         switch ($fieldData) {
             //====================================================================//
             // Status Draft
@@ -119,10 +131,10 @@ trait StatusTrait
             case "PaymentDraft":
                 //====================================================================//
                 // Whatever => Set Draft
-                if ((0 != $this->object->statut) && (!$this->setStatusDraft())) {
+                if ((0 != $this->object->status) && (!$this->setStatusDraft())) {
                     return false;
                 }
-                $this->object->statut = Facture::STATUS_DRAFT;
+                $this->setInvoiceStatus(Facture::STATUS_DRAFT);
 
                 break;
                 //====================================================================//
@@ -135,14 +147,14 @@ trait StatusTrait
                 // If Already Paid => Set Draft
                 // If Already Canceled => Set Draft
                 $draftStatuses = array(Facture::STATUS_ABANDONED, Facture::STATUS_CLOSED);
-                if (in_array((int) $this->object->statut, $draftStatuses, false)) {
+                if (in_array((int) $this->object->status, $draftStatuses, false)) {
                     if (!$this->setStatusDraft()) {
                         return false;
                     }
                 }
                 //====================================================================//
                 // If Not Validated => Set Validated
-                if ((1 != $this->object->statut)) {
+                if ((Facture::STATUS_VALIDATED != $this->getInvoiceStatus())) {
                     if (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK)) {
                         return $this->catchDolibarrErrors();
                     }
@@ -151,7 +163,7 @@ trait StatusTrait
                     $this->setDownloadUrlsUpdated();
                 }
                 $this->object->paye = 0;
-                $this->object->statut = Facture::STATUS_VALIDATED;
+                $this->setInvoiceStatus(Facture::STATUS_VALIDATED);
 
                 break;
                 //====================================================================//
@@ -160,12 +172,12 @@ trait StatusTrait
             case "PaymentComplete":
                 //====================================================================//
                 // If Previously Canceled => Locked
-                if ((Facture::STATUS_ABANDONED == $this->object->statut)) {
+                if ((Facture::STATUS_ABANDONED == $this->getInvoiceStatus())) {
                     return Splash::log()->err("You cannot Validate a Canceled Invoice!");
                 }
                 //====================================================================//
                 // If Draft => Set Validated
-                if (Facture::STATUS_DRAFT == $this->object->statut) {
+                if (Facture::STATUS_DRAFT == $this->getInvoiceStatus()) {
                     if (1 != $this->object->validate($user, "", $conf->global->SPLASH_STOCK)) {
                         return $this->catchDolibarrErrors();
                     }
@@ -175,11 +187,11 @@ trait StatusTrait
                 }
                 //====================================================================//
                 // If Validated => Set Paid
-                if ((1 == $this->object->statut) && (1 != $this->object->set_paid($user))) {
+                if ((Facture::STATUS_VALIDATED == $this->getInvoiceStatus()) && (1 != $this->setStatusPaid())) {
                     return $this->catchDolibarrErrors();
                 }
                 $this->object->paye = 1;
-                $this->object->statut = Facture::STATUS_CLOSED;
+                $this->setInvoiceStatus(Facture::STATUS_CLOSED);
 
                 break;
                 //====================================================================//
@@ -188,19 +200,44 @@ trait StatusTrait
             case "PaymentCanceled":
                 //====================================================================//
                 // Whatever => Set Canceled
-                if ((3 != $this->object->statut) && (!$this->setStatusCancel())) {
+                if ((Facture::STATUS_ABANDONED != $this->getInvoiceStatus()) && (!$this->setStatusCancel())) {
                     return $this->catchDolibarrErrors();
                 }
                 $this->object->paye = 0;
-                $this->object->statut = Facture::STATUS_ABANDONED;
+                $this->setInvoiceStatus(Facture::STATUS_ABANDONED);
 
                 break;
         }
-        if ($initialStatut != $this->object->statut) {
+        if ($initialStatut != $this->object->status) {
             $this->needUpdate();
         }
 
         return true;
+    }
+
+    /**
+     * Update Invoice Status with Version Detection
+     * Since Dolibarr V19, Uses status instead of statut
+     * Both properties available since V13
+     */
+    protected function getInvoiceStatus(): int
+    {
+        return $this->object->status;
+    }
+
+    /**
+     * Update Invoice Status with Version Detection
+     * Since Dolibarr V19, Uses status instead of statut
+     * Both properties available since V13
+     */
+    protected function setInvoiceStatus(int $status): void
+    {
+        $this->object->status = $status;
+        //====================================================================//
+        //
+        if (property_exists($this->object, "statut")) {
+            $this->object->statut = $status;
+        }
     }
 
     /**
@@ -212,12 +249,33 @@ trait StatusTrait
     {
         global $conf, $user;
 
+        if (method_exists($this->object, "setDraft")
+            && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+            return $this->catchDolibarrErrors();
+        }
         if (method_exists($this->object, "set_draft")
                 && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
             return $this->catchDolibarrErrors();
         }
-        if (method_exists($this->object, "setDraft")
-                && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
+
+        return true;
+    }
+
+    /**
+     * Set Invoice State as Draft
+     *
+     * @return bool
+     */
+    private function setStatusPaid(): bool
+    {
+        global $user;
+
+        if (method_exists($this->object, "setPaid")
+            && (1 != $this->object->setPaid($user))) {
+            return $this->catchDolibarrErrors();
+        }
+        if (method_exists($this->object, "set_paid")
+            && (1 != $this->object->set_paid($user))) {
             return $this->catchDolibarrErrors();
         }
 
@@ -233,15 +291,21 @@ trait StatusTrait
     {
         global $user;
 
-        if (method_exists($this->object, "set_canceled")
-            && (1 != $this->object->set_canceled($user))) {
-            return $this->catchDolibarrErrors();
+        if (method_exists($this->object, "setCanceled")) {
+            if (1 != $this->object->setCanceled($user)) {
+                return $this->catchDolibarrErrors();
+            }
+
+            return true;
         }
-        if (method_exists($this->object, "setCanceled")
-            && (1 != $this->object->setCanceled($user))) {
-            return $this->catchDolibarrErrors();
+        if (method_exists($this->object, "set_canceled")) {
+            if (1 != $this->object->set_canceled($user)) {
+                return $this->catchDolibarrErrors();
+            }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

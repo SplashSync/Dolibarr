@@ -94,6 +94,7 @@ trait CRUDTrait
         $this->object = new Commande($db);
         //====================================================================//
         // Pre-Setup of Dolibarr infos
+        $this->object->user_author_id = $user->id;
         $this->object->entity = MultiCompany::getCurrentId();
         $dateTime = new DateTime($this->in["date"]);
         $this->setSimple('date', $dateTime->getTimestamp());

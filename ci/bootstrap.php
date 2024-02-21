@@ -57,5 +57,6 @@ dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", "2", 'chaine', 0, '', $conf->
 // Activate Splash Module
 activateModule("modSplash");
 activateModule("modExpedition");
+activateModule("modProduct");
 activateModule("modProductBatch");
 activateModule("modAccounting");
