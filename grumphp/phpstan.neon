@@ -13,8 +13,7 @@ parameters:
             - ArrayObject
             - FactureStats
             - CommandeStats
-
-    ignoreErrors: 
+    ignoreErrors:
         - '#Function completeFileArrayWithDatabaseInfo not found.#'
 
         # Undefined in Dolibarr Class Property       
@@ -40,3 +39,6 @@ parameters:
 
         # Fix for Dolibarr V18
         - '#Class EcmfilesLine referenced with incorrect case: EcmFilesLine.#'
+
+        # Fix for Dolibarr V19
+        - '#Method Commande::load_board\(\) invoked with 2 parameters, 1 required#'

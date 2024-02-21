@@ -57,7 +57,7 @@ trait ItemsTrait
         if (Splash::isDebugMode()) {
             //====================================================================//
             // Force Invoice Status To Draft
-            $this->object->statut = 0;
+            $this->setInvoiceStatus(\Facture::STATUS_DRAFT);
         }
         //====================================================================//
         // Perform Line Delete

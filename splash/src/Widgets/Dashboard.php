@@ -221,7 +221,14 @@ class Dashboard extends AbstractWidget
             include_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
             $board = new \Commande($db);
 
-            $dashboardLines[] = $board->load_board($user);
+            //====================================================================//
+            // FIX for Dolibarr V19
+            if (Local::dolVersionCmp("19.0.0") > 0) {
+                $dashboardLines[] = $board->load_board($user, "toship");
+                $dashboardLines[] = $board->load_board($user, "tobill");
+            } else {
+                $dashboardLines[] = $board->load_board($user, "none");
+            }
         }
     }
 

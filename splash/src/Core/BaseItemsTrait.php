@@ -184,12 +184,12 @@ trait BaseItemsTrait
         $item->total_localtax1 = 0;
         $item->total_localtax2 = 0;
 
-        $item->fk_multicurrency = "";
-        $item->multicurrency_code = "";
-        $item->multicurrency_subprice = "0.0";
-        $item->multicurrency_total_ht = "0.0";
-        $item->multicurrency_total_tva = "0.0";
-        $item->multicurrency_total_ttc = "0.0";
+        $item->fk_multicurrency = 0;
+        $item->multicurrency_code = "0";
+        $item->multicurrency_subprice = 0.0;
+        $item->multicurrency_total_ht = 0.0;
+        $item->multicurrency_total_tva = 0.0;
+        $item->multicurrency_total_ttc = 0.0;
 
         if ($item->insert() <= 0) {
             $this->catchDolibarrErrors($item);
@@ -656,12 +656,17 @@ trait BaseItemsTrait
         }
 
         //====================================================================//
+        // Ensure ThirdParty is Loaded
+        if (!$this->object->thirdparty instanceof \Societe) {
+            $this->object->fetch_thirdparty();
+        }
+        //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne à partir de
         // qty, pu, remise_percent et txtva
         $localTaxType = getLocalTaxesFromRate(
             (string) $vatRateOrId,
             0,
-            $this->object->fetch_thirdparty(),
+            $this->object->thirdparty,
             $mysoc,
             (int) $useId
         );

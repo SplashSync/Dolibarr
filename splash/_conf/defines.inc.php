@@ -32,7 +32,7 @@ define("SPL_SHOW_DEV", 0);
 
 //====================================================================//
 // Module Version
-define("SPL_MOD_VERSION", '2.18.1');
+define("SPL_MOD_VERSION", '2.19.0');
 define("SPL_MOD_ID", 9200);
 define("SPL_MOD_NAME", 'splash');
 define("SPL_MOD_CATEGORIE", 'technic');

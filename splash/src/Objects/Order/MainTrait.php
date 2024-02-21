@@ -137,7 +137,7 @@ trait MainTrait
             //====================================================================//
             // Order Delivery Date
             case 'date_livraison':
-                $dateLivraison = $this->object->date_livraison;
+                $dateLivraison = $this->object->delivery_date;
                 $this->out[$fieldName] = !empty($dateLivraison)?dol_print_date($dateLivraison, '%Y-%m-%d'):null;
 
                 break;
@@ -244,16 +244,13 @@ trait MainTrait
             //====================================================================//
             // Order Official Date
             case 'date_livraison':
-                if (empty($fieldData) || dol_print_date($this->object->{$fieldName}, 'standard') === $fieldData) {
+                if (empty($fieldData) || dol_print_date($this->object->delivery_date, 'standard') === $fieldData) {
                     break;
                 }
                 $dateTime = new \DateTime((string) $fieldData);
-                if ($this->object->set_date_livraison($user, $dateTime->getTimestamp()) < 0) {
+                if ($this->object->setDeliveryDate($user, $dateTime->getTimestamp()) < 0) {
                     $this->catchDolibarrErrors();
                 }
-                //====================================================================//
-                // FIX for V12 & 13 - Move to delivery_date in next releases.
-                $this->setSimple('delivery_date', $this->object->date_livraison);
                 $this->needUpdate();
 
                 break;

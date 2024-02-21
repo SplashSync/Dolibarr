@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Address;
 
 use Contact;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Local\Local;
 use Splash\Local\Services\MultiCompany;
 use User;
 
@@ -137,7 +138,7 @@ trait CRUDTrait
      */
     public function delete(string $objectId): bool
     {
-        global $db,$user;
+        global $db, $user;
         //====================================================================//
         // Stack Trace
         Splash::log()->trace();
@@ -159,8 +160,12 @@ trait CRUDTrait
             return Splash::log()->err(" Unable to delete Product (".$objectId.").");
         }
         //====================================================================//
+        // Prepare Args
+        $arg1 = (Local::dolVersionCmp("19.0.0") > 0) ? $user : 0;
+        //====================================================================//
         // Delete Object
-        if ($object->delete() <= 0) {
+        /** @phpstan-ignore-next-line */
+        if ($object->delete($arg1) <= 0) {
             return $this->catchDolibarrErrors($object);
         }
 

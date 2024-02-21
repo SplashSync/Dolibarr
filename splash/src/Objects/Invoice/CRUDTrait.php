@@ -107,8 +107,9 @@ trait CRUDTrait
         $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
         $this->setSimple("statut", Facture::STATUS_DRAFT);
+        $this->object->fk_user_author = $user->id;
         $this->object->entity = MultiCompany::getCurrentId();
-        $this->object->statut = Facture::STATUS_DRAFT;
+        $this->setInvoiceStatus(Facture::STATUS_DRAFT);
         $this->object->paye = 0;
         //====================================================================//
         // If Credit Note => Setup Type
@@ -252,7 +253,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Only if Invoice is Valid
-        if ($this->object->statut <= 0) {
+        if ($this->getInvoiceStatus() <= 0) {
             return;
         }
         //====================================================================//

@@ -181,19 +181,19 @@ trait MainTrait
             //====================================================================//
 
             case 'isDraft':
-                $this->out[$fieldName] = (0 == $this->object->statut);
+                $this->out[$fieldName] = (Facture::STATUS_DRAFT == $this->getInvoiceStatus());
 
                 break;
             case 'isCanceled':
-                $this->out[$fieldName] = (3 == $this->object->statut);
+                $this->out[$fieldName] = (Facture::STATUS_ABANDONED == $this->getInvoiceStatus());
 
                 break;
             case 'isValidated':
-                $this->out[$fieldName] = (1 == $this->object->statut);
+                $this->out[$fieldName] = (Facture::STATUS_VALIDATED == $this->getInvoiceStatus());
 
                 break;
             case 'isPaid':
-                $this->out[$fieldName] = (2 == $this->object->statut);
+                $this->out[$fieldName] = (Facture::STATUS_CLOSED == $this->getInvoiceStatus());
 
                 break;
             default:
@@ -257,7 +257,7 @@ trait MainTrait
         }
         //====================================================================//
         // If Status Is Not Validated | Closed => Cannot Update This Flag
-        if (!in_array((int) $this->object->statut, array(Facture::STATUS_VALIDATED, Facture::STATUS_CLOSED), false)) {
+        if (!in_array($this->getInvoiceStatus(), array(Facture::STATUS_VALIDATED, Facture::STATUS_CLOSED), false)) {
             return true;
         }
         //====================================================================//
@@ -265,13 +265,13 @@ trait MainTrait
         if ($data) {
             //====================================================================//
             // Set Paid using Dolibarr Function
-            if ((1 == $this->object->statut) && (1 != $this->object->set_paid($user))) {
+            if ((Facture::STATUS_VALIDATED == $this->getInvoiceStatus()) && (1 != $this->object->set_paid($user))) {
                 return $this->catchDolibarrErrors();
             }
         } else {
             //====================================================================//
             // Set UnPaid using Dolibarr Function
-            if ((2 == $this->object->statut) && (1 != $this->object->set_unpaid($user))) {
+            if ((Facture::STATUS_CLOSED == $this->getInvoiceStatus()) && (1 != $this->object->set_unpaid($user))) {
                 return $this->catchDolibarrErrors();
             }
         }
