@@ -222,6 +222,18 @@ trait StatusTrait
      */
     protected function getInvoiceStatus(): int
     {
+        //====================================================================//
+        // Manage Deprecation of status property
+        if (!property_exists($this->object, "status")
+            && property_exists($this->object, "statut")
+        ) {
+            return $this->object->statut;
+        }
+        if (property_exists($this->object, "statut")) {
+            /** @phpstan-ignore-next-line */
+            return $this->object->status ?? $this->object->statut;
+        }
+
         return $this->object->status;
     }
 
@@ -234,7 +246,7 @@ trait StatusTrait
     {
         $this->object->status = $status;
         //====================================================================//
-        //
+        // Manage Deprecation of status property
         if (property_exists($this->object, "statut")) {
             $this->object->statut = $status;
         }
