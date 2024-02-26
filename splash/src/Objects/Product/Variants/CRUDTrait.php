@@ -186,7 +186,7 @@ trait CRUDTrait
             //====================================================================//
             // Extract Variable Product Id
             $variantProductId = self::objects()->id($listData["id"]);
-            if (false !== $variantProductId) {
+            if (!empty($variantProductId)) {
                 break;
             }
         }
