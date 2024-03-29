@@ -15,7 +15,6 @@
 
 namespace Splash\Local\Services;
 
-use _PHPStan_a2a733b6a\Nette\PhpGenerator\Method;
 use Splash\Local\Local;
 
 /**

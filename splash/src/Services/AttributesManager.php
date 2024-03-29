@@ -64,11 +64,10 @@ class AttributesManager
     /**
      * Load All Attribute Values from Database
      *
-     * @param int $attributeId Product Attribute Id
-     *
-     * @return void
+     * @param int  $attributeId Product Attribute ID
+     * @param bool $reload      Force Reload of Values in Cache
      */
-    public static function loadAttributeValues(int $attributeId)
+    public static function loadAttributeValues(int $attributeId, bool $reload = false): void
     {
         global $db;
         //====================================================================//
@@ -78,7 +77,15 @@ class AttributesManager
         // Load Attributes Values Cache
         $attributeValue = new ProductAttributeValue($db);
         foreach ($attributes as $attribute) {
-            self::$attributesValuesCache[$attribute->id] = $attributeValue->fetchAllByProductAttribute($attributeId);
+            if ($reload) {
+                self::$attributesValuesCache[$attribute->id] = $attributeValue
+                    ->fetchAllByProductAttribute($attributeId)
+                ;
+            } else {
+                self::$attributesValuesCache[$attribute->id] ??= $attributeValue
+                    ->fetchAllByProductAttribute($attributeId)
+                ;
+            }
         }
     }
 
@@ -120,7 +127,8 @@ class AttributesManager
         //====================================================================//
         // Walk on Attributes Cache
         foreach ($attributes as $attribute) {
-            if (strtolower($attributeCode) == strtolower($attribute->ref)) {
+            if (self::sanitizeName($attributeCode) == self::sanitizeName($attribute->ref)) {
+                //            if (strtolower($attributeCode) == strtolower($attribute->ref)) {
                 return $attribute;
             }
         }
@@ -150,7 +158,7 @@ class AttributesManager
         //====================================================================//
         // Create New Attribute
         $attribute = new ProductAttribute($db);
-        $attribute->ref = strtoupper($attributeCode);
+        $attribute->ref = self::sanitizeName($attributeCode);
         $attribute->label = is_string($attributeName) ? $attributeName : $attributeCode;
 
         if ($attribute->create($user) < 0) {
@@ -306,7 +314,7 @@ class AttributesManager
         //====================================================================//
         // Walk on Attributes Cache
         foreach (self::$attributesValuesCache[$attribute->id] as $value) {
-            if (strtolower($valueName) == strtolower($value->value)) {
+            if (self::sanitizeName($valueName) == self::sanitizeName($value->value)) {
                 return $value;
             }
         }
@@ -346,7 +354,7 @@ class AttributesManager
 
         //====================================================================//
         // Reload Load Attributes Values Cache
-        self::loadAttributeValues($attribute->id);
+        self::loadAttributeValues($attribute->id, true);
 
         return $value;
     }
@@ -395,8 +403,13 @@ class AttributesManager
         }
         //====================================================================//
         // Reload Load Attributes Values Cache
-        self::loadAttributeValues($value->fk_product_attribute);
+        self::loadAttributeValues($value->fk_product_attribute, true);
 
         return true;
+    }
+
+    private static function sanitizeName(string $name): string
+    {
+        return strtoupper(dol_sanitizeFileName(dol_string_nospecial(trim($name))));
     }
 }
