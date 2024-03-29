@@ -63,9 +63,6 @@ class AttributesManager
 
     /**
      * Load All Attribute Values from Database
-     *
-     * @param int  $attributeId Product Attribute ID
-     * @param bool $reload      Force Reload of Values in Cache
      */
     public static function loadAttributeValues(int $attributeId, bool $reload = false): void
     {
@@ -77,12 +74,19 @@ class AttributesManager
         // Load Attributes Values Cache
         $attributeValue = new ProductAttributeValue($db);
         foreach ($attributes as $attribute) {
+            //====================================================================//
+            // This is Searched Attribute
+            if ($attributeId != $attribute->id) {
+                continue;
+            }
+            //====================================================================//
+            // Load Attribute Values with Local Caching
             if ($reload) {
-                self::$attributesValuesCache[$attribute->id] = $attributeValue
+                self::$attributesValuesCache[$attributeId] = $attributeValue
                     ->fetchAllByProductAttribute($attributeId)
                 ;
             } else {
-                self::$attributesValuesCache[$attribute->id] ??= $attributeValue
+                self::$attributesValuesCache[$attributeId] ??= $attributeValue
                     ->fetchAllByProductAttribute($attributeId)
                 ;
             }
@@ -90,9 +94,9 @@ class AttributesManager
     }
 
     /**
-     * Fetch Product Combinations Attribute by Id
+     * Fetch Product Combinations Attribute by ID
      *
-     * @param int $attributeId Product Attribute Id
+     * @param int $attributeId Product Attribute ID
      *
      * @return null|ProductAttribute
      */
@@ -128,7 +132,6 @@ class AttributesManager
         // Walk on Attributes Cache
         foreach ($attributes as $attribute) {
             if (self::sanitizeName($attributeCode) == self::sanitizeName($attribute->ref)) {
-                //            if (strtolower($attributeCode) == strtolower($attribute->ref)) {
                 return $attribute;
             }
         }
@@ -343,7 +346,7 @@ class AttributesManager
         // Create New Attribute
         $value = new ProductAttributeValue($db);
         $value->fk_product_attribute = $attribute->id;
-        $value->ref = strtoupper($valueCode);
+        $value->ref = self::sanitizeName($valueCode);
         $value->value = is_string($valueName) ? $valueName : $valueCode;
 
         if ($value->create($user) < 0) {
