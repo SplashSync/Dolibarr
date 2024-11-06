@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Widgets;
+namespace Splash\Local\Widgets;
 
 use Splash\Templates\Widgets\SelfTestTemplate;
 

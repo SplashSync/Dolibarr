@@ -19,7 +19,7 @@ use FactureLigne;
 use OrderLine;
 use Product;
 use Societe;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
 use stdClass;

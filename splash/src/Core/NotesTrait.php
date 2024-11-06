@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Core;
+namespace Splash\Local\Core;
 
 /**
  * Dolibarr Orders & Invoices Notes Fields

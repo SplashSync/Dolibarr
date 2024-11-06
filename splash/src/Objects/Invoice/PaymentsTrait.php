@@ -19,7 +19,7 @@ use DateTime;
 use Exception;
 use Paiement;
 use PaiementFourn;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\BankAccounts;
 use Splash\Local\Services\PaymentManager;

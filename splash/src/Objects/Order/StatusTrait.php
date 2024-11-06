@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\Order;
 
 use Commande;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Models\Objects\Order\Status;
 
 /**

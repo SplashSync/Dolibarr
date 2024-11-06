@@ -18,7 +18,7 @@ namespace Splash\Local\Objects\Order;
 use Commande;
 use DateTime;
 use Exception;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Services\MultiCompany;
 use User;
 

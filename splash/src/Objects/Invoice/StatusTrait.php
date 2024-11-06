@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use Facture;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Models\Objects\Invoice\Status;
 
 /**

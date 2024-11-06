@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use FactureLigne;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 
 /**
  * Dolibarr Customer Invoice Items Fields
