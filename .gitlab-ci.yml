@@ -117,15 +117,15 @@ stages:
 ################################################################
 # Dolibarr V20
 Dol-20-Basics:
-    image:          tuxgasy/dolibarr:20
+    image:          dolibarr/dolibarr:20
     <<: *functionnal-basic
     allow_failure: true
 Dol-20-Advanced:
-    image:          tuxgasy/dolibarr:20
+    image:          dolibarr/dolibarr:20
     <<: *functionnal-advanced
     allow_failure: true
 Dol-20-Variants:
-    image:          tuxgasy/dolibarr:20
+    image:          dolibarr/dolibarr:20
     <<: *functionnal-variants
     allow_failure: true
 
