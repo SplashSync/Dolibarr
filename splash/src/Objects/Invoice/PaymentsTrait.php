@@ -219,6 +219,7 @@ trait PaymentsTrait
      */
     protected function setPaymentLineFields(string $fieldName, ?array $fieldData): void
     {
+        global $user;
         //====================================================================//
         // Safety Check
         if ("payments" !== $fieldName) {
@@ -253,8 +254,11 @@ trait PaymentsTrait
                 continue;
             }
             //====================================================================//
+            // Prepare Args
+            $arg1 = (Local::dolVersionCmp("20.0.0") > 0) ? $user : 0;
+            //====================================================================//
             // Try to delete Payment Line
-            $payment->delete();
+            $payment->delete($arg1);
         }
 
         unset($this->in[$fieldName]);
@@ -269,6 +273,7 @@ trait PaymentsTrait
      */
     protected function clearPayments(int $invoiceId): void
     {
+        global $user;
         //====================================================================//
         // Load Invoice Payments
         $this->loadPayments($invoiceId);
@@ -287,8 +292,11 @@ trait PaymentsTrait
                 continue;
             }
             //====================================================================//
+            // Prepare Args
+            $arg1 = (Local::dolVersionCmp("20.0.0") > 0) ? $user : 0;
+            //====================================================================//
             // Try to delete Payment Line
-            if ($payment->delete() <= 0) {
+            if ($payment->delete($arg1) <= 0) {
                 $this->catchDolibarrErrors($payment);
 
                 Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
@@ -347,6 +355,7 @@ trait PaymentsTrait
      */
     private function updatePaymentItem(int $paymentId, array $lineData): bool
     {
+        global $user;
         //====================================================================//
         // Load Payment Item
         $payment = $this->newPayment();
@@ -376,8 +385,11 @@ trait PaymentsTrait
             return false;
         }
         //====================================================================//
+        // Prepare Args
+        $arg1 = (Local::dolVersionCmp("20.0.0") > 0) ? $user : 0;
+        //====================================================================//
         // Try to delete Payment
-        if ($payment->delete() <= 0) {
+        if ($payment->delete($arg1) <= 0) {
             $this->catchDolibarrErrors($payment);
 
             // Unable to Delete Payment => No Recreate
@@ -435,6 +447,8 @@ trait PaymentsTrait
      * @param array $lineData Line Data Array
      *
      * @return bool Re-Create Payment Item or Exit?
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function createPaymentItem(array $lineData): bool
     {
@@ -461,7 +475,9 @@ trait PaymentsTrait
         }
         //====================================================================//
         // Setup Payment Method
-        $payment->paiementid = PaymentMethods::getDoliId($lineData["mode"]);
+        if ($methodId = PaymentMethods::getDoliId($lineData["mode"])) {
+            $payment->paiementid = $methodId;
+        }
         //====================================================================//
         // Setup Payment Reference
         $payment->num_payment = $lineData["number"] ?? "";
@@ -470,7 +486,9 @@ trait PaymentsTrait
         $payment->amounts[$payment->facid] = self::parsePrice($lineData["amount"]);
         //====================================================================//
         // Take Care of Payment Currency
-        if (property_exists($payment, "multicurrency_code")) {
+        if (property_exists($payment, "multicurrency_code")
+            && is_string($this->object->multicurrency_code)
+        ) {
             $payment->multicurrency_code[$payment->facid] = $this->object->multicurrency_code;
         }
         //====================================================================//

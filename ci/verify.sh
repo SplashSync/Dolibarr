@@ -20,12 +20,12 @@ set -e
 
 ################################################################################
 # Docker Compose Container you want to check
-CONTAINERS="dol-19,dol-18,dol-17,dol-16,dol-14"
+CONTAINERS="dol-20,dol-18,dol-17,dol-16"
 WORKDIR="/var/www/html/custom"
 ################################################################################
 # Start Docker Compose Stack
 echo '===> Start Docker Stack'
-docker-compose up -d
+docker compose up -d
 
 ######################################
 # Run Grumphp Test Suites Locally
@@ -40,9 +40,9 @@ do
     echo "===> CHECKS ON $ID"
     echo "----------------------------------------------------"
     # Ensure Git is Installed
-    docker-compose exec $ID apt update
-    docker-compose exec $ID apt install git -y
+    docker compose exec $ID apt update
+    docker compose exec $ID apt install git -y
     # Run Grumphp Test Suites
-    docker-compose exec -w $WORKDIR $ID php splash/vendor/bin/grumphp run --testsuite=travis
-    docker-compose exec -w $WORKDIR $ID php splash/vendor/bin/grumphp run --testsuite=phpstan
+    docker compose exec -w $WORKDIR $ID php splash/vendor/bin/grumphp run --testsuite=travis
+    docker compose exec -w $WORKDIR $ID php splash/vendor/bin/grumphp run --testsuite=phpstan
 done

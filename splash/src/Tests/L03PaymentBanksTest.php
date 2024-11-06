@@ -184,7 +184,7 @@ class L03PaymentBanksTest extends ObjectsCase
         $payment->fetch($paymentMethodId);
         if (!$payment->active) {
             $payment->active = 1;
-            $payment->update($user, false);
+            $payment->update($user);
         }
 
         //====================================================================//

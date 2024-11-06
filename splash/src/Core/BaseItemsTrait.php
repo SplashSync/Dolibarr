@@ -18,7 +18,7 @@ namespace Splash\Local\Core;
 use FactureLigne;
 use OrderLine;
 use Product;
-use PropaleLigne;
+use Societe;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
@@ -27,6 +27,8 @@ use SupplierInvoiceLine;
 
 /**
  * Dolibarr Orders & Invoices Items Fields
+ *
+ * @phpstan-type Line FactureLigne|OrderLine|SupplierInvoiceLine
  */
 trait BaseItemsTrait
 {
@@ -40,7 +42,7 @@ trait BaseItemsTrait
     private bool $itemUpdate = false;
 
     /**
-     * @var null|FactureLigne|OrderLine|SupplierInvoiceLine
+     * @var null|Line
      */
     private $currentItem;
 
@@ -152,6 +154,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Fill List with Data
+        /** @var Line $orderLine */
         foreach ($this->object->lines as $index => $orderLine) {
             //====================================================================//
             // Read Data from Line Item
@@ -166,7 +169,7 @@ trait BaseItemsTrait
     /**
      * Insert an Item to Order or Invoice
      *
-     * @param FactureLigne|OrderLine|PropaleLigne|SupplierInvoiceLine $item
+     * @param Line $item
      *
      * @return bool
      */
@@ -191,7 +194,7 @@ trait BaseItemsTrait
         $item->multicurrency_total_tva = 0.0;
         $item->multicurrency_total_ttc = 0.0;
 
-        if ($item->insert() <= 0) {
+        if (!method_exists($item, 'insert') || $item->insert() <= 0) {
             $this->catchDolibarrErrors($item);
 
             return false;
@@ -203,8 +206,8 @@ trait BaseItemsTrait
     /**
      * Read requested Field
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $line    Line Data Object
-     * @param string                                     $fieldId Field Identifier / Name
+     * @param Line   $line    Line Data Object
+     * @param string $fieldId Field Identifier / Name
      *
      * @return null|array|bool|float|int|string
      *
@@ -279,14 +282,18 @@ trait BaseItemsTrait
             $this->itemUpdate = false;
             //====================================================================//
             // Read Next Item Line
-            $this->currentItem = array_shift($this->object->lines);
+            /** @var null|Line $item */
+            $item = array_shift($this->object->lines);
+            $this->currentItem = $item;
             //====================================================================//
             // Update Item Line
             $this->setItem($itemData);
         }
         //====================================================================//
         // Delete Remaining Lines
+        /** @var Line $lineItem */
         foreach ($this->object->lines as $lineItem) {
+            /** @phpstan-ignore-next-line  */
             $this->deleteItem($lineItem);
         }
         //====================================================================//
@@ -324,7 +331,9 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // FIX for Module that Compare Changed Data on Update
-        $this->currentItem->oldline = clone $this->currentItem;
+        if (property_exists($this->currentItem, 'oldline')) {
+            $this->currentItem->oldline = clone $this->currentItem;
+        }
         //====================================================================//
         // Update Line Description
         $this->setItemSimpleData($itemData, "description");
@@ -657,8 +666,11 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Ensure ThirdParty is Loaded
-        if (!$this->object->thirdparty instanceof \Societe) {
+        if (!$this->object->thirdparty instanceof Societe) {
             $this->object->fetch_thirdparty();
+        }
+        if (!$this->object->thirdparty instanceof Societe) {
+            return;
         }
         //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne à partir de
@@ -677,7 +689,7 @@ trait BaseItemsTrait
             (int) $this->currentItem->qty,
             $this->currentItem->subprice,
             $this->currentItem->remise_percent,
-            $this->currentItem->tva_tx,
+            (float) $this->currentItem->tva_tx,
             -1,
             -1,
             0,

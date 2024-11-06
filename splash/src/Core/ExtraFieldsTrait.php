@@ -296,12 +296,16 @@ trait ExtraFieldsTrait
         }
         //====================================================================//
         // Extract Generic Field Data
-        if (is_array($this->object->array_options ?? null)
-            && array_key_exists($fieldName, $this->object->array_options)) {
-            return $this->object->array_options[$fieldName];
+        if (!is_array($this->object->array_options ?? null)
+            || !array_key_exists($fieldName, $this->object->array_options)) {
+            return null;
+        }
+        $fieldData = $this->object->array_options[$fieldName];
+        if (!is_array($fieldData) && !is_scalar($fieldData)) {
+            return null;
         }
 
-        return null;
+        return $fieldData;
     }
 
     /**
@@ -333,6 +337,7 @@ trait ExtraFieldsTrait
             $this->extraFields = new ExtraFields($db);
             $key = is_null($elementType) ? static::$extraFieldsType : $elementType;
             $this->extraFields->fetch_name_optionals_label($key, true);
+            /** @phpstan-ignore-next-line */
             $this->extraFieldsAttrs = $this->extraFields->attributes[$key] ?? array();
         }
 

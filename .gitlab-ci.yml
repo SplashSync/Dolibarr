@@ -115,31 +115,37 @@ stages:
 ################################################################
 
 ################################################################
+# Dolibarr V20
+Dol-20-Basics:
+    image:          tuxgasy/dolibarr:20
+    <<: *functionnal-basic
+    allow_failure: true
+Dol-20-Advanced:
+    image:          tuxgasy/dolibarr:20
+    <<: *functionnal-advanced
+    allow_failure: true
+Dol-20-Variants:
+    image:          tuxgasy/dolibarr:20
+    <<: *functionnal-variants
+    allow_failure: true
+
+################################################################
 # Dolibarr V19
 Dol-19-Basics:
     image:          tuxgasy/dolibarr:19
     <<: *functionnal-basic
-    allow_failure: true
 Dol-19-Advanced:
     image:          tuxgasy/dolibarr:19
     <<: *functionnal-advanced
-    allow_failure: true
 Dol-19-Variants:
     image:          tuxgasy/dolibarr:19
     <<: *functionnal-variants
-    allow_failure: true
 
 ################################################################
 # Dolibarr V18
 Dol-18-Basics:
     image:          tuxgasy/dolibarr:18
     <<: *functionnal-basic
-Dol-18-Advanced:
-    image:          tuxgasy/dolibarr:18
-    <<: *functionnal-advanced
-Dol-18-Variants:
-    image:          tuxgasy/dolibarr:18
-    <<: *functionnal-variants
 
 ################################################################
 # Dolibarr V17
@@ -244,6 +250,11 @@ Dol-13-Variants:
     # Run After Script
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+
+Dol-20-Quality:
+    image:      dolibarr/dolibarr:20
+    <<: *code_quality
+    allow_failure: true
 
 Dol-19-Quality:
     image:      tuxgasy/dolibarr:19
