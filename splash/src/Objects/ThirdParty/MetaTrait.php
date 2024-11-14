@@ -148,8 +148,11 @@ trait MetaTrait
             //====================================================================//
             // Direct Writings
             case 'status':
-            case 'tva_assuj':
                 $this->setSimple($fieldName, $fieldData);
+
+                break;
+            case 'tva_assuj':
+                $this->setSimple($fieldName, $fieldData ? 1 : 0);
 
                 break;
             case 'fournisseur':

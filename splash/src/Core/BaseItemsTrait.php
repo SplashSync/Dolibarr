@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Core;
 
+use CommandeFournisseurLigne;
 use FactureLigne;
 use OrderLine;
 use Product;
@@ -28,7 +29,7 @@ use SupplierInvoiceLine;
 /**
  * Dolibarr Orders & Invoices Items Fields
  *
- * @phpstan-type Line FactureLigne|OrderLine|SupplierInvoiceLine
+ * @phpstan-type Line FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine
  */
 trait BaseItemsTrait
 {
@@ -387,7 +388,9 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Update Item Totals
-        $this->currentItem->update_total();
+        if (method_exists($this->currentItem, "update_total")) {
+            $this->currentItem->update_total();
+        }
     }
 
     /**

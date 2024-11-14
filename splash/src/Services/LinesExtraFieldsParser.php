@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Services;
 
+use CommandeFournisseurLigne;
 use CommonInvoiceLine;
 use Exception;
 use FactureLigne;
@@ -28,7 +29,7 @@ use SupplierInvoiceLine;
 /**
  * MultiCompany Module Manager
  *
- * @phpstan-type Line CommonInvoiceLine|FactureLigne|OrderLine|SupplierInvoiceLine
+ * @phpstan-type Line CommonInvoiceLine|FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine
  */
 class LinesExtraFieldsParser
 {
