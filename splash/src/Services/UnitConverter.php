@@ -13,25 +13,30 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Local\Core;
+namespace Splash\Local\Services;
 
 use ArrayObject;
+use Product;
 use Splash\Components\UnitConverter as Converter;
 use Splash\Core\SplashCore as Splash;
-use Splash\Local\Local;
 
 /**
  * Dolibarr Unit Converter
  *
  * Now Uses Splash Core Unit Converter to Detect & Convert Units Values
  */
-trait UnitConverterTrait
+class UnitConverter
 {
+    const WEIGHT = "weight";
+    const LENGTH = "size";
+    const SURFACE = "surface";
+    const VOLUME = "volume";
+
     /**
      * @var array<string, array<float|int>>
      */
     private static array $knowUnits = array(
-        "weight" => array(
+        self::WEIGHT => array(
             "-9" => Converter::MASS_MICROGRAM,
             "-6" => Converter::MASS_MILLIGRAM,
             "-3" => Converter::MASS_GRAM,
@@ -40,7 +45,7 @@ trait UnitConverterTrait
             "98" => Converter::MASS_OUNCE,
             "99" => Converter::MASS_LIVRE,
         ),
-        "length" => array(
+        self::LENGTH => array(
             "-3" => Converter::LENGTH_MILIMETER,
             "-2" => Converter::LENGTH_CENTIMETER,
             "-1" => Converter::LENGTH_DECIMETER,
@@ -49,7 +54,7 @@ trait UnitConverterTrait
             "98" => Converter::LENGTH_FOOT,
             "99" => Converter::LENGTH_INCH,
         ),
-        "surface" => array(
+        self::SURFACE => array(
             "-6" => Converter::AREA_MM2,
             "-4" => Converter::AREA_CM2,
             "-2" => Converter::AREA_DM2,
@@ -58,7 +63,7 @@ trait UnitConverterTrait
             "98" => Converter::AREA_FOOT2,
             "99" => Converter::AREA_INCH2,
         ),
-        "volume" => array(
+        self::VOLUME => array(
             "-9" => Converter::VOLUME_MM3,
             "-6" => Converter::VOLUME_CM3,
             "-3" => Converter::VOLUME_DM3,
@@ -90,7 +95,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = self::detectSplashUnit((string) $unit, "weight", Converter::MASS_KG);
+        $splFactor = self::detectSplashUnit((string) $unit, self::WEIGHT, Converter::MASS_KG);
 
         //====================================================================//
         // Convert Value to Generic Factor
@@ -104,51 +109,50 @@ trait UnitConverterTrait
      *
      * @return ArrayObject $r->weight , $r->weight_units , $r->print, $r->raw
      */
-    public function normalizeWeight(?float $weight): ArrayObject
+    public static function normalizeWeight(?float $weight, Product $baseProduct = null): ArrayObject
     {
         $result = new ArrayObject();
+        $result->raw = $weight;
 
         //====================================================================//
         // Variable Product Weight - Always Parent Weight Unit
-        if ($this->isVariant() && !empty($this->baseProduct)) {
+        if (!empty($baseProduct)) {
             // Detect Splash Generic Unit Factor from Parent
             $splFactor = self::detectSplashUnit(
-                (string) $this->baseProduct->weight_units,
-                "weight",
+                (string) $baseProduct->weight_units,
+                self::WEIGHT,
                 Converter::MASS_KG
             );
             // Convert Generic Weight to Parent Unit
             $result->weight = Converter::convertWeight((float) $weight, $splFactor);
             // Force Variant Weight Unit to Parent Unit
-            $result->weight_units = $this->baseProduct->weight_units;
-            //====================================================================//
-            // Weight - Tonne
-        } elseif ($weight >= 1e3) {
-            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_TONNE);
-            $result->weight_units = self::getDolUnitId("weight", "3");
-            //====================================================================//
-            // Weight - KiloGram
-        } elseif ($weight >= 1) {
-            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_KILOGRAM);
-            $result->weight_units = self::getDolUnitId("weight", "0");
-            //====================================================================//
-            // Weight - Gram
-        } elseif ($weight >= 1e-3) {
-            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_GRAM);
-            $result->weight_units = self::getDolUnitId("weight", "-3");
-            //====================================================================//
-            // Weight - MilliGram
-        } elseif ($weight >= 1e-6) {
-            $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_MILLIGRAM);
-            $result->weight_units = self::getDolUnitId("weight", "-6");
+            $result->weight_units = $baseProduct->weight_units;
+
+            return $result;
         }
-        $result->raw = $weight;
+        //====================================================================//
+        // Detect Best Unit
+        foreach (self::getDolUnits(self::WEIGHT) as $scale => $minValue) {
+            if ($weight >= $minValue) {
+                $result->weight = Converter::convertWeight(
+                    (float) $weight,
+                    (float) self::getFactor(self::WEIGHT, $scale)
+                );
+                $result->weight_units = $scale;
+
+                return $result;
+            }
+        }
+        //====================================================================//
+        // Weight - Default
+        $result->weight = Converter::convertWeight((float) $weight, Converter::MASS_KILOGRAM);
+        $result->weight_units = "0";
 
         return $result;
     }
 
     /**
-     * Convert Lenght form all units to m.
+     * Convert Length form all units to m.
      *
      * @param null|float $length Length Value
      * @param int|string $unit   Length Unit
@@ -159,7 +163,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = self::detectSplashUnit((string) $unit, "length", Converter::LENGTH_M);
+        $splFactor = self::detectSplashUnit((string) $unit, self::LENGTH, Converter::LENGTH_M);
 
         //====================================================================//
         // Convert Value to Generic Factor
@@ -171,35 +175,63 @@ trait UnitConverterTrait
      *
      * @param null|float $length Length Raw Value
      *
-     * @return ArrayObject $r->length , $r->length_units , $r->print, $r->raw
+     * @return ArrayObject{ 'length': float, 'length_units': string, 'raw': null|float  }
      */
     public static function normalizeLength(?float $length): ArrayObject
     {
         $result = new ArrayObject();
-        //====================================================================//
-        // Length - Meter
-        if ($length >= 1) {
-            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_M);
-            $result->length_units = self::getDolUnitId("size", "0");
-            //====================================================================//
-            // Length - DecaMeter
-        } elseif ($length >= 1e-1) {
-            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_DM);
-            $result->length_units = self::getDolUnitId("size", "-1");
-            //====================================================================//
-            // Length - CentiMeter
-        } elseif ($length >= 1e-2) {
-            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_CM);
-            $result->length_units = self::getDolUnitId("size", "-2");
-            //====================================================================//
-            // Length - MilliMeter
-        } elseif ($length >= 1e-3) {
-            $result->length = Converter::convertLength((float) $length, Converter::LENGTH_MM);
-            $result->length_units = self::getDolUnitId("size", "-3");
-        }
         $result->raw = $length;
+        //====================================================================//
+        // Detect Best Unit
+        foreach (self::getDolUnits(self::LENGTH) as $scale => $minValue) {
+            if ($length >= $minValue) {
+                $result->length = Converter::convertLength(
+                    (float) $length,
+                    (float) self::getFactor(self::LENGTH, $scale)
+                );
+                $result->length_units = $scale;
+
+                return $result;
+            }
+        }
+        //====================================================================//
+        // Length - Default
+        $result->length = Converter::convertLength((float) $length, Converter::LENGTH_M);
+        $result->length_units = "0";
 
         return $result;
+    }
+
+    /**
+     * Return Normalized Dimension form raw m value.
+     *
+     * @param null|float        $length     Length Raw Value
+     * @param array<null|float> $dimensions List of Other Dimensions (in Meter)
+     *
+     * @return ArrayObject{ 'length': float, 'length_units': string, 'raw': null|float  }
+     */
+    public static function normalizeDimension(?float $length, array $dimensions): ArrayObject
+    {
+        //====================================================================//
+        // Remove Empty Dimensions
+        $dimensions = array_filter($dimensions);
+        //====================================================================//
+        // Find Min Dimensions
+        $minDimension = min($dimensions);
+        //====================================================================//
+        // Convert Min Dimension to get Minimal Unit
+        $minResult = self::normalizeLength($minDimension);
+
+        //====================================================================//
+        // Convert Requested Dimension to Minimal Unit
+        return new ArrayObject(array(
+            "length" => Converter::convertLength(
+                (float) $length,
+                (float) self::getFactor(self::LENGTH, $minResult->length_units)
+            ),
+            "length_units" => $minResult->length_units,
+            "raw" => $length,
+        ), ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**
@@ -226,33 +258,29 @@ trait UnitConverterTrait
      *
      * @param null|float $surface Surface Raw Value
      *
-     * @return ArrayObject $r->surface , $r->surface_units , $r->print, $r->raw
+     * @return ArrayObject{ 'surface': float, 'surface_units': string, 'raw': null|float  }
      */
     public static function normalizeSurface(?float $surface): ArrayObject
     {
         $result = new ArrayObject();
-        //====================================================================//
-        // Surface - Meter 2
-        if ($surface >= 1) {
-            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_M2);
-            $result->surface_units = self::getDolUnitId("surface", "0");
-            //====================================================================//
-            // Surface - DecaMeter 2
-        } elseif ($surface >= 1e-2) {
-            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_DM2);
-            $result->surface_units = self::getDolUnitId("surface", "-2");
-            //====================================================================//
-            // Surface - CentiMeter 2
-        } elseif ($surface >= 1e-4) {
-            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_CM2);
-            $result->surface_units = self::getDolUnitId("surface", "-4");
-            //====================================================================//
-            // Surface - MilliMeter 2
-        } elseif ($surface >= 1e-6) {
-            $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_MM2);
-            $result->surface_units = self::getDolUnitId("surface", "-6");
-        }
         $result->raw = $surface;
+        //====================================================================//
+        // Detect Best Unit
+        foreach (self::getDolUnits(self::SURFACE) as $scale => $minValue) {
+            if ($surface >= $minValue) {
+                $result->surface = Converter::convertSurface(
+                    (float) $surface,
+                    (float) self::getFactor(self::SURFACE, $scale)
+                );
+                $result->surface_units = $scale;
+
+                return $result;
+            }
+        }
+        //====================================================================//
+        // Surface - Default
+        $result->surface = Converter::convertSurface((float) $surface, Converter::AREA_M2);
+        $result->surface_units = "0";
 
         return $result;
     }
@@ -269,7 +297,7 @@ trait UnitConverterTrait
     {
         //====================================================================//
         // Detect Splash Generic Unit Factor
-        $splFactor = self::detectSplashUnit((string) $unit, "volume", Converter::VOLUME_M3);
+        $splFactor = self::detectSplashUnit((string) $unit, self::VOLUME, Converter::VOLUME_M3);
 
         //====================================================================//
         // Convert Value to Generic Factor
@@ -281,33 +309,29 @@ trait UnitConverterTrait
      *
      * @param null|float $volume Volume Raw Value
      *
-     * @return ArrayObject $r->volume , $r->volume_units , $r->print, $r->raw
+     * @return ArrayObject{ 'volume': float, 'volume_units': string, 'raw': null|float  }
      */
     public static function normalizeVolume(?float $volume): ArrayObject
     {
         $result = new ArrayObject();
-        //====================================================================//
-        // Volume - Meter 3
-        if ($volume >= 1) {
-            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_M3);
-            $result->volume_units = self::getDolUnitId("volume", "0");
-            //====================================================================//
-            // Volume - DecaMeter 3
-        } elseif ($volume >= 1e-3) {
-            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_DM3);
-            $result->volume_units = self::getDolUnitId("volume", "-3");
-            //====================================================================//
-            // Volume - CentiMeter 3
-        } elseif ($volume >= 1e-6) {
-            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_CM3);
-            $result->volume_units = self::getDolUnitId("volume", "-6");
-            //====================================================================//
-            // Volume - MilliMeter 3
-        } elseif ($volume >= 1e-9) {
-            $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_MM3);
-            $result->volume_units = self::getDolUnitId("volume", "-9");
-        }
         $result->raw = $volume;
+        //====================================================================//
+        // Detect Best Unit
+        foreach (self::getDolUnits(self::VOLUME) as $scale => $minValue) {
+            if ($volume >= $minValue) {
+                $result->volume = Converter::convertVolume(
+                    (float) $volume,
+                    (float) self::getFactor(self::VOLUME, $scale)
+                );
+                $result->volume_units = $scale;
+
+                return $result;
+            }
+        }
+        //====================================================================//
+        // Volume - Default
+        $result->volume = Converter::convertVolume((float) $volume, Converter::VOLUME_M3);
+        $result->volume_units = "0";
 
         return $result;
     }
@@ -323,23 +347,11 @@ trait UnitConverterTrait
      */
     private static function detectSplashUnit(string $unit, string $type, float $fallBack): float
     {
-        //====================================================================//
-        // STANDARD => Dolibarr Unit Scale Factored Stored in Objects
-        if (!self::useDatabaseUnitsIds()) {
-            if (isset(self::$knowUnits[$type][$unit])) {
-                return self::$knowUnits[$type][$unit];
-            }
-
+        if (!self::loadDolUnits()) {
             return $fallBack;
         }
-
-        //====================================================================//
-        // SINCE V10 => Dolibarr Unit Code Stored in Dictionary
-        if (!self::loadDolUnits() || !isset(self::$dico[$unit])) {
-            return $fallBack;
-        }
-        if (isset(self::$knowUnits[$type][self::$dico[$unit]->scale])) {
-            return self::$knowUnits[$type][self::$dico[$unit]->scale];
+        if (!is_null($factor = self::getFactor($type, $unit))) {
+            return $factor;
         }
 
         return $fallBack;
@@ -354,11 +366,6 @@ trait UnitConverterTrait
     {
         global $db;
         //====================================================================//
-        // STANDARD => Dolibarr Unit Scale Factored Stored in Objects
-        if (!self::useDatabaseUnitsIds()) {
-            return true;
-        }
-        //====================================================================//
         // Dictionary Already Loaded
         if (isset(self::$dico)) {
             return true;
@@ -367,7 +374,7 @@ trait UnitConverterTrait
         // Load Dictionary Already Loaded
         self::$dico = array();
         $sql = "SELECT t.rowid as id, t.code, t.label, t.short_label, t.unit_type, t.scale, t.active";
-        $sql .= " FROM ".MAIN_DB_PREFIX."c_units as t WHERE t.active=1";
+        $sql .= " FROM ".MAIN_DB_PREFIX."c_units as t WHERE t.active=1 ORDER BY t.sortorder";
         $resSql = $db->query($sql);
         if (!$resSql) {
             return Splash::log()->errTrace($db->lasterror());
@@ -386,24 +393,17 @@ trait UnitConverterTrait
     }
 
     /**
-     * Identify Dolibarr Unit from Scale.
+     * Get List of Available Dolibarr Units for type.
      *
-     * @param string $type
-     * @param string $scale
-     *
-     * @return int|string
+     * @return array<string, float>
      */
-    private static function getDolUnitId(string $type, string $scale)
+    private static function getDolUnits(string $type): array
     {
+        $units = array();
         //====================================================================//
-        // STANDARD => Dolibarr Unit Scale Factored Stored in Objects
-        if (!self::useDatabaseUnitsIds()) {
-            return $scale;
-        }
-        //====================================================================//
-        // V10.0.0 to V10.0.2 => Dolibarr Unit IDs Stored in Object
+        // Load Dolibarr Unit IDs
         if (!self::loadDolUnits()) {
-            return 0;
+            return array();
         }
         //====================================================================//
         // Search for Unit in Dictionary
@@ -411,32 +411,22 @@ trait UnitConverterTrait
             if ($cUnit->unit_type != $type) {
                 continue;
             }
-            if ($cUnit->scale != $scale) {
+            //====================================================================//
+            // Get Conversion Factor for Unit
+            if (is_null($factor = self::getFactor($type, $cUnit->scale))) {
                 continue;
             }
-
-            return $cUnit->id;
+            $units[(string) $cUnit->scale] = Converter::normalizeLength(1.0, $factor);
         }
 
-        return 0;
+        return $units;
     }
 
     /**
-     * Detect if Stored Units are Scales or Database Dictionary IDs.
-     *
-     * V10.0.0 to V10.0.2 => Dolibarr Unit IDs Stored in Objects
-     *
-     * @return bool TRUE if Database
+     * Get Factor for Units for type.
      */
-    private static function useDatabaseUnitsIds(): bool
+    private static function getFactor(string $type, string $scale): ?float
     {
-        if (Local::dolVersionCmp("10.0.0") < 0) {
-            return false;
-        }
-        if (Local::dolVersionCmp("10.0.2") > 0) {
-            return false;
-        }
-
-        return true;
+        return self::$knowUnits[$type][$scale] ?? null;
     }
 }

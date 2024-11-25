@@ -43,7 +43,6 @@ class Product extends AbstractObject implements PrimaryKeysAwareInterface
     use Core\ErrorParserTrait;
     use Core\MultiLangsTrait;
     use Core\MetaDatesTrait;
-    use Core\UnitConverterTrait;
     use Core\ExtraFieldsTrait;
     use Core\ImagesTrait;
     use Core\LocalizationTrait;

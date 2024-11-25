@@ -17,6 +17,7 @@ namespace Splash\Local\Tests;
 
 use Exception;
 use Splash\Client\Splash;
+use Splash\Local\Services\ProductIdentifier;
 use Splash\Models\Helpers\ObjectsHelper;
 use Splash\Tests\Tools\ObjectsCase;
 use Splash\Tests\Tools\Traits\MethodInvokerTrait;
@@ -35,6 +36,8 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @param string $sequence
      * @param string $objectType
+     *
+     * @throws Exception
      *
      * @return void
      */
@@ -55,17 +58,17 @@ class L07SkuItemsDetectionTest extends ObjectsCase
         $infos = $this->createProduct();
         //====================================================================//
         //   Test Detection with Product Link
-        $this->verifyProductDetection($objectType, "WhatEver", $infos["SplashId"], $infos["ObjectId"]);
+        $this->verifyProductDetection("WhatEver", $infos["SplashId"], $infos["ObjectId"]);
         //====================================================================//
         //   Test Detection without Product Link
-        $this->verifyProductDetection($objectType, "WhatEver", null, 0);
+        $this->verifyProductDetection("WhatEver", null, null);
         //====================================================================//
         //   Test Detection with Wrong Product Link
-        $this->verifyProductDetection($objectType, "WhatEver", "ThisIsNoAnObjectId", 0);
+        $this->verifyProductDetection("WhatEver", "ThisIsNoAnObjectId", null);
         //====================================================================//
         //   Test Detection with Product SKU
-        $this->verifyProductDetection($objectType, $infos["Ref"], null, 0);
-        $this->verifyProductDetection($objectType, $infos["Ref"], "ThisIsNoAnObjectId", 0);
+        $this->verifyProductDetection($infos["Ref"], null, null);
+        $this->verifyProductDetection($infos["Ref"], "ThisIsNoAnObjectId", null);
     }
 
     /**
@@ -73,10 +76,7 @@ class L07SkuItemsDetectionTest extends ObjectsCase
      *
      * @dataProvider ObjectTypesProvider
      *
-     * @param string $sequence
-     * @param string $objectType
-     *
-     * @return void
+     * @throws Exception
      */
     public function testDetectionWithTheOption(string $sequence, string $objectType): void
     {
@@ -95,33 +95,28 @@ class L07SkuItemsDetectionTest extends ObjectsCase
         $infos = $this->createProduct();
         //====================================================================//
         //   Test Detection with Product Link
-        $this->verifyProductDetection($objectType, "WhatEver", $infos["SplashId"], $infos["ObjectId"]);
+        $this->verifyProductDetection("WhatEver", $infos["SplashId"], $infos["ObjectId"]);
         //====================================================================//
         //   Test Detection without Product Link
-        $this->verifyProductDetection($objectType, "WhatEver", null, 0);
+        $this->verifyProductDetection("WhatEver", null, null);
         //====================================================================//
         //   Test Detection with Wrong Product Link
-        $this->verifyProductDetection($objectType, "WhatEver", "ThisIsNoAnObjectId", 0);
+        $this->verifyProductDetection("WhatEver", "ThisIsNoAnObjectId", null);
         //====================================================================//
         //   Test Detection with Product SKU
-        $this->verifyProductDetection($objectType, $infos["Ref"], null, $infos["ObjectId"]);
-        $this->verifyProductDetection($objectType, $infos["Ref"], "ThisIsNoAnObjectId", $infos["ObjectId"]);
+        $this->verifyProductDetection($infos["Ref"], null, $infos["ObjectId"]);
+        $this->verifyProductDetection($infos["Ref"], "ThisIsNoAnObjectId", $infos["ObjectId"]);
     }
 
     /**
      * Ensure We are in Correct ObjectType & Guest Mode is Allowed
      *
-     * @param string $sequence
-     * @param string $objectType
-     *
      * @throws Exception
-     *
-     * @return bool
      */
-    public function isAllowedTestSequence(string $sequence, string $objectType)
+    public function isAllowedTestSequence(string $sequence, string $objectType): bool
     {
         //====================================================================//
-        //   Only For Orders & Invoices
+        // Only For Orders & Invoices
         if (!in_array($objectType, array("Order", "Invoice"), true)) {
             $this->assertTrue(true);
 
@@ -165,30 +160,23 @@ class L07SkuItemsDetectionTest extends ObjectsCase
 
     /**
      * Test of Product Detection
-     *
-     * @param string      $objectType
-     * @param string      $desc
-     * @param null|string $fkProduct
-     * @param int         $result
-     *
-     * @throws Exception
-     *
-     * @return void
      */
-    private function verifyProductDetection(string $objectType, string $desc, ?string $fkProduct, int $result): void
+    private function verifyProductDetection(string $desc, ?string $fkProduct, ?int $result): void
     {
         //====================================================================//
-        //   Load Tested Object
-        $object = Splash::object($objectType);
-        //====================================================================//
-        //   Execute Test Detection
+        // Prepare Item Data
         $itemData = array(
             "desc" => $desc,
             "fk_product" => $fkProduct
         );
-        $this->assertEquals(
-            $result,
-            $this->invokeMethod($object, "detectProductId", array($itemData))
-        );
+        //====================================================================//
+        // Execute Product Detection
+        $product = ProductIdentifier::findIdByLineItem($itemData);
+        if ($result) {
+            $this->assertInstanceOf(\Product::class, $product);
+            $this->assertEquals($result, $product->id);
+        } else {
+            $this->assertNull($product);
+        }
     }
 }

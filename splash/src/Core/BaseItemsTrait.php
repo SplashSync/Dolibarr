@@ -23,7 +23,8 @@ use Societe;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
-use stdClass;
+use Splash\Local\Services\ProductIdentifier;
+use Splash\Local\Services\TaxManager;
 use SupplierInvoiceLine;
 
 /**
@@ -84,6 +85,18 @@ trait BaseItemsTrait
             ->group($groupName)
             ->microData("http://schema.org/Product", "productID")
             ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
+        //====================================================================//
+        // Order Line Product SKU
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("product_ref")
+            ->inList("lines")
+            ->name($langs->trans("ProductRef"))
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "sku")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+            ->setPreferRead()
+            ->isNotTested()
         ;
         //====================================================================//
         // Order Line Quantity
@@ -235,6 +248,10 @@ trait BaseItemsTrait
                     : null
                 ;
                 //====================================================================//
+                // Line Product Sku
+            case 'product_ref':
+                return (string) $line->product_ref;
+                //====================================================================//
                 // Order Line Quantity
             case 'qty':
                 return (int) $line->qty;
@@ -342,6 +359,9 @@ trait BaseItemsTrait
         //====================================================================//
         // Update Line Label
         $this->setItemSimpleData($itemData, "label");
+        //====================================================================//
+        // Update Line Label
+        $this->setItemSimpleData($itemData, "product_ref");
         //====================================================================//
         // Update Quantity
         $this->setItemSimpleData($itemData, "qty");
@@ -473,8 +493,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Clean VAT Code
-        $taxName = preg_replace('/\s|%/', '', $itemData["vat_src_code"]);
-        $cleanedTaxName = is_string($taxName) ? substr($taxName, 0, 10) : "0";
+        $cleanedTaxName = TaxManager::getSanitizedCode($itemData["vat_src_code"]);
         //====================================================================//
         // Update VAT Code if Needed
         if ($this->currentItem->vat_src_code !== $cleanedTaxName) {
@@ -489,8 +508,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
-        $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
-        if (!$identifiedVat) {
+        if (!$identifiedVat = TaxManager::findTaxByCode($this->currentItem->vat_src_code)) {
             return;
         }
         //====================================================================//
@@ -500,38 +518,6 @@ trait BaseItemsTrait
         $this->currentItem->localtax1_type = $identifiedVat->localtax1_type;
         $this->currentItem->localtax2_tx = $identifiedVat->localtax2_tx;
         $this->currentItem->localtax2_type = $identifiedVat->localtax2_type;
-    }
-
-    /**
-     * Identify Vat Type by Source Code
-     *
-     * @param null|string $vatSrcCode
-     *
-     * @return null|stdClass
-     */
-    private function getVatIdBySrcCode($vatSrcCode = null)
-    {
-        global $db;
-
-        //====================================================================//
-        // Safety Check => VAT Type Code is Not Empty
-        if (empty($vatSrcCode)) {
-            return null;
-        }
-
-        //====================================================================//
-        // Serach for VAT Type from Given Code
-        $sql = "SELECT t.rowid, t.taux as tva_tx, t.localtax1 as localtax1_tx,";
-        $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type";
-        $sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
-        $sql .= " WHERE t.code = '".$vatSrcCode."' AND t.active = 1";
-
-        $resql = $db->query($sql);
-        if ($resql) {
-            return  $db->fetch_object($resql);
-        }
-
-        return null;
     }
 
     /**
@@ -549,8 +535,11 @@ trait BaseItemsTrait
             return;
         }
         //====================================================================//
+        // Identify Product from Received Data
+        $product = ProductIdentifier::findIdByLineItem($itemData);
+        $productId = $product ? $product->id : null;
+        //====================================================================//
         // Compare Product Link
-        $productId = $this->detectProductId($itemData);
         if ($this->currentItem->fk_product == $productId) {
             return;
         }
@@ -560,13 +549,10 @@ trait BaseItemsTrait
         $this->catchDolibarrErrors($this->currentItem);
         //====================================================================//
         // Update Product Type
-        $productType = $this->currentItem->getValueFrom(
-            "product",
-            $this->currentItem->fk_product,
-            "fk_product_type"
-        );
-        $this->currentItem->setValueFrom("product_type", $productType, '', null, '', '', "none");
-        $this->catchDolibarrErrors($this->currentItem);
+        if ($product) {
+            $this->currentItem->setValueFrom("product_type", $product->type, '', null, '', '', "none");
+            $this->catchDolibarrErrors($this->currentItem);
+        }
     }
 
     /**
@@ -599,47 +585,6 @@ trait BaseItemsTrait
     }
 
     /**
-     * Detect Product ID from Input Line Item with SKU Detection
-     *
-     * @param array $itemData Input Item Data Array
-     *
-     * @return int
-     */
-    private function detectProductId($itemData)
-    {
-        global $db, $conf;
-        //====================================================================//
-        // Product Id is Given
-        if (isset($itemData["fk_product"])) {
-            //====================================================================//
-            // Decode Splash Id String
-            $fkProduct = self::objects()->Id($itemData["fk_product"]);
-            if ($fkProduct) {
-                return (int) $fkProduct;
-            }
-        }
-        //====================================================================//
-        // Search for Product SKU from Item Description
-        if (!empty($conf->global->SPLASH_DECTECT_ITEMS_BY_SKU) && isset($itemData["desc"])) {
-            //====================================================================//
-            // Ensure Product Class is Loaded
-            include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-            //====================================================================//
-            // Shorten Item Resume to remove potential spaces
-            $productRef = str_replace(array(" ", "(", ")", "[", "]", "+", "/"), "", $itemData["desc"]);
-            //====================================================================//
-            // Try Loading product by SKU
-            $product = new Product($db);
-            $result = $product->fetch(0, $productRef);
-            if (($result > 0) && ($product->id > 0)) {
-                return $product->id;
-            }
-        }
-
-        return 0;
-    }
-
-    /**
      * Update Item Totals
      *
      * @return void
@@ -660,8 +605,7 @@ trait BaseItemsTrait
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
         if (!empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
-            $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
-            if ($identifiedVat) {
+            if ($identifiedVat = TaxManager::findTaxByCode($this->currentItem->vat_src_code)) {
                 $vatRateOrId = $identifiedVat->rowid;
                 $useId = true;
             }

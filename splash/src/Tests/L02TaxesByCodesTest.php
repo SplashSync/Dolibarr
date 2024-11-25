@@ -19,6 +19,7 @@ use Splash\Client\Splash;
 use Splash\Local\Local;
 use Splash\Local\Objects\Invoice;
 use Splash\Local\Objects\Order;
+use Splash\Local\Services\TaxManager;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
@@ -192,75 +193,24 @@ class L02TaxesByCodesTest extends ObjectsCase
     }
 
     /**
-     * @param int    $countryId
-     * @param float  $vatRate
-     * @param string $code
-     * @param float  $vatRate2
-     *
-     * @return void
+     * Update Tax Code for a Given Country
      */
-    private function setTaxeCode($countryId, $vatRate, $code, $vatRate2 = 0)
+    private function setTaxeCode(int $countryId, float $vatRate, string $code, float $vatRate2 = 0): bool
     {
-        global $db;
-
         //====================================================================//
         //   Ensure Not Already Defined
-        if ($this->isTaxeCode($countryId, $vatRate, $code)) {
-            return;
+        if (($tax = TaxManager::findTaxByRate($vatRate, $countryId)) && ($tax->code == $code)) {
+            return true;
         }
         //====================================================================//
-        //   Count Tax Code
-        $sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_tva as t";
-        $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
-        $result = $db->query($sql);
-        $this->assertNotEmpty($result);
-        //====================================================================//
-        //   Add Tax Code
-        if (!$db->num_rows($result)) {
-            $sql = "INSERT INTO ".MAIN_DB_PREFIX."c_tva ";
-            $sql .= " (`fk_pays`, `code`, `taux`, `localtax1`, `localtax1_type`,";
-            $sql .= " `localtax2`, `localtax2_type`, `recuperableonly`, `note`, `active`)";
-            $sql .= " VALUES ('".$countryId."', '".$code."', '".$vatRate."', '".$vatRate2."', ";
-            $sql .= " '".($vatRate2 ? "1" : "0")."', '0', '0', '0', '".$code."', '1')";
-            $result = $db->query($sql);
-            if (!$result) {
-                dol_print_error($db);
-            }
-            $db->free($result);
-
-            return;
+        //   Add Tax Rate Code
+        if (!$tax) {
+            return TaxManager::addTaxeCode($countryId, $vatRate, $code, $vatRate2);
         }
         //====================================================================//
-        //   Update Tax Code
-        $sql = "UPDATE ".MAIN_DB_PREFIX."c_tva as t SET code = '".$code;
-        $sql .= "' WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
-        $result = $db->query($sql);
-        if (!$result) {
-            dol_print_error($db);
-        }
-        $db->free($result);
-    }
+        //   Update Tax Rate Code
+        $this->assertNotEmpty($tax->id);
 
-    /**
-     * @param int    $countryId
-     * @param float  $vatRate
-     * @param string $code
-     *
-     * @return bool
-     */
-    private function isTaxeCode($countryId, $vatRate, $code)
-    {
-        global $db;
-
-        $sql = "SELECT * FROM ".MAIN_DB_PREFIX."c_tva as t";
-        $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
-        $sql .= " AND t.code = '".$code."'";
-
-        $resql = $db->query($sql);
-        if (!$resql) {
-            dol_print_error($db);
-        }
-
-        return (bool) ($db->num_rows($resql) > 0);
+        return TaxManager::updateTaxeCode($tax->id, $code);
     }
 }
