@@ -217,7 +217,7 @@ class UnitConverter
         $dimensions = array_filter($dimensions);
         //====================================================================//
         // Find Min Dimensions
-        $minDimension = min($dimensions);
+        $minDimension = (float) min($dimensions);
         //====================================================================//
         // Convert Min Dimension to get Minimal Unit
         $minResult = self::normalizeLength($minDimension);
