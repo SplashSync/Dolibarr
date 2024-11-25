@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use Facture;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Models\Objects\Invoice\Status;
 
 /**
@@ -227,6 +227,7 @@ trait StatusTrait
         if (!property_exists($this->object, "status")
             && property_exists($this->object, "statut")
         ) {
+            /** @phpstan-ignore-next-line */
             return $this->object->statut;
         }
         if (property_exists($this->object, "statut")) {
@@ -234,6 +235,7 @@ trait StatusTrait
             return $this->object->status ?? $this->object->statut;
         }
 
+        /** @phpstan-ignore-next-line */
         return $this->object->status;
     }
 

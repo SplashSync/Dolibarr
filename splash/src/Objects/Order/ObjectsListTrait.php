@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects\Order;
+namespace Splash\Local\Objects\Order;
 
 use Splash\Local\Services\MultiCompany;
 

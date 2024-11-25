@@ -21,10 +21,10 @@
 // *******************************************************************//
 //====================================================================//
 
-namespace   Splash\Local\Widgets;
+namespace Splash\Local\Widgets;
 
 use Exception;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Splash\Models\AbstractWidget;
 

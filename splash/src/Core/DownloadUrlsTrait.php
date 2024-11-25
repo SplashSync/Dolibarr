@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Core;
+namespace Splash\Local\Core;
 
 use Splash\Local\Objects\CreditNote;
 use Splash\Local\Objects\Invoice;

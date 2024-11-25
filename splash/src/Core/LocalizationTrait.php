@@ -13,9 +13,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Core;
+namespace Splash\Local\Core;
 
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 
 /**

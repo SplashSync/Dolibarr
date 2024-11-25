@@ -24,7 +24,6 @@
 #
 # To us different PS Version configured, you need to add hosts to /etc/hosts
 # 
-# 172.100.0.12        v12.dolibarr.local
 # 172.100.0.13        v13.dolibarr.local
 # 172.100.0.14        v14.dolibarr.local
 # 172.100.0.15        v15.dolibarr.local
@@ -32,14 +31,13 @@
 # 172.100.0.17        v17.dolibarr.local
 # 172.100.0.18        v18.dolibarr.local
 # 172.100.0.19        v19.dolibarr.local
+# 172.100.0.20        v20.dolibarr.local
 # 172.100.0.99        latest.dolibarr.local
 # 172.100.0.100       toolkit.dolibarr.local
 # 172.100.0.101       db.dolibarr.local
 # 172.100.0.200       phpmyadmin.dolibarr.local
 #
 ################################################################################
-
-version: "3.2"
 
 services:
 
@@ -89,9 +87,41 @@ services:
             splashsync:    { aliases: [ latest.dolibarr.local ] }
 
     ################################################################################
+    # Dolibarr V20
+    dol-20:
+        image: dolibarr/dolibarr:20
+        container_name: v20.dolibarr.local
+        depends_on:
+            - mysql
+        links:
+            - mysql
+        working_dir:    /var/www/html/custom
+        environment:
+            - "DOLI_DB_TYPE=mysqli"
+            - "DOLI_DB_HOST=mysql"
+            - "DOLI_DB_NAME=dolibarr20"
+            - "DOLI_DB_USER=root"
+            - "DOLI_DB_PASSWORD=dolibarr"
+            - "DOLI_ADMIN_LOGIN=Admin"
+            - "PHP_MEMORY_LIMIT=-1"
+            - SPLASH_WS_ID=ThisIsDol20Key
+            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
+            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
+        volumes:
+            - "./:/var/www/html/custom/"
+            - "./.git/:/var/www/html/custom/.git/"
+        entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
+        hostname: v20.dolibarr.local
+        networks:
+            dolibarr:      { ipv4_address: 172.100.0.20 }
+            splashsync:    { aliases: [ v20.dolibarr.local ] }
+
+
+
+    ################################################################################
     # Dolibarr V19
     dol-19:
-        image: tuxgasy/dolibarr:19
+        image: dolibarr/dolibarr:19
         container_name: v19.dolibarr.local
         depends_on:
             - mysql
@@ -121,7 +151,7 @@ services:
     ################################################################################
     # Dolibarr V18
     dol-18:
-        image: tuxgasy/dolibarr:18
+        image: dolibarr/dolibarr:18
         container_name: v18.dolibarr.local
         depends_on:
             - mysql
@@ -151,7 +181,7 @@ services:
     ################################################################################
     # Dolibarr V17
     dol-17:
-        image: tuxgasy/dolibarr:17
+        image: dolibarr/dolibarr:17
         container_name: v17.dolibarr.local
         depends_on:
             - mysql
@@ -181,7 +211,7 @@ services:
     ################################################################################
     # Dolibarr V16
     dol-16:
-        image: tuxgasy/dolibarr:16
+        image: dolibarr/dolibarr:16
         container_name: v16.dolibarr.local
         depends_on:
             - mysql
@@ -212,7 +242,7 @@ services:
     ################################################################################
     # Dolibarr V15
     dol-15:
-        image: tuxgasy/dolibarr:15
+        image: dolibarr/dolibarr:15
         container_name: v15.dolibarr.local
         depends_on:
             - mysql
@@ -269,55 +299,30 @@ services:
 
     ################################################################################
     # Dolibarr V13
-#     dol-13:
-#         image: tuxgasy/dolibarr:13
-#         container_name: dolibarr-v13
-#         depends_on:
-#             - mysql
-#         environment:
-#             - "DOLI_DB_TYPE=mysqli"
-#             - "DOLI_DB_HOST=mysql"
-#             - "DOLI_DB_NAME=dolibarr13"
-#             - "DOLI_DB_USER=root"
-#             - "DOLI_DB_PASSWORD=dolibarr"
-#             - "DOLI_ADMIN_LOGIN=Admin"
-#             - "PHP_MEMORY_LIMIT=-1"
-#             - SPLASH_WS_ID=ThisIsDol13Key
-#             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-#             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
-#         volumes:
-#             - "./:/var/www/html/custom/"
-#         entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
-#         hostname: v13.dolibarr.local
-#         networks:
-#             dolibarr:      { ipv4_address: 172.100.0.13 }
-#             splashsync:    { aliases: [ v13.dolibarr.local ] }
+    dol-13:
+         image: tuxgasy/dolibarr:13
+         container_name: dolibarr-v13
+         depends_on:
+             - mysql
+         environment:
+             - "DOLI_DB_TYPE=mysqli"
+             - "DOLI_DB_HOST=mysql"
+             - "DOLI_DB_NAME=dolibarr13"
+             - "DOLI_DB_USER=root"
+             - "DOLI_DB_PASSWORD=dolibarr"
+             - "DOLI_ADMIN_LOGIN=Admin"
+             - "PHP_MEMORY_LIMIT=-1"
+             - SPLASH_WS_ID=ThisIsDol13Key
+             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
+             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
+         volumes:
+             - "./:/var/www/html/custom/"
+         entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
+         hostname: v13.dolibarr.local
+         networks:
+             dolibarr:      { ipv4_address: 172.100.0.13 }
+             splashsync:    { aliases: [ v13.dolibarr.local ] }
 
-    ################################################################################
-    # Dolibarr V12
-    dol-12:
-        image: tuxgasy/dolibarr:13
-        container_name: v12.dolibarr.local
-        depends_on:
-            - mysql
-        environment:
-            - "DOLI_DB_TYPE=mysqli"
-            - "DOLI_DB_HOST=mysql"
-            - "DOLI_DB_NAME=dolibarr12"
-            - "DOLI_DB_USER=root"
-            - "DOLI_DB_PASSWORD=dolibarr"
-            - "DOLI_ADMIN_LOGIN=Admin"
-            - "PHP_MEMORY_LIMIT=-1"
-            - SPLASH_WS_ID=ThisIsDol12Key
-            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
-        volumes:
-            - "./:/var/www/html/custom/"
-        command: sh /var/www/html/custom/docker/docker-entrypoint.sh
-        hostname: v12.dolibarr.local
-        networks:
-            dolibarr:      { ipv4_address: 172.100.0.12 }
-            splashsync:    { aliases: [ v12.dolibarr.local ] }
 
     ################################################################################
     # Splash Toolkit Container   

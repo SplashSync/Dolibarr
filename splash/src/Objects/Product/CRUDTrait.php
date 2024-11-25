@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\Product;
 
 use Product;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Services\MultiCompany;
 use Splash\Local\Services\VariantsManager;
 use User;

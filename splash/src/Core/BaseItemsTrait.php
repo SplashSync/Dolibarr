@@ -15,18 +15,22 @@
 
 namespace Splash\Local\Core;
 
+use CommandeFournisseurLigne;
 use FactureLigne;
 use OrderLine;
 use Product;
-use PropaleLigne;
-use Splash\Core\SplashCore      as Splash;
+use Societe;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\LinesExtraFieldsParser;
-use stdClass;
+use Splash\Local\Services\ProductIdentifier;
+use Splash\Local\Services\TaxManager;
 use SupplierInvoiceLine;
 
 /**
  * Dolibarr Orders & Invoices Items Fields
+ *
+ * @phpstan-type Line FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine
  */
 trait BaseItemsTrait
 {
@@ -40,7 +44,7 @@ trait BaseItemsTrait
     private bool $itemUpdate = false;
 
     /**
-     * @var null|FactureLigne|OrderLine|SupplierInvoiceLine
+     * @var null|Line
      */
     private $currentItem;
 
@@ -81,6 +85,18 @@ trait BaseItemsTrait
             ->group($groupName)
             ->microData("http://schema.org/Product", "productID")
             ->association($descFieldName."@lines", "qty@lines", "price@lines")
+        ;
+        //====================================================================//
+        // Order Line Product SKU
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("product_ref")
+            ->inList("lines")
+            ->name($langs->trans("ProductRef"))
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "sku")
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+            ->setPreferRead()
+            ->isNotTested()
         ;
         //====================================================================//
         // Order Line Quantity
@@ -152,6 +168,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Fill List with Data
+        /** @var Line $orderLine */
         foreach ($this->object->lines as $index => $orderLine) {
             //====================================================================//
             // Read Data from Line Item
@@ -166,7 +183,7 @@ trait BaseItemsTrait
     /**
      * Insert an Item to Order or Invoice
      *
-     * @param FactureLigne|OrderLine|PropaleLigne|SupplierInvoiceLine $item
+     * @param Line $item
      *
      * @return bool
      */
@@ -191,7 +208,7 @@ trait BaseItemsTrait
         $item->multicurrency_total_tva = 0.0;
         $item->multicurrency_total_ttc = 0.0;
 
-        if ($item->insert() <= 0) {
+        if (!method_exists($item, 'insert') || $item->insert() <= 0) {
             $this->catchDolibarrErrors($item);
 
             return false;
@@ -203,8 +220,8 @@ trait BaseItemsTrait
     /**
      * Read requested Field
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $line    Line Data Object
-     * @param string                                     $fieldId Field Identifier / Name
+     * @param Line   $line    Line Data Object
+     * @param string $fieldId Field Identifier / Name
      *
      * @return null|array|bool|float|int|string
      *
@@ -230,6 +247,10 @@ trait BaseItemsTrait
                     ? self::objects()->encode("Product", (string) $line->fk_product)
                     : null
                 ;
+                //====================================================================//
+                // Line Product Sku
+            case 'product_ref':
+                return (string) $line->product_ref;
                 //====================================================================//
                 // Order Line Quantity
             case 'qty':
@@ -279,14 +300,18 @@ trait BaseItemsTrait
             $this->itemUpdate = false;
             //====================================================================//
             // Read Next Item Line
-            $this->currentItem = array_shift($this->object->lines);
+            /** @var null|Line $item */
+            $item = array_shift($this->object->lines);
+            $this->currentItem = $item;
             //====================================================================//
             // Update Item Line
             $this->setItem($itemData);
         }
         //====================================================================//
         // Delete Remaining Lines
+        /** @var Line $lineItem */
         foreach ($this->object->lines as $lineItem) {
+            /** @phpstan-ignore-next-line  */
             $this->deleteItem($lineItem);
         }
         //====================================================================//
@@ -324,7 +349,9 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // FIX for Module that Compare Changed Data on Update
-        $this->currentItem->oldline = clone $this->currentItem;
+        if (property_exists($this->currentItem, 'oldline')) {
+            $this->currentItem->oldline = clone $this->currentItem;
+        }
         //====================================================================//
         // Update Line Description
         $this->setItemSimpleData($itemData, "description");
@@ -332,6 +359,9 @@ trait BaseItemsTrait
         //====================================================================//
         // Update Line Label
         $this->setItemSimpleData($itemData, "label");
+        //====================================================================//
+        // Update Line Label
+        $this->setItemSimpleData($itemData, "product_ref");
         //====================================================================//
         // Update Quantity
         $this->setItemSimpleData($itemData, "qty");
@@ -378,7 +408,9 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Update Item Totals
-        $this->currentItem->update_total();
+        if (method_exists($this->currentItem, "update_total")) {
+            $this->currentItem->update_total();
+        }
     }
 
     /**
@@ -461,8 +493,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Clean VAT Code
-        $taxName = preg_replace('/\s|%/', '', $itemData["vat_src_code"]);
-        $cleanedTaxName = is_string($taxName) ? substr($taxName, 0, 10) : "0";
+        $cleanedTaxName = TaxManager::getSanitizedCode($itemData["vat_src_code"]);
         //====================================================================//
         // Update VAT Code if Needed
         if ($this->currentItem->vat_src_code !== $cleanedTaxName) {
@@ -477,8 +508,7 @@ trait BaseItemsTrait
         }
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
-        $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
-        if (!$identifiedVat) {
+        if (!$identifiedVat = TaxManager::findTaxByCode($this->currentItem->vat_src_code)) {
             return;
         }
         //====================================================================//
@@ -488,38 +518,6 @@ trait BaseItemsTrait
         $this->currentItem->localtax1_type = $identifiedVat->localtax1_type;
         $this->currentItem->localtax2_tx = $identifiedVat->localtax2_tx;
         $this->currentItem->localtax2_type = $identifiedVat->localtax2_type;
-    }
-
-    /**
-     * Identify Vat Type by Source Code
-     *
-     * @param null|string $vatSrcCode
-     *
-     * @return null|stdClass
-     */
-    private function getVatIdBySrcCode($vatSrcCode = null)
-    {
-        global $db;
-
-        //====================================================================//
-        // Safety Check => VAT Type Code is Not Empty
-        if (empty($vatSrcCode)) {
-            return null;
-        }
-
-        //====================================================================//
-        // Serach for VAT Type from Given Code
-        $sql = "SELECT t.rowid, t.taux as tva_tx, t.localtax1 as localtax1_tx,";
-        $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type";
-        $sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
-        $sql .= " WHERE t.code = '".$vatSrcCode."' AND t.active = 1";
-
-        $resql = $db->query($sql);
-        if ($resql) {
-            return  $db->fetch_object($resql);
-        }
-
-        return null;
     }
 
     /**
@@ -537,8 +535,11 @@ trait BaseItemsTrait
             return;
         }
         //====================================================================//
+        // Identify Product from Received Data
+        $product = ProductIdentifier::findIdByLineItem($itemData);
+        $productId = $product ? $product->id : null;
+        //====================================================================//
         // Compare Product Link
-        $productId = $this->detectProductId($itemData);
         if ($this->currentItem->fk_product == $productId) {
             return;
         }
@@ -548,13 +549,10 @@ trait BaseItemsTrait
         $this->catchDolibarrErrors($this->currentItem);
         //====================================================================//
         // Update Product Type
-        $productType = $this->currentItem->getValueFrom(
-            "product",
-            $this->currentItem->fk_product,
-            "fk_product_type"
-        );
-        $this->currentItem->setValueFrom("product_type", $productType, '', null, '', '', "none");
-        $this->catchDolibarrErrors($this->currentItem);
+        if ($product) {
+            $this->currentItem->setValueFrom("product_type", $product->type, '', null, '', '', "none");
+            $this->catchDolibarrErrors($this->currentItem);
+        }
     }
 
     /**
@@ -587,47 +585,6 @@ trait BaseItemsTrait
     }
 
     /**
-     * Detect Product ID from Input Line Item with SKU Detection
-     *
-     * @param array $itemData Input Item Data Array
-     *
-     * @return int
-     */
-    private function detectProductId($itemData)
-    {
-        global $db, $conf;
-        //====================================================================//
-        // Product Id is Given
-        if (isset($itemData["fk_product"])) {
-            //====================================================================//
-            // Decode Splash Id String
-            $fkProduct = self::objects()->Id($itemData["fk_product"]);
-            if ($fkProduct) {
-                return (int) $fkProduct;
-            }
-        }
-        //====================================================================//
-        // Search for Product SKU from Item Description
-        if (!empty($conf->global->SPLASH_DECTECT_ITEMS_BY_SKU) && isset($itemData["desc"])) {
-            //====================================================================//
-            // Ensure Product Class is Loaded
-            include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-            //====================================================================//
-            // Shorten Item Resume to remove potential spaces
-            $productRef = str_replace(array(" ", "(", ")", "[", "]", "+", "/"), "", $itemData["desc"]);
-            //====================================================================//
-            // Try Loading product by SKU
-            $product = new Product($db);
-            $result = $product->fetch(0, $productRef);
-            if (($result > 0) && ($product->id > 0)) {
-                return $product->id;
-            }
-        }
-
-        return 0;
-    }
-
-    /**
      * Update Item Totals
      *
      * @return void
@@ -648,8 +605,7 @@ trait BaseItemsTrait
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
         if (!empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
-            $identifiedVat = $this->getVatIdBySrcCode($this->currentItem->vat_src_code);
-            if ($identifiedVat) {
+            if ($identifiedVat = TaxManager::findTaxByCode($this->currentItem->vat_src_code)) {
                 $vatRateOrId = $identifiedVat->rowid;
                 $useId = true;
             }
@@ -657,8 +613,11 @@ trait BaseItemsTrait
 
         //====================================================================//
         // Ensure ThirdParty is Loaded
-        if (!$this->object->thirdparty instanceof \Societe) {
+        if (!$this->object->thirdparty instanceof Societe) {
             $this->object->fetch_thirdparty();
+        }
+        if (!$this->object->thirdparty instanceof Societe) {
+            return;
         }
         //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne à partir de
@@ -677,7 +636,7 @@ trait BaseItemsTrait
             (int) $this->currentItem->qty,
             $this->currentItem->subprice,
             $this->currentItem->remise_percent,
-            $this->currentItem->tva_tx,
+            (float) $this->currentItem->tva_tx,
             -1,
             -1,
             0,

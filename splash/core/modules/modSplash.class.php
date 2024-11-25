@@ -87,8 +87,6 @@ class modSplash extends DolibarrModules
             'menus' => 0,               // Set this to 1 if module has its own menus handler directory
             'barcode' => 0,             // Set this to 1 if module has its own barcode directory
             'models' => 0,              // Set this to 1 if module has its own models directory
-            'css' => '',                 // Set this to relative path of css if module has its own css file
-            'hooks' => '',              // Set here all hooks context managed by module
             'workflow' => ''            // Set here all workflow context managed by module
         );
 

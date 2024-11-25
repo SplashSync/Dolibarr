@@ -13,10 +13,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects;
+namespace Splash\Local\Objects;
 
 use Facture;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Core;
 use Splash\Models\AbstractObject;
 use Splash\Models\Objects\ListsTrait;

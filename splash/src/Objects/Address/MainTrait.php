@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects\Address;
+namespace Splash\Local\Objects\Address;
 
 /**
  * Dolibarr Contacts Address Main Fields

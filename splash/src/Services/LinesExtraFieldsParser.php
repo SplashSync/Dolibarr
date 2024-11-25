@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Services;
 
+use CommandeFournisseurLigne;
+use CommonInvoiceLine;
 use Exception;
 use FactureLigne;
 use OrderLine;
@@ -26,6 +28,8 @@ use SupplierInvoiceLine;
 
 /**
  * MultiCompany Module Manager
+ *
+ * @phpstan-type Line CommonInvoiceLine|FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine
  */
 class LinesExtraFieldsParser
 {
@@ -38,7 +42,7 @@ class LinesExtraFieldsParser
     public static string $extraFieldsType;
 
     /**
-     * @var FactureLigne|OrderLine|SupplierInvoiceLine
+     * @var Line
      */
     protected $object;
 
@@ -109,8 +113,8 @@ class LinesExtraFieldsParser
     /**
      * Read requested Extra Field
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $item
-     * @param string                                     $fieldId Field Identifier / Name
+     * @param Line   $item
+     * @param string $fieldId Field Identifier / Name
      *
      * @return null|bool|float|int|string
      */
@@ -126,9 +130,9 @@ class LinesExtraFieldsParser
     /**
      * Write Given Extra Field
      *
-     * @param FactureLigne|OrderLine|SupplierInvoiceLine $item
-     * @param string                                     $fieldName Field Identifier / Name
-     * @param mixed                                      $fieldData Field Data
+     * @param Line   $item
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
      *
      * @return bool
      */

@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Core;
+namespace Splash\Local\Core;
 
 /**
  * Access to Dolibarr Multi-lang Fields

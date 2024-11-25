@@ -16,7 +16,7 @@
 namespace Splash\Local;
 
 use ArrayObject;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Core\ExtraFieldsPhpUnitTrait;
 use Splash\Local\Services\ConfigManager;
 use Splash\Local\Services\MultiCompany;

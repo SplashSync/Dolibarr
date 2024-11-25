@@ -13,7 +13,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects\Product;
+namespace Splash\Local\Objects\Product;
+
+use Splash\Local\Services\UnitConverter;
 
 /**
  * Dolibarr Products Fields
@@ -95,7 +97,7 @@ trait DimensionsTrait
         // READ Fields
         switch ($fieldName) {
             case 'weight':
-                $this->out[$fieldName] = (float) $this->convertWeight(
+                $this->out[$fieldName] = (float) UnitConverter::convertWeight(
                     $this->object->weight,
                     $this->object->weight_units
                 );
@@ -104,22 +106,21 @@ trait DimensionsTrait
             case 'length':
             case 'width':
             case 'height':
-                $this->out[$fieldName] = (float) $this->convertLength(
+                $this->out[$fieldName] = (float) UnitConverter::convertLength(
                     $this->object->{ $fieldName },
                     $this->object->length_units
-                    // $this->object->{ $fieldName."_units" }
                 );
 
                 break;
             case 'surface':
-                $this->out[$fieldName] = (float) $this->convertSurface(
+                $this->out[$fieldName] = (float) UnitConverter::convertSurface(
                     $this->object->surface,
                     $this->object->surface_units
                 );
 
                 break;
             case 'volume':
-                $this->out[$fieldName] = (float) $this->convertVolume(
+                $this->out[$fieldName] = (float) UnitConverter::convertVolume(
                     $this->object->volume,
                     $this->object->volume_units
                 );
@@ -150,11 +151,11 @@ trait DimensionsTrait
 
                 break;
             case 'surface':
-                if ((string) $fieldData !== (string) $this->convertSurface(
+                if ((string) $fieldData !== (string) UnitConverter::convertSurface(
                     (float) $this->object->surface ?: 0.0,
                     $this->object->surface_units
                 )) {
-                    $normalized = $this->normalizeSurface((float) $fieldData);
+                    $normalized = UnitConverter::normalizeSurface((float) $fieldData);
                     $this->object->surface = $normalized->surface;
                     $this->object->surface_units = $normalized->surface_units;
                     $this->needUpdate();
@@ -162,11 +163,11 @@ trait DimensionsTrait
 
                 break;
             case 'volume':
-                if ((string) $fieldData !== (string) $this->convertVolume(
+                if ((string) $fieldData !== (string) UnitConverter::convertVolume(
                     (float) $this->object->volume ?: 0.0,
                     $this->object->volume_units
                 )) {
-                    $normalized = $this->normalizeVolume((float) $fieldData);
+                    $normalized = UnitConverter::normalizeVolume((float) $fieldData);
                     $this->object->volume = $normalized->volume;
                     $this->object->volume_units = $normalized->volume_units;
                     $this->needUpdate();
@@ -190,25 +191,41 @@ trait DimensionsTrait
     protected function setDimensionsValuesFields(string $fieldName, ?string $fieldData)
     {
         //====================================================================//
-        // WRITE Field
-        switch ($fieldName) {
-            case 'width':
-            case 'height':
-            case 'length':
-                if ((string)$fieldData !== (string) $this->convertLength(
-                    (float) $this->object->{ $fieldName } ?: 0.0,
-                    $this->object->length_units
-                )) {
-                    $nomalized = $this->normalizeLength((float) $fieldData);
-                    $this->object->{ $fieldName } = $nomalized->length;
-                    $this->object->length_units = $nomalized->length_units;
-                    $this->needUpdate();
-                }
-
-                break;
-            default:
-                return;
+        // Filter on Dimensional Fields
+        if (!in_array($fieldName, array('width', 'height', 'length'), true)) {
+            return;
         }
+        //====================================================================//
+        // Build Normalized Dimensions Array
+        $dimensions = array(
+            'width' => (float) ($this->in["width"] ?? UnitConverter::convertLength(
+                (float) $this->object->width ?: 0.0,
+                $this->object->length_units
+            )),
+            'height' => (float) ($this->in["height"] ?? UnitConverter::convertLength(
+                (float) $this->object->height ?: 0.0,
+                $this->object->length_units
+            )),
+            'length' => (float) ($this->in["length"] ?? UnitConverter::convertLength(
+                (float) $this->object->length ?: 0.0,
+                $this->object->length_units
+            )),
+        );
+        //====================================================================//
+        // Compute Current Value
+        $current = UnitConverter::convertLength(
+            (float) $this->object->{ $fieldName } ?: 0.0,
+            $this->object->length_units
+        );
+        $normalized = UnitConverter::normalizeDimension((float) $fieldData, $dimensions);
+        //====================================================================//
+        // Update of Dimensional Field
+        if ((string) $current !== (string) $normalized->length) {
+            $this->object->{ $fieldName } = $normalized->length;
+            $this->object->length_units = $normalized->length_units;
+            $this->needUpdate();
+        }
+
         unset($this->in[$fieldName]);
     }
 
@@ -228,13 +245,17 @@ trait DimensionsTrait
     {
         //====================================================================//
         // Check if Product Weight Updated => NO CHANGES
-        $weightStr = $this->convertWeight($this->object->weight, $this->object->weight_units);
+        $weightStr = UnitConverter::convertWeight($this->object->weight, $this->object->weight_units);
         if ((string) $fieldData == (string) $weightStr) {
             return;
         }
         //====================================================================//
         // Update Current Product Weight (With Variant Detection)
-        $normalized = $this->normalizeWeight($fieldData);
+        if ($this->isVariant() && !empty($this->baseProduct)) {
+            $normalized = UnitConverter::normalizeWeight($fieldData, $this->baseProduct);
+        } else {
+            $normalized = UnitConverter::normalizeWeight($fieldData);
+        }
         $this->object->weight = $normalized->weight;
         $this->object->weight_units = $normalized->weight_units;
         $this->needUpdate();

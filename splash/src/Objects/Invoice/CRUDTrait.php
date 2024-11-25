@@ -18,7 +18,7 @@ namespace Splash\Local\Objects\Invoice;
 use DateTime;
 use Exception;
 use Facture;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Objects\CreditNote;
 use Splash\Local\Services\MultiCompany;
 use User;

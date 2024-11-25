@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects\Invoice;
+namespace Splash\Local\Objects\Invoice;
 
 use Splash\Local\Local;
 use Splash\Local\Services\MultiCompany;

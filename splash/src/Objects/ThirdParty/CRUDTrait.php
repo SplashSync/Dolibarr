@@ -16,7 +16,7 @@
 namespace Splash\Local\Objects\ThirdParty;
 
 use Societe;
-use Splash\Core\SplashCore      as Splash;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Splash\Local\Services\MultiCompany;
 use User;
@@ -47,7 +47,7 @@ trait CRUDTrait
         MultiCompany::replaceMcGlobal();
         //====================================================================//
         // Fetch Object
-        if (1 != $object->fetch((int) $objectId)) {
+        if ($object->fetch((int) $objectId) <= 0) {
             $this->catchDolibarrErrors($object);
 
             return Splash::log()->errNull("Unable to load ThirdParty (".$objectId.").");

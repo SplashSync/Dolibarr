@@ -45,7 +45,7 @@ trait PrimaryTrait
         $this->object = new Societe($db);
         //====================================================================//
         // Fetch Object
-        if (1 == $this->object->fetch(0, $name, '', '', '', '', '', '', '', '', $email)) {
+        if ($this->object->fetch(0, $name, '', '', '', '', '', '', '', '', $email) > 0) {
             return $this->getObjectIdentifier();
         }
 

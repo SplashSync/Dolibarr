@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Local\Objects;
+namespace Splash\Local\Objects;
 
 use Product as BaseProduct;
 use Splash\Local\Core;
@@ -43,7 +43,6 @@ class Product extends AbstractObject implements PrimaryKeysAwareInterface
     use Core\ErrorParserTrait;
     use Core\MultiLangsTrait;
     use Core\MetaDatesTrait;
-    use Core\UnitConverterTrait;
     use Core\ExtraFieldsTrait;
     use Core\ImagesTrait;
     use Core\LocalizationTrait;
