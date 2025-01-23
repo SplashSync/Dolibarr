@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Invoice;
 
 use DateTime;
+use Splash\Local\Local;
 
 /**
  * Dolibarr Customer Invoice Fields (Required)
@@ -52,8 +53,9 @@ trait CoreTrait
         ;
         //====================================================================//
         // Customer Reference
+        // Since Dolibarr V20 -> ref_client is deprecated, uses ref_customer instead
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->identifier("ref_client")
+            ->identifier((Local::dolVersionCmp("20.0.0") > 0) ? "ref_customer" : "ref_client")
             ->name($langs->trans("RefCustomer"))
             ->microData("http://schema.org/Invoice", "confirmationNumber")
             ->isIndexed()
@@ -87,6 +89,7 @@ trait CoreTrait
             // Direct Readings
             case 'ref':
             case 'ref_client':
+            case 'ref_customer':
             case 'ref_ext':
                 $this->getSimple($fieldName);
 
@@ -124,6 +127,7 @@ trait CoreTrait
             // Direct Readings
             case 'ref':
             case 'ref_client':
+            case 'ref_customer':
                 $this->setSimple($fieldName, $fieldData);
 
                 break;

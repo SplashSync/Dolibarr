@@ -50,7 +50,11 @@ trait ObjectsListTrait
         $sql .= " f.entity as entity_id,";          // Entity ID
         $sql .= " ".$refColumn." as ref,";          // Dolibarr Reference
         $sql .= " f.ref_ext as ref_ext,";           // External Reference
-        $sql .= " f.ref_client as ref_client,";     // Customer Reference
+        $sql .= " f.ref_client as ref_client,";
+        $sql .= (Local::dolVersionCmp("20.0.2") > 0) // Customer Reference
+                ? " f.ref_client as ref_customer,"
+                : " f.ref_client as ref_client,"
+        ;
         $sql .= " ".$totalHtColumn." as total_ht,"; // Total net of tax
         $sql .= " f.total_ttc as total_ttc,";       // Total with tax
         $sql .= " f.datef as date";                 // Invoice date
