@@ -20,6 +20,7 @@ use CommonInvoiceLine;
 use Exception;
 use FactureLigne;
 use OrderLine;
+use PropaleLigne;
 use Splash\Components\FieldsFactory;
 use Splash\Local\Core\ExtraFieldsTrait;
 use Splash\Models\AbstractObject;
@@ -29,7 +30,7 @@ use SupplierInvoiceLine;
 /**
  * MultiCompany Module Manager
  *
- * @phpstan-type Line CommonInvoiceLine|FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine
+ * @phpstan-type Line CommonInvoiceLine|FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine|PropaleLigne
  */
 class LinesExtraFieldsParser
 {

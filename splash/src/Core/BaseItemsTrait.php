@@ -19,6 +19,7 @@ use CommandeFournisseurLigne;
 use FactureLigne;
 use OrderLine;
 use Product;
+use PropaleLigne;
 use Societe;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
@@ -30,7 +31,7 @@ use SupplierInvoiceLine;
 /**
  * Dolibarr Orders & Invoices Items Fields
  *
- * @phpstan-type Line FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine
+ * @phpstan-type Line FactureLigne|OrderLine|CommandeFournisseurLigne|SupplierInvoiceLine|PropaleLigne
  */
 trait BaseItemsTrait
 {
