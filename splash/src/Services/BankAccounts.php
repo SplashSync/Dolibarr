@@ -49,7 +49,7 @@ class BankAccounts
         }
 
         //====================================================================//
-        // Detect Bank Account Id From Method Code
+        // Detect Bank Account ID From Method Code
         return $conf->global->{$parameterName};
     }
 
