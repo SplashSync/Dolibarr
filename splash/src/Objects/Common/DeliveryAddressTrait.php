@@ -60,16 +60,6 @@ trait DeliveryAddressTrait
             ->isReadOnly()
         ;
         //====================================================================//
-        // Customer Email
-        $this->fieldsFactory()->create(SPL_T_EMAIL)
-            ->identifier("email")
-            ->name($langs->trans("Email"))
-            ->microData("http://schema.org/ContactPoint", "email")
-            ->group($groupName)
-            ->isIndexed()
-            ->isReadOnly()
-        ;
-        //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
             ->identifier("phone")
@@ -225,7 +215,6 @@ trait DeliveryAddressTrait
             case 'state_code':
             case 'country':
             case 'country_code':
-            case 'email':
             case 'phone_mobile':
                 $this->getDeliveryContact();
                 $this->getSimple($fieldName, "deliveryContact");

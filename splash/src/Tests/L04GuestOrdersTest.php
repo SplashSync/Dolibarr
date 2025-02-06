@@ -77,7 +77,13 @@ class L04GuestOrdersTest extends ObjectsCase
             $this->assertTrue($socId['required']);
             //====================================================================//
             //   Verify Email Field
-            $this->assertEmpty($this->findField($fields, array("email")));
+            $email = $this->findField($fields, array("email"));
+            $this->assertNotEmpty($email);
+            $this->assertIsArray($email);
+            $this->assertEquals(SPL_T_EMAIL, $email['type']);
+            $this->assertFalse($email['required']);
+            $this->assertTrue($email['read']);
+            $this->assertFalse($email['write']);
 
             return;
         }
@@ -99,7 +105,7 @@ class L04GuestOrdersTest extends ObjectsCase
         $this->assertIsArray($email);
         $this->assertEquals(SPL_T_EMAIL, $email['type']);
         $this->assertFalse($email['required']);
-        $this->assertFalse($email['read']);
+        $this->assertTrue($email['read']);
         $this->assertTrue($email['write']);
     }
 

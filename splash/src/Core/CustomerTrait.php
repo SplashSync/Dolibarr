@@ -45,6 +45,7 @@ trait CustomerTrait
         $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
             ->identifier("socid")
             ->name($langs->trans("Company"))
+            ->isRequired(!$this->isAllowedGuest())
         ;
         //====================================================================//
         // Metadata are Specific to Object Type (Order/Invoice)
@@ -53,27 +54,15 @@ trait CustomerTrait
         } else {
             $this->fieldsFactory()->microData("http://schema.org/Invoice", "customer");
         }
-
         //====================================================================//
-        // Not Allowed Guest Orders/Invoices Mode
-        if (!$this->isAllowedGuest()) {
-            $this->fieldsFactory()->isRequired();
-
-            return;
-        }
-
-        //====================================================================//
-        // Is Allowed Customer Email Detection
-        if ($this->isAllowedEmailDetection()) {
-            //====================================================================//
-            // Customer Email
-            $this->fieldsFactory()->create(SPL_T_EMAIL)
-                ->Identifier("email")
-                ->Name($langs->trans("Email"))
-                ->MicroData("http://schema.org/ContactPoint", "email")
-                ->isWriteOnly()
-                ->isNotTested();
-        }
+        // Customer Email
+        $this->fieldsFactory()->create(SPL_T_EMAIL)
+            ->Identifier("email")
+            ->Name($langs->trans("Email"))
+            ->MicroData("http://schema.org/ContactPoint", "email")
+            ->isReadOnly(!$this->isAllowedEmailDetection())
+            ->isNotTested()
+        ;
     }
 
     /**
@@ -139,6 +128,16 @@ trait CustomerTrait
             case 'socid':
                 $this->out[$fieldName] = self::objects()
                     ->encode("ThirdParty", (string) $this->object->socid)
+                ;
+
+                break;
+                //====================================================================//
+                // ThirdParty Email
+            case 'email':
+                $this->object->thirdparty ?? $this->object->fetch_thirdparty();
+                $this->out[$fieldName] = !empty($this->object->thirdparty->email)
+                    ? $this->object->thirdparty->email
+                    : null
                 ;
 
                 break;
