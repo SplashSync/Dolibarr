@@ -52,9 +52,9 @@ trait BaseItemsTrait
     /**
      * Build Line Item Fields using FieldFactory
      *
-     * @return void
+     * @SuppressWarnings(ExcessiveMethodLength)
      */
-    protected function buildItemsFields()
+    protected function buildItemsFields(): void
     {
         global $langs;
 
@@ -99,6 +99,20 @@ trait BaseItemsTrait
             ->setPreferRead()
             ->isNotTested()
         ;
+        //====================================================================//
+        // Order Line Product MPN
+        if ($this->isSupplierMode()) {
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->identifier("ref_supplier")
+                ->inList("lines")
+                ->name($langs->trans("RefOrderSupplierShort"))
+                ->description($langs->trans("RefOrderSupplier"))
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "mpn")
+                ->association($descFieldName."@lines", "qty@lines", "price@lines")
+                ->isReadOnly()
+            ;
+        }
         //====================================================================//
         // Order Line Quantity
         $this->fieldsFactory()->create(SPL_T_INT)
@@ -252,6 +266,13 @@ trait BaseItemsTrait
                 // Line Product Sku
             case 'product_ref':
                 return (string) $line->product_ref;
+                //====================================================================//
+                // Line Product Sku
+            case 'ref_supplier':
+                return property_exists($line, "ref_supplier")
+                    ? (string) $line->ref_supplier
+                    : null
+                ;
                 //====================================================================//
                 // Order Line Quantity
             case 'qty':
@@ -659,5 +680,21 @@ trait BaseItemsTrait
         if (property_exists($this->currentItem, "remise") && empty($this->currentItem->remise)) {
             $this->currentItem->remise = 0;
         }
+    }
+
+    /**
+     * Check if we are on Supplier Mode => Access to Ref. Supplier
+     */
+    private function isSupplierMode(): bool
+    {
+        if (class_exists(Local::CLASS_SUPPLIER_ORDER) && is_a($this, Local::CLASS_SUPPLIER_ORDER)) {
+            return true;
+        }
+
+        if (class_exists(Local::CLASS_SUPPLIER_INVOICE) && is_a($this, Local::CLASS_SUPPLIER_INVOICE)) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -17,6 +17,7 @@ namespace Splash\Local\Core;
 
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Objects\Order;
+use Splash\Local\Services\ThirdPartyIdentifier;
 
 /**
  * Dolibarr Customer Fields (Required)
@@ -218,7 +219,8 @@ trait CustomerTrait
         //====================================================================//
         // Detect ThirdParty Using Given Email
         if ($this->isAllowedEmailDetection() && isset($receivedData["email"]) && !empty($receivedData["email"])) {
-            $this->socId = $this->getCustomerByEmail($receivedData["email"]);
+            $societe = ThirdPartyIdentifier::findOneByEmail($receivedData["email"]);
+            $this->socId = $societe ? $societe->id : null;
             Splash::log()->deb("Customer Email Identified : Id ".$this->socId);
         }
         //====================================================================//
@@ -255,7 +257,7 @@ trait CustomerTrait
     }
 
     /**
-     * Check if Email Detyection is Active
+     * Check if Email Detection is Active
      *
      * @return bool
      */
@@ -267,37 +269,5 @@ trait CustomerTrait
         }
 
         return (bool) $conf->global->SPLASH_GUEST_ORDERS_EMAIL;
-    }
-
-    /**
-     * Detect Guest Customer To Use for This Order/Invoice
-     *
-     * @param string $email Customer Email
-     *
-     * @return int Customer ID
-     */
-    private function getCustomerByEmail(string $email): int
-    {
-        global $db;
-
-        //====================================================================//
-        // Prepare Sql Query
-        $sql = 'SELECT s.rowid';
-        $sql .= ' FROM '.MAIN_DB_PREFIX.'societe as s';
-        $sql .= ' WHERE s.entity IN ('.getEntity('societe').')';
-        $sql .= " AND s.email = '".$db->escape($email)."'";
-
-        //====================================================================//
-        // Execute Query
-        $resql = $db->query($sql);
-        if (!$resql || (1 != $db->num_rows($resql))) {
-            return 0;
-        }
-        $customer = $db->fetch_object($resql);
-        Splash::log()->deb("Customer Detected by Email : ".$email." => Id ".$customer->rowid);
-
-        //====================================================================//
-        // Return Customer Id
-        return $customer->rowid;
     }
 }

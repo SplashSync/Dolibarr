@@ -59,6 +59,13 @@ class Local implements LocalClassInterface
      *
      * @phpstan-var string
      */
+    const CLASS_SUPPLIER_ORDER = 'Splash\Local\Objects\SupplierOrder';
+
+    /**
+     * @var class-string
+     *
+     * @phpstan-var string
+     */
     const CLASS_SUPPLIER_INVOICE = 'Splash\Local\Objects\SupplierInvoice';
 
     //====================================================================//
