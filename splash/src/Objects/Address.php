@@ -49,6 +49,16 @@ class Address extends AbstractObject
     use Address\CRUDTrait;
     use Address\CoreTrait;
     use Address\MainTrait;
+    use Address\MySocTrait;
+
+    //====================================================================//
+    // Class Constants
+    //====================================================================//
+
+    /**
+     * Special ID for Reading My Soc as Address
+     */
+    const MY_SOC_ID = "my-soc";
 
     //====================================================================//
     // ExtraFields Type

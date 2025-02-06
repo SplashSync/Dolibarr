@@ -15,6 +15,9 @@
 
 namespace Splash\Local\Core;
 
+use Splash\Local\Dictionary\StaticContactTypes;
+use Splash\Local\Services\ContactsManager;
+
 /**
  * Dolibarr Customer Orders/Invoices Address Fields
  */
@@ -32,14 +35,14 @@ trait ContactsTrait
         //====================================================================//
         // Billing Address
         $this->fieldsFactory()->create((string) self::objects()->encode("Address", SPL_T_ID))
-            ->identifier("BILLING")
+            ->identifier(StaticContactTypes::BILLING)
             ->name($langs->trans("TypeContact_commande_external_BILLING"))
             ->microData("http://schema.org/Order", "billingAddress")
         ;
         //====================================================================//
         // Shipping Address
         $this->fieldsFactory()->create((string) self::objects()->encode("Address", SPL_T_ID))
-            ->identifier("SHIPPING")
+            ->identifier(StaticContactTypes::SHIPPING)
             ->name($langs->trans("TypeContact_commande_external_SHIPPING"))
             ->microData("http://schema.org/Order", "orderDelivery")
         ;
@@ -58,14 +61,15 @@ trait ContactsTrait
         //====================================================================//
         // READ Fields
         switch ($fieldName) {
-            case 'SHIPPING':
-            case 'BILLING':
-                $contactsArray = $this->object->liste_contact(-1, 'external', 1, $fieldName);
-                if (is_array($contactsArray) && !empty($contactsArray)) {
-                    /** @var int[] $contactsArray  */
-                    $this->out[$fieldName] = self::objects()
-                        ->encode("Address", (string) array_shift($contactsArray))
-                    ;
+            case StaticContactTypes::SHIPPING:
+            case StaticContactTypes::BILLING:
+                //====================================================================//
+                // Get First Contact ID
+                $contactId = ContactsManager::getFirstContactId($this->object, $fieldName);
+                //====================================================================//
+                // Encode Contact ID
+                if ($contactId) {
+                    $this->out[$fieldName] = self::objects()->encode("Address", (string) $contactId);
                 } else {
                     $this->out[$fieldName] = null;
                 }
@@ -88,7 +92,7 @@ trait ContactsTrait
      */
     protected function setContactsFields(string $fieldName, ?string $fieldData)
     {
-        if (!in_array($fieldName, array('SHIPPING', 'BILLING'), true)) {
+        if (!in_array($fieldName, array(StaticContactTypes::SHIPPING, StaticContactTypes::BILLING), true)) {
             return;
         }
         unset($this->in[$fieldName]);

@@ -71,46 +71,6 @@ trait MainTrait
 
         $groupName = $langs->trans("Status");
         //====================================================================//
-        // Is Draft
-        $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->identifier("isdraft")
-            ->group($groupName)
-            ->name($langs->trans("Order")." : ".$langs->trans("Draft"))
-            ->microData("http://schema.org/OrderStatus", "OrderDraft")
-            ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
-            ->isReadOnly()
-        ;
-        //====================================================================//
-        // Is Canceled
-        $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->identifier("iscanceled")
-            ->group($groupName)
-            ->name($langs->trans("Order")." : ".$langs->trans("Canceled"))
-            ->microData("http://schema.org/OrderStatus", "OrderCancelled")
-            ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
-            ->isReadOnly()
-        ;
-        //====================================================================//
-        // Is Validated
-        $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->identifier("isvalidated")
-            ->group($groupName)
-            ->name($langs->trans("Order")." : ".$langs->trans("Validated"))
-            ->microData("http://schema.org/OrderStatus", "OrderProcessing")
-            ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
-            ->isReadOnly()
-        ;
-        //====================================================================//
-        // Is Closed
-        $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->identifier("isclosed")
-            ->name($langs->trans("Order")." : ".$langs->trans("Closed"))
-            ->group($groupName)
-            ->microData("http://schema.org/OrderStatus", "OrderDelivered")
-            ->association("isdraft", "iscanceled", "isvalidated", "isclosed")
-            ->isReadOnly()
-        ;
-        //====================================================================//
         // Is Paid
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("billed")
@@ -175,46 +135,6 @@ trait MainTrait
             case 'total_ttc':
             case 'total_vat':
                 $this->getSimple($fieldName);
-
-                break;
-            default:
-                return;
-        }
-
-        unset($this->in[$key]);
-    }
-
-    /**
-     * Read requested Field
-     *
-     * @param string $key       Input List Key
-     * @param string $fieldName Field Identifier / Name
-     *
-     * @return void
-     */
-    protected function getStatesFields(string $key, string $fieldName): void
-    {
-        //====================================================================//
-        // READ Fields
-        switch ($fieldName) {
-            //====================================================================//
-            // ORDER STATUS
-            //====================================================================//
-
-            case 'isdraft':
-                $this->out[$fieldName] = (0 == $this->object->statut);
-
-                break;
-            case 'iscanceled':
-                $this->out[$fieldName] = (-1 == $this->object->statut);
-
-                break;
-            case 'isvalidated':
-                $this->out[$fieldName] = (1 == $this->object->statut);
-
-                break;
-            case 'isclosed':
-                $this->out[$fieldName] = (3 == $this->object->statut);
 
                 break;
             default:

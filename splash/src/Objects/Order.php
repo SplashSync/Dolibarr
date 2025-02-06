@@ -55,7 +55,9 @@ class Order extends AbstractObject
     use Core\DownloadUrlsTrait;
 
     // Dolibarr Common Fields Traits
+    use Common\DeliveryAddressTrait;
     use Common\PaymentMethodTrait;
+    use Common\ShippingMethodTrait;
     use Common\BankAccountTrait;
 
     // Dolibarr Orders Traits
@@ -65,6 +67,7 @@ class Order extends AbstractObject
     use Order\MainTrait;
     use Order\ItemsTrait;
     use Order\StatusTrait;
+    use Order\StatusFlagsTrait;
 
     //====================================================================//
     // ExtraFields Type
@@ -134,9 +137,11 @@ class Order extends AbstractObject
         $langs->load("admin");
         $langs->load("companies");
         $langs->load("orders");
+        $langs->load("bills");
         $langs->load("other");
         $langs->load("banks");
         $langs->load("stocks");
+        $langs->load("sendings");
         //====================================================================//
         //  Translate Object Name
         static::$name = $langs->trans("Module25Name");

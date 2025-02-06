@@ -67,6 +67,7 @@ trait TriggersTrait
             'ORDER_CREATE',
             'ORDER_VALIDATE',
             'ORDER_MODIFY',
+            'COMMANDE_MODIFY',
             'ORDER_UPDATE',
             'ORDER_DELETE',
             'ORDER_CLOSE',

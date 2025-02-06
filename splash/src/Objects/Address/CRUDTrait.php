@@ -18,6 +18,7 @@ namespace Splash\Local\Objects\Address;
 use Contact;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
+use Splash\Local\Objects\Address;
 use Splash\Local\Services\MultiCompany;
 use User;
 
@@ -39,6 +40,11 @@ trait CRUDTrait
         //====================================================================//
         // Stack Trace
         Splash::log()->trace();
+        //====================================================================//
+        // Detect My Soc Request
+        if (Address::MY_SOC_ID == $objectId) {
+            return $this->getMySocAsContact();
+        }
         //====================================================================//
         // Init Object
         $object = new Contact($db);
