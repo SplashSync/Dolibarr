@@ -236,10 +236,9 @@ class TableQuery
         }
         //====================================================================//
         // Apply Universal Formating
-        $errStr = "";
-        $arg3 = (Local::dolVersionCmp("17.0.0") >= 0) ? 1 : null;
-        /** @phpstan-ignore-next-line */
-        $where = forgeSQLFromUniversalSearchCriteria($where, $errStr, $arg3);
+        /** @phpstan-var null|string $errStr */
+        $errStr = null;
+        $where = forgeSQLFromUniversalSearchCriteria($where, $errStr, 1);
         if ($errStr) {
             Splash::log()->err($errStr);
         }
