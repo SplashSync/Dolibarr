@@ -16,6 +16,7 @@
 namespace Splash\Local\Core;
 
 use ExtraFields;
+use Splash\Local\Local;
 
 /**
  * Access to Dolibarr Extra Fields for PhpUnit
@@ -23,7 +24,7 @@ use ExtraFields;
 trait ExtraFieldsPhpUnitTrait
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
     private static array $testedExtraTypes = array(
         "varchar" => "phpunit_varchar",
@@ -32,6 +33,10 @@ trait ExtraFieldsPhpUnitTrait
         "bool" => "phpunit_bool",
         "price" => "phpunit_price",
         "date" => "phpunit_date",
+        "select" => "phpunit_select",
+        "checkbox" => "phpunit_checkbox",
+        "sellist" => "phpunit_sellist",
+        "chkbxlst" => "phpunit_chkbxlst",
     );
 
     /**
@@ -63,44 +68,99 @@ trait ExtraFieldsPhpUnitTrait
         //====================================================================//
         // Setup all Testing ExtraTypes
         foreach (self::$testedExtraTypes as $extraFieldType => $extraFieldName) {
-            //====================================================================//
-            // ExtraField Already Exist => Update
             if (in_array($extraFieldName, array_keys($existingTypes), true)) {
-                $extraFields->update(
-                    (string) $extraFieldName,
-                    ucwords((string) $extraFieldName, "_"),
-                    $extraFieldType,
-                    255,
-                    $elementType,
-                    0,
-                    0,
-                    0,
-                    array("options" => array()),
-                    1,
-                    '',
-                    '0',
-                    ($visible ? '0':'1')
-                );
                 //====================================================================//
-                // ExtraField Not Found = Create
+                // ExtraField Already Exist => Update
+                self::updatePhpUnitExtraField($elementType, $extraFieldType, $extraFieldName, $visible);
             } else {
-                $extraFields->addExtraField(
-                    $extraFieldName,
-                    ucwords($extraFieldName, "_"),
-                    $extraFieldType,
-                    0,
-                    '255',
-                    $elementType,
-                    0,
-                    0,
-                    '',
-                    '0',
-                    1,
-                    '',
-                    '0',
-                    ($visible ? '0':'1')
-                );
+                //====================================================================//
+                // ExtraField Not Found => Create
+                self::createPhpUnitExtraField($elementType, $extraFieldType, $extraFieldName, $visible);
             }
         }
+    }
+
+    /**
+     * Create an Extra Fields on Object Type
+     */
+    private static function createPhpUnitExtraField(
+        string $element,
+        string $type,
+        string $name,
+        bool $visible = true
+    ): void {
+        global $db;
+        $extraFields = new ExtraFields($db);
+
+        $extraFields->addExtraField(
+            $name,
+            ucwords($name, "_"),
+            $type,
+            0,
+            '255',
+            $element,
+            0,
+            0,
+            '',
+            array("options" => self::getExtraFieldOptions($type)),
+            1,
+            '',
+            '0',
+            ($visible ? '0':'1')
+        );
+    }
+
+    /**
+     * Update an Extra Fields on Object Type
+     */
+    private static function updatePhpUnitExtraField(
+        string $element,
+        string $type,
+        string $name,
+        bool $visible = true
+    ): void {
+        global $db;
+        $extraFields = new ExtraFields($db);
+
+        $extraFields->update(
+            $name,
+            ucwords($name, "_"),
+            $type,
+            255,
+            $element,
+            0,
+            0,
+            0,
+            array("options" => self::getExtraFieldOptions($type)),
+            1,
+            '',
+            '0',
+            ($visible ? '0':'1')
+        );
+    }
+
+    /**
+     * Create an Extra Fields on Object Type
+     */
+    private static function getExtraFieldOptions(string $type): array
+    {
+        switch ($type) {
+            case "select":
+            case "checkbox":
+                return array(
+                    "A" => "Option A",
+                    "B" => "Option B",
+                    "C" => "Option C",
+                    "D" => "Option D",
+                );
+            case "sellist":
+            case "chkbxlst":
+                return (Local::dolVersionCmp("18.0.0") >= 0)
+                    ? array("c_typent:libelle:code::(active:=:1)" => null)
+                    : array("c_typent:libelle:code::(active=1)" => null)
+                ;
+        }
+
+        return array();
     }
 }

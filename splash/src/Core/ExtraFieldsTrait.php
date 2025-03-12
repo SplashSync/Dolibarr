@@ -16,7 +16,7 @@
 namespace Splash\Local\Core;
 
 use ExtraFields;
-use Splash\Client\Splash;
+use Splash\Local\Services\StringQueriesManager;
 use Splash\Models\Helpers\InlineHelper;
 
 /**
@@ -87,7 +87,7 @@ trait ExtraFieldsTrait
             if ($this->extraInList) {
                 $this->fieldsFactory()->inList($this->extraInList);
             }
-            if (in_array($fieldType, array('select', "checkbox"), true)) {
+            if (in_array($fieldType, array('select', "checkbox", "sellist", "chkbxlst"), true)) {
                 $this->fieldsFactory()
                     ->addChoices($this->getChoices($fieldType, $fieldId))
                 ;
@@ -154,15 +154,7 @@ trait ExtraFieldsTrait
 
                 break;
             case SPL_T_INLINE:
-                $fieldType = (string) $this->decodeType($fieldName);
-                //====================================================================//
-                // Explode Storage Value
-                $value = is_scalar($fieldData) ? explode(",", (string) $fieldData) : array();
-                //====================================================================//
-                // Build Intersection Value
-                $this->out[$fieldName] = InlineHelper::fromArray(
-                    array_intersect_key($this->getOptions($fieldType), array_flip($value))
-                );
+                $this->out[$fieldName] = $this->encodeInlineValue($fieldName, $fieldData);
 
                 break;
             case SPL_T_PRICE:
@@ -226,13 +218,7 @@ trait ExtraFieldsTrait
 
                 break;
             case SPL_T_INLINE:
-                $fieldType = (string) $this->decodeType($fieldName);
-                $fieldData = is_scalar($fieldData) ? (string) $fieldData : null;
-                //====================================================================//
-                // Build Storage Value
-                $fieldDataStorage = implode(',', array_keys(
-                    array_intersect($this->getOptions($fieldType), InlineHelper::toArray($fieldData))
-                ));
+                $fieldDataStorage = $this->decodeInlineValue($fieldName, $fieldData);
                 //====================================================================//
                 // Compare with Current
                 if ($currentData != $fieldDataStorage) {
@@ -417,6 +403,7 @@ trait ExtraFieldsTrait
             case "password":
             case "select":
             case "link":
+            case "sellist":
                 return SPL_T_VARCHAR;
             case "text":
             case "html":
@@ -433,6 +420,7 @@ trait ExtraFieldsTrait
             case "radio":
                 return SPL_T_BOOL;
             case "checkbox":
+            case "chkbxlst":
                 return SPL_T_INLINE;
             case "price":
                 return SPL_T_PRICE;
@@ -442,8 +430,6 @@ trait ExtraFieldsTrait
                 return SPL_T_EMAIL;
             case "url":
                 return SPL_T_URL;
-            case "sellist":
-            case "chkbxlst":
             case "separate":
                 return null;
         }
@@ -546,8 +532,20 @@ trait ExtraFieldsTrait
      */
     private function getChoices(string $fieldType, string $fieldId): array
     {
+        //====================================================================//
+        // Simple Select => Values are the Options
         if ('select' == $fieldType) {
             return $this->getOptions($fieldId);
+        }
+        //====================================================================//
+        // Table Select => Load Values from Database with Query String
+        if (in_array($fieldType, array('sellist', 'chkbxlst'), true)) {
+            $queryString = array_keys($this->getOptions($fieldId))[0] ?? null;
+            if (empty($queryString) || !is_string($queryString)) {
+                return array();
+            }
+
+            return StringQueriesManager::getValuesFromExtraFields($queryString) ?? array();
         }
 
         $choices = array();
@@ -572,5 +570,53 @@ trait ExtraFieldsTrait
 
         /** @phpstan-ignore-next-line */
         return $this->extraFieldsAttrs[$attrType][$fieldType] ?? null;
+    }
+
+    /**
+     * Encode Inline ExtraField Value
+     *
+     * @param string $fieldName Dolibarr Extra field Type Name
+     * @param mixed  $fieldData Dolibarr Extra field Value
+     */
+    private function encodeInlineValue(string $fieldName, $fieldData): string
+    {
+        $fieldId = (string) $this->decodeType($fieldName);
+        //====================================================================//
+        // Explode Storage Value
+        $value = is_scalar($fieldData) ? explode(",", (string) $fieldData) : array();
+        //====================================================================//
+        // Table Values => Direct Parsing
+        if ('chkbxlst' == $this->getExtraFieldAttr($fieldId, "type")) {
+            return InlineHelper::fromArray($value);
+        }
+
+        //====================================================================//
+        // Select Values => Build Intersection Value
+        return InlineHelper::fromArray(
+            array_intersect_key($this->getOptions($fieldId), array_flip($value))
+        );
+    }
+
+    /**
+     * Decode Inline ExtraField Value
+     *
+     * @param string $fieldName Dolibarr Extra field Type Name
+     * @param mixed  $fieldData Splash Extra field Value
+     */
+    private function decodeInlineValue(string $fieldName, $fieldData): string
+    {
+        $fieldType = (string) $this->decodeType($fieldName);
+        $fieldData = is_scalar($fieldData) ? (string) $fieldData : null;
+        //====================================================================//
+        // Table Values => Direct Parsing
+        if ('chkbxlst' == $this->getExtraFieldAttr($fieldType, "type")) {
+            return implode(',', InlineHelper::toArray($fieldData));
+        }
+
+        //====================================================================//
+        // Select Values => Build Storage Value
+        return implode(',', array_keys(
+            array_intersect($this->getOptions($fieldType), InlineHelper::toArray($fieldData))
+        ));
     }
 }
