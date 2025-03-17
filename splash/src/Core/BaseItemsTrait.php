@@ -252,7 +252,7 @@ trait BaseItemsTrait
             //====================================================================//
             // Order Line Description
             case 'desc':
-                return ($line instanceof SupplierInvoiceLine) ? "" : $line->desc;
+                return ($line instanceof SupplierInvoiceLine) ? "" : ($line->desc ?: $line->product_label);
             case 'description':
                 return $line->description ?? "";
                 //====================================================================//
