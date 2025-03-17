@@ -53,6 +53,7 @@ class Order extends AbstractObject
     use Core\MarketplaceModeTrait;
     use Core\NotesTrait;
     use Core\DownloadUrlsTrait;
+    use Core\ItemsTotalsTrait;
 
     // Dolibarr Common Fields Traits
     use Common\DeliveryAddressTrait;
