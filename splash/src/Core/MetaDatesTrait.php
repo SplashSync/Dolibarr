@@ -43,10 +43,24 @@ trait MetaDatesTrait
             ->microData("http://schema.org/DataFeedItem", "dateModified")
             ->isReadOnly()
         ;
+        $this->fieldsFactory()->create(SPL_T_DATETIME)
+            ->identifier("datetime_modification")
+            ->name($langs->trans("DateLastModification"))
+            ->group("Meta")
+            ->microData("http://schema.org/DataFeedItem", "dateModified")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // datec - Creation Date
         $this->fieldsFactory()->create(SPL_T_DATE)
             ->identifier("date_creation")
+            ->name($langs->trans("DateCreation"))
+            ->group("Meta")
+            ->microData("http://schema.org/DataFeedItem", "dateCreated")
+            ->isReadOnly()
+        ;
+        $this->fieldsFactory()->create(SPL_T_DATETIME)
+            ->identifier("datetime_creation")
             ->name($langs->trans("DateCreation"))
             ->group("Meta")
             ->microData("http://schema.org/DataFeedItem", "dateCreated")
@@ -76,6 +90,18 @@ trait MetaDatesTrait
                     $this->infoLoaded = true;
                 }
                 $this->out[$fieldName] = dol_print_date($this->object->{$fieldName}, 'dayrfc');
+
+                break;
+            case 'datetime_creation':
+            case 'datetime_modification':
+                if (!$this->infoLoaded) {
+                    $this->object->info($this->object->id);
+                    $this->infoLoaded = true;
+                }
+                $this->out[$fieldName] = dol_print_date(
+                    $this->object->{str_replace("datetime_", "date_", $fieldName)},
+                    'standard'
+                );
 
                 break;
             default:
