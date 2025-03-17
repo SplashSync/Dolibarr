@@ -125,7 +125,7 @@ trait ItemsTotalsTrait
     /**
      * Compute Total Price for Items Type
      */
-    private function getItemTypeTotal(int $itemType = null): array
+    private function getItemTypeTotal(int $itemType = null): ?array
     {
         global $conf;
 
