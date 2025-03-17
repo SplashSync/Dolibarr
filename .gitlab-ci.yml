@@ -180,42 +180,17 @@ Dol-15-Variants:
 ################################################################
 # Dolibarr V14
 Dol-14-Basics:
-    image:          tuxgasy/dolibarr:14.0.4
-    <<: *functionnal-basic
-
-################################################################
-# Dolibarr V13
-Dol-13-Basics:
-    image:          tuxgasy/dolibarr:13
+    image:          tuxgasy/dolibarr:14
     allow_failure:  true
     <<: *functionnal-basic
-Dol-13-Advanced:
-    image:          tuxgasy/dolibarr:13
+Dol-14-Advanced:
+    image:          tuxgasy/dolibarr:14
     allow_failure:  true
     <<: *functionnal-advanced
-Dol-13-Variants:
-    image:          tuxgasy/dolibarr:13
+Dol-14-Variants:
+    image:          tuxgasy/dolibarr:14
     allow_failure:  true
     <<: *functionnal-variants
-
-################################################################
-# Dolibarr DEV
-# Dol-Dev-Basics:
-#     image:          tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     retry:          0
-#     <<: *functionnal-basic
-# Dol-Dev-Advanced:
-#     image:          tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     retry:          0
-#     <<: *functionnal-advanced
-# Dol-Dev-Variants:
-#     image:          tuxgasy/dolibarr:develop
-#     allow_failure:  true
-#     retry:          0
-#     <<: *functionnal-variants
-
 
 ################################################################
 # Code Quality Verifications 

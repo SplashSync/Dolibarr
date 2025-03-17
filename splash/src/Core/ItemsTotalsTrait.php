@@ -92,7 +92,7 @@ trait ItemsTotalsTrait
             case 'price_total':
                 $this->out[$fieldName] = self::prices()->encode(
                     null,
-                    self::toVatPercents($this->object->total_ht, $this->object->total_ttc),
+                    self::toVatPercents((float) $this->object->total_ht, (float) $this->object->total_ttc),
                     $this->object->total_ttc,
                     $this->object->multicurrency_code ?: $conf->global->MAIN_MONNAIE
                 );
