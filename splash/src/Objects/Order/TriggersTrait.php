@@ -76,6 +76,7 @@ trait TriggersTrait
             'ORDER_CANCEL',
             // Order Line Actions
             'LINEORDER_INSERT',
+            'LINEORDER_MODIFY',
             'LINEORDER_UPDATE',
             'LINEORDER_DELETE',
             // Order Contacts Actions
@@ -135,12 +136,14 @@ trait TriggersTrait
             case 'ORDER_VALIDATE':
             case 'ORDER_MODIFY':
             case 'ORDER_UPDATE':
+            case 'COMMANDE_MODIFY':
             case 'ORDER_CLOSE':
             case 'ORDER_REOPEN':
             case 'ORDER_CLASSIFY_BILLED':
             case 'ORDER_CANCEL':
             case 'LINEORDER_INSERT':
             case 'LINEORDER_UPDATE':
+            case 'LINEORDER_MODIFY':
             case 'LINEORDER_DELETE':
             case 'COMMANDE_ADD_CONTACT':
             case 'COMMANDE_DELETE_CONTACT':
