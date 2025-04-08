@@ -609,9 +609,10 @@ trait BaseItemsTrait
     /**
      * Update Item Totals
      *
-     * @return void
+     * @SuppressWarnings(CyclomaticComplexity)
+     * @SuppressWarnings(NPathComplexity)
      */
-    private function updateItemTotals()
+    private function updateItemTotals(): void
     {
         global $conf, $mysoc;
 
@@ -679,6 +680,11 @@ trait BaseItemsTrait
         // FIX for Dolibarr V16
         if (property_exists($this->currentItem, "remise") && empty($this->currentItem->remise)) {
             $this->currentItem->remise = 0;
+        }
+        //====================================================================//
+        // Ask for Buy Price Computation
+        if (property_exists($this->currentItem, "pa_ht")) {
+            $this->currentItem->pa_ht = "";
         }
     }
 
