@@ -88,6 +88,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Verify Reference
         $this->assertStringContainsString((string) $expectedRef, $object->ref, "Splash Status: ".$splStatus);
         if ("PROV" != $expectedRef) {
+            $this->assertNotEmpty($object->date);
             $this->assertStringContainsString(dol_print_date($object->date, '%y%m'), $object->ref);
         }
     }
@@ -183,6 +184,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
             "Splash Status: ".$splashStatus
         );
         if ("PROV" != $expectedRef) {
+            $this->assertNotEmpty($object->date);
             $this->assertStringContainsStringIgnoringCase(dol_print_date($object->date, '%y%m'), $object->ref);
             // @phpstan-ignore-next-line
             $this->assertStringContainsStringIgnoringCase(dol_print_date($fakeData["date"], '%y%m'), $object->ref);
