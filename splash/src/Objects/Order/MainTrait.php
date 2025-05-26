@@ -164,7 +164,8 @@ trait MainTrait
             //====================================================================//
             // Order Official Date
             case 'date_livraison':
-                if (empty($fieldData) || dol_print_date($this->object->delivery_date, 'standard') === $fieldData) {
+                $deliveryDate = (int) $this->object->delivery_date;
+                if (empty($fieldData) || dol_print_date($deliveryDate, 'standard') === $fieldData) {
                     break;
                 }
                 $dateTime = new \DateTime((string) $fieldData);
