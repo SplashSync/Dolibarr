@@ -27,7 +27,7 @@ trait MultiLangTrait
     use FieldsManagerTrait;
 
     /**
-     * Read requested Field
+     * Read Requested Field
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
