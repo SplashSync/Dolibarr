@@ -42,12 +42,12 @@
 
     "require": {
         "php":                              "^7.4|^8.0",
-        "splash/phpcore":                   "dev-master"
+        "splash/phpcore":                   "^2.0"
     },
     
     "require-dev": {
-        "splash/console":                   "dev-master",
-        "badpixxel/php-sdk":                "~2.0"
+        "splash/console":                   "^2.0",
+        "badpixxel/php-sdk":                "^2.0"
     },
 
     "archive": {
