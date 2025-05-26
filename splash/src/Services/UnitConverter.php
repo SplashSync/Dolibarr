@@ -19,6 +19,7 @@ use ArrayObject;
 use Product;
 use Splash\Components\UnitConverter as Converter;
 use Splash\Core\SplashCore as Splash;
+use stdClass;
 
 /**
  * Dolibarr Unit Converter
@@ -86,8 +87,8 @@ class UnitConverter
     /**
      * Convert Weight form all units to kg.
      *
-     * @param null|float $weight Weight Value
-     * @param int|string $unit   Weight Unit
+     * @param null|float      $weight Weight Value
+     * @param null|int|string $unit   Weight Unit
      *
      * @return float Weight Value in kg
      */
@@ -154,8 +155,8 @@ class UnitConverter
     /**
      * Convert Length form all units to m.
      *
-     * @param null|float $length Length Value
-     * @param int|string $unit   Length Unit
+     * @param null|float      $length Length Value
+     * @param null|int|string $unit   Length Unit
      *
      * @return float Length Value in m
      */
@@ -237,8 +238,8 @@ class UnitConverter
     /**
      * Convert Surface form all units to m².
      *
-     * @param null|float $surface Surface Value
-     * @param int|string $unit    Surface Unit
+     * @param null|float      $surface Surface Value
+     * @param null|int|string $unit    Surface Unit
      *
      * @return float Surface Value in m²
      */
@@ -288,8 +289,8 @@ class UnitConverter
     /**
      * Convert Volume form all units to m3.
      *
-     * @param null|float $volume Volume Value
-     * @param int|string $unit   Volume Unit
+     * @param null|float      $volume Volume Value
+     * @param null|int|string $unit   Volume Unit
      *
      * @return float Volume Value in m3
      */
@@ -334,6 +335,133 @@ class UnitConverter
         $result->volume_units = "0";
 
         return $result;
+    }
+
+    /**
+     * Get Dolibarr Units Choices.
+     *
+     * @return array<string, string>
+     */
+    public static function getDolUnitChoices(?string $type = null): array
+    {
+        global $langs;
+
+        if (!self::loadDolUnits()) {
+            return array();
+        }
+
+        //====================================================================//
+        // Search for Unit in Dictionary
+        $choices = array();
+        foreach (self::$dico as $cUnit) {
+            //====================================================================//
+            // Filter on Unit Type
+            if ($type && ($cUnit->unit_type != $type)) {
+                continue;
+            }
+
+            $choices[$cUnit->code] = $langs->trans($cUnit->label);
+        }
+
+        return $choices;
+    }
+
+    /**
+     * Get Dolibarr Units by ID.
+     */
+    public static function getDolUnitById(int $unitId, ?string $type = null): ?stdClass
+    {
+        if (!self::loadDolUnits() || empty($unitId)) {
+            return null;
+        }
+
+        //====================================================================//
+        // Search for Unit in Dictionary
+        foreach (self::$dico as $cUnit) {
+            //====================================================================//
+            // Filter on Unit Type
+            if ($type && ($cUnit->unit_type != $type)) {
+                continue;
+            }
+            //====================================================================//
+            // Filter on Unit ID
+            if ($cUnit->id != $unitId) {
+                continue;
+            }
+
+            return $cUnit;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get Dolibarr Units by Code.
+     */
+    public static function getDolUnitByCode(?string $unitCode, ?string $type = null): ?stdClass
+    {
+        if (!self::loadDolUnits() || empty($unitCode)) {
+            return null;
+        }
+
+        //====================================================================//
+        // Search for Unit in Dictionary
+        foreach (self::$dico as $cUnit) {
+            //====================================================================//
+            // Filter on Unit Type
+            if ($type && ($cUnit->unit_type != $type)) {
+                continue;
+            }
+            //====================================================================//
+            // Filter on Unit Code
+            if (strtolower($cUnit->code) != strtolower($unitCode)) {
+                continue;
+            }
+
+            return $cUnit;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get Dolibarr Units by Label.
+     */
+    public static function getDolUnitByLabel(?string $unitLabel, ?string $type = null): ?stdClass
+    {
+        global $langs;
+
+        if (!self::loadDolUnits() || empty($unitLabel)) {
+            return null;
+        }
+
+        $unitLabel = strtolower($unitLabel);
+        //====================================================================//
+        // Search for Unit in Dictionary
+        foreach (self::$dico as $cUnit) {
+            //====================================================================//
+            // Filter on Unit Type
+            if ($type && ($cUnit->unit_type != $type)) {
+                continue;
+            }
+            //====================================================================//
+            // Build Unit Labels
+            $labels = array_unique(array(
+                strtolower($cUnit->label),
+                strtolower($cUnit->short_label),
+                strtolower($langs->trans($cUnit->label)),
+                strtolower($langs->trans($cUnit->short_label)),
+            ));
+            //====================================================================//
+            // Filter on Unit Label
+            if (!in_array($unitLabel, $labels, true)) {
+                continue;
+            }
+
+            return $cUnit;
+        }
+
+        return null;
     }
 
     /**
