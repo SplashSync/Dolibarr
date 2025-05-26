@@ -16,7 +16,6 @@
 namespace Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore as Splash;
-use Splash\Local\Local;
 
 /**
  * Dolibarr Products Core Fields (Required)
@@ -83,20 +82,6 @@ trait CoreTrait
                 ->isLogged()
             ;
         }
-
-        /**
-         * Note
-         *
-         * @since 17.0 'note' Field Renamed to 'note_private'
-         */
-        $noteFieldName = (Local::dolVersionCmp("17.0.0") < 0) ? "note": "note_private";
-        $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->identifier($noteFieldName)
-            ->name($langs->trans("Note"))
-            ->group($groupName)
-            ->microData("http://schema.org/Product", "privatenote")
-            ->addOption('language', $langs->getDefaultLang())
-        ;
     }
 
     /**
@@ -163,8 +148,6 @@ trait CoreTrait
 
                 break;
             case 'description':
-            case 'note':
-            case 'note_private':
                 $this->setSimple($fieldName, $fieldData);
                 $this->setMultiLangContent($fieldName, $langs->getDefaultLang(), (string) $fieldData);
 
