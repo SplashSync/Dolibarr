@@ -37,7 +37,8 @@ class TaxManager
         //====================================================================//
         // Search for VAT Rate by Country & Rate
         $sql = "SELECT t.rowid as id, t.code, t.taux as tva_tx, t.localtax1 as localtax1_tx,";
-        $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type";
+        $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type,";
+        $sql .= " t.recuperableonly as npr";
         $sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
         $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
         $results = $db->query($sql);
