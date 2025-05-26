@@ -58,13 +58,7 @@ trait BaseItemsTrait
     {
         global $langs;
 
-        if (is_a($this, Local::CLASS_ORDER)) {
-            $groupName = $langs->trans("OrderLine");
-        } elseif (is_a($this, Local::CLASS_INVOICE)) {
-            $groupName = $langs->trans("InvoiceLine");
-        } else {
-            $groupName = "Items";
-        }
+        $groupName = "Items";
 
         //====================================================================//
         // Order Line Description
@@ -645,6 +639,9 @@ trait BaseItemsTrait
         //====================================================================//
         // Calcul du total TTC et de la TVA pour la ligne à partir de
         // qty, pu, remise_percent et txtva
+        /**
+         * @var array{string, int|string, string, int|string, string, string} $localTaxType
+         */
         $localTaxType = getLocalTaxesFromRate(
             (string) $vatRateOrId,
             0,
@@ -658,23 +655,23 @@ trait BaseItemsTrait
         $tabPrice = calcul_price_total(
             (int) $this->currentItem->qty,
             $this->currentItem->subprice,
-            $this->currentItem->remise_percent,
+            (float) $this->currentItem->remise_percent,
             (float) $this->currentItem->tva_tx,
             -1,
             -1,
             0,
             "HT",
             $this->currentItem->info_bits,
-            $this->currentItem->product_type,
+            $this->currentItem->product_type ? Product::TYPE_SERVICE : Product::TYPE_PRODUCT,
             $mysoc,
             $localTaxType
         );
 
-        $this->currentItem->total_ht = $tabPrice[0];
-        $this->currentItem->total_tva = $tabPrice[1];
-        $this->currentItem->total_ttc = $tabPrice[2];
-        $this->currentItem->total_localtax1 = $tabPrice[9];
-        $this->currentItem->total_localtax2 = $tabPrice[10];
+        $this->currentItem->total_ht = (float) $tabPrice[0];
+        $this->currentItem->total_tva = (float) $tabPrice[1];
+        $this->currentItem->total_ttc = (float) $tabPrice[2];
+        $this->currentItem->total_localtax1 = (float) $tabPrice[9];
+        $this->currentItem->total_localtax2 = (float) $tabPrice[10];
 
         //====================================================================//
         // FIX for Dolibarr V16
