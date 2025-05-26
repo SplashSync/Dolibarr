@@ -126,7 +126,7 @@ trait ExtraFieldsPhpUnitTrait
             $name,
             ucwords($name, "_"),
             $type,
-            255,
+            "255",
             $element,
             0,
             0,

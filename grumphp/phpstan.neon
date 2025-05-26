@@ -43,3 +43,6 @@ parameters:
 
         # Fix for Dolibarr V19
         - '#Method Commande::load_board\(\) invoked with 2 parameters, 1 required#'
+
+        # Fix for Dolibarr before V21
+        - '#Parameter \#4 \$length of method ExtraFields::update\(\) expects int, string given.#'
