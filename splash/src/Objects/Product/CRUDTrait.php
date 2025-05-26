@@ -71,7 +71,7 @@ trait CRUDTrait
         //====================================================================//
         // Since DOL 17 - Force Loading of Old Copy
         /** @phpstan-ignore-next-line */
-        $object->oldcopy = dol_clone($object);
+        $object->oldcopy = dol_clone($object, 1);
 
         return $object;
     }
