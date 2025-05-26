@@ -97,8 +97,8 @@ trait DimensionsTrait
         // READ Fields
         switch ($fieldName) {
             case 'weight':
-                $this->out[$fieldName] = (float) UnitConverter::convertWeight(
-                    $this->object->weight,
+                $this->out[$fieldName] = UnitConverter::convertWeight(
+                    (float) $this->object->weight,
                     $this->object->weight_units
                 );
 
@@ -106,22 +106,22 @@ trait DimensionsTrait
             case 'length':
             case 'width':
             case 'height':
-                $this->out[$fieldName] = (float) UnitConverter::convertLength(
-                    $this->object->{ $fieldName },
+                $this->out[$fieldName] = UnitConverter::convertLength(
+                    (float) $this->object->{ $fieldName },
                     $this->object->length_units
                 );
 
                 break;
             case 'surface':
-                $this->out[$fieldName] = (float) UnitConverter::convertSurface(
-                    $this->object->surface,
+                $this->out[$fieldName] = UnitConverter::convertSurface(
+                    (float) $this->object->surface,
                     $this->object->surface_units
                 );
 
                 break;
             case 'volume':
-                $this->out[$fieldName] = (float) UnitConverter::convertVolume(
-                    $this->object->volume,
+                $this->out[$fieldName] = UnitConverter::convertVolume(
+                    (float) $this->object->volume,
                     $this->object->volume_units
                 );
 
@@ -245,7 +245,7 @@ trait DimensionsTrait
     {
         //====================================================================//
         // Check if Product Weight Updated => NO CHANGES
-        $weightStr = UnitConverter::convertWeight($this->object->weight, $this->object->weight_units);
+        $weightStr = UnitConverter::convertWeight((float) $this->object->weight, $this->object->weight_units);
         if ((string) $fieldData == (string) $weightStr) {
             return;
         }
