@@ -88,6 +88,8 @@ trait MultiLangsTrait
      * @param string $isoCode   Language Iso Code
      * @param string $content   Content String
      *
+     * @phpstan-param  'label'|'description'|'note' $fieldName
+     *
      * @return void
      */
     public function setMultiLangContent(string $fieldName, string $isoCode, string $content): void
