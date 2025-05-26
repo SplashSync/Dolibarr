@@ -57,6 +57,7 @@ class CategoryManager
         self::init();
         //====================================================================//
         // Load Categories Objects List
+        /** @var Categorie[] $categories */
         $categories = (new Categorie($db))->containing($object->id, $type, 'object');
         if (!is_array($categories)) {
             return array();
