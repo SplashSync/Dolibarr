@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Product;
 
 use Splash\Local\Services\ConfigManager;
+use Splash\Local\Services\ProductPriceUpdater;
 
 /**
  * Dolibarr Products Multi-Prices Fields
@@ -131,7 +132,7 @@ trait MultiPricesTrait
      */
     protected function setMultiPricesFields(string $fieldName, ?array $fieldData): void
     {
-        global $conf, $user;
+        global $conf;
 
         //====================================================================//
         // Check if Feature Enabled & Default Price Selected
@@ -180,7 +181,7 @@ trait MultiPricesTrait
             }
             //====================================================================//
             // Commit Price Update on Simple Product
-            $result = $this->object->updatePrice($price, $priceBase, $user, $fieldData["vat"], 0.0, $level);
+            $result = ProductPriceUpdater::update($this->object, $price, $fieldData["vat"], $priceBase, $level);
             //====================================================================//
             // Check potential Errors
             if ($result < 0) {

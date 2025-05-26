@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Product;
 
 use Splash\Local\Local;
 use Splash\Local\Services\ConfigManager;
+use Splash\Local\Services\ProductPriceUpdater;
 
 /**
  * Dolibarr Products Prices Fields
@@ -227,7 +228,7 @@ trait PricesTrait
      */
     private function setProductPrice(array $newPrice): bool
     {
-        global $conf, $user;
+        global $conf;
 
         //====================================================================//
         // Read Current Product Price (Via Out Buffer)
@@ -257,7 +258,6 @@ trait PricesTrait
         //====================================================================//
         // If multi-prices are enabled
         $priceLevel = ConfigManager::getDefaultPriceLevel();
-
         //====================================================================//
         // Update Variant Product Price
         if ($this->isVariant() && !empty($this->baseProduct)) {
@@ -266,7 +266,7 @@ trait PricesTrait
 
         //====================================================================//
         // Commit Price Update on Simple Product
-        $result = $this->object->updatePrice($price, $priceBase, $user, $newPrice["vat"], 0.0, $priceLevel);
+        $result = ProductPriceUpdater::update($this->object, $price, $newPrice["vat"], $priceBase, $priceLevel);
         //====================================================================//
         // Check potential Errors
         if ($result < 0) {
@@ -291,7 +291,7 @@ trait PricesTrait
      */
     private function setVariantPrice(float $price, float $priceVat, string $priceBase, int $priceLevel): bool
     {
-        global $conf, $user;
+        global $conf;
         //====================================================================//
         // Safety Check
         if (!isset($this->baseProduct)) {
@@ -314,7 +314,7 @@ trait PricesTrait
         }
         //====================================================================//
         // Commit Price Update on Parent Product (Only To Update Taxes Rates)
-        $result = $this->baseProduct->updatePrice($parentPrice, $priceBase, $user, $priceVat, 0.0, $priceLevel);
+        $result = ProductPriceUpdater::update($this->baseProduct, $parentPrice, $priceVat, $priceBase, $priceLevel);
         //====================================================================//
         // Check potential Errors
         if ($result < 0) {
