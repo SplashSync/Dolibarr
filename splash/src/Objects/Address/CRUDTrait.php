@@ -50,7 +50,7 @@ trait CRUDTrait
         $object = new Contact($db);
         //====================================================================//
         // Fetch Object
-        if (1 != $object->fetch((int) $objectId)) {
+        if (0 >= $object->fetch((int) $objectId)) {
             $this->catchDolibarrErrors($object);
 
             return Splash::log()->errNull("Unable to load Contact Address (".$objectId.").");
