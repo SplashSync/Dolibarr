@@ -18,7 +18,6 @@
 ################################################################
 # Include Pipeline Templates
 include:
-    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/gitlab/module.yaml'
     - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/gitlab/pages.yaml'
 
 ################################################################
@@ -84,7 +83,7 @@ stages:
         - cd  /var/www/html/custom
         ################################################################################
         # Build Module (Composer)
-        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh | bash
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/ci/composer.sh | bash
         ################################################################################
         # Execute Bootstrap file
         - php ci/bootstrap.php
@@ -269,18 +268,17 @@ Dol-14-Quality:
 ################################################################
 # Build Module
 ################################################################
-#module:
-#    image:      registry.gitlab.com/splashsync/php-console:pages
-#    stage:      Builds
-#    tags:       ['Dedicated']
-#    retry:      2
-#    ################################################################################
-#    # Run Test Script
-#    script:
-#        # Run Composer to Build deps
-#        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
-#        # Build Documentation
-#        - php splash/vendor/bin/grumphp run --tasks=build-module
-#    artifacts:
-#        paths:
-#            - build
+module:
+    stage:      Builds
+    tags:       ['Dedicated']
+    retry:      2
+    ################################################################################
+    # Run Test Script
+    script:
+        # Run Composer to Build deps
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/ci/composer.sh  | bash
+        # Build Documentation
+        - php splash/vendor/bin/grumphp run --tasks=build-module
+    artifacts:
+        paths:
+            - build
