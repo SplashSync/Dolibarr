@@ -18,7 +18,8 @@
 ################################################################
 # Include Pipeline Templates
 include:
-    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/pages.yaml'
+    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/gitlab/module.yaml'
+    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/gitlab/pages.yaml'
 
 ################################################################
 # Define Default Image
@@ -44,11 +45,12 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
+    - Builds
     - Quality
     - Basic
     - Advanced
     - Variants
-    - Builds
+#    - Builds
 
 ################################################################
 # Functional Tests
@@ -267,18 +269,18 @@ Dol-14-Quality:
 ################################################################
 # Build Module
 ################################################################
-module:
-    image:      registry.gitlab.com/splashsync/php-console:pages
-    stage:      Builds
-    tags:       ['Dedicated']
-    retry:      2
-    ################################################################################
-    # Run Test Script
-    script:
-        # Run Composer to Build deps
-        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
-        # Build Documentation
-        - php splash/vendor/bin/grumphp run --tasks=build-module
-    artifacts:
-        paths:
-            - build
+#module:
+#    image:      registry.gitlab.com/splashsync/php-console:pages
+#    stage:      Builds
+#    tags:       ['Dedicated']
+#    retry:      2
+#    ################################################################################
+#    # Run Test Script
+#    script:
+#        # Run Composer to Build deps
+#        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+#        # Build Documentation
+#        - php splash/vendor/bin/grumphp run --tasks=build-module
+#    artifacts:
+#        paths:
+#            - build
