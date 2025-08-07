@@ -32,15 +32,33 @@ trait MainTrait
         global $langs;
 
         //====================================================================//
+        // Since V20, ThirdParty has Mobile Phone
+        $hasMobilePhone = (Local::dolVersionCmp("20.0.0") >= 0);
+
+        //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
             ->identifier("phone")
             ->name($langs->trans("Phone"))
             ->isLogged()
-            ->microData("http://schema.org/Person", "telephone")
+            ->microData(
+                $hasMobilePhone ? "http://schema.org/PostalAddress" : "http://schema.org/Person",
+                "telephone"
+            )
             ->isIndexed()
             ->isListed()
         ;
+        //====================================================================//
+        // Mobile Phone (Since V20)
+        if ($hasMobilePhone) {
+            $this->fieldsFactory()->create(SPL_T_PHONE)
+                ->identifier("phone_mobile")
+                ->name($langs->trans("PhoneMobile"))
+                ->isLogged()
+                ->microData("http://schema.org/Person", "telephone")
+                ->isIndexed()
+            ;
+        }
         //====================================================================//
         // Email
         $this->fieldsFactory()->create(SPL_T_EMAIL)
@@ -159,6 +177,7 @@ trait MainTrait
             //====================================================================//
             // Direct Readings
             case 'phone':
+            case 'phone_mobile':
             case 'email':
             case 'url':
             case 'idprof1':
@@ -196,6 +215,7 @@ trait MainTrait
             //====================================================================//
             // Direct Writings
             case 'phone':
+            case 'phone_mobile':
             case 'email':
             case 'url':
             case 'idprof1':
