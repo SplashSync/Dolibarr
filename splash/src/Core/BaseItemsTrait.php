@@ -94,6 +94,17 @@ trait BaseItemsTrait
             ->isNotTested()
         ;
         //====================================================================//
+        // Order Line Product ONLY SKU
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("product_only_ref")
+            ->inList("lines")
+            ->name(sprintf("[%s] %s", $langs->trans("Products"), $langs->trans("ProductRef")))
+            ->group($groupName)
+            ->association($descFieldName."@lines", "qty@lines", "price@lines")
+            ->isReadOnly()
+            ->isNotTested()
+        ;
+        //====================================================================//
         // Order Line Product MPN
         if ($this->isSupplierMode()) {
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -260,6 +271,10 @@ trait BaseItemsTrait
                 // Line Product Sku
             case 'product_ref':
                 return (string) $line->product_ref;
+                //====================================================================//
+                // Line Product Sku
+            case 'product_only_ref':
+                return (Product::TYPE_PRODUCT == $line->product_type) ? (string) $line->product_ref : null;
                 //====================================================================//
                 // Line Product Sku
             case 'ref_supplier':
