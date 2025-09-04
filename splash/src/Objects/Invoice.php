@@ -49,6 +49,7 @@ class Invoice extends AbstractObject
     use Core\ContactsTrait;
     use Core\MultiCompanyFieldsTrait;
     use Core\MarketplaceModeTrait;
+    use Core\NotesTrait;
     use Core\DownloadUrlsTrait;
 
     // Dolibarr Common Fields Traits

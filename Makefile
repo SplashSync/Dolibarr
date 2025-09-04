@@ -18,33 +18,32 @@ serve: 		## Execute Functional Test
 
 .PHONY: 	upgrade
 upgrade: 	## Update Composer Packages
-	$(MAKE) up
-	$(MAKE) all COMMAND="composer update -q || composer update"
+	composer update -q || composer update
 
 .PHONY: 	verify
 verify:		## Verify Code in All Containers
 	$(MAKE) up
-	$(MAKE) all-checked COMMAND="composer update -q || composer update"
+	$(MAKE) upgrade
 	$(MAKE) all-checked COMMAND="php splash/vendor/bin/grumphp run --testsuite=travis"
 	$(MAKE) all-checked COMMAND="php splash/vendor/bin/grumphp run --testsuite=csfixer"
 	$(MAKE) all-checked COMMAND="php splash/vendor/bin/grumphp run --testsuite=phpstan"
 
-.PHONY: phpstan
+.PHONY: 	phpstan
 phpstan:	## Execute Php Stan in All Containers
 	$(MAKE) all-checked COMMAND="php splash/vendor/bin/grumphp run --testsuite=phpstan"
 
-.PHONY: test
-test: 	## Execute Functional Test in All Containers
+.PHONY: 	test
+test: 		## Execute Functional Test in All Containers
 	$(MAKE) up
 	$(MAKE) all-checked COMMAND="php splash/vendor/bin/phpunit --testdox"
 
 
-.PHONY: module
-module: ## Build Slash Module
+.PHONY: 	module
+module: 	## Build Slash Module
 	php splash/vendor/bin/grumphp run --tasks=build-module
 
-.PHONY: all
-all: # Execute a Command in All Containers
+.PHONY: 	all
+all: 		## Execute a Command in All Containers
 	@$(foreach service,$(shell docker compose config --services | sort), \
 		set -e; \
 		echo "$(COLOR_CYAN) >> Executing '$(COMMAND)' in container: $(service) $(COLOR_RESET)"; \
