@@ -329,62 +329,6 @@ services:
             splashsync:    { aliases: [ v15.dolibarr.local ] }
 
     ################################################################################
-    # Dolibarr V14
-#    dol-14:
-#        image: tuxgasy/dolibarr:14
-#        container_name: dolibarr-v14
-#        depends_on:
-#            - mysql
-#        links:
-#            - mysql
-#        environment:
-#            - "DOLI_DB_TYPE=mysqli"
-#            - "DOLI_DB_HOST=mysql"
-#            - "DOLI_DB_NAME=dolibarr14"
-#            - "DOLI_DB_USER=root"
-#            - "DOLI_DB_PASSWORD=dolibarr"
-#            - "DOLI_ADMIN_LOGIN=Admin"
-#            - "PHP_MEMORY_LIMIT=-1"
-#            - SPLASH_WS_ID=ThisIsDol14Key
-#            - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-#            - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
-#        volumes:
-#            - "./:/var/www/html/custom/"
-#            - "./.git/:/var/www/html/custom/.git/"
-#        entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
-#        hostname: v14.dolibarr.local
-#        networks:
-#            dolibarr:      { ipv4_address: 172.100.0.14 }
-#            splashsync:    { aliases: [ v14.dolibarr.local ] }
-
-    ################################################################################
-    # Dolibarr V13
-    dol-13:
-         image: tuxgasy/dolibarr:13
-         container_name: dolibarr-v13
-         depends_on:
-             - mysql
-         environment:
-             - "DOLI_DB_TYPE=mysqli"
-             - "DOLI_DB_HOST=mysql"
-             - "DOLI_DB_NAME=dolibarr13"
-             - "DOLI_DB_USER=root"
-             - "DOLI_DB_PASSWORD=dolibarr"
-             - "DOLI_ADMIN_LOGIN=Admin"
-             - "PHP_MEMORY_LIMIT=-1"
-             - SPLASH_WS_ID=ThisIsDol13Key
-             - SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt
-             - SPLASH_WS_HOST=http://172.100.0.100/ws/soap
-         volumes:
-             - "./:/var/www/html/custom/"
-         entrypoint: sh /var/www/html/custom/docker/docker-entrypoint.sh
-         hostname: v13.dolibarr.local
-         networks:
-             dolibarr:      { ipv4_address: 172.100.0.13 }
-             splashsync:    { aliases: [ v13.dolibarr.local ] }
-
-
-    ################################################################################
     # Splash Toolkit Container   
     toolkit:
         image: 'splashsync/toolkit:alpine'
