@@ -115,19 +115,31 @@ stages:
 ################################################################
 
 ################################################################
+# Dolibarr V22
+Dol-22-Basics:
+    image:          dolibarr/dolibarr:22
+    <<: *functionnal-basic
+    allow_failure: true
+Dol-22-Advanced:
+    image:          dolibarr/dolibarr:22
+    <<: *functionnal-advanced
+    allow_failure: true
+Dol-22-Variants:
+    image:          dolibarr/dolibarr:22
+    <<: *functionnal-variants
+    allow_failure: true
+
+################################################################
 # Dolibarr V21
 Dol-21-Basics:
     image:          dolibarr/dolibarr:21
     <<: *functionnal-basic
-    allow_failure: true
 Dol-21-Advanced:
     image:          dolibarr/dolibarr:21
     <<: *functionnal-advanced
-    allow_failure: true
 Dol-21-Variants:
     image:          dolibarr/dolibarr:21
     <<: *functionnal-variants
-    allow_failure: true
 
 ################################################################
 # Dolibarr V20

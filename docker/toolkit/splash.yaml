@@ -35,6 +35,21 @@ splash:
                 WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
 
         ########################################################################
+        # Dolibarr V22
+        dol-22:
+            id:                 ThisIsDol22Key
+            key:                ThisTokenIsNotSoSecretChangeIt
+            name:               Dolibarr 22
+            host:               false
+            connector:          soap
+            config:
+                Extended:           true
+                WsIdentifier:       ThisIsDol22Key
+                WsEncryptionKey:    ThisTokenIsNotSoSecretChangeIt
+                WsHost:             http://v22.dolibarr.local
+                WsPath:             /custom/splash/vendor/splash/phpcore/soap.php
+
+        ########################################################################
         # Dolibarr V21
         dol-21:
             id:                 ThisIsDol21Key
