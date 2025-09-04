@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Order;
 
 use Commande;
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Local;
 use Splash\Models\Objects\Order\Status;
 
 /**
@@ -63,15 +64,16 @@ trait StatusTrait
             return;
         }
 
-        if (-1 == $this->object->statut) {
+        $rawStatus = $this->getRawStatus();
+        if (-1 == $rawStatus) {
             $this->out[$fieldName] = Status::CANCELED;
-        } elseif (0 == $this->object->statut) {
+        } elseif (0 == $rawStatus) {
             $this->out[$fieldName] = Status::DRAFT;
-        } elseif (1 == $this->object->statut) {
+        } elseif (1 == $rawStatus) {
             $this->out[$fieldName] = Status::PROCESSING;
-        } elseif (2 == $this->object->statut) {
+        } elseif (2 == $rawStatus) {
             $this->out[$fieldName] = Status::IN_TRANSIT;
-        } elseif (3 == $this->object->statut) {
+        } elseif (3 == $rawStatus) {
             $this->out[$fieldName] = Status::DELIVERED;
         } else {
             $this->out[$fieldName] = Status::UNKNOWN;
@@ -116,7 +118,7 @@ trait StatusTrait
 
         //====================================================================//
         // Statut Canceled
-        if (Status::isCanceled($fieldData) && (Commande::STATUS_CANCELED != $this->object->statut)) {
+        if (Status::isCanceled($fieldData) && (Commande::STATUS_CANCELED != $this->getRawStatus())) {
             return $this->setStatusCancel();
         }
         //====================================================================//
@@ -145,15 +147,15 @@ trait StatusTrait
         }
         //====================================================================//
         // Statut Shipped but Not Delivered
-        if (Status::isShipped($fieldData) && (Commande::STATUS_VALIDATED == $this->object->statut)) {
+        if (Status::isShipped($fieldData) && (Commande::STATUS_VALIDATED == $this->getRawStatus())) {
             //====================================================================//
             // Set Shipped
-            $this->object->statut = Commande::STATUS_SHIPMENTONPROCESS;
+            $this->setRawStatus(Commande::STATUS_SHIPMENTONPROCESS);
             $this->needUpdate();
         }
         //====================================================================//
         // Statut Closed => Go Closed
-        if (Status::isDelivered($fieldData) && (Commande::STATUS_CLOSED != $this->object->statut)) {
+        if (Status::isDelivered($fieldData) && (Commande::STATUS_CLOSED != $this->getRawStatus())) {
             //====================================================================//
             // If Previously Validated => Close
             if (!$this->setStatusClosed()) {
@@ -178,7 +180,7 @@ trait StatusTrait
 
         //====================================================================//
         // If Previously Closed => Set Draft
-        if (3 == $this->object->statut) {
+        if (3 == $this->getRawStatus()) {
             if (method_exists($this->object, "set_draft")
                     && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
@@ -190,7 +192,7 @@ trait StatusTrait
         }
         //====================================================================//
         // If Previously Draft => Valid
-        if ((0 == $this->object->statut) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
+        if ((0 == $this->getRawStatus()) && (1 != $this->object->valid($user, $conf->global->SPLASH_STOCK))) {
             return $this->catchDolibarrErrors();
         }
         //====================================================================//
@@ -198,7 +200,7 @@ trait StatusTrait
         if (1 != $this->object->cancel($conf->global->SPLASH_STOCK)) {
             return $this->catchDolibarrErrors();
         }
-        $this->object->statut = Commande::STATUS_CANCELED;
+        $this->setRawStatus(Commande::STATUS_CANCELED);
 
         return true;
     }
@@ -214,7 +216,7 @@ trait StatusTrait
 
         //====================================================================//
         // Must Be Canceled
-        if (-1 != $this->object->statut) {
+        if (-1 != $this->getRawStatus()) {
             return true;
         }
         //====================================================================//
@@ -240,7 +242,7 @@ trait StatusTrait
 
         //====================================================================//
         // If Not Draft (Validated or Closed)
-        if (0 != $this->object->statut) {
+        if (0 != $this->getRawStatus()) {
             if (method_exists($this->object, "set_draft")
                     && (1 != $this->object->set_draft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
@@ -249,7 +251,7 @@ trait StatusTrait
                     && (1 != $this->object->setDraft($user, $conf->global->SPLASH_STOCK))) {
                 return $this->catchDolibarrErrors();
             }
-            $this->object->statut = Commande::STATUS_DRAFT;
+            $this->setRawStatus(Commande::STATUS_DRAFT);
         }
 
         return true;
@@ -266,7 +268,7 @@ trait StatusTrait
 
         //====================================================================//
         // Must Be Draft
-        if (0 != $this->object->statut) {
+        if (0 != $this->getRawStatus()) {
             return true;
         }
         //====================================================================//
@@ -292,11 +294,11 @@ trait StatusTrait
 
         //====================================================================//
         // If Previously Closed => Re-Open
-        if ((Commande::STATUS_CLOSED == $this->object->statut)) {
+        if ((Commande::STATUS_CLOSED == $this->getRawStatus())) {
             if (1 != $this->object->set_reopen($user)) {
                 return Splash::log()->errTrace($langs->trans($this->object->error));
             }
-            $this->object->statut = Commande::STATUS_VALIDATED;
+            $this->setRawStatus(Commande::STATUS_VALIDATED);
         }
 
         return true;
@@ -314,13 +316,50 @@ trait StatusTrait
         //====================================================================//
         // If Previously Validated => Close
         $validatedStatuses = array(Commande::STATUS_VALIDATED, Commande::STATUS_SHIPMENTONPROCESS);
-        if (in_array((int) $this->object->statut, $validatedStatuses, false)) {
+        if (in_array((int) $this->getRawStatus(), $validatedStatuses, false)) {
             if (1 != $this->object->cloture($user)) {
                 return Splash::log()->errTrace($langs->trans($this->object->error));
             }
-            $this->object->statut = Commande::STATUS_CLOSED;
+            $this->setRawStatus(Commande::STATUS_CLOSED);
         }
 
         return true;
+    }
+
+    /**
+     * Get Order Raw Status Code
+     */
+    protected function getRawStatus(): ?int
+    {
+        //====================================================================//
+        // Since Dolibarr V21 => use $status, $statut is deprecated
+        if (Local::dolVersionCmp("21.0.0") >= 0) {
+            if (property_exists($this->object, "status")) {
+                /** @var null|int $rawStatus */
+                $rawStatus = $this->object->status;
+
+                return $rawStatus;
+            }
+        }
+        if (property_exists($this->object, "statut")) {
+            return $this->object->statut;
+        }
+
+        return Commande::STATUS_DRAFT;
+    }
+
+    /**
+     * Set Order Raw Status Code
+     */
+    private function setRawStatus(int $rawStatus): void
+    {
+        //====================================================================//
+        // Since Dolibarr V21 => use $status, $statut is deprecated
+        if (property_exists($this->object, "statut")) {
+            $this->object->statut = $rawStatus;
+        }
+        if (property_exists($this->object, "status")) {
+            $this->object->status = $rawStatus;
+        }
     }
 }

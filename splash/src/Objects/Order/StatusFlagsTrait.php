@@ -106,23 +106,23 @@ trait StatusFlagsTrait
             //====================================================================//
 
             case 'isdraft':
-                $this->out[$fieldName] = (Commande::STATUS_DRAFT == $this->object->statut);
+                $this->out[$fieldName] = (Commande::STATUS_DRAFT == $this->getRawStatus());
 
                 break;
             case 'iscanceled':
-                $this->out[$fieldName] = (Commande::STATUS_CANCELED == $this->object->statut);
+                $this->out[$fieldName] = (Commande::STATUS_CANCELED == $this->getRawStatus());
 
                 break;
             case 'isvalidated':
-                $this->out[$fieldName] = (Commande::STATUS_VALIDATED == $this->object->statut);
+                $this->out[$fieldName] = (Commande::STATUS_VALIDATED == $this->getRawStatus());
 
                 break;
             case 'isclosed':
-                $this->out[$fieldName] = (Commande::STATUS_CLOSED == $this->object->statut);
+                $this->out[$fieldName] = (Commande::STATUS_CLOSED == $this->getRawStatus());
 
                 break;
             case 'forceDelivered':
-                $this->out[$fieldName] = (Commande::STATUS_CLOSED == $this->object->statut)
+                $this->out[$fieldName] = (Commande::STATUS_CLOSED == $this->getRawStatus())
                     && ShippingMethods::isMySocMethod($this->object->shipping_method_id)
                 ;
 

@@ -207,7 +207,7 @@ trait MainTrait
             return;
         }
         // Not Possible
-        if ($this->object->statut <= \Commande::STATUS_DRAFT) {
+        if ($this->getRawStatus() <= \Commande::STATUS_DRAFT) {
             return;
         }
 
