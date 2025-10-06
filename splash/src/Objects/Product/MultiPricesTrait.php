@@ -41,9 +41,6 @@ trait MultiPricesTrait
         //====================================================================//
         // Walk on Prices Levels
         for ($level = 1; $level <= $conf->global->PRODUIT_MULTIPRICES_LIMIT; $level++) {
-            if ($level == $multiPricesLevel) {
-                continue;
-            }
             //====================================================================//
             // Build Field Name
             $keyforlabel = 'PRODUIT_MULTIPRICES_LABEL'.$level;
