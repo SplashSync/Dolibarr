@@ -170,6 +170,25 @@ trait StatusTrait
     }
 
     /**
+     * Get Order Raw Status Code
+     */
+    protected function getRawStatus(): ?int
+    {
+        //====================================================================//
+        // Since Dolibarr V21 => use $status, $statut is deprecated
+        if (Local::dolVersionCmp("21.0.0") >= 0) {
+            if (property_exists($this->object, "status")) {
+                return $this->object->status;
+            }
+        }
+        if (property_exists($this->object, "statut")) {
+            return $this->object->statut;
+        }
+
+        return Commande::STATUS_DRAFT;
+    }
+
+    /**
      * Set Order State as Canceled
      *
      * @return bool
@@ -324,28 +343,6 @@ trait StatusTrait
         }
 
         return true;
-    }
-
-    /**
-     * Get Order Raw Status Code
-     */
-    protected function getRawStatus(): ?int
-    {
-        //====================================================================//
-        // Since Dolibarr V21 => use $status, $statut is deprecated
-        if (Local::dolVersionCmp("21.0.0") >= 0) {
-            if (property_exists($this->object, "status")) {
-                /** @var null|int $rawStatus */
-                $rawStatus = $this->object->status;
-
-                return $rawStatus;
-            }
-        }
-        if (property_exists($this->object, "statut")) {
-            return $this->object->statut;
-        }
-
-        return Commande::STATUS_DRAFT;
     }
 
     /**
