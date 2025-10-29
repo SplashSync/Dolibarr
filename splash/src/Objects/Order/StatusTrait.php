@@ -178,6 +178,8 @@ trait StatusTrait
         // Since Dolibarr V21 => use $status, $statut is deprecated
         if (Local::dolVersionCmp("21.0.0") >= 0) {
             if (property_exists($this->object, "status")) {
+                assert(is_scalar($this->object->status));
+
                 return $this->object->status;
             }
         }
