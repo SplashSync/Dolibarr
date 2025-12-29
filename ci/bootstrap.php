@@ -36,6 +36,8 @@ dolibarr_set_const($db, "MAIN_MODULE_SYSLOG", '0', 'chaine', 0, '', 0);
 //====================================================================//
 // Allow Negative Stocks
 dolibarr_set_const($db, "STOCK_ALLOW_NEGATIVE_TRANSFER", '1', 'chaine', 0, '', 0);
+// Since Dolibarr 22.0.0
+dolibarr_set_const($db, "STOCK_DISALLOW_NEGATIVE_TRANSFER", '0', 'chaine', 0, '', 0);
 
 //====================================================================//
 // Setup Splash Module

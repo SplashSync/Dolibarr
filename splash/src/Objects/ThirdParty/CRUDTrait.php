@@ -123,7 +123,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Update Object
-        if ($this->object->update($this->object->id, $user, 1, 1) <= 0) {
+        if ($this->object->update($this->object->id, $user, 1, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
 
             return Splash::log()->errNull("Unable to Update ThirdParty (".$this->object->id.")");
