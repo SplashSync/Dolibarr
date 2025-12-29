@@ -28,6 +28,8 @@ require_once(DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php");
 // Ensure Minimal Dolibarr Config
 dolibarr_set_const($db, "MAIN_INFO_SOCIETE_NOM", 'Dolibarr for Splash', 'chaine', 0, '', $conf->entity);
 dolibarr_set_const($db, "MAIN_INFO_SOCIETE_COUNTRY", '1:FR:France', 'chaine', 0, '', $conf->entity);
+// Since Dolibarr 22.0.0
+dolibarr_set_const($db, "STOCK_DISALLOW_NEGATIVE_TRANSFER", '0', 'chaine', 0, '', $conf->entity);
 
 //====================================================================//
 // Activate Splash Module
