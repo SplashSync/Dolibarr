@@ -1,0 +1,60 @@
+
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Docker Compose File
+#
+# MySql & PhpMyAdmin
+
+# 172.100.0.101       db.dolibarr.local
+# 172.100.0.200       phpmyadmin.dolibarr.local
+#
+################################################################################
+
+services:
+
+  ################################################################################
+  # MySQL Container
+  mysql:
+      image: mysql:5.7
+      container_name: db.dolibarr.local
+      logging: { driver: "none" }
+      environment:
+          - "MYSQL_ROOT_PASSWORD=dolibarr"
+          - "MYSQL_DATABASE=dolibarr"
+          - "MYSQL_USER=dolibarr"
+          - "MYSQL_PASSWORD=dolibarr"
+      networks:
+          default:          { ipv4_address: 172.100.0.101, aliases: [ db.dolibarr.local ] }
+          splashsync:       { aliases: [ db.dolibarr.local ] }
+
+  ################################################################################
+  # PhpMyAdmin Container
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin:5
+      container_name: phpmyadmin.dolibarr.local
+      logging: { driver: "none" }
+      depends_on:
+          - mysql
+      environment:
+          - PMA_HOST=mysql
+          - MYSQL_USER=dolibarr
+          - MYSQL_ROOT_PASSWORD=dolibarr
+          - MYSQL_PASSWORD=dolibarr
+      networks:
+          default:          { ipv4_address: 172.100.0.200, aliases: [ phpmyadmin.dolibarr.local ] }

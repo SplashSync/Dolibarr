@@ -1,0 +1,40 @@
+
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Docker Compose File
+#
+# Splash Toolkit Container
+#
+################################################################################
+
+services:
+
+  ################################################################################
+  # Splash Toolkit Container
+  toolkit:
+      image:                'splashsync/toolkit:alpine'
+      container_name:       toolkit.dolibarr.local
+      hostname:             toolkit.dolibarr.local
+      logging:              { driver: "none" }
+      volumes:
+          # Specify Local Configuration File
+          - './toolkit/splash.yaml:/app/config/packages/splash.yaml:ro'
+      networks:
+          default:          { ipv4_address: 172.100.0.100, aliases: [ toolkit.dolibarr.local ] }
+          splashsync:       { aliases: [ toolkit.dolibarr.local ] }

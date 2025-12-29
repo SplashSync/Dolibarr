@@ -1,0 +1,56 @@
+
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Docker Compose File
+#
+# Dolibarr V22
+#
+################################################################################
+
+services:
+
+    ################################################################################
+    # Dolibarr V22
+    dol-22:
+        image:              dolibarr/dolibarr:22
+        container_name:     v22.dolibarr.local
+        depends_on:
+            - mysql
+        links:
+            - mysql
+        working_dir:        /var/www/html/custom
+        environment:
+            - "DOLI_DB_TYPE=mysqli"
+            - "DOLI_DB_HOST=mysql"
+            - "DOLI_DB_NAME=dolibarr22"
+            - "DOLI_DB_USER=root"
+            - "DOLI_DB_PASSWORD=dolibarr"
+            - "DOLI_ADMIN_LOGIN=Admin"
+            - "PHP_MEMORY_LIMIT=-1"
+            - "SPLASH_WS_ID=ThisIsDol22Key"
+            - "SPLASH_WS_KEY=ThisTokenIsNotSoSecretChangeIt"
+            - "SPLASH_WS_HOST=http://172.100.0.100/ws/soap"
+        volumes:
+            - "../:/var/www/html/custom/"
+            - "../.git/:/var/www/html/custom/.git/"
+        entrypoint:         sh /var/www/html/custom/docker/docker-entrypoint.sh
+        hostname:           v22.dolibarr.local
+        networks:
+            default:        { ipv4_address: 172.100.0.22 }
+            splashsync:     { aliases: [ v22.dolibarr.local ] }
