@@ -34,6 +34,7 @@
 # 172.100.0.20        v20.dolibarr.local
 # 172.100.0.21        v21.dolibarr.local
 # 172.100.0.22        v22.dolibarr.local
+# 172.100.0.23        v23.dolibarr.local
 # 172.100.0.99        latest.dolibarr.local
 # 172.100.0.100       toolkit.dolibarr.local
 # 172.100.0.101       db.dolibarr.local
@@ -47,6 +48,7 @@ include:
     - docker/mysql.compose.yaml
     - docker/toolkit.compose.yaml
     - docker/dolibarr.compose.yaml
+    - docker/dol-23.compose.yaml
     - docker/dol-22.compose.yaml
     - docker/dol-21.compose.yaml
     - docker/dol-20.compose.yaml
