@@ -68,6 +68,7 @@ if ('UpdateOrder' == $action) {
 
     //====================================================================//
     // Update Default Payment Mode Id
+    /** @var null|array|string $dfPayMode */
     $dfPayMode = GETPOST('paiementcode', 'alpha');
     if ($dfPayMode && !is_array($dfPayMode)) {
         if (dolibarr_set_const($db, "SPLASH_DEFAULT_PAYMENT", $dfPayMode, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -78,6 +79,7 @@ if ('UpdateOrder' == $action) {
     //====================================================================//
     // Update Default Guest Customer
     if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
+        /** @var null|array|string $socId */
         $socId = GETPOST('GuestCustomerid', 'alpha');
         if ($socId && !is_array($socId)) {
             if (dolibarr_set_const($db, "SPLASH_GUEST_ORDERS_CUSTOMER", $socId, 'chaine', 0, '', $conf->entity) <= 0) {

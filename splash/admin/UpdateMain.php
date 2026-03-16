@@ -44,6 +44,7 @@ if ('UpdateMain' == $action) {
     $errors = 0;
     //====================================================================//
     // Update Server Id
+    /** @var null|array|string $wsId */
     $wsId = GETPOST('WsId', 'alpha');
     if ($wsId && !is_array($wsId)) {
         if (dolibarr_set_const($db, "SPLASH_WS_ID", $wsId, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -53,6 +54,7 @@ if ('UpdateMain' == $action) {
 
     //====================================================================//
     // Update Server Encryption Key
+    /** @var null|array|string $wsKey */
     $wsKey = GETPOST('WsKey', 'alpha');
     if ($wsKey && !is_array($wsKey)) {
         if (dolibarr_set_const($db, "SPLASH_WS_KEY", $wsKey, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -62,6 +64,7 @@ if ('UpdateMain' == $action) {
 
     //====================================================================//
     // Update Server Host Url
+    /** @var null|array|string $wsHost */
     $wsHost = GETPOST('WsHost', 'alpha');
     if ($wsHost && !is_array($wsHost)) {
         if (dolibarr_set_const($db, "SPLASH_WS_HOST", $wsHost, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -71,6 +74,7 @@ if ('UpdateMain' == $action) {
 
     //====================================================================//
     // Update Protocol
+    /** @var null|array|string $wsMethod */
     $wsMethod = GETPOST('WsMethod', 'alpha');
     if ($wsMethod && !is_array($wsMethod)) {
         if (dolibarr_set_const($db, "SPLASH_WS_METHOD", $wsMethod, 'chaine', 0, '', $conf->entity) <= 0) {

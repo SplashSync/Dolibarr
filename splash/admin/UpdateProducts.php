@@ -42,6 +42,7 @@ if ('UpdateProducts' == $action) {
 
     //====================================================================//
     // Update Default Stock
+    /** @var null|array|string $dfStock */
     $dfStock = GETPOST('stock', 'alpha');
     if ($dfStock && !is_array($dfStock)) {
         if (dolibarr_set_const($db, "SPLASH_STOCK", $dfStock, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -50,6 +51,7 @@ if ('UpdateProducts' == $action) {
     }
     //====================================================================//
     // Update Products Default Stock
+    /** @var null|array|string $dfProductStock */
     $dfProductStock = GETPOST('product_stock', 'alpha');
     if ($dfProductStock && !is_array($dfProductStock)) {
         if (dolibarr_set_const($db, "SPLASH_PRODUCT_STOCK", $dfProductStock, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -58,6 +60,7 @@ if ('UpdateProducts' == $action) {
     }
     //====================================================================//
     // Update Default MultiPrice
+    /** @var null|array|string $dfPrice */
     $dfPrice = GETPOST('price_level', 'alpha');
     if ($dfPrice && !is_array($dfPrice)) {
         if (dolibarr_set_const($db, "SPLASH_MULTIPRICE_LEVEL", $dfPrice, 'chaine', 0, '', $conf->entity) <= 0) {

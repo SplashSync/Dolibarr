@@ -31,6 +31,7 @@ if ('UpdateLocal' == $action) {
     $errors = 0;
     //====================================================================//
     // Update Default Lang
+    /** @var null|array|string $dfLang */
     $dfLang = GETPOST('DefaultLang', 'alpha');
     if ($dfLang && !is_array($dfLang)) {
         if (dolibarr_set_const($db, "SPLASH_LANG", $dfLang, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -40,6 +41,7 @@ if ('UpdateLocal' == $action) {
 
     //====================================================================//
     // Update Other Langs
+    /** @var null|array|string $otherLangs */
     $otherLangs = GETPOST('OtherLangs', 'alpha');
     if ($otherLangs && is_array($otherLangs)) {
         if (dolibarr_set_const($db, "SPLASH_LANGS", serialize($otherLangs), 'chaine', 0, '', $conf->entity) <= 0) {
@@ -49,6 +51,7 @@ if ('UpdateLocal' == $action) {
 
     //====================================================================//
     // Update Default User
+    /** @var null|array|string $dfUser */
     $dfUser = GETPOST('user', 'alpha');
     if ($dfUser && !is_array($dfUser)) {
         if (dolibarr_set_const($db, "SPLASH_USER", $dfUser, 'chaine', 0, '', $conf->entity) <= 0) {

@@ -32,6 +32,7 @@ if ('UpdatePayments' == $action) {
 
     //====================================================================//
     // Update Default Bank Account Id
+    /** @var null|array|string $dfBank */
     $dfBank = GETPOST('accountid', 'alpha');
     if ($dfBank && !is_array($dfBank)) {
         if (dolibarr_set_const($db, "SPLASH_BANK", $dfBank, 'chaine', 0, '', $conf->entity) <= 0) {
@@ -50,6 +51,7 @@ if ('UpdatePayments' == $action) {
         }
         //====================================================================//
         // Update Account Select
+        /** @var null|array|string $accId */
         $accId = GETPOST($accType["id"], 'alpha');
         if ($accId && !is_array($accId)) {
             $res = dolibarr_set_const($db, "SPLASH_BANK_FOR_".$accType["id"], $accId, 'chaine', 0, '', $conf->entity);
