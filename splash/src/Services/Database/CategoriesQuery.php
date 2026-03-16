@@ -102,8 +102,18 @@ class CategoriesQuery
      */
     private static function toCategoryCode(string $catId): string
     {
+        static $map;
+        global $db;
+
         require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 
-        return Categorie::$MAP_ID_TO_CODE[$catId] ?? $catId;
+        if (!isset($map)) {
+            $map = array();
+            foreach ((new Categorie($db))->getMapList() as $item) {
+                $map[$item["id"]] = $item["code"];
+            }
+        }
+
+        return $map[$catId] ?? $catId;
     }
 }
