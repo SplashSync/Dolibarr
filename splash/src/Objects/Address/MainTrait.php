@@ -15,6 +15,8 @@
 
 namespace Splash\Local\Objects\Address;
 
+use Splash\Local\Local;
+
 /**
  * Dolibarr Contacts Address Main Fields
  */
@@ -186,9 +188,12 @@ trait MainTrait
 
                 break;
             case 'statut':
-                $this->getSimpleBool(
-                    property_exists($this->object, 'status') ? "status" : "statut"
-                );
+                //====================================================================//
+                // Since Dolibarr V23 => use $status, $statut is deprecated
+                $this->out[$fieldName] = (Local::dolVersionCmp("23.0.0") >= 0)
+                    ? !empty($this->object->status)
+                    : !empty($this->object->statut)
+                ;
 
                 break;
             default:
@@ -236,8 +241,10 @@ trait MainTrait
 
                 break;
             case 'statut':
+                //====================================================================//
+                // Since Dolibarr V23 => use $status, $statut is deprecated
                 $this->setSimple(
-                    property_exists($this->object, 'status') ? "status" : "statut",
+                    (Local::dolVersionCmp("23.0.0") >= 0) ? "status" : "statut",
                     $fieldData
                 );
 
