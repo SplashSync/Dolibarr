@@ -28,7 +28,7 @@ services:
   ################################################################################
   # Splash Toolkit Container
   toolkit:
-      image:                'splashsync/toolkit:alpine'
+      image:                'splashsync/toolkit:3.0'
       container_name:       toolkit.dolibarr.local
       hostname:             toolkit.dolibarr.local
       logging:              { driver: "none" }

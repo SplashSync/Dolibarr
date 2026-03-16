@@ -6,7 +6,7 @@ include splash/vendor/badpixxel/php-sdk/make/sdk.mk
 
 ################################################################################
 # Docker Compose Container we want to check
-CONTAINERS="dol-22,dol-21,dol-20,dol-18,dol-17,dol-16"
+CONTAINERS="dol-23,dol-22,dol-21,dol-20,dol-18,dol-17,dol-16"
 
 COMMAND ?= echo "Aucune commande spécifiée"
 COLOR_CYAN := $(shell tput setaf 6)
