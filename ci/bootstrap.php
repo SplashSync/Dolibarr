@@ -41,6 +41,12 @@ dolibarr_set_const($db, "STOCK_DISALLOW_NEGATIVE_TRANSFER", '0', 'chaine', 0, ''
 dolibarr_set_const($db, "STOCK_DISALLOW_NEGATIVE_TRANSFER", '0', 'chaine', 0, '', $conf->entity);
 
 //====================================================================//
+// Disable Product Availability Check on Order Validation
+// Since Dolibarr V23
+dolibarr_set_const($db, "ORDER_NOCHECK_ONSALE_PRODUCTS_ONVALID", '1', 'chaine', 0, '', 0);
+dolibarr_set_const($db, "ORDER_NOCHECK_ONSALE_PRODUCTS_ONVALID", '1', 'chaine', 0, '', $conf->entity);
+
+//====================================================================//
 // Setup Splash Module
 dolibarr_set_const($db, "MAIN_MODULE_SPLASH", "1", 'chaine', 0, '', 0);
 dolibarr_set_const($db, "MAIN_MODULE_SPLASH_TRIGGERS", "1", 'chaine', 0, '', 0);

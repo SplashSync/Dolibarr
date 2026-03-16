@@ -82,7 +82,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         }
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
-        $this->assertEquals($dolStatus, $object->statut);
+        $this->assertEquals($dolStatus, ($object->status ?? $object->statut));
 
         //====================================================================//
         //   Verify Reference
@@ -174,7 +174,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         }
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
-        $this->assertEquals($dolibarrStatus, $object->statut);
+        $this->assertEquals($dolibarrStatus, ($object->status ?? $object->statut));
 
         //====================================================================//
         //   Verify Reference
@@ -263,7 +263,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         $this->assertTrue(false !== $object);
         $this->assertNotEmpty($object);
-        $this->assertEquals(Commande::STATUS_DRAFT, $object->statut);
+        $this->assertEquals(Commande::STATUS_DRAFT, ($object->status ?? $object->statut));
 
         return $object;
     }
