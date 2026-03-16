@@ -186,7 +186,9 @@ trait MainTrait
 
                 break;
             case 'statut':
-                $this->getSimpleBool($fieldName);
+                $this->getSimpleBool(
+                    property_exists($this->object, 'status') ? "status" : "statut"
+                );
 
                 break;
             default:
@@ -234,7 +236,10 @@ trait MainTrait
 
                 break;
             case 'statut':
-                $this->setSimple($fieldName, $fieldData);
+                $this->setSimple(
+                    property_exists($this->object, 'status') ? "status" : "statut",
+                    $fieldData
+                );
 
                 break;
             default:

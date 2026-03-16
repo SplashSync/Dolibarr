@@ -39,23 +39,18 @@ trait ObjectsListTrait
         $sql = "SELECT ";
         //====================================================================//
         // Select Database fields
-        $sql .= " c.rowid as id,";                    // Object Id
-        $sql .= " c.entity as entity_id,";           // Entity Id
-        $sql .= " c.ref_ext as ref_ext,";             // Reference
-        $sql .= " c.firstname as firstname,";         // FirstName
-        $sql .= " c.lastname as lastname,";           // LastName
-        $sql .= " c.phone as phone_pro,";             // Professionnal Phone
-        $sql .= " c.phone_mobile as phone_mobile,";   // Mobile Phone
-        $sql .= " c.email as email,";                 // Email
-        $sql .= " c.zip as zip,";                     // ZipCode
-        $sql .= " c.town as town,";                   // City Name
-        if (Local::dolVersionCmp("3.7.0") >= 0) {
-            $sql .= " p.label as country,";          // Country Name
-        } else {
-            $sql .= " p.libelle as country,";        // Country Name
-        }
-        $sql .= " c.statut as status,";              // Active
-        $sql .= " c.tms as modified";                // last modified date
+        $sql .= " c.rowid as id,";                      // Object ID
+        $sql .= " c.entity as entity_id,";              // Entity ID
+        $sql .= " c.ref_ext as ref_ext,";               // Reference
+        $sql .= " c.firstname as firstname,";           // FirstName
+        $sql .= " c.lastname as lastname,";             // LastName
+        $sql .= " c.phone as phone_pro,";               // Professional Phone
+        $sql .= " c.phone_mobile as phone_mobile,";     // Mobile Phone
+        $sql .= " c.email as email,";                   // Email
+        $sql .= " c.zip as zip,";                       // ZipCode
+        $sql .= " c.town as town,";                     // City Name
+        $sql .= " p.label as country,";                 // Country Name
+        $sql .= " c.tms as modified";                   // last modified date
         //====================================================================//
         // Select Database tables
         $sql .= " FROM ".MAIN_DB_PREFIX."socpeople as c ";
