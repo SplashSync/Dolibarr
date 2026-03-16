@@ -243,10 +243,11 @@ trait MainTrait
             case 'statut':
                 //====================================================================//
                 // Since Dolibarr V23 => use $status, $statut is deprecated
-                $this->setSimple(
-                    (Local::dolVersionCmp("23.0.0") >= 0) ? "status" : "statut",
-                    $fieldData
-                );
+                // Both properties must be set for update() to work correctly
+                if (Local::dolVersionCmp("23.0.0") >= 0) {
+                    $this->setSimple("status", $fieldData);
+                }
+                $this->setSimple("statut", $fieldData);
 
                 break;
             default:
