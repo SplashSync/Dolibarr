@@ -676,7 +676,7 @@ trait BaseItemsTrait
             -1,
             0,
             "HT",
-            $this->currentItem->info_bits,
+            (int) $this->currentItem->info_bits,
             $this->currentItem->product_type ? Product::TYPE_SERVICE : Product::TYPE_PRODUCT,
             $mysoc,
             $localTaxType

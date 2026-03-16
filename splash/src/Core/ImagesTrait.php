@@ -174,10 +174,10 @@ trait ImagesTrait
             $this->relFilesDir .= $this->object->id."/photos/";
             $this->dolFilesDir .= $this->relFilesDir;
         } else {
-            $this->dolFilesDir .= '/'.dol_sanitizeFileName($this->object->ref);
+            $this->dolFilesDir .= '/'.dol_sanitizeFileName((string) $this->object->ref);
             $this->relFilesDir = ($entity > 1) ? $entity."/" : "";
             $this->relFilesDir .= $this->elementPath[$element];
-            $this->relFilesDir .= "/".dol_sanitizeFileName($this->object->ref);
+            $this->relFilesDir .= "/".dol_sanitizeFileName((string) $this->object->ref);
         }
 
         //====================================================================//

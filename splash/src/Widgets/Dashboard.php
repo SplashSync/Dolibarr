@@ -103,7 +103,7 @@ class Dashboard extends AbstractWidget
         Local::loadDefaultLanguage();
 
         //====================================================================//
-        // Setup Widget Core Informations
+        // Setup Widget Core Information
         //====================================================================//
 
         $this->setTitle($this->getName());
@@ -289,7 +289,7 @@ class Dashboard extends AbstractWidget
         if (! empty($conf->contrat->enabled) && $user->rights->contrat->lire) {
             include_once DOL_DOCUMENT_ROOT.'/contrat/class/contrat.class.php';
             $board = new \Contrat($db);
-            $dashboardLines[] = $board->load_board($user, "inactives");
+            $dashboardLines[] = $board->load_board($user, "inactive");
 
             // Number of active services (expired)
             $dashboardLines[] = $board->load_board($user, "expired");

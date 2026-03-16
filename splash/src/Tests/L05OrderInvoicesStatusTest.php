@@ -86,10 +86,10 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
 
         //====================================================================//
         //   Verify Reference
-        $this->assertStringContainsString((string) $expectedRef, $object->ref, "Splash Status: ".$splStatus);
+        $this->assertStringContainsString((string) $expectedRef, (string) $object->ref, "Splash Status: ".$splStatus);
         if ("PROV" != $expectedRef) {
             $this->assertNotEmpty($object->date);
-            $this->assertStringContainsString(dol_print_date($object->date, '%y%m'), $object->ref);
+            $this->assertStringContainsString(dol_print_date($object->date, '%y%m'), (string) $object->ref);
         }
     }
 
@@ -180,14 +180,19 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         //   Verify Reference
         $this->assertStringContainsStringIgnoringCase(
             (string) $expectedRef,
-            $object->ref,
+            (string) $object->ref,
             "Splash Status: ".$splashStatus
         );
         if ("PROV" != $expectedRef) {
             $this->assertNotEmpty($object->date);
-            $this->assertStringContainsStringIgnoringCase(dol_print_date($object->date, '%y%m'), $object->ref);
-            // @phpstan-ignore-next-line
-            $this->assertStringContainsStringIgnoringCase(dol_print_date($fakeData["date"], '%y%m'), $object->ref);
+            $this->assertStringContainsStringIgnoringCase(
+                dol_print_date($object->date, '%y%m'),
+                (string) $object->ref
+            );
+            $this->assertStringContainsStringIgnoringCase(
+                dol_print_date($fakeData["date"], '%y%m'), // @phpstan-ignore argument.type
+                (string) $object->ref
+            );
         }
     }
 
