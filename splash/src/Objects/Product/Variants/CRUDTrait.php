@@ -176,29 +176,28 @@ trait CRUDTrait
         }
         //====================================================================//
         // Walk on Variant Products
-        $variantProductId = false;
+        $combination = null;
         foreach ($this->in["variants"] as $listData) {
             //====================================================================//
-            // Check Product Id is here
+            // Check Product ID is here
             if (!isset($listData["id"]) || !is_string($listData["id"])) {
                 continue;
             }
             //====================================================================//
             // Extract Variable Product Id
-            $variantProductId = self::objects()->id($listData["id"]);
-            if (!empty($variantProductId)) {
+            if (empty($variantProductId = self::objects()->id($listData["id"]))) {
+                continue;
+            }
+            //====================================================================//
+            // Load Product Combinations
+            $combination = VariantsManager::getProductCombination((int) $variantProductId);
+            if (!empty($combination)) {
                 break;
             }
         }
         //====================================================================//
-        // No Variant Products Id Given
-        if (!$variantProductId) {
-            return null;
-        }
-        //====================================================================//
-        // Load Product Combinations
-        $combination = VariantsManager::getProductCombination((int) $variantProductId);
-        if (null == $combination) {
+        // No Product Combinations Identified
+        if (!$combination) {
             return null;
         }
 
