@@ -521,7 +521,12 @@ trait PaymentsTrait
             return Splash::log()->err("Unable to detect Invoice Payment Account ID.");
         }
         //====================================================================//
-        // Setup Payment Account Id
+        // Setup Order / Invoice Account ID
+        if (!Splash::isTravisMode() && empty($this->object->fk_account)) {
+            $this->setSimple('fk_account', $accountId);
+        }
+        //====================================================================//
+        // Setup Payment Account ID
         if ($payment->addPaymentToBank($user, 'payment', '(Payment)', $accountId, "", "") < 0) {
             Splash::log()->errTrace("Unable to add Invoice Payment to Bank Account.");
 
