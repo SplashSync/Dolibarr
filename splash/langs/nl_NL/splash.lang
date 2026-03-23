@@ -57,6 +57,7 @@ SPL_DfUser          =   Gebruiker te gebruiken voor alle externe bewerkingen
 SPL_DfStock         =   Magazijn gebruikt voor voorraadtransacties (als er geen standaardmagazijn is opgegeven op productniveau)
 SPL_ProductStock    =   Standaardmagazijn voor productinstellingen (indien lege waarde of niet opgegeven)
 SPL_DfPayMethod     =   Standaard betalingsmethode gebruikt door de module (indien niet gespecificeerd)
+SPL_DfPayCondition  =   Standaard betalingsvoorwaarde gebruikt door de module (indien niet gespecificeerd)
 SPL_DfMultiPrice    =   Standaardprijs gebruikt door de module (MultiPrices-modus is ingeschakeld)
 
 ################################################################################

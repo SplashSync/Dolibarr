@@ -55,6 +55,7 @@ SPL_DfLang          =   Default Language used by the module
 SPL_OtherLangs      =   Other Languages used by the module
 SPL_DfUser          =   User to use for all remote operations
 SPL_DfPayMethod     =   Default payment method used by the module (if not specified)
+SPL_DfPayCondition  =   Default payment condition used by the module (if not specified)
 
 ################################################################################
 # Admin Page Index - Products

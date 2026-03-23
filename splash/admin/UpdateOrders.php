@@ -77,6 +77,17 @@ if ('UpdateOrder' == $action) {
     }
 
     //====================================================================//
+    // Update Default Payment TERM ID
+    /** @var null|array|string $dfPayTerm */
+    $dfPayTerm = GETPOST('payment_term', 'alpha');
+    if (is_scalar($dfPayTerm)) {
+        $key = "SPLASH_DEFAULT_PAYMENT_TERM";
+        if (dolibarr_set_const($db, $key, (string) $dfPayTerm, 'chaine', 0, '', $conf->entity) <= 0) {
+            $errors++;
+        }
+    }
+
+    //====================================================================//
     // Update Default Guest Customer
     if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
         /** @var null|array|string $socId */

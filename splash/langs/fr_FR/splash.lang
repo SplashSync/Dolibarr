@@ -54,8 +54,8 @@ SPL_Local_Help      =   https://splashsync.github.io/Dolibarr/fr/start.html#conf
 SPL_DfLang          =   Langue par défaut utilisée par le module
 SPL_OtherLangs      =   Autres Langues utilisées par le module
 SPL_DfUser          =   Utilisateur utilisée par le module lors des opération réalisée à distance
-SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifié)
-
+SPL_DfPayMethod     =   Mode de paiement par défaut utilisée par le module (si non spécifiée)
+SPL_DfPayCondition  =   Condition de paiement par défaut utilisée par le module (si non spécifiée)
 
 ################################################################################
 # Admin Page Index - Products
@@ -86,7 +86,7 @@ SPL_Orders_Email    =   Essayez de détecter le client en utilisant son adresse 
 # Admin Page Index - Payments
 ################################################################################
 
-SPL_Payment_Config  =   Import ds Paiements
+SPL_Payment_Config  =   Import des Paiements
 SPL_Payment_Help    =   https://splashsync.github.io/Dolibarr/fr/documentation.html#gestion-des-paiements
 SPL_DfBankAccount   =   Compte Bancaire par défaut utilisée par le module (si non spécifié)
 SPL_BankAccountFor  =   Compte Bancaire pour les paiements par <b>%s</b> (%s)

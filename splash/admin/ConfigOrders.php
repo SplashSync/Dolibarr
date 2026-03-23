@@ -32,12 +32,19 @@ echo '<table class="noborder" width="100%"><tbody>';
 
 //====================================================================//
 // Default Payment Method Parameter
-require_once(DOL_DOCUMENT_ROOT."/product/class/html.formproduct.class.php");
-$formproduct = new FormProduct($db);
-echo '  <tr class="impair">';
+echo '  <tr class="pair">';
 echo '      <td>'.$langs->trans("SPL_DfPayMethod").'</td>';
 echo '      <td>';
 $form->select_types_paiements($conf->global->SPLASH_DEFAULT_PAYMENT, 'paiementcode', '', 2);
+echo '      </td>';
+echo '  </tr>';
+
+//====================================================================//
+// Default Payment Condition Parameter
+echo '  <tr class="impair">';
+echo '      <td>'.$langs->trans("SPL_DfPayCondition").'</td>';
+echo '      <td>';
+$form->select_conditions_paiements($conf->global->SPLASH_DEFAULT_PAYMENT_TERM, 'payment_term', -1, 1);
 echo '      </td>';
 echo '  </tr>';
 
