@@ -58,6 +58,7 @@ class Order extends AbstractObject
     // Dolibarr Common Fields Traits
     use Common\DeliveryAddressTrait;
     use Common\PaymentMethodTrait;
+    use Common\PaymentTermTrait;
     use Common\ShippingMethodTrait;
     use Common\BankAccountTrait;
 

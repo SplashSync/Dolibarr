@@ -21,6 +21,7 @@ use Facture;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Objects\CreditNote;
 use Splash\Local\Services\MultiCompany;
+use Splash\Local\Services\PaymentTerms;
 use User;
 
 /**
@@ -111,6 +112,14 @@ trait CRUDTrait
         $this->object->entity = MultiCompany::getCurrentId();
         $this->setInvoiceStatus(Facture::STATUS_DRAFT);
         $this->object->paye = 0;
+        //====================================================================//
+        // Pre-Setup Default Payment Term (Invoices only, not Credit Notes)
+        if (!$this instanceof CreditNote) {
+            $defaultPayTerm = PaymentTerms::getDefaultId();
+            if ($defaultPayTerm) {
+                $this->setSimple("cond_reglement_id", $defaultPayTerm);
+            }
+        }
         //====================================================================//
         // If Credit Note => Setup Type
         if ($this instanceof CreditNote) {

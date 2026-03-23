@@ -20,6 +20,7 @@ use DateTime;
 use Exception;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Services\MultiCompany;
+use Splash\Local\Services\PaymentTerms;
 use User;
 
 /**
@@ -101,6 +102,11 @@ trait CRUDTrait
         $this->setSimple('date_commande', $dateTime->getTimestamp());
         $this->doCustomerDetection($this->in);
         $this->setSimple("statut", Commande::STATUS_DRAFT);
+        //====================================================================//
+        // Pre-Setup Default Payment Term
+        if ($defaultPayTerm = PaymentTerms::getDefaultId()) {
+            $this->setSimple("cond_reglement_id", $defaultPayTerm);
+        }
 
         //====================================================================//
         // Create Object In Database

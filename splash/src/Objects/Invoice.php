@@ -54,6 +54,7 @@ class Invoice extends AbstractObject
 
     // Dolibarr Common Fields Traits
     use Common\PaymentMethodTrait;
+    use Common\PaymentTermTrait;
     use Common\BankAccountTrait;
 
     // Dolibarr Invoices Traits
