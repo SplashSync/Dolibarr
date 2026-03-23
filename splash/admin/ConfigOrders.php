@@ -26,7 +26,7 @@ echo    '<input type="hidden" name="action" value="UpdateOrder">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), "", $langs->trans("SPL_Orders_Config"), 0, "");
+print load_fiche_titre($langs->trans("SPL_Orders_Config"), "", "order");
 
 echo '<table class="noborder" width="100%"><tbody>';
 
@@ -131,10 +131,6 @@ if ($conf->global->SPLASH_GUEST_ORDERS_ALLOW) {
 }
 
 echo '</tbody></table>';
-
-//====================================================================//
-// Close Local Configuration Tab
-echo "</div>";
 
 //====================================================================//
 // Display Save Btn | Help Link

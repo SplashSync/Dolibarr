@@ -25,7 +25,7 @@ echo    '<input type="hidden" name="action" value="UpdatePayments">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), "", $langs->trans("SPL_Payment_Config"), 0, "");
+print load_fiche_titre($langs->trans("SPL_Payment_Config"), "", "title_bank");
 
 echo '<table class="noborder" width="100%"><tbody>';
 
@@ -61,10 +61,6 @@ foreach ($form->cache_types_paiements as $PaymentType) {
 }
 
 echo '</tbody></table>';
-
-//====================================================================//
-// Close Local Configuration Tab
-echo "</div>";
 
 //====================================================================//
 // Display Save Btn | Help Link

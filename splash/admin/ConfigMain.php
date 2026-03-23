@@ -23,7 +23,7 @@ echo    '<input type="hidden" name="action" value="UpdateMain">';
 
 //====================================================================//
 // Open Main Configuration Tab
-dol_fiche_head(array(), "", $langs->trans("SPL_Main_Config"), 0, "");
+print load_fiche_titre($langs->trans("SPL_Main_Config"), "", "title_setup");
 
 echo '<table class="noborder" width="100%"><tbody>';
 //====================================================================//
@@ -111,10 +111,6 @@ if ($conf->global->SPLASH_SMART_NOTIFY) {
 echo '  </tr>';
 
 echo '</tbody></table>';
-
-//====================================================================//
-// Close Main Configuration Tab
-echo "</div>";
 
 //====================================================================//
 // Display Save Btn | Help Link

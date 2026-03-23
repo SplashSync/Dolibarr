@@ -25,7 +25,7 @@ echo    '<input type="hidden" name="action" value="UpdateLocal">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), "", $langs->trans("SPL_Local_Config"), 0, "");
+print load_fiche_titre($langs->trans("SPL_Local_Config"), "", "user");
 
 echo '<table class="noborder" width="100%"><tbody>';
 
@@ -73,10 +73,6 @@ echo '      </td>';
 echo '  </tr>';
 
 echo '</tbody></table>';
-
-//====================================================================//
-// Close Local Configuration Tab
-echo "</div>";
 
 //====================================================================//
 // Display Save Btn | Help Link

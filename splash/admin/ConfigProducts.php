@@ -25,7 +25,7 @@ echo    '<input type="hidden" name="action" value="UpdateProducts">';
 
 //====================================================================//
 // Open Local Configuration Tab
-dol_fiche_head(array(), "", $langs->trans("Products"), 0, "");
+print load_fiche_titre($langs->trans("Products"), "", "product");
 
 echo '<table class="noborder" width="100%"><tbody>';
 
@@ -96,10 +96,6 @@ if (!empty($conf->global->PRODUIT_MULTIPRICES)) {
 }
 
 echo '</tbody></table>';
-
-//====================================================================//
-// Close Local Configuration Tab
-echo "</div>";
 
 //====================================================================//
 // Display Save Btn | Help Link
