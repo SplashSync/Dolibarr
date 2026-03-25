@@ -524,6 +524,7 @@ trait PaymentsTrait
         // Setup Order / Invoice Account ID
         if (!Splash::isTravisMode() && empty($this->object->fk_account)) {
             $this->setSimple('fk_account', $accountId);
+            $this->object->setBankAccount($accountId);
         }
         //====================================================================//
         // Setup Payment Account ID
