@@ -42,7 +42,7 @@
 #
 ################################################################################
 
-name: "php-splash-dolibarr-dev"
+name: "splash-dolibarr-dev"
 
 include:
     - docker/mysql.compose.yaml

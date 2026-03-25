@@ -50,8 +50,9 @@ rm /usr/local/etc/php/conf.d/dolibarr-php.ini;
 # Setup Splash Module
 ################################################################################
 
-echo "Updating Dolibarr Custom folder ownership..."
+echo "Updating Dolibarr folder ownership..."
 chmod -R 777  /var/www/html/custom
+chmod -R 777  /var/www/documents
 
 echo "Execute PHP Bootstrap Script"
 php /var/www/html/custom/docker/bootstrap.php
