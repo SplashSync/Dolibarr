@@ -250,7 +250,7 @@ trait CRUDTrait
     /**
      * Re-Generate Invoice Pdf if Needed
      *
-     * @return void
+     * @SuppressWarnings(Superglobals)
      */
     public function updateObjectPdf(): void
     {
