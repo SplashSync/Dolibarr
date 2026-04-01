@@ -269,6 +269,10 @@ trait CRUDTrait
         // Reload to get new records
         $this->object->fetch($this->object->id);
         //====================================================================//
+        // Force manual print context to prevent
+        // injecting default PDF rendering options (e.g. autoliquidation mention)
+        $_POST['action'] = 'builddoc';
+        //====================================================================//
         // Generate Pdf Document
         $result = $this->object->generateDocument("", $langs);
         if ($result < 0) {
