@@ -523,8 +523,9 @@ trait BaseItemsTrait
             return;
         }
         //====================================================================//
-        // No Vat Code Given => Identify it from Line Vat Rate
-        if (empty($itemData["vat_src_code"])) {
+        // No Vat Code Given at All => Identify it from Line Vat Rate
+        // An explicitly empty code is a request to clear it, not a missing one
+        if (!isset($itemData["vat_src_code"])) {
             $this->setItemVatSrcCodeFromRate();
 
             return;
@@ -547,6 +548,13 @@ trait BaseItemsTrait
         //====================================================================//
         // Detect VAT Rates from Vat Src Code
         if (!$identifiedVat = TaxManager::findTaxByCode($this->currentItem->vat_src_code)) {
+            //====================================================================//
+            // Unknown Code => Fallback on Identification by Vat Rate
+            // Cleared codes are left untouched: this is an explicit request
+            if (!empty($cleanedTaxName)) {
+                $this->setItemVatSrcCodeFromRate();
+            }
+
             return;
         }
         //====================================================================//
@@ -675,7 +683,7 @@ trait BaseItemsTrait
         // Detect VAT Rates from Vat Src Code
         if (!empty($conf->global->SPLASH_DETECT_TAX_NAME)) {
             if ($identifiedVat = TaxManager::findTaxByCode($this->currentItem->vat_src_code)) {
-                $vatRateOrId = $identifiedVat->rowid;
+                $vatRateOrId = $identifiedVat->id;
                 $useId = true;
             }
         }
