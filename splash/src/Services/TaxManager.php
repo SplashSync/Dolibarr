@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Services;
 
+use Splash\Local\Local;
 use stdClass;
 
 /**
@@ -40,7 +41,10 @@ class TaxManager
         $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type,";
         $sql .= " t.recuperableonly as npr";
         $sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
-        $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate;
+        $sql .= " WHERE t.fk_pays = ".$countryId." AND t.taux = ".$vatRate." AND t.active = 1";
+        $sql .= self::getTaxRatesEntityFilter();
+        $sql .= self::getTaxRatesOrderBy();
+        $sql .= $db->plimit(1);
         $results = $db->query($sql);
         if ($results) {
             return  $db->fetch_object($results);
@@ -72,6 +76,7 @@ class TaxManager
         $sql .= " t.localtax1_type, t.localtax2 as localtax2_tx, t.localtax2_type";
         $sql .= " FROM ".MAIN_DB_PREFIX."c_tva as t";
         $sql .= " WHERE t.code = '".$code."' AND t.active = 1";
+        $sql .= self::getTaxRatesEntityFilter();
 
         $results = $db->query($sql);
         if ($results) {
@@ -134,6 +139,48 @@ class TaxManager
         $taxName = preg_replace('/\s|%/', '', (string) $code);
 
         return is_string($taxName) ? substr($taxName, 0, 10) : "0";
+    }
+
+    /**
+     * Build Multi-Company Filter for the VAT Dictionary
+     *
+     * The entity column was only added to llx_c_tva on Dolibarr V19.
+     */
+    private static function getTaxRatesEntityFilter(): string
+    {
+        if (Local::dolVersionCmp("19.0.0") < 0) {
+            return "";
+        }
+
+        return " AND t.entity IN (".getEntity('c_tva').")";
+    }
+
+    /**
+     * Build ORDER BY Clause used to Pick a Single Rate from the VAT Dictionary
+     *
+     * A same country & rate may hold several dictionary entries: NPR variants,
+     * code-less rows, and user defined codes. Ordering must be deterministic,
+     * and must not rely on rowid, which carries no business meaning and differs
+     * from one installation to another.
+     */
+    private static function getTaxRatesOrderBy(): string
+    {
+        $orderBy = array();
+        //====================================================================//
+        // Since Dolibarr V17 => Honor Dictionary Default Flag
+        // Only editable from Dictionary Setup since Dolibarr V22
+        if (Local::dolVersionCmp("17.0.0") >= 0) {
+            $orderBy[] = "t.use_default DESC";
+        }
+        //====================================================================//
+        // Standard Rate before Non Recoverable (NPR) ones
+        $orderBy[] = "t.recuperableonly ASC";
+        //====================================================================//
+        // Last Resort => Coded Rate before Code-less one, then Code itself
+        $orderBy[] = "(COALESCE(t.code, '') <> '') DESC";
+        $orderBy[] = "t.code ASC";
+
+        return " ORDER BY ".implode(", ", $orderBy);
     }
 
     /**

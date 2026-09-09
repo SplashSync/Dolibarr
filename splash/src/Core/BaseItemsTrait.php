@@ -519,7 +519,14 @@ trait BaseItemsTrait
     {
         global $conf;
 
-        if (!isset($itemData["vat_src_code"]) || is_null($this->currentItem)) {
+        if (is_null($this->currentItem)) {
+            return;
+        }
+        //====================================================================//
+        // No Vat Code Given => Identify it from Line Vat Rate
+        if (empty($itemData["vat_src_code"])) {
+            $this->setItemVatSrcCodeFromRate();
+
             return;
         }
         //====================================================================//
@@ -549,6 +556,36 @@ trait BaseItemsTrait
         $this->currentItem->localtax1_type = $identifiedVat->localtax1_type;
         $this->currentItem->localtax2_tx = $identifiedVat->localtax2_tx;
         $this->currentItem->localtax2_type = $identifiedVat->localtax2_type;
+    }
+
+    /**
+     * Identify Line Vat Source Code from its Vat Rate
+     *
+     * Dolibarr expects a vat category code on lines: it drives the vat select
+     * auto-fill and is required for Factur-X. Whenever the remote does not
+     * provide one, resolve it from the line vat rate using the vat dictionary.
+     *
+     * An already defined code is never cleared: we only fill a code we could
+     * actually resolve.
+     *
+     * @return void
+     */
+    private function setItemVatSrcCodeFromRate(): void
+    {
+        if (is_null($this->currentItem)) {
+            return;
+        }
+        //====================================================================//
+        // Identify Vat Rate in Dictionary
+        $identifiedVat = TaxManager::findTaxByRate((float) $this->currentItem->tva_tx);
+        $vatSrcCode = TaxManager::getSanitizedCode($identifiedVat->code ?? null);
+        //====================================================================//
+        // No Code Identified or Already Up to Date => Nothing to do
+        if (empty($vatSrcCode) || ($this->currentItem->vat_src_code === $vatSrcCode)) {
+            return;
+        }
+        $this->currentItem->vat_src_code = $vatSrcCode;
+        $this->itemUpdate = true;
     }
 
     /**
