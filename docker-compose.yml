@@ -48,6 +48,7 @@ include:
     - docker/mysql.compose.yaml
     - docker/toolkit.compose.yaml
     - docker/dolibarr.compose.yaml
+    - docker/dol-24.compose.yaml
     - docker/dol-23.compose.yaml
     - docker/dol-22.compose.yaml
     - docker/dol-21.compose.yaml
