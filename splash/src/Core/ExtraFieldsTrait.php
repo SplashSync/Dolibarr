@@ -150,7 +150,7 @@ trait ExtraFieldsTrait
 
                 break;
             case SPL_T_BOOL:
-                $this->out[$fieldName] = is_scalar($fieldData)  ? (bool) $fieldData : null;
+                $this->out[$fieldName] = is_scalar($fieldData)  ? (bool) $fieldData : false;
 
                 break;
             case SPL_T_INLINE:
@@ -209,10 +209,17 @@ trait ExtraFieldsTrait
             case SPL_T_EMAIL:
             case SPL_T_INT:
             case SPL_T_DOUBLE:
-            case SPL_T_BOOL:
                 if ($currentData != $fieldData) {
                     /** @phpstan-ignore-next-line  */
                     $this->object->array_options[$fieldName] = $fieldData;
+                    $this->needUpdate();
+                }
+
+                break;
+            case SPL_T_BOOL:
+                if ($currentData != $fieldData) {
+                    /** @phpstan-ignore-next-line  */
+                    $this->object->array_options[$fieldName] = empty($fieldData) ? 0 : 1;
                     $this->needUpdate();
                 }
 

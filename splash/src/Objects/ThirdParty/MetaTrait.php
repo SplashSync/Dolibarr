@@ -115,8 +115,9 @@ trait MetaTrait
 
                 break;
             case 'prospect':
-                $this->object->prospect = $this->object->client;
-                $this->getSimpleBit('prospect', 1);
+                //====================================================================//
+                // Prospect Flag is Stored on Bit 1 of Customer Flag
+                $this->out[$fieldName] = (bool) (((int) $this->object->client >> 1) & 1);
 
                 break;
             case 'parent':

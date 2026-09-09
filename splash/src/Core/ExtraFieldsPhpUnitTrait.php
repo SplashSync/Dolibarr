@@ -30,7 +30,7 @@ trait ExtraFieldsPhpUnitTrait
         "varchar" => "phpunit_varchar",
         "text" => "phpunit_text",
         "int" => "phpunit_int",
-        "bool" => "phpunit_bool",
+        "boolean" => "phpunit_bool",
         "price" => "phpunit_price",
         "date" => "phpunit_date",
         "select" => "phpunit_select",

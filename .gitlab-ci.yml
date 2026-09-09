@@ -115,19 +115,31 @@ stages:
 ################################################################
 
 ################################################################
+# Dolibarr V24
+Dol-24-Basics:
+    image:          dolibarr/dolibarr:24
+    <<: *functionnal-basic
+    allow_failure: true
+Dol-24-Advanced:
+    image:          dolibarr/dolibarr:24
+    <<: *functionnal-advanced
+    allow_failure: true
+Dol-24-Variants:
+    image:          dolibarr/dolibarr:24
+    <<: *functionnal-variants
+    allow_failure: true
+
+################################################################
 # Dolibarr V23
 Dol-23-Basics:
     image:          dolibarr/dolibarr:23
     <<: *functionnal-basic
-    allow_failure: true
 Dol-23-Advanced:
     image:          dolibarr/dolibarr:23
     <<: *functionnal-advanced
-    allow_failure: true
 Dol-23-Variants:
     image:          dolibarr/dolibarr:23
     <<: *functionnal-variants
-    allow_failure: true
 
 ################################################################
 # Dolibarr V22
@@ -265,10 +277,14 @@ Dol-14-Variants:
     after_script:
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
 
+Dol-24-Quality:
+    image:      dolibarr/dolibarr:24
+    <<: *code_quality
+    allow_failure: true
+
 Dol-23-Quality:
     image:      dolibarr/dolibarr:23
     <<: *code_quality
-    allow_failure: true
 
 Dol-22-Quality:
     image:      dolibarr/dolibarr:22
