@@ -16,15 +16,8 @@ Take the time to fully understand what the different parameters are for in order
 
 In order to properly manage your inventory, you must tell Splash which warehouse to use for inventory corrections.
 
-<div class="callout-block callout-warning">
-    <div class="icon-holder">
-        <i class="fas fa-exclamation-circle"></i>
-    </div>
-    <div class="content">
-        <h4 class="callout-title">Warning</h4>
-        <p>At a minimum, you must create a warehouse, even if you only have one storage location.</p>
-    </div>
-</div>
+> [!WARNING]
+> At a minimum, you must create a warehouse, even if you only have one storage location.
 
 #### Default warehouse for product configurations
 
@@ -45,15 +38,10 @@ If you work with several Warehouses, this mode will allow you to independently a
 
 A field will be created for each warehouse, it will then have to be configured on your Splash account.
 
-<div class="callout-block callout-success">
-    <div class="icon-holder">
-        <i class="fas fa-thumbs-up"></i>
-    </div>
-    <div class="content">
-        <h4 class="callout-title">Multi-site management</h4>
-        <p>It is now possible to manage the stocks of your E-Commerce sites and your points of sale separately.</p>
-    </div>
-</div>
+> [!TIP]
+> **Multi-site management**
+>
+> It is now possible to manage the stocks of your E-Commerce sites and your points of sale separately.
  
 The actual stock of your products, generic fields and automatically connected, will now be read only.
 You can read it, but not modify it.

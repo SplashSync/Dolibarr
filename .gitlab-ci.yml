@@ -17,8 +17,8 @@
 
 ################################################################
 # Include Pipeline Templates
-include:
-    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/gitlab/pages.yaml'
+#include:
+#    - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/2.0/gitlab/pages.yaml'
 
 ################################################################
 # Define Default Image

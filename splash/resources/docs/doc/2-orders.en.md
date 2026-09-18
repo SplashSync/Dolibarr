@@ -8,7 +8,7 @@ title: Orders & Invoices
 
 Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block group all Orders & Invoice imports parameters. 
 
-![]({{ "/assets/img/screenshot_6.png"|relative_url}})
+![Orders & invoices import parameters](../assets/img/screenshot_6.png)
 
 ### Tax Rates Detection (NEW) 
 
@@ -22,13 +22,13 @@ First, you need to create define, on each servers, the same Codes for VAT Rates.
 
 With Dolibarr, VAT Rate name is "Code", this value is empty by default. Generaly, you can use codes used by your E-Commerce.  
 
-![]({{ "/assets/img/screenshot_8.png"|relative_url}})
+![VAT rates dictionary in Dolibarr settings](../assets/img/screenshot_8.png)
 
 **How it works ?**
 
 If you have a look at the data that are now available for Orders & Invoices objects, you will see a new field called "VAT Rate". 
 
-![]({{ "/assets/img/screenshot_9.png"|relative_url}})
+![VAT Rate field on orders & invoices objects](../assets/img/screenshot_9.png)
 
 When Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line. 
 

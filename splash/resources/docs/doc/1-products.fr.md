@@ -16,15 +16,8 @@ Prennez le temps de bien comprendre à quoi servent les différents paramètres 
 
 Afin de gérer correctement vos stocks, vous devez indiquer à Splash quel entrepôt utiliser pour les corrections de stocks.
 
-<div class="callout-block callout-warning">
-    <div class="icon-holder">
-        <i class="fas fa-exclamation-circle"></i>
-    </div>
-    <div class="content">
-        <h4 class="callout-title">Attention</h4>
-        <p>A minima, vous devez créer un entrepôt, même si vous n'avez qu'un seul lieu de stockage.</p>
-    </div>
-</div>
+> [!WARNING]
+> A minima, vous devez créer un entrepôt, même si vous n'avez qu'un seul lieu de stockage.
 
 #### Entrepôt par défaut pour les configurations produits
 
@@ -45,15 +38,10 @@ Si vous travaillez avec plusieurs Entrepôts, ce mode vous permettra d'accéder 
 
 Un champ sera créé pour chaque entrepôt, il faudra ensuite le configurer sur votre compte Splash.
 
-<div class="callout-block callout-success">
-    <div class="icon-holder">
-        <i class="fas fa-thumbs-up"></i>
-    </div>
-    <div class="content">
-        <h4 class="callout-title">Gestion Multi-sites</h4>
-        <p>Il est désormais possible de gérér séparement les stocks de vos sites de E-Commerce et de vos points de vente.</p>
-    </div>
-</div>
+> [!TIP]
+> **Gestion Multi-sites**
+>
+> Il est désormais possible de gérér séparement les stocks de vos sites de E-Commerce et de vos points de vente.
  
 Le stock réel de vos produits, champs générique et connecté automatiquement, sera désormais en lécture seule. 
 Vous pourrez le lire, mais pas le modifier.

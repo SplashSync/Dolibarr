@@ -1,45 +1,62 @@
 ---
 lang: fr
 permalink: start/configure
-title: Configuration du Module
+title: Configurer le module Splash
+description: Connectez le module à votre compte Splash et définissez ses paramètres par défaut.
+updated: 2026-09-18
 ---
 
-### Activez le Module 
-La configuration du module est disponible dans la configuration de Dolibarr **Configuration >> Modules >> Interfaces >> Splash** 
+Une fois activé, le module doit être connecté à votre compte Splash et recevoir quelques valeurs
+par défaut. Comptez quelques minutes :stopwatch:
 
-![]({{ "/assets/img/screenshot_1.png"|relative_url}})
+Pour ouvrir sa configuration, cliquez sur l'icône de réglage du module Splash dans
+**Configuration > Modules / Applications**.
 
-### Connectez vous à votre compte Splash
+### Connectez-vous à votre compte Splash
 
-D'abord, vous devez créer des clés d'accès pour votre module sur notre site. Pour ce faire, sur votre compte Splash, allez sur ** Serveurs ** >> ** Ajoutez un serveur ** et notez vos clés d'identification et de cryptage qui vous seront données.
+Commencez par créer les clés d'accès de votre serveur : dans votre espace Splash, allez dans
+**Serveurs** > **Ajouter un serveur**, puis notez l'identifiant du serveur et sa clé de cryptage.
 
-![]({{ "/assets/img/screenshot_2.png"|relative_url}})
+![Ajout d'un serveur sur l'espace Splash](../assets/img/screenshot_2.png)
 
-Ensuite, entrez les clés de la configuration du module (attention à ne pas oublier de caractère).
+Saisissez ensuite ces deux clés dans le bloc **Paramètres généraux** de la configuration du module.
 
-![]({{ "/assets/img/screenshot_3.png"|relative_url}})
+> [!IMPORTANT]
+> Copiez les clés telles quelles, sans espace en trop ni caractère oublié : un seul caractère
+> erroné empêche toute connexion.
 
-### Configurer les paramètres par défaut
+![Clés Splash dans la configuration du module](../assets/img/screenshot_3.png)
 
-Pour fonctionner correctement, le module a besoin de quelques paramètres. 
-Ces valeurs par défaut seront utilisées lors de la création / modification des objets.
+### Définissez les paramètres par défaut
 
-![]({{ "/assets/img/screenshot_4.png"|relative_url}})
+Le bloc **Paramètres Locaux** regroupe les valeurs utilisées chaque fois qu'un objet est créé ou
+modifié sans valeur explicite.
 
-##### Langue par défaut
-Sélectionnez la langue par défaut à utiliser pour la communication avec les serveurs de Splash.
+![Paramètres par défaut du module](../assets/img/screenshot_4.png)
 
-##### User par défaut
-Sélectionnez l'utilisateur qui sera utilisé pour toutes les actions exécutées par le module Splash.
-Nous recommandons fortement la création d'un utilisateur **dédié** pour Splash.
-Soyez conscient que le module Splash prends en compte la configuration des droits des utilisateurs, cet utilisateur doit donc disposer des droit appropriés pour interagir avec Dolibarr.
+#### Langue par défaut
 
-##### Entrepôt / Compte bancaire / Méthode de Paiement
-Définissez ces valeurs à utiliser si aucune valeur n'est spécifiée. 
+La langue utilisée par le module pour communiquer avec le serveur Splash.
 
-### Vérifiez les résultats des Self-Tests
+#### Utilisateur par défaut
 
-Chaque fois que vous mettez à jour votre configuration, le module vérifiera vos paramètres et vous assurera que la communication avec Splash fonctionne bien.
-Assurez-vous que tous les tests sont passés ... c'est critique!
+L'utilisateur au nom duquel le module exécute toutes ses actions.
 
-![]({{ "/assets/img/screenshot_5.png"|relative_url}})
+> [!TIP]
+> Créez un utilisateur dédié à Splash : le module applique la politique de droits de Dolibarr,
+> cet utilisateur doit donc disposer des droits sur tous les objets que vous voulez synchroniser.
+
+#### Entrepôt, compte bancaire et mode de paiement par défaut
+
+Les valeurs utilisées lorsque l'autre application n'en fournit aucune.
+
+### Vérifiez les résultats des self-tests
+
+À chaque enregistrement de la configuration, le module vérifie vos paramètres et s'assure que la
+communication avec Splash fonctionne.
+
+> [!WARNING]
+> Tous les tests doivent être au vert : un self-test en échec signifie que le serveur ne peut pas
+> synchroniser.
+
+![Résultats des self-tests](../assets/img/screenshot_5.png)
