@@ -2,65 +2,78 @@
 lang: en
 permalink: docs/orders
 title: Orders & Invoices
+description: Orders and invoices import parameters, tax rates detection and guest orders.
+updated: 2026-09-18
 ---
 
-### Configure Import Features 
+### Configure import features
 
-Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block group all Orders & Invoice imports parameters. 
+Since v1.4 of Splash Module for Dolibarr, a dedicated configuration block groups all orders and
+invoices import parameters.
 
 ![Orders & invoices import parameters](../assets/img/screenshot_6.png)
 
-### Tax Rates Detection (NEW) 
+### Tax rates detection
 
-When importing orders & Invoices lines, Splash Module is now able to identify line's tax rate using a shared Tax Code. 
+When importing orders and invoices lines, the Splash module is able to identify the line's tax rate
+using a shared tax code.
 
-This feature is usefull for countries that have multiple or complex VAT rates (i.e. Canada).
+This feature is useful for countries that have multiple or complex VAT rates (i.e. Canada).
 
-**How to configure it ?**
-  
-First, you need to create define, on each servers, the same Codes for VAT Rates. For Dolibarr, this setup is  available in **Settings >> Dictionary >> VAT Rates or Sales Tax Rates**  
+#### How to configure it?
 
-With Dolibarr, VAT Rate name is "Code", this value is empty by default. Generaly, you can use codes used by your E-Commerce.  
+First, you need to define, on each server, the same codes for VAT rates. For Dolibarr, this setup
+is available in **Setup > Dictionary setup > VAT Rates or Sales Tax Rates**.
+
+With Dolibarr, the VAT rate name is "Code", this value is empty by default. Generally, you can use
+the codes used by your e-commerce.
 
 ![VAT rates dictionary in Dolibarr settings](../assets/img/screenshot_8.png)
 
-**How it works ?**
+#### How does it work?
 
-If you have a look at the data that are now available for Orders & Invoices objects, you will see a new field called "VAT Rate". 
+If you have a look at the data available for Orders & Invoices objects, you will see a field called
+"VAT Rate".
 
 ![VAT Rate field on orders & invoices objects](../assets/img/screenshot_9.png)
 
-When Splash import an Order or an Invoice, if the given code if found on your Dolibarr Dictionnary, Splash will setup this VAT Rate for creating this product line. 
+When Splash imports an order or an invoice, if the given code is found in your Dolibarr dictionary,
+Splash uses this VAT rate to create the product line.
 
-**Limitations**
+#### Limitations
 
 Up to now, only part of our modules are compatible with this feature.
 
-To use this feature, you must ensure VAT Rates Codes are **strictly** similar on all connected applications.
+> [!IMPORTANT]
+> To use this feature, you must ensure VAT rates codes are **strictly** identical on all connected
+> applications.
 
+### Import of guest orders
 
-### Import of Guests Orders (NEW)
+#### Why?
 
-**Why ?**
+Most modern e-commerce platforms now offer customers the possibility to place an order without
+creating any customer account. On the ERP side, it is not possible to create an order (or invoice)
+without pointing to a customer. To solve this problem, we developed a specific feature.
 
-Most parts of moderns E-Commerce platforms now offer to customers the possibility to place an order without creating any customer account.
-On the ERP side, it is not possible to create an Order (or Invoice) without pointing to a customer. 
-To solve this problem, we developped a specific feature. 
+#### What does it do?
 
-**What is does ?**
+When you enable **Import of Guests Orders & Invoices**, Splash removes the **required** flag on the
+customer link. This way, the Splash server will push all new orders and invoices to Dolibarr,
+whether they have a customer defined or not.
 
-When you enable **Import of Guests Orders & Invoices**, Splash will remove the **requiered** flag for customers link. This way, Splash Server will push all new Orders & Invoices to Dolibarr.
-Whatever if they have a customer defined or not.
+In this mode, any order (or invoice) that has no customer defined will be attached to a predefined
+default customer.
 
-In this mode, any Order (or Invoice) that has no customer defined will be attached to a predefined default customer.
+#### Configuration
 
-**Configuration**
+To use this mode, just enable the feature and select the default customer to use.
 
-To Use this Mode, just enable the feature and select the default customer to use. We highly recommand creation of a dedicated customer.
+> [!TIP]
+> We highly recommend the creation of a dedicated customer.
 
-**Email detection**
+#### Email detection
 
-This additionnal feature may be used to detect already known customers using their Email if provided by the Server. 
-If the give Email belong to an existing ThirdParty, the order will be attached to this customer and not to default customer. 
- 
-
+This additional feature may be used to detect already known customers using their email, if
+provided by the server. If the given email belongs to an existing third party, the order will be
+attached to this customer and not to the default customer.

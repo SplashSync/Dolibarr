@@ -2,23 +2,27 @@
 lang: en
 permalink: docs/payments
 title: User Payments
+description: Default payment method and bank account, and a dedicated bank account for each payment method.
+updated: 2026-09-18
 ---
 
-### Select Bank Account (NEW)
+### Select bank account
 
-Since v1.4 of Splash Module for Dolibarr, it is possible to select, for each active Payment Method, the bank account you want to use. 
+Since v1.4 of Splash Module for Dolibarr, it is possible to select, for each active payment method,
+the bank account you want to use.
 
 ![Bank account selected for each payment method](../assets/img/screenshot_7.png)
 
+#### Default payment method
 
-**Default Payment Method**
+When an invoice payment is imported, if no valid payment method is given, Splash will use this
+default payment method to create the payment.
 
-When an Invoice payment is imported, if no valid payment method is requested, Splash will use this default payment method for Invoice payment creation.
+#### Default bank account
 
-**Default Bank Account**
+When an invoice payment is imported, if no specific bank account is given, Splash will use this
+default value.
 
-When an Invoice payment is imported, if no specific Bank Account is given, Splash will use this default value.
+#### Bank account per method
 
-**Bank Account per Method**
-
-For each **active** payyment method, select target Bank Account to use.
+For each **active** payment method, select the target bank account to use.

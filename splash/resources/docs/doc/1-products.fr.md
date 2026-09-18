@@ -1,47 +1,50 @@
 ---
 lang: fr
 permalink: docs/products
-title:  Catalogue Produits
+title: Catalogue Produits
+description: Entrepôts, stocks et multi-prix, les paramètres du catalogue produits à bien configurer.
+updated: 2026-09-18
 ---
 
+Splash dispose de nombreuses fonctionnalités dédiées à la gestion du catalogue produits.
 
-### Gestion du Catalogue Produits
+La gestion des stocks et des prix de vente sont des points très sensibles. Prenez le temps de bien
+comprendre à quoi servent les différents paramètres afin de les configurer correctement.
 
-Splash dispose de beaucoup de fonctionnalités dédiées à la gestion du catlogue produit.
+### Entrepôt utilisé pour les mouvements de stocks
 
-La gestion des stocks et des prix de vente sont des point très sensibles.
-Prennez le temps de bien comprendre à quoi servent les différents paramètres afin de les configurer correctement. 
-
-#### Entrepôt utilisé pour les mouvements de stocks
-
-Afin de gérer correctement vos stocks, vous devez indiquer à Splash quel entrepôt utiliser pour les corrections de stocks.
+Afin de gérer correctement vos stocks, vous devez indiquer à Splash quel entrepôt utiliser pour les
+corrections de stocks.
 
 > [!WARNING]
 > A minima, vous devez créer un entrepôt, même si vous n'avez qu'un seul lieu de stockage.
 
-#### Entrepôt par défaut pour les configurations produits
+### Entrepôt par défaut pour les configurations produits
 
-Lors de la création de produits, Splash peu les configurer afin qu'ils soient associés l'entrepôt de votre choix. 
+Lors de la création de produits, Splash peut les configurer afin qu'ils soient associés à l'entrepôt
+de votre choix.
 
-#### Multi-Prix: Prix par défaut utilisée par le module
+### Multi-prix : prix par défaut utilisé par le module
 
-Si vous utilisés la fonction multiprix de Dolibarr, vous devez indiquer à Splash quel niveau de prix utiliser comme prix par défaut.
+Si vous utilisez la fonction multi-prix de Dolibarr, vous devez indiquer à Splash quel niveau de
+prix utiliser comme prix par défaut.
 
-Les autres niveaux de prix seront eux aussi accéssibles, mais dans des champs supplémentaires 
-qu'il vous faudra connecter manuellement depuis votre compte Splash.
+Les autres niveaux de prix seront eux aussi accessibles, mais dans des champs supplémentaires qu'il
+vous faudra connecter manuellement depuis votre compte Splash.
 
-#### [Expert] Gérez vos Stocks Entrepôt par Entrepôt
+### Gérez vos stocks entrepôt par entrepôt
 
-**Cette fonction requiert l'activation du mode "Expert"** 
+> [!NOTE]
+> Cette fonction requiert l'activation du mode **Expert**.
 
-Si vous travaillez avec plusieurs Entrepôts, ce mode vous permettra d'accéder indépendamment aux stocks de chaque entrepôts.
+Si vous travaillez avec plusieurs entrepôts, ce mode vous permettra d'accéder indépendamment aux
+stocks de chaque entrepôt.
 
 Un champ sera créé pour chaque entrepôt, il faudra ensuite le configurer sur votre compte Splash.
 
 > [!TIP]
-> **Gestion Multi-sites**
->
-> Il est désormais possible de gérér séparement les stocks de vos sites de E-Commerce et de vos points de vente.
- 
-Le stock réel de vos produits, champs générique et connecté automatiquement, sera désormais en lécture seule. 
-Vous pourrez le lire, mais pas le modifier.
+> **Gestion multi-sites** : il est désormais possible de gérer séparément les stocks de vos sites
+> de e-commerce et de vos points de vente.
+
+Le stock réel de vos produits, champ générique et connecté automatiquement, sera désormais en
+lecture seule : vous pourrez le lire, mais pas le modifier.
