@@ -167,7 +167,25 @@ trait CustomerTrait
                 //====================================================================//
                 // Standard Mode => A SocId is Required
                 if (!$this->isAllowedGuest()) {
-                    $this->setSimple($fieldName, self::objects()->id((string) $fieldData));
+                    //====================================================================//
+                    // An unresolved customer link must never overwrite the ThirdParty
+                    //
+                    // When the source cannot resolve the customer (ThirdParty not
+                    // linked on its side), writing the raw value sets socid to null
+                    // and the update fails on "Column 'fk_soc' cannot be null".
+                    // Keep the current ThirdParty and warn; error only when the
+                    // object has none.
+                    $newSocId = self::objects()->id((string) $fieldData);
+                    if (!empty($newSocId)) {
+                        $this->setSimple($fieldName, $newSocId);
+                    } elseif (empty($this->object->socid)) {
+                        Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "socid");
+                    } else {
+                        Splash::log()->war(sprintf(
+                            "Customer link not resolved by the source, keeping current ThirdParty (%s).",
+                            (string) $this->object->socid
+                        ));
+                    }
 
                     break;
                 }
