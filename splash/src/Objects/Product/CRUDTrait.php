@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Product;
 
 use Product;
+use ProductCombination;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Services\MultiCompany;
 use Splash\Local\Services\VariantsManager;
@@ -141,6 +142,15 @@ trait CRUDTrait
         // Stack Trace
         Splash::log()->trace();
         //====================================================================//
+        // Deleting a Variant Parent Product is Forbidden!
+        //
+        // Same guard as load(): a parent carries no order line of its own, so
+        // isObjectUsed() believes it is free and Dolibarr deletes it together
+        // with every variant hanging from it.
+        if (VariantsManager::hasProductVariants((int) $objectId)) {
+            return Splash::log()->err(Splash::trans("ProductIsVariantBase"));
+        }
+        //====================================================================//
         // Load Object
         $object = new Product($db);
         //====================================================================//
@@ -170,21 +180,10 @@ trait CRUDTrait
         if ($object->delete($user) <= 0) {
             return $this->catchDolibarrErrors($object);
         }
+
         //====================================================================//
         // Parent Object if Last Product Variant
-        if (empty($combination)) {
-            return true;
-        }
-        if (0 == $combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent)) {
-            //====================================================================//
-            // Also Delete Parent Product
-            $object->id = $combination->fk_product_parent;
-            if ($object->delete($user) <= 0) {
-                return $this->catchDolibarrErrors($object);
-            }
-        }
-
-        return true;
+        return $this->deleteOrphanVariantParent($object, $user, $combination);
     }
 
     /**
@@ -281,5 +280,37 @@ trait CRUDTrait
         }
 
         return $product;
+    }
+
+    /**
+     * Delete Parent Product once its Last Variant was Deleted
+     *
+     * @param Product                 $object      Deleted product, reused to delete its parent
+     * @param User                    $user        User running the deletion
+     * @param null|ProductCombination $combination Combination of the deleted product, if it was a variant
+     *
+     * @return bool
+     */
+    private function deleteOrphanVariantParent(
+        Product $object,
+        User $user,
+        ?ProductCombination $combination
+    ): bool {
+        //====================================================================//
+        // Not a Variant or Parent still has Variants => Nothing to do
+        if (empty($combination)) {
+            return true;
+        }
+        if (0 != $combination->countNbOfCombinationForFkProductParent($combination->fk_product_parent)) {
+            return true;
+        }
+        //====================================================================//
+        // Also Delete Parent Product
+        $object->id = $combination->fk_product_parent;
+        if ($object->delete($user) <= 0) {
+            return $this->catchDolibarrErrors($object);
+        }
+
+        return true;
     }
 }
