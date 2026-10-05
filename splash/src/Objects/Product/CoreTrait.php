@@ -16,6 +16,7 @@
 namespace Splash\Local\Objects\Product;
 
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Services\ProductIdentifier;
 
 /**
  * Dolibarr Products Core Fields (Required)
@@ -132,9 +133,22 @@ trait CoreTrait
             //====================================================================//
             // Direct Writings
             case 'ref':
+                //====================================================================//
+                // Normalize Reference the way Dolibarr Stores it
+                // Otherwise, "A/B" never equals the stored "A_B": the product is
+                // updated on each sync and its documents path is renamed to a
+                // folder that does not exist.
+                $ref = is_null($fieldData) ? null : ProductIdentifier::normalizeRef($fieldData);
+                if (!is_null($fieldData) && ($ref !== $fieldData)) {
+                    Splash::log()->war(sprintf(
+                        "Product reference '%s' was normalized to '%s', as Dolibarr stores it.",
+                        $fieldData,
+                        $ref
+                    ));
+                }
                 // Update Path of Object Documents In Database
-                $this->updateFilesPath("produit", (string) $this->object->ref, (string) $fieldData);
-                $this->setSimple($fieldName, $fieldData);
+                $this->updateFilesPath("produit", (string) $this->object->ref, (string) $ref);
+                $this->setSimple($fieldName, $ref);
 
                 break;
             case 'label':

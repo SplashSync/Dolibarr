@@ -16,6 +16,7 @@
 namespace Splash\Local\Services;
 
 use Product;
+use Splash\Local\Local;
 use Splash\Models\Helpers\ObjectsHelper;
 
 /**
@@ -23,6 +24,13 @@ use Splash\Models\Helpers\ObjectsHelper;
  */
 class ProductIdentifier
 {
+    /**
+     * Dolibarr setting disabling Product References Sanitization (since Dolibarr V18)
+     *
+     * @var string
+     */
+    const ALLOW_UNSECURED_REFS = "MAIN_SECURITY_ALLOW_UNSECURED_REF_LABELS";
+
     /**
      * Detect Product ID from Input Line Item with SKU Detection
      *
@@ -102,16 +110,51 @@ class ProductIdentifier
         // Ensure Product Class is Loaded
         include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
         //====================================================================//
-        // Shorten Item Resume to remove potential spaces
-        $productRef = str_replace(array(" ", "(", ")", "[", "]", "+", "/"), "", $productSku);
+        // Candidate References, in Order
+        $candidates = array_unique(array(
+            // Shorten Item Resume to remove potential spaces
+            str_replace(array(" ", "(", ")", "[", "]", "+", "/"), "", $productSku),
+            // Reference as Dolibarr Stores it ("A/B" => "A_B")
+            self::normalizeRef($productSku),
+        ));
         //====================================================================//
         // Try Loading product by SKU
-        $product = new Product($db);
-        $result = $product->fetch(0, $productRef);
-        if (($result > 0) && ($product->id > 0)) {
-            return $product;
+        foreach ($candidates as $productRef) {
+            $product = new Product($db);
+            $result = $product->fetch(0, $productRef);
+            if (($result > 0) && ($product->id > 0)) {
+                return $product;
+            }
         }
 
         return null;
+    }
+
+    /**
+     * Normalize a Product Reference the way Dolibarr stores it
+     *
+     * Dolibarr sanitizes references on product create & update: special chars
+     * (/, \, :, *, ?, ", <, >, |, [, ], spaces...) are replaced by "_".
+     * A reference sent by a source may then differ from the stored one, so
+     * every lookup or write of a reference must go through this method.
+     *
+     * Since Dolibarr V18, sanitization is skipped when the
+     * MAIN_SECURITY_ALLOW_UNSECURED_REF_LABELS setting is enabled.
+     *
+     * @param string $ref Product reference, as received from the source
+     *
+     * @return string Product reference, as Dolibarr would store it
+     */
+    public static function normalizeRef(string $ref): string
+    {
+        //====================================================================//
+        // Since Dolibarr V18 => Sanitization may be Disabled
+        if ((Local::dolVersionCmp("18.0.0") >= 0) && !empty(Local::getParameter(self::ALLOW_UNSECURED_REFS))) {
+            return trim($ref);
+        }
+
+        //====================================================================//
+        // Same Transformation as Dolibarr Product::create() & Product::update()
+        return dol_sanitizeFileName(dol_string_nospecial(trim($ref)));
     }
 }
