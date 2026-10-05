@@ -41,6 +41,22 @@ trait TriggersTrait
     );
 
     /**
+     * Prices Import Triggered Action Names, with their Prices Table
+     *
+     * Since Dolibarr V24, imports in Secured mode run triggers. Prices tables
+     * have no business object: Dolibarr builds these action names from the
+     * table element, and passes a stdClass holding the price line id.
+     *
+     * @var array<string, string>
+     */
+    private static array $productPricesImportActions = array(
+        'PRODUCTPRICE_CREATE' => 'product_price',
+        'PRODUCTPRICE_MODIFY' => 'product_price',
+        'PRODUCTSUPPLIERPRICE_CREATE' => 'product_fournisseur_price',
+        'PRODUCTSUPPLIERPRICE_MODIFY' => 'product_fournisseur_price',
+    );
+
+    /**
      * Prepare Object Commit for Product
      *
      * @param string $action Event Code
@@ -58,8 +74,12 @@ trait TriggersTrait
             return false;
         }
         //====================================================================//
+        // Identify Product, or Skip Commit
+        if (!$this->setProductObjectId($action, $object)) {
+            return false;
+        }
+        //====================================================================//
         // Store Global Action Parameters
-        $this->setProductObjectId($object);
         $this->setProductParameters($action);
 
         return true;
@@ -77,7 +97,8 @@ trait TriggersTrait
     {
         //====================================================================//
         // Filter on Event Action
-        if (!in_array($action, self::$productActions, true)) {
+        if (!in_array($action, self::$productActions, true)
+            && !isset(self::$productPricesImportActions[$action])) {
             return false;
         }
 
@@ -91,13 +112,14 @@ trait TriggersTrait
     }
 
     /**
-     * Identify Order Id from Given Object
+     * Identify Product ID from Given Object
      *
+     * @param string $action Event Code
      * @param object $object Impacted Objet
      *
-     * @return void
+     * @return bool False if no Product could be Identified
      */
-    private function setProductObjectId(object $object): void
+    private function setProductObjectId(string $action, object $object): bool
     {
         //====================================================================//
         // Identify Product Id
@@ -105,7 +127,14 @@ trait TriggersTrait
             $this->objectId = (string) $object->id;
         } elseif ($object instanceof MouvementStock) {
             $this->objectId = (string) $object->product_id;
+        } elseif (isset(self::$productPricesImportActions[$action])) {
+            $this->objectId = $this->getProductIdFromPriceLine(
+                self::$productPricesImportActions[$action],
+                $object
+            );
         }
+
+        return !empty($this->objectId);
     }
 
     /**
@@ -143,6 +172,9 @@ trait TriggersTrait
         } elseif ('PRODUCT_PRICE_MODIFY' == $action) {
             $this->action = ($isLockedForCreation ?   SPL_A_CREATE : SPL_A_UPDATE);
             $this->comment = "Product Price Updated on Dolibarr";
+        } elseif (isset(self::$productPricesImportActions[$action])) {
+            $this->action = SPL_A_UPDATE;
+            $this->comment = "Product Prices Imported on Dolibarr";
         } elseif ('PRODUCT_DELETE' == $action) {
             $this->action = SPL_A_DELETE;
             $this->comment = "Product Deleted on Dolibarr";
@@ -187,5 +219,38 @@ trait TriggersTrait
                 "Variant Created on Dolibarr"       // Action Comment
             );
         }
+    }
+
+    /**
+     * Identify Product Id from an Imported Price Line
+     *
+     * The object is a stdClass holding the price line id, and its product id
+     * only when IMPORT_TRIGGER_ENRICH_OBJECT is enabled: read it otherwise.
+     *
+     * @param string $priceTable Prices table, without prefix
+     * @param object $object     Impacted Objet
+     *
+     * @return null|string
+     */
+    private function getProductIdFromPriceLine(string $priceTable, object $object): ?string
+    {
+        global $db;
+
+        //====================================================================//
+        // Product ID Already Known (Enriched Object)
+        if (!empty($object->fk_product) && is_scalar($object->fk_product)) {
+            return (string) $object->fk_product;
+        }
+        //====================================================================//
+        // Read Product Id from Price Line
+        if (empty($object->id) || !is_scalar($object->id)) {
+            return null;
+        }
+        $sql = "SELECT fk_product FROM ".MAIN_DB_PREFIX.$priceTable;
+        $sql .= " WHERE rowid = ".((int) $object->id);
+        $result = $db->query($sql);
+        $line = $result ? $db->fetch_object($result) : null;
+
+        return empty($line->fk_product) ? null : (string) $line->fk_product;
     }
 }

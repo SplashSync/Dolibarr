@@ -3,11 +3,11 @@ lang: en
 permalink: docs/imports
 title: Data imports
 description: Since Dolibarr 24, imported data is natively synchronized by Splash, provided you choose the right import mode.
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
-The Dolibarr import assistant lets you create or update companies, contacts, products, orders or
-invoices in bulk, from a CSV or Excel file.
+The Dolibarr import assistant lets you create or update companies, contacts, products, prices,
+orders or invoices in bulk, from a CSV or Excel file.
 
 Since **Dolibarr 24**, these imports are synchronized **natively** by Splash: each imported line is
 sent to your other applications, exactly like a manual entry. Only one condition: choose the right
@@ -22,6 +22,12 @@ In **Tools > Import > New Import**, at the targeted fields step, select in **Imp
 ![Import mode selection in the import assistant](../assets/img/screenshot_10.png)
 
 It is the mode offered by default: just leave it as is.
+
+### Price imports
+
+Imports of **sale prices per level** (multi-prices) and of **supplier prices** are supported too:
+each imported price triggers the synchronization of the related product. No specific setting is
+required, beyond the secured mode.
 
 > [!WARNING]
 > In **fast mode**, Dolibarr runs no automatic action on imported lines: Splash is not notified of
