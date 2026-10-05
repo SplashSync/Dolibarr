@@ -329,9 +329,10 @@ trait ImagesTrait
 
         //====================================================================//
         // Prepare Update Request
-        $sql = $sql = 'UPDATE '.MAIN_DB_PREFIX.$ecmImage->table_element.' SET';
-        $sql .= ' filepath = "'.$element.'/'.$newRef.'" ';
-        $sql .= ' WHERE filepath="'.$element.'/'.$oldRef.'"';
+        // References come from connected applications: they must be escaped
+        $sql = 'UPDATE '.MAIN_DB_PREFIX.$ecmImage->table_element.' SET';
+        $sql .= " filepath = '".$db->escape($element.'/'.$newRef)."'";
+        $sql .= " WHERE filepath = '".$db->escape($element.'/'.$oldRef)."'";
 
         //====================================================================//
         // Execute Update Request
