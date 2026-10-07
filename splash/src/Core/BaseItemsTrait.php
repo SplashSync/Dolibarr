@@ -534,6 +534,14 @@ trait BaseItemsTrait
         // Clean VAT Code
         $cleanedTaxName = TaxManager::getSanitizedCode($itemData["vat_src_code"]);
         //====================================================================//
+        // Code Unknown in Dictionary => Use Dictionary Code for Line Vat Rate
+        // A line code missing from the dictionary makes Dolibarr reset the
+        // rate to the first option (0%) when the line is edited or cloned.
+        if (!empty($cleanedTaxName) && !TaxManager::findTaxByCode($cleanedTaxName)) {
+            $identifiedVat = TaxManager::findTaxByRate((float) $this->currentItem->tva_tx);
+            $cleanedTaxName = TaxManager::getSanitizedCode($identifiedVat->code ?? null);
+        }
+        //====================================================================//
         // Update VAT Code if Needed
         if ($this->currentItem->vat_src_code !== $cleanedTaxName) {
             $this->currentItem->vat_src_code = $cleanedTaxName;
