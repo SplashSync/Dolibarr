@@ -426,11 +426,13 @@ trait BaseItemsTrait
         }
 
         //====================================================================//
-        // Prepare Args
-        $arg1 = (Local::dolVersionCmp("5.0.0") > 0) ? $user : 0;
+        // Dolibarr v23+ compatibility fix-up on SupplierInvoiceLine
+        if ($this->currentItem instanceof SupplierInvoiceLine) {
+            $this->currentItem = $this->ensureSupplierInvoiceLineSubpriceTtc($this->currentItem);
+        }
         //====================================================================//
         // Perform Line Update
-        if ($this->currentItem->update($arg1) <= 0) {
+        if ($this->currentItem->update($user) <= 0) {
             $this->catchDolibarrErrors($this->currentItem);
             Splash::log()->errTrace($this->currentItem->db->lastquery());
             Splash::log()->errTrace("Unable to update Line Item. ");
@@ -485,8 +487,7 @@ trait BaseItemsTrait
         if (abs($this->currentItem->subprice - $htPrice) > 1E-6) {
             $this->currentItem->subprice = $htPrice;
             if ($this->currentItem instanceof SupplierInvoiceLine) {
-                $this->currentItem->pu_ht = $htPrice;
-                $this->currentItem->pu_ttc = $ttcPrice;
+                $this->currentItem = $this->applySupplierInvoiceLinePrice($this->currentItem, $htPrice, $ttcPrice);
             } else {
                 $this->currentItem->price = $htPrice;
             }
@@ -506,6 +507,47 @@ trait BaseItemsTrait
         if (empty($this->currentItem->price) && (!$this->currentItem instanceof SupplierInvoiceLine)) {
             $this->currentItem->price = 0;
         }
+    }
+
+    /**
+     * Push HT & TTC Prices onto a Supplier Invoice Line.
+     *
+     * Dolibarr v23 renamed `pu_ttc` to `subprice_ttc` in the UPDATE SQL
+     * (pu_ttc kept as a deprecated alias). Both properties are kept in sync
+     * so the same code works on every supported Dolibarr version.
+     */
+    private function applySupplierInvoiceLinePrice(
+        SupplierInvoiceLine $line,
+        float $htPrice,
+        float $ttcPrice
+    ): SupplierInvoiceLine {
+        $line->pu_ht = $htPrice;
+        $line->pu_ttc = $ttcPrice;
+        if (property_exists($line, 'subprice_ttc')) {
+            $line->subprice_ttc = $ttcPrice;
+        }
+
+        return $line;
+    }
+
+    /**
+     * Safety net for Dolibarr v23+ on SupplierInvoiceLine before update().
+     *
+     * The UPDATE SQL now reads `$subprice_ttc` (pu_ttc deprecated). When the
+     * price was not touched by this update, `$subprice_ttc` may be empty
+     * while `$pu_ttc` still holds the fetched value — mirror it so the SQL
+     * does not emit an empty assignment.
+     */
+    private function ensureSupplierInvoiceLineSubpriceTtc(SupplierInvoiceLine $line): SupplierInvoiceLine
+    {
+        if (!property_exists($line, 'subprice_ttc')
+            || !empty($line->subprice_ttc)
+            || empty($line->pu_ttc)) {
+            return $line;
+        }
+        $line->subprice_ttc = $line->pu_ttc;
+
+        return $line;
     }
 
     /**
