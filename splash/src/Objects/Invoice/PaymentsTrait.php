@@ -226,6 +226,16 @@ trait PaymentsTrait
             return;
         }
         //====================================================================//
+        // The Local Decomposition may be richer than the Source's
+        if ($this->hasRicherLocalPayments($fieldData)) {
+            unset($this->in[$fieldName]);
+
+            return;
+        }
+        //====================================================================//
+        // Set Aside Payments the Remote Source could not have created
+        $this->protectLocalOnlyPayments($fieldData);
+        //====================================================================//
         // Verify Lines List & Update if Needed
         $firstMethodId = null;
         foreach ($fieldData ?? array() as $lineData) {
@@ -302,6 +312,163 @@ trait PaymentsTrait
                 Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
             }
         }
+    }
+
+    /**
+     * Check whether the Local Payments hold more detail than the Source can express
+     *
+     * A source that models a single payment per order cannot describe an
+     * instalment plan. When the local side already holds several payments that
+     * cover the invoice, pairing them one-by-one with the source's shorter list
+     * keeps the first and deletes the rest: the schedule is destroyed and
+     * replaced by a single line, for the same total.
+     *
+     * There is nothing to gain from writing in that case — the local set is a
+     * refinement of the very fact the source is reporting — so the payments are
+     * left exactly as they are, neither paired, deleted, nor added to.
+     *
+     * @param null|array $fieldData Payment lines declared by the source
+     *
+     * @return bool
+     */
+    private function hasRicherLocalPayments(?array $fieldData): bool
+    {
+        $local = count($this->payments);
+        //====================================================================//
+        // A single local payment is never richer than the source's view
+        if ($local < 2) {
+            return false;
+        }
+        //====================================================================//
+        // The source describes at least as many lines => let it drive
+        if ($local <= count($fieldData ?? array())) {
+            return false;
+        }
+        //====================================================================//
+        // The local payments must already settle the invoice.
+        // Credit notes and deposits count: an invoice closed by payments plus a
+        // discount is settled just as surely as one closed by payments alone.
+        $total = abs((float) ($this->object->total_ttc ?? 0));
+        if ($total < 1E-6) {
+            return false;
+        }
+        $paid = 0.0;
+        foreach ($this->payments as $paymentData) {
+            $paid += abs((float) ($paymentData->amount ?? 0));
+        }
+        if (method_exists($this->object, "getSumCreditNotesUsed")) {
+            $paid += abs((float) $this->object->getSumCreditNotesUsed());
+        }
+        if (method_exists($this->object, "getSumDepositsUsed")) {
+            $paid += abs((float) $this->object->getSumDepositsUsed());
+        }
+        if (($paid + 1E-6) < $total) {
+            return false;
+        }
+        Splash::log()->war(sprintf(
+            "Invoice %s keeps its %d local payments: the source declares %d line(s) for the same total.",
+            $this->object->ref ?? "?",
+            $local,
+            count($fieldData ?? array())
+        ));
+
+        return true;
+    }
+
+    /**
+     * Set Aside Payments that the Remote Source could not have created
+     *
+     * Payments are paired with remote lines by position, and every payment
+     * left over is deleted. A payment entered locally for a movement the
+     * source never knew about would therefore be reused for an unrelated
+     * remote line, or silently destroyed.
+     *
+     * Those payments are removed from the working list: they are neither
+     * reused nor deleted, and the sync leaves them untouched.
+     *
+     * @param null|array $fieldData Payment lines declared by the source
+     *
+     * @return void
+     */
+    private function protectLocalOnlyPayments(?array $fieldData): void
+    {
+        //====================================================================//
+        // Collect the Payment Methods the Source actually declares
+        $remoteMethods = array();
+        foreach ($fieldData ?? array() as $lineData) {
+            if (!empty($lineData["mode"])) {
+                $remoteMethods[(string) $lineData["mode"]] = true;
+            }
+        }
+        foreach ($this->payments as $index => $paymentData) {
+            $reason = $this->getPaymentProtectionReason($paymentData, $remoteMethods);
+            if (!$reason) {
+                continue;
+            }
+            Splash::log()->war(sprintf(
+                "Invoice Payment %s (%s) was left untouched: %s.",
+                $paymentData->id ?? "?",
+                $paymentData->code ?? "?",
+                $reason
+            ));
+            unset($this->payments[$index]);
+        }
+        $this->payments = array_values($this->payments);
+    }
+
+    /**
+     * Identify why a Payment must not be managed by a Sync
+     *
+     * @param object $paymentData    Payment Line, as loaded by loadPayments()
+     * @param array  $remoteMethods  Payment methods declared by the source, as keys
+     *
+     * @return null|string Reason, or Null if Splash may manage this Payment
+     */
+    private function getPaymentProtectionReason(object $paymentData, array $remoteMethods = array()): ?string
+    {
+        global $db;
+
+        //====================================================================//
+        // Payment Method is not one the Source declares => a different payment
+        //
+        // Cash recorded locally against an order the shop believes was paid by
+        // card is not another version of the same movement: it is a movement
+        // the source knows nothing about. Pairing them by position would
+        // rewrite the local one to the source's amount and method.
+        if ($remoteMethods && !isset($remoteMethods[(string) ($paymentData->method ?? "")])) {
+            return sprintf(
+                "method '%s' is not among those the source declares (%s)",
+                $paymentData->code ?? "?",
+                implode(", ", array_keys($remoteMethods))
+            );
+        }
+        //====================================================================//
+        // Payment Method has no Splash equivalent => entered locally
+        // getSplashCode() returns the raw Dolibarr code when no mapping exists,
+        // so an unmapped method is never a key of PaymentMethods::KNOWN.
+        if (!isset(PaymentMethods::KNOWN[(string) ($paymentData->method ?? "")])) {
+            return sprintf(
+                "payment method '%s' has no Splash equivalent, it cannot come from the source",
+                $paymentData->code ?? "?"
+            );
+        }
+        //====================================================================//
+        // Bank Entry already reconciled with a Statement => Accounting is closed
+        if (!empty($paymentData->fk_bank)) {
+            $sql = "SELECT rappro, num_releve FROM ".MAIN_DB_PREFIX."bank";
+            $sql .= " WHERE rowid = ".(int) $paymentData->fk_bank;
+            $result = $db->query($sql);
+            if ($result && ($bank = $db->fetch_object($result))) {
+                if (!empty($bank->rappro) || !empty($bank->num_releve)) {
+                    return sprintf(
+                        "bank entry is reconciled with statement '%s'",
+                        $bank->num_releve ?? ""
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
