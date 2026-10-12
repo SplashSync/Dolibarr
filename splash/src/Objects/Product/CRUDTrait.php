@@ -209,7 +209,7 @@ trait CRUDTrait
         Splash::log()->trace();
         //====================================================================//
         // Keep Variant Label in Sync with Parent Label & Attributes Values
-        $needed = $this->updateVariantLabel() || $needed;
+        $needed = $this->updateVariantLabel() || $needed || $this->isToUpdate("baseProduct");
         if (!$needed) {
             Splash::log()->deb("Product Update not Needed");
 

@@ -360,6 +360,46 @@ class VariantsManager
     }
 
     /**
+     * Rebuild Generated Labels of All Variants of a Renamed Parent Product
+     *
+     * Dolibarr itself does not touch variants labels when their parent is
+     * renamed, and once renamed, the previous parent label is lost: siblings
+     * must be rebuilt in the same write, or never be recognized again.
+     *
+     * @param Product $parent        Parent Product, already renamed
+     * @param string  $previousLabel Parent Product Label before Renaming
+     * @param int     $skippedId     RowId of the Variant being Written (already rebuilt)
+     *
+     * @return void
+     */
+    public static function updateVariantsLabels(Product $parent, string $previousLabel, int $skippedId): void
+    {
+        global $db, $user;
+
+        foreach (array_keys(self::getProductVariants($parent->id)) as $productId) {
+            if ($skippedId == $productId) {
+                continue;
+            }
+            $variant = new Product($db);
+            if ($variant->fetch((int) $productId) <= 0) {
+                continue;
+            }
+            //====================================================================//
+            // Up to Date or Customized by a User => Keep it
+            $label = self::getVariantLabel($parent, (int) $productId);
+            $current = trim((string) $variant->label);
+            if (($current === $label)
+                || !self::isGeneratedLabel($current, array($parent->label, $previousLabel), (int) $productId)) {
+                continue;
+            }
+            $variant->label = $label;
+            if ($variant->update($variant->id, $user) <= 0) {
+                Splash::log()->war("Unable to Update Variant Label (".$variant->id.")");
+            }
+        }
+    }
+
+    /**
      * Check if Product is Locked by Splash
      * - Has Combinations
      * - If is Combination & is On Update

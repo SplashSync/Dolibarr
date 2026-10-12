@@ -112,7 +112,17 @@ trait CRUDTrait
 
                 return Splash::log()->errTrace("Unable to Update Base Product (".$this->baseProduct->id.")");
             }
+            //====================================================================//
+            // Parent Label Changed => Rebuild Labels of Other Variants
+            if (null !== $this->previousBaseLabel) {
+                VariantsManager::updateVariantsLabels(
+                    $this->baseProduct,
+                    $this->previousBaseLabel,
+                    (int) $this->object->id
+                );
+            }
         }
+        $this->previousBaseLabel = null;
 
         //====================================================================//
         // Update Product Combination
@@ -138,16 +148,13 @@ trait CRUDTrait
      * Dolibarr builds a variant label (parent label + attributes values) only
      * once, when the combination is created. When attributes values or parent
      * label change afterward, the label is rebuilt here the same way, unless a
-     * user customized it.
+     * user customized it. Other variants of a renamed parent are rebuilt once
+     * the parent is saved, see updateVariantProduct().
      *
      * @return bool True if Variant Label was Changed
      */
     protected function updateVariantLabel(): bool
     {
-        //====================================================================//
-        // Reset Previous Parent Label for Next Writes
-        $previousBaseLabel = $this->previousBaseLabel;
-        $this->previousBaseLabel = null;
         //====================================================================//
         // Safety Check
         if (!isset($this->baseProduct, $this->combination) || empty($this->object->id)) {
@@ -162,7 +169,7 @@ trait CRUDTrait
         }
         //====================================================================//
         // Never Overwrite a Label Customized by a User
-        $parentLabels = array((string) $this->baseProduct->label, (string) $previousBaseLabel);
+        $parentLabels = array((string) $this->baseProduct->label, (string) $this->previousBaseLabel);
         if (!VariantsManager::isGeneratedLabel($current, $parentLabels, (int) $this->object->id)) {
             return false;
         }
