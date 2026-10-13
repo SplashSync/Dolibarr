@@ -15,6 +15,7 @@
 
 namespace Splash\Local\Objects;
 
+use CommonInvoice;
 use Facture;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Core;
@@ -167,12 +168,13 @@ class Invoice extends AbstractObject
      *
      * Since Dolibarr V19, Uses status instead of statut.
      * Both properties available since V13.
+     * Shared by Customer & Supplier Invoices.
      *
-     * @param Facture $invoice
+     * @param CommonInvoice $invoice
      *
      * @return int
      */
-    public static function getInvoiceStatusStatic(Facture $invoice): int
+    public static function getInvoiceStatusStatic(CommonInvoice $invoice): int
     {
         //====================================================================//
         // Manage Deprecation of status property
