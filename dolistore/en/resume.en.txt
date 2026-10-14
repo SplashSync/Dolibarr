@@ -1,0 +1,1 @@
+Make Dolibarr the heart of your business: companies, products, stocks, orders and invoices stay permanently in sync with your online store, point of sale, CRM or logistics, with no re-keying or manual export. Open source module, compatible with Dolibarr 14 to 24.

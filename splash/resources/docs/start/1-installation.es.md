@@ -60,7 +60,7 @@ Dolibarr descomprime el archivo e instala el módulo en su carpeta `custom`.
 ### Active el módulo
 
 En **Configuración > Módulos**, el módulo Splash se encuentra en la familia **Interfaces con
-sistemas extrenos**: actívelo.
+sistemas externos**: actívelo.
 
 ![Módulo Splash en la lista de módulos de Dolibarr](../assets/img/screenshot_1.png)
 

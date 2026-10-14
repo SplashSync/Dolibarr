@@ -1,0 +1,1 @@
+Haga de Dolibarr el corazón de su actividad: terceros, productos, stocks, pedidos y facturas se mantienen sincronizados en todo momento con su tienda online, su punto de venta, su CRM o su logística, sin volver a introducir datos ni exportarlos a mano. Módulo de código abierto, compatible con Dolibarr 14 a 24.

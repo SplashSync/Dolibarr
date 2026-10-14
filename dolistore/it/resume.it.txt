@@ -1,0 +1,1 @@
+Fate di Dolibarr il cuore della vostra attività: soggetti terzi, prodotti, scorte, ordini e fatture restano sempre sincronizzati con il vostro negozio online, la cassa, il CRM o la logistica, senza reinserimenti né esportazioni manuali. Modulo open source, compatibile con Dolibarr da 14 a 24.

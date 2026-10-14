@@ -1,0 +1,2 @@
+Faites de Dolibarr le cœur de votre activité : tiers, produits, stocks, commandes et factures restent synchronisés en permanence avec votre boutique en ligne, votre caisse, votre CRM ou votre logistique, sans ressaisie ni export manuel.
+Module open source, compatible Dolibarr 14 à 24.

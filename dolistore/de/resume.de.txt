@@ -1,0 +1,1 @@
+Machen Sie Dolibarr zum Herzstück Ihres Geschäfts: Geschäftspartner, Produkte, Bestände, Aufträge und Rechnungen bleiben dauerhaft synchron mit Ihrem Onlineshop, Ihrer Kasse, Ihrem CRM oder Ihrer Logistik, ohne erneute Eingabe oder manuellen Export. Open-Source-Modul, kompatibel mit Dolibarr 14 bis 24.
