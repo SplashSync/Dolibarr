@@ -28,9 +28,20 @@ use Splash\Local\Services\ContactsManager;
 trait DeliveryAddressTrait
 {
     /**
+     * Delivery Contact of the Current Order
+     *
      * @var null|Contact
      */
     protected ?Contact $deliveryContact = null;
+
+    /**
+     * Order the Delivery Contact was Loaded for
+     *
+     * Object Classes are Singletons: Cache must be Dropped when another Order is Loaded.
+     *
+     * @var null|object
+     */
+    protected ?object $deliveryContactOwner = null;
 
     /**
      * Build Fields using FieldFactory
@@ -180,11 +191,7 @@ trait DeliveryAddressTrait
             //====================================================================//
             // Delivery ThirdParty Name
             case 'company':
-                $this->object->thirdparty ?? $this->object->fetch_thirdparty();
-                $this->out[$fieldName] = !empty($this->object->thirdparty->name)
-                    ? $this->object->thirdparty->name
-                    : null
-                ;
+                $this->out[$fieldName] = $this->getDeliveryCompanyName();
 
                 break;
                 //====================================================================//
@@ -273,15 +280,48 @@ trait DeliveryAddressTrait
     }
 
     /**
+     * Get Name of the Company the Order is Delivered to
+     *
+     * Company must match the Delivery Contact, which may belong
+     * to another ThirdParty than the Order one.
+     */
+    private function getDeliveryCompanyName(): ?string
+    {
+        global $mysoc;
+
+        $contact = $this->getDeliveryContact();
+        //====================================================================//
+        // Store Pickup: Delivery Contact is Built from MySoc, without ID
+        if ($contact && empty($contact->id)) {
+            return !empty($mysoc->name) ? (string) $mysoc->name : null;
+        }
+        //====================================================================//
+        // Delivery Contact Attached to a ThirdParty
+        if ($contact && !empty($contact->socid) && !empty($contact->socname)) {
+            return (string) $contact->socname;
+        }
+        //====================================================================//
+        // Fallback: Order ThirdParty
+        $this->object->thirdparty ?? $this->object->fetch_thirdparty();
+
+        return !empty($this->object->thirdparty->name)
+            ? $this->object->thirdparty->name
+            : null
+        ;
+    }
+
+    /**
      * Read requested Field
      */
     private function getDeliveryContact(): ?Contact
     {
         //====================================================================//
-        // Already Loaded
-        if (isset($this->deliveryContact)) {
+        // Already Loaded for this Order
+        if ($this->deliveryContactOwner === $this->object) {
             return $this->deliveryContact;
         }
+        $this->deliveryContactOwner = $this->object;
+        $this->deliveryContact = null;
 
         //====================================================================//
         // Load Delivery Address
