@@ -149,6 +149,36 @@ class L09OrderInvoiceLinkTest extends ObjectsCase
     }
 
     /**
+     * Test Invoice Detection is Done for Each Loaded Order
+     *
+     * Object Classes are Singletons: Invoice must never leak from one Order to another.
+     *
+     * @throws Exception
+     *
+     * @return void
+     */
+    public function testSuccessiveOrdersReading(): void
+    {
+        $this->loadLocalTestSequence("Monolangual");
+
+        $invoicedId = $this->createOrder();
+        $invoice = $this->createLinkedInvoice($invoicedId, true);
+        $otherId = $this->createOrder();
+        //====================================================================//
+        // Read Invoiced Order, then Order without Invoice
+        Assert::assertSame($invoice->ref, $this->readField($invoicedId, "invoiceNumber"));
+        Assert::assertEmpty($this->readField($otherId, "invoiceNumber"));
+        Assert::assertEmpty($this->readField($otherId, "invoicePdf"));
+        //====================================================================//
+        // Invoice Validated after a First Reading is Detected
+        $lateInvoice = $this->createLinkedInvoice($otherId, true);
+        Assert::assertSame($lateInvoice->ref, $this->readField($otherId, "invoiceNumber"));
+        //====================================================================//
+        // Back to First Order
+        Assert::assertSame($invoice->ref, $this->readField($invoicedId, "invoiceNumber"));
+    }
+
+    /**
      * Delete the Generated Pdf of an Invoice, if any
      *
      * @param Facture $invoice

@@ -35,11 +35,13 @@ trait InvoiceLinkTrait
     private ?Facture $orderInvoice = null;
 
     /**
-     * Invoice Detection Already Done for this Object
+     * Order the Invoice Detection was Done for
      *
-     * @var bool
+     * Object Classes are Singletons: Cache must be Dropped when another Order is Loaded.
+     *
+     * @var null|object
      */
-    private bool $orderInvoiceLoaded = false;
+    private ?object $orderInvoiceOwner = null;
 
     /**
      * Build Fields using FieldFactory
@@ -102,11 +104,12 @@ trait InvoiceLinkTrait
         global $db;
 
         //====================================================================//
-        // Detection Already Done
-        if ($this->orderInvoiceLoaded) {
+        // Detection Already Done for this Order
+        if ($this->orderInvoiceOwner === $this->object) {
             return $this->orderInvoice;
         }
-        $this->orderInvoiceLoaded = true;
+        $this->orderInvoiceOwner = $this->object;
+        $this->orderInvoice = null;
         //====================================================================//
         // Ensure Invoice Class is Loaded
         include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
