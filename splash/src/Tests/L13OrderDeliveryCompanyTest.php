@@ -135,7 +135,10 @@ class L13OrderDeliveryCompanyTest extends ObjectsCase
         $data = Splash::object("Order")->get($orderId, array("company"));
         Assert::assertIsArray($data);
 
-        return $data["company"] ?? null;
+        $company = $data["company"] ?? null;
+        Assert::assertTrue(is_null($company) || is_string($company));
+
+        return is_string($company) ? $company : null;
     }
 
     /**
