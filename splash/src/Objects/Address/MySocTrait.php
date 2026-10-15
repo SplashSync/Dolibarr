@@ -32,7 +32,7 @@ trait MySocTrait
 
         $contact->lastname = $mysoc->name;
         $contact->phone_pro = $mysoc->phone;
-        $contact->phone_mobile = $mysoc->phone_mobile;
+        $contact->phone_mobile = $mysoc->phone_mobile ?? null;
         $contact->email = $mysoc->email;
 
         $contact->address = $mysoc->address;
