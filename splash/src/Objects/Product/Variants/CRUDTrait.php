@@ -36,6 +36,13 @@ trait CRUDTrait
      */
     protected ?ProductCombination $combination = null;
 
+    /**
+     * Parent Product Label before it was Changed by Current Write
+     *
+     * @var null|string
+     */
+    protected ?string $previousBaseLabel = null;
+
     //====================================================================//
     // Variants CRUD Functions
     //====================================================================//
@@ -105,7 +112,17 @@ trait CRUDTrait
 
                 return Splash::log()->errTrace("Unable to Update Base Product (".$this->baseProduct->id.")");
             }
+            //====================================================================//
+            // Parent Label Changed => Rebuild Labels of Other Variants
+            if (null !== $this->previousBaseLabel) {
+                VariantsManager::updateVariantsLabels(
+                    $this->baseProduct,
+                    $this->previousBaseLabel,
+                    (int) $this->object->id
+                );
+            }
         }
+        $this->previousBaseLabel = null;
 
         //====================================================================//
         // Update Product Combination
@@ -121,6 +138,46 @@ trait CRUDTrait
                 return Splash::log()->errTrace("Unable to Update Combination Properties (".$this->combination->id.")");
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Keep Variant Label in Sync with Parent Label & Attributes Values
+     *
+     * Dolibarr builds a variant label (parent label + attributes values) only
+     * once, when the combination is created. When attributes values or parent
+     * label change afterward, the label is rebuilt here the same way, unless a
+     * user customized it. Other variants of a renamed parent are rebuilt once
+     * the parent is saved, see updateVariantProduct().
+     *
+     * @return bool True if Variant Label was Changed
+     */
+    protected function updateVariantLabel(): bool
+    {
+        //====================================================================//
+        // Safety Check
+        if (!isset($this->baseProduct, $this->combination) || empty($this->object->id)) {
+            return false;
+        }
+        //====================================================================//
+        // Compare Current Label with Dolibarr Generated Label
+        $current = trim((string) $this->object->label);
+        $label = VariantsManager::getVariantLabel($this->baseProduct, (int) $this->object->id);
+        if ($current === $label) {
+            return false;
+        }
+        //====================================================================//
+        // Never Overwrite a Label Customized by a User
+        $parentLabels = array((string) $this->baseProduct->label, (string) $this->previousBaseLabel);
+        if (!VariantsManager::isGeneratedLabel($current, $parentLabels, (int) $this->object->id)) {
+            return false;
+        }
+        //====================================================================//
+        // Update Variant Label
+        Splash::log()->deb("Variant Label Updated: ".$current." => ".$label);
+        $this->object->label = $label;
+        $this->needUpdate();
 
         return true;
     }
