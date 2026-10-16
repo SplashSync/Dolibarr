@@ -461,6 +461,50 @@ trait PaymentsTrait
             || empty((double) $lineData["amount"])) {
             return false;
         }
+        //====================================================================//
+        // Never add a payment to an invoice that is already settled.
+        //
+        // Source lines are paired with local payments by position, and a
+        // payment that is not linked to this invoice is invisible to that
+        // pairing. identifyExistingPayment() is meant to recover those, but it
+        // gives up in exactly the cases that produce them:
+        //
+        //  - getSimilarPayment() requires a non empty "number", which only
+        //    gateway transactions carry. Vouchers, cheques, transfers and cash
+        //    have none, so no lookup is even attempted.
+        //  - it then requires the candidate to already carry invoice totals,
+        //    so a payment linked to no invoice — the very case it should
+        //    catch — is rejected.
+        //
+        // The source line then falls through to createPaymentItem() and the
+        // invoice is settled a second time. Rather than enumerate the causes,
+        // compare against what the invoice already carries: payments, credit
+        // notes and deposits covering the total leave nothing to receive.
+        //
+        // This does not forbid overpaying. A settlement in vouchers or in cash
+        // rarely falls on the exact cent, and such a payment is accepted
+        // because nothing covers the invoice yet when it arrives. What is
+        // refused is the second full settlement of an invoice already closed.
+        $settled = abs((float) $this->object->getSommePaiement());
+        if (method_exists($this->object, "getSumCreditNotesUsed")) {
+            $settled += abs((float) $this->object->getSumCreditNotesUsed());
+        }
+        if (method_exists($this->object, "getSumDepositsUsed")) {
+            $settled += abs((float) $this->object->getSumDepositsUsed());
+        }
+        $invoiceTotal = abs((float) $this->object->total_ttc);
+        if (($invoiceTotal > 1E-6) && (($settled + 1E-6) >= $invoiceTotal)) {
+            Splash::log()->war(sprintf(
+                "Invoice %s already settled (%s of %s): a further payment of %s was refused, "
+                ."it would settle the invoice twice.",
+                $this->object->ref ?? "?",
+                (string) $settled,
+                (string) $invoiceTotal,
+                (string) self::parsePrice($lineData["amount"])
+            ));
+
+            return false;
+        }
         $payment = $this->newPayment();
         //====================================================================//
         // Setup Payment Invoice Id
