@@ -270,6 +270,23 @@ trait MainTrait
             }
         } else {
             //====================================================================//
+            // Never unpay an invoice that carries real payments: the source's
+            // opinion cannot outrank money already recorded and possibly
+            // reconciled on the bank side.
+            global $db;
+            if ($this->object instanceof \FactureFournisseur) {
+                $sqlNbPay = "SELECT COUNT(*) as nb FROM ".MAIN_DB_PREFIX."paiementfourn_facturefourn WHERE fk_facturefourn = ".((int) $this->object->id);
+            } else {
+                $sqlNbPay = "SELECT COUNT(*) as nb FROM ".MAIN_DB_PREFIX."paiement_facture WHERE fk_facture = ".((int) $this->object->id);
+            }
+            $resNbPay = $db->query($sqlNbPay);
+            $objNbPay = $resNbPay ? $db->fetch_object($resNbPay) : null;
+            if ($objNbPay && ((int) $objNbPay->nb) > 0) {
+                dol_syslog("splash: invoice ".$this->object->ref." kept paid, carries ".$objNbPay->nb." real payment(s), source opinion ignored", LOG_WARNING);
+
+                return true;
+            }
+            //====================================================================//
             // Set UnPaid using Dolibarr Function
             if ((Facture::STATUS_CLOSED == $this->getInvoiceStatus()) && (1 != $this->object->set_unpaid($user))) {
                 return $this->catchDolibarrErrors();
