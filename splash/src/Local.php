@@ -190,6 +190,21 @@ class Local implements LocalClassInterface
             MultiCompany::setup();
         }
 
+        //====================================================================//
+        // Ensure Dolibarr hooks fired inside core computations also run here:
+        // the webservice never calls initHooks(), so the global HookManager
+        // carries no context and modules hooking the product (e.g. virtual
+        // stock adjusters via the 'loadvirtualstock' hook) stay silent --
+        // the synced stock then differs from what Dolibarr itself displays.
+        global $db, $hookmanager;
+        if (!is_object($hookmanager) && is_object($db)) {
+            require_once DOL_DOCUMENT_ROOT.'/core/class/hookmanager.class.php';
+            $hookmanager = new \HookManager($db);
+        }
+        if (is_object($hookmanager)) {
+            $hookmanager->initHooks(array('productdao'));
+        }
+
         return true;
     }
 
