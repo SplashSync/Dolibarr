@@ -46,3 +46,6 @@ parameters:
 
         # Fix for Dolibarr before V21
         - '#Parameter \#4 \$length of method ExtraFields::update\(\) expects int, string given.#'
+
+        # Fix for Dolibarr before V23
+        - '#Method Commande::cancel\(\) invoked with 2 parameters, 0-1 required#'
