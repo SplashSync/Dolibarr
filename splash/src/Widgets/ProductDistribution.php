@@ -356,7 +356,7 @@ class ProductDistribution extends AbstractWidget
      *
      * @return array
      */
-    private function getData(int $limit = null): array
+    private function getData(?int $limit = null): array
     {
         global $db;
 

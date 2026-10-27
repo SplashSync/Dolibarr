@@ -30,7 +30,7 @@ trait ErrorParserTrait
      *
      * @return bool False if Error was Found
      */
-    protected function catchDolibarrErrors(object $subject = null): bool
+    protected function catchDolibarrErrors(?object $subject = null): bool
     {
         //====================================================================//
         // Use Current Parser Object
@@ -58,7 +58,7 @@ trait ErrorParserTrait
      *
      * @return bool False if Error was Found
      */
-    private function catchSimpleErrors(object $subject = null): bool
+    private function catchSimpleErrors(?object $subject = null): bool
     {
         global $langs;
 
@@ -85,7 +85,7 @@ trait ErrorParserTrait
      *
      * @return bool False if Error was Found
      */
-    private function catchArrayErrors(object $subject = null): bool
+    private function catchArrayErrors(?object $subject = null): bool
     {
         global $langs;
 
@@ -117,7 +117,7 @@ trait ErrorParserTrait
      *
      * @return void
      */
-    private function catchDatabaseErrors(object $subject = null): void
+    private function catchDatabaseErrors(?object $subject = null): void
     {
         global $db;
 

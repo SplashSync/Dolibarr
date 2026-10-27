@@ -320,7 +320,7 @@ trait ExtraFieldsTrait
      *
      * @return ExtraFields
      */
-    private function loadExtraFields(string $elementType = null): ExtraFields
+    private function loadExtraFields(?string $elementType = null): ExtraFields
     {
         global $db;
         //====================================================================//

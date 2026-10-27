@@ -64,7 +64,7 @@ class L05OrderInvoicesStatusTest extends ObjectsCase
         string $objectType,
         string $splStatus,
         int $dolStatus,
-        string $expectedRef = null
+        ?string $expectedRef = null
     ): void {
         //====================================================================//
         //   Update Status Directly on Module

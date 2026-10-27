@@ -26,7 +26,7 @@ class TaxManager
     /**
      * Identify VAT Rate by Country & Rate
      */
-    public static function findTaxByRate(float $vatRate, int $countryId = null): ?stdClass
+    public static function findTaxByRate(float $vatRate, ?int $countryId = null): ?stdClass
     {
         global $db;
 
@@ -60,7 +60,7 @@ class TaxManager
      *
      * @return null|stdClass
      */
-    public static function findTaxByCode(string $code = null): ?stdClass
+    public static function findTaxByCode(?string $code = null): ?stdClass
     {
         global $db;
 

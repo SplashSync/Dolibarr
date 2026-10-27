@@ -110,7 +110,7 @@ class UnitConverter
      *
      * @return ArrayObject $r->weight , $r->weight_units , $r->print, $r->raw
      */
-    public static function normalizeWeight(?float $weight, Product $baseProduct = null): ArrayObject
+    public static function normalizeWeight(?float $weight, ?Product $baseProduct = null): ArrayObject
     {
         $result = new ArrayObject();
         $result->raw = $weight;

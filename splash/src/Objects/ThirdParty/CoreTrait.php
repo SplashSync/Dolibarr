@@ -238,7 +238,7 @@ trait CoreTrait
      *
      * @return null|array Contact Firstname, Lastname & Company Name
      */
-    private static function decodeFullName(string $fullName = null): ?array
+    private static function decodeFullName(?string $fullName = null): ?array
     {
         //====================================================================//
         // Safety Checks

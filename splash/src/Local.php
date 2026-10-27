@@ -273,7 +273,7 @@ class Local implements LocalClassInterface
     /**
      * {@inheritdoc}
      */
-    public function testSequences(string $name = null): array
+    public function testSequences(?string $name = null): array
     {
         Services\SequencesManager::init();
 

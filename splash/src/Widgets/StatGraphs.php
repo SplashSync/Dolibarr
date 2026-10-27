@@ -146,7 +146,7 @@ class StatGraphs extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    public function get(array $parameters = null): array
+    public function get(?array $parameters = null): array
     {
         //====================================================================//
         // Stack Trace

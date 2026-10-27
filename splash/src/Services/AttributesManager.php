@@ -147,7 +147,7 @@ class AttributesManager
      *
      * @return false|ProductAttribute
      */
-    public static function addAttribute(string $attributeCode, string $attributeName = null)
+    public static function addAttribute(string $attributeCode, ?string $attributeName = null)
     {
         global $db, $user;
 
@@ -334,7 +334,7 @@ class AttributesManager
      *
      * @return false|ProductAttributeValue
      */
-    public static function addAttributeValue(ProductAttribute $attribute, string $valueCode, string $valueName = null)
+    public static function addAttributeValue(ProductAttribute $attribute, string $valueCode, ?string $valueName = null)
     {
         global $db, $user;
 
