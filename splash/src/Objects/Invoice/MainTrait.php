@@ -264,6 +264,41 @@ trait MainTrait
         // Update This Flag
         if ($data) {
             //====================================================================//
+            // Never close an invoice the recorded money does not cover.
+            //
+            // The source knows whether its order was paid. It does not know how
+            // much of THIS invoice has actually been received, because a shop
+            // has a single paid/unpaid state where accounting has a running
+            // balance: a schedule of cheques, a deposit, a settlement part
+            // vouchers part transfer. The shop marks the order paid the day the
+            // arrangement is agreed; the invoice is extinguished only when the
+            // last movement lands.
+            //
+            // An invoice closed early is a receivable that disappears from the
+            // books while it is still owed. Under the French e-invoicing regime
+            // each payment is also reported with its own date, so the missing
+            // movements are never declared either.
+            //
+            // A human may still close a residue by hand in Dolibarr — writing
+            // off a few cents is a decision. A connector may not.
+            $covered = (float) $this->object->getSommePaiement();
+            if (method_exists($this->object, "getSumCreditNotesUsed")) {
+                $covered += (float) $this->object->getSumCreditNotesUsed();
+            }
+            if (method_exists($this->object, "getSumDepositsUsed")) {
+                $covered += (float) $this->object->getSumDepositsUsed();
+            }
+            $invoiceTotal = abs((float) $this->object->total_ttc);
+            if (($invoiceTotal > 1E-6) && ((abs($covered) + 1E-6) < $invoiceTotal)) {
+                dol_syslog(
+                    "splash: invoice ".$this->object->ref." left open, only ".$covered
+                    ." of ".$invoiceTotal." is recorded, source opinion ignored",
+                    LOG_WARNING
+                );
+
+                return true;
+            }
+            //====================================================================//
             // Set Paid using Dolibarr Function
             if ((Facture::STATUS_VALIDATED == $this->getInvoiceStatus()) && (1 != $this->object->set_paid($user))) {
                 return $this->catchDolibarrErrors();
