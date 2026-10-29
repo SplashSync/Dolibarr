@@ -98,15 +98,11 @@ trait MultiLangsTrait
 
         //====================================================================//
         // Create This Translation if empty
-        if (!isset($this->object->multilangs[$isoCode])) {
-            $this->object->multilangs[$isoCode] = array(
-                "label" => "", "description" => ""
-            );
-        }
+        $this->initMultiLang($isoCode);
         //====================================================================//
         // Update Contents
         //====================================================================//
-        if ($this->object->multilangs[$isoCode][$fieldName] ?? null != $content) {
+        if (($this->object->multilangs[$isoCode][$fieldName] ?? null) !== $content) {
             $this->object->multilangs[$isoCode][$fieldName] = $content;
             $this->needUpdate();
         }
@@ -126,6 +122,7 @@ trait MultiLangsTrait
             if (!empty($this->object->multilangs[$isoCode][$fieldName])) {
                 continue;
             }
+            $this->initMultiLang($isoCode);
             $this->object->multilangs[$isoCode][$fieldName] = $content;
         }
     }
@@ -159,5 +156,23 @@ trait MultiLangsTrait
         }
 
         return (string) $this->object->multilangs[$isoCode][$fieldName];
+    }
+
+    /**
+     * Ensure a Translation exists with all keys Dolibarr expects
+     *
+     * Dolibarr reads label & description of every translation on update,
+     * a partial entry makes Product::setMultiLangs() fail.
+     *
+     * @param string $isoCode Language Iso Code
+     *
+     * @return void
+     */
+    private function initMultiLang(string $isoCode): void
+    {
+        $this->object->multilangs[$isoCode] = array_replace(
+            array("label" => "", "description" => ""),
+            $this->object->multilangs[$isoCode] ?? array()
+        );
     }
 }
