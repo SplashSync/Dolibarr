@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Invoice;
 
 use Facture;
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Local;
 use Splash\Local\Objects\Invoice;
 use Splash\Models\Objects\Invoice\Status;
 
@@ -132,8 +133,15 @@ trait StatusTrait
             case "PaymentDraft":
                 //====================================================================//
                 // Whatever => Set Draft
-                if ((0 != $this->object->status) && (!$this->setStatusDraft())) {
-                    return false;
+                if (0 != $this->object->status) {
+                    //====================================================================//
+                    // Never bring back to draft an invoice that must stay unalterable
+                    if ($this->isDraftForbidden()) {
+                        break;
+                    }
+                    if (!$this->setStatusDraft()) {
+                        return false;
+                    }
                 }
                 $this->setInvoiceStatus(Facture::STATUS_DRAFT);
 
@@ -149,6 +157,11 @@ trait StatusTrait
                 // If Already Canceled => Set Draft
                 $draftStatuses = array(Facture::STATUS_ABANDONED, Facture::STATUS_CLOSED);
                 if (in_array((int) $this->object->status, $draftStatuses, false)) {
+                    //====================================================================//
+                    // Never bring back to draft an invoice that must stay unalterable
+                    if ($this->isDraftForbidden()) {
+                        break;
+                    }
                     if (!$this->setStatusDraft()) {
                         return false;
                     }
@@ -239,6 +252,61 @@ trait StatusTrait
         if (property_exists($this->object, "statut")) {
             $this->object->statut = $status;
         }
+    }
+
+    /**
+     * Check if Invoice must NOT go back to Draft
+     *
+     * Back to draft, the connector rewrites the lines and validates again under
+     * the same reference: what was issued is erased. With the unalterable log
+     * (blockedlog) active, mandatory in France, that is forbidden; and on an
+     * invoice that carries real payments it silently drops money already
+     * recorded. A change made in the source after invoicing must become a
+     * credit note, never an edit of the invoice.
+     *
+     * The source request is ignored and logged. A line rewrite that follows
+     * then fails on the validated status, so the sync reports it instead of
+     * rewriting in silence.
+     *
+     * @return bool True if the invoice must stay validated
+     */
+    private function isDraftForbidden(): bool
+    {
+        global $db;
+
+        if (Facture::STATUS_DRAFT == $this->getInvoiceStatus()) {
+            return false;
+        }
+        $reason = null;
+        if (function_exists("isModEnabled") && isModEnabled("blockedlog")) {
+            $reason = "the unalterable log (blockedlog) is active";
+        } else {
+            //====================================================================//
+            // Supplier invoices keep their payment links in another table.
+            $isSupplier = is_a($this, Local::CLASS_SUPPLIER_INVOICE);
+            $sql = "SELECT COUNT(*) as nb FROM ".MAIN_DB_PREFIX
+                .($isSupplier ? "paiementfourn_facturefourn" : "paiement_facture")
+                ." WHERE ".($isSupplier ? "fk_facturefourn" : "fk_facture")." = ".((int) $this->object->id);
+            $res = $db->query($sql);
+            $obj = $res ? $db->fetch_object($res) : null;
+            if ($obj && ((int) $obj->nb) > 0) {
+                $reason = ((int) $obj->nb)." real payment(s) recorded";
+            }
+        }
+        if (null === $reason) {
+            return false;
+        }
+        dol_syslog(
+            "splash: invoice ".$this->object->ref." kept validated, ".$reason
+            .", back-to-draft request from the source ignored",
+            LOG_WARNING
+        );
+        Splash::log()->war(
+            "Invoice ".$this->object->ref." kept validated (".$reason."): "
+            ."a change made after invoicing must be a credit note."
+        );
+
+        return true;
     }
 
     /**
