@@ -226,7 +226,10 @@ trait StatusTrait
         }
         //====================================================================//
         // Set Canceled
-        if (1 != $this->object->cancel($conf->global->SPLASH_STOCK)) {
+        $result = (Local::dolVersionCmp("23.0.0") >= 0)
+            ? $this->object->cancel($user, $conf->global->SPLASH_STOCK)
+            : $this->object->cancel($conf->global->SPLASH_STOCK);
+        if (1 != $result) {
             return $this->catchDolibarrErrors();
         }
         $this->setRawStatus(Commande::STATUS_CANCELED);
