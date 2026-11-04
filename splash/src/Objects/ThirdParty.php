@@ -42,6 +42,7 @@ class ThirdParty extends AbstractObject implements PrimaryKeysAwareInterface
     use Core\ExtraFieldsTrait;
     use Core\ObjectsListTrait;
     use Core\MultiCompanyFieldsTrait;
+    use Core\AdminUrlTrait;
     use Core\MarketplaceModeTrait;
 
     // Dolibarr ThirdParty Traits

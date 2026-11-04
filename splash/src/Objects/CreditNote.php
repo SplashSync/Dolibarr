@@ -47,6 +47,7 @@ class CreditNote extends AbstractObject
     use Core\ObjectsListTrait;
     use Core\CustomerTrait;
     use Core\MultiCompanyFieldsTrait;
+    use Core\AdminUrlTrait;
     use Core\MarketplaceModeTrait;
     use Core\NotesTrait;
     use Core\DownloadUrlsTrait;
