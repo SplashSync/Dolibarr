@@ -198,18 +198,25 @@ trait AttributesTrait
     private function isValidAttributeDefinition(array $attrData): bool
     {
         //====================================================================//
+        // MODIF Pichinov : contexte d erreur (produit + attribut concernes)
+        $context = sprintf(
+            " [produit %s (id %s) / attribut %s]",
+            $this->object->ref ?? "?",
+            $this->object->id ?? "?",
+            is_scalar($attrData["code"] ?? null) ? (string) $attrData["code"] : "?"
+        );
         // Check Attributes Code is Given
         if (empty($attrData["code"]) || !is_string($attrData["code"])) {
-            return Splash::log()->err(" Product Attribute Code is Not Valid.");
+            return Splash::log()->err(" Product Attribute Code is Not Valid.".$context);
         }
         //====================================================================//
         // Check Attributes Names are Given
-        if (!$this->isValidScalarData($attrData, "name", "Public Name")) {
+        if (!$this->isValidScalarData($attrData, "name", "Public Name", $context)) {
             return false;
         }
         //====================================================================//
         // Check Attributes Values are Given
-        if (!$this->isValidScalarData($attrData, "value", "Value Name")) {
+        if (!$this->isValidScalarData($attrData, "value", "Value Name", $context)) {
             return false;
         }
 
@@ -225,12 +232,15 @@ trait AttributesTrait
      *
      * @return bool
      */
-    private function isValidScalarData(array $attrData, string $key, string $name): bool
+    private function isValidScalarData(array $attrData, string $key, string $name, string $context = ""): bool
     {
         //====================================================================//
         // Check Attributes Values are Given
         if (empty($attrData[$key]) || !is_scalar($attrData[$key])) {
-            return Splash::log()->err("Product Attribute ".$name." is Not Valid.");
+            return Splash::log()->err(
+                "Product Attribute ".$name." is Not Valid.".$context
+                ." (recu: ".var_export($attrData[$key] ?? null, true).")"
+            );
         }
 
         return true;
