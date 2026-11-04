@@ -98,8 +98,8 @@ class L15AdminUrlTest extends ObjectsCase
     /**
      * Create an Object with Fake Data
      *
-     * @param string               $objectType
-     * @param array<string, string> $overrides
+     * @param string                     $objectType
+     * @param array<string, null|string> $overrides
      *
      * @throws Exception
      *
