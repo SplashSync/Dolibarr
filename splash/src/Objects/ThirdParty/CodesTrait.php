@@ -15,6 +15,9 @@
 
 namespace Splash\Local\Objects\ThirdParty;
 
+use Splash\Core\SplashCore as Splash;
+use Splash\Local\Local;
+
 /**
  * Dolibarr ThirdParty Codes Fields
  *
@@ -22,6 +25,13 @@ namespace Splash\Local\Objects\ThirdParty;
  */
 trait CodesTrait
 {
+    /**
+     * Max Length of Dolibarr Accountancy Codes (llx_societe.code_compta)
+     *
+     * @var int
+     */
+    private static int $accountancyCodeMaxLength = 24;
+
     /**
      * Build Codes Fields using FieldFactory
      *
@@ -113,5 +123,57 @@ trait CodesTrait
         }
 
         unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Ensure Customer Accountancy Code is Unique, when Required by Dolibarr Setup
+     *
+     * Accountancy code generators (i.e. Aquarium) may compute a code already used
+     * by another third party: Dolibarr stores it on creation without any check,
+     * then refuses every later update. A numeric suffix is added to make it unique.
+     *
+     * @return void
+     */
+    private function ensureUniqueCustomerAccountancyCode(): void
+    {
+        //====================================================================//
+        // Uniqueness Not Required by Dolibarr Setup
+        if (empty(Local::getParameter("SOCIETE_ACCOUNTANCY_CODE_CUSTOMER_UNIQUE"))) {
+            return;
+        }
+        //====================================================================//
+        // Not a Customer or No Accountancy Code
+        $code = trim((string) $this->object->code_compta_client);
+        if (empty($this->object->client) || empty($code)) {
+            return;
+        }
+        //====================================================================//
+        // Accountancy Code is Already Unique
+        $objectId = (int) $this->object->id;
+        if (!$this->object->id_prof_exists("code_compta", $code, $objectId)) {
+            return;
+        }
+        //====================================================================//
+        // Search for First Available Suffixed Code
+        for ($index = 1; $index < 1000; $index++) {
+            $suffix = (string) $index;
+            $newCode = substr($code, 0, self::$accountancyCodeMaxLength - strlen($suffix)).$suffix;
+            if ($this->object->id_prof_exists("code_compta", $newCode, $objectId)) {
+                continue;
+            }
+            $this->object->code_compta_client = $newCode;
+            //====================================================================//
+            // Legacy Property, Read First by Dolibarr <= 20 on Updates
+            if (property_exists($this->object, "code_compta")) {
+                $this->object->code_compta = $newCode;
+            }
+            Splash::log()->war(sprintf(
+                "Customer Accountancy Code %s already used by another ThirdParty, renamed to %s",
+                $code,
+                $newCode
+            ));
+
+            return;
+        }
     }
 }
