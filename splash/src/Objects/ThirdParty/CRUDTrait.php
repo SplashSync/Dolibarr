@@ -122,6 +122,9 @@ trait CRUDTrait
             return Splash::log()->errNull("ErrLocalUserMissing", __CLASS__, __FUNCTION__);
         }
         //====================================================================//
+        // Ensure Customer Accountancy Code is Unique
+        $this->ensureUniqueCustomerAccountancyCode();
+        //====================================================================//
         // Update Object
         if ($this->object->update($this->object->id, $user, 1, 1, 1) <= 0) {
             $this->catchDolibarrErrors();
