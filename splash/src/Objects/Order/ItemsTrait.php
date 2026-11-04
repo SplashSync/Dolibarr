@@ -55,6 +55,7 @@ trait ItemsTrait
         //====================================================================//
         // Force Order Status To Draft
         $this->object->statut = 0;
+        $this->object->status = 0;
         //====================================================================//
         // Perform Line Delete
         if ($this->object->deleteline($user, $orderLine->id) <= 0) {
