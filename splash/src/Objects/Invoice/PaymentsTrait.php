@@ -40,6 +40,15 @@ trait PaymentsTrait
     protected array $payments = array();
 
     /**
+     * Invoice status as it stood in database when the Invoice was loaded
+     *
+     * Null when the Invoice was not loaded by this request (created here).
+     *
+     * @var null|int
+     */
+    protected ?int $invoiceStatusAtLoad = null;
+
+    /**
      * Build Address Fields using FieldFactory
      *
      * @return void
@@ -104,6 +113,10 @@ trait PaymentsTrait
         //====================================================================//
         // Detect Supplier Invoices Mode
         $isSupplier |= is_a($this, Local::CLASS_SUPPLIER_INVOICE);
+        //====================================================================//
+        // Remember the Invoice status as it stands in database,
+        // before this request writes anything to it
+        $this->invoiceStatusAtLoad = $this->readInvoiceStatus($invoiceId, (bool) $isSupplier);
         //====================================================================//
         // Prepare SQL Request
         // Payments already done (from payment on this invoice)
@@ -302,6 +315,28 @@ trait PaymentsTrait
                 Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
             }
         }
+    }
+
+    /**
+     * Read the status of an Invoice as it stands in database
+     *
+     * @param int  $invoiceId  Invoice Id
+     * @param bool $isSupplier Supplier Invoice Mode
+     *
+     * @return null|int
+     */
+    private function readInvoiceStatus(int $invoiceId, bool $isSupplier): ?int
+    {
+        global $db;
+
+        $sql = "SELECT fk_statut FROM ".MAIN_DB_PREFIX.($isSupplier ? "facture_fourn" : "facture");
+        $sql .= " WHERE rowid = ".$invoiceId;
+        $result = $db->query($sql);
+        if (!$result || !($row = $db->fetch_object($result))) {
+            return null;
+        }
+
+        return (int) $row->fk_statut;
     }
 
     /**

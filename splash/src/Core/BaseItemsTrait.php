@@ -326,6 +326,19 @@ trait BaseItemsTrait
             return;
         }
         //====================================================================//
+        // Never rewrite the Lines of a validated Invoice
+        if ($this->isInvoiceLinesLocked()) {
+            Splash::log()->war(sprintf(
+                "Invoice %s is validated: its lines are kept as issued, the %d line(s) sent by the source were ignored. "
+                ."A change made after invoicing needs a credit note.",
+                $this->object->ref ?? "?",
+                count($fieldData ?? array())
+            ));
+            unset($this->in[$fieldName]);
+
+            return;
+        }
+        //====================================================================//
         // Verify Lines List & Update if Needed
         foreach ($fieldData ?? array() as $itemData) {
             $this->itemUpdate = false;
@@ -353,6 +366,39 @@ trait BaseItemsTrait
         $this->object->fetch_lines();
 
         unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Check whether the Lines of this Invoice must not be rewritten
+     *
+     * Lines are written with FactureLigne::update() / insert() and
+     * Facture::update_price(), which do not check the invoice status the way
+     * Facture::updateline() / addline() do. When the invoice does not go back
+     * to draft first (the source status keeps it validated or paid, or the
+     * back-to-draft is refused as proposed in #38), the source's lines are still
+     * written into the validated invoice: amounts change under the same
+     * reference, with no trace in the unalterable log since BILL_MODIFY is not
+     * a logged event.
+     *
+     * An Invoice that was already validated when loaded, and is still not a
+     * draft when its lines arrive, keeps them as issued. An invoice created by
+     * this request, or one that did go back to draft, behaves as before.
+     * Orders, quotes and supplier orders do not carry the property and are
+     * never affected.
+     *
+     * @return bool
+     */
+    private function isInvoiceLinesLocked(): bool
+    {
+        if (!property_exists($this, "invoiceStatusAtLoad") || null === $this->invoiceStatusAtLoad) {
+            return false;
+        }
+        if ($this->invoiceStatusAtLoad <= 0) {
+            return false;
+        }
+        $status = (int) ($this->object->status ?? $this->object->statut ?? 0);
+
+        return $status > 0;
     }
 
     /**
