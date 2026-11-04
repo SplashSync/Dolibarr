@@ -42,6 +42,7 @@ class Address extends AbstractObject
     use Core\ExtraFieldsTrait;
     use Core\ObjectsListTrait;
     use Core\MultiCompanyFieldsTrait;
+    use Core\AdminUrlTrait;
     use Core\MarketplaceModeTrait;
 
     // Dolibarr Address Traits

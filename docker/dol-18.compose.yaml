@@ -36,6 +36,7 @@ services:
             - mysql
         working_dir:        /var/www/html/custom
         environment:
+            - "DOLI_URL_ROOT=http://v18.dolibarr.local"
             - "DOLI_DB_TYPE=mysqli"
             - "DOLI_DB_HOST=mysql"
             - "DOLI_DB_NAME=dolibarr18"

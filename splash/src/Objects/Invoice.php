@@ -49,6 +49,7 @@ class Invoice extends AbstractObject
     use Core\CustomerTrait;
     use Core\ContactsTrait;
     use Core\MultiCompanyFieldsTrait;
+    use Core\AdminUrlTrait;
     use Core\MarketplaceModeTrait;
     use Core\NotesTrait;
     use Core\DownloadUrlsTrait;

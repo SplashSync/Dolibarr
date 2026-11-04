@@ -48,6 +48,7 @@ class Product extends AbstractObject implements PrimaryKeysAwareInterface
     use Core\LocalizationTrait;
     use Core\ObjectsListTrait;
     use Core\MultiCompanyFieldsTrait;
+    use Core\AdminUrlTrait;
     use Core\MarketplaceModeTrait;
 
     // Dolibarr Products Traits
