@@ -108,6 +108,11 @@ trait BaseLabelTrait
         //====================================================================//
         // Write Default Lang Base Label
         if ('base_label' == $fieldName) {
+            //====================================================================//
+            // Keep Previous Parent Label to Detect Generated Variant Labels
+            if (self::isVariant() && isset($this->baseProduct) && ($this->baseProduct->label !== $fieldData)) {
+                $this->previousBaseLabel = $this->baseProduct->label;
+            }
             $this->setSimple('label', $fieldData, self::isVariant() ? 'baseProduct' : "object");
             unset($this->in[$fieldName]);
         }
