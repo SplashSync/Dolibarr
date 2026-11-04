@@ -19,6 +19,7 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use Societe;
 use Splash\Client\Splash;
+use Splash\Local\Local;
 use Splash\Tests\Tools\ObjectsCase;
 
 /**
@@ -36,6 +37,7 @@ class L14ThirdPartyAccountancyCodeTest extends ObjectsCase
     public function testDuplicatedCodeIsSuffixed(): void
     {
         $this->loadLocalTestSequence("Monolangual");
+        $this->skipIfUniquenessNotSupported();
         $this->setUniqueAccountancyCode(true);
 
         try {
@@ -69,10 +71,13 @@ class L14ThirdPartyAccountancyCodeTest extends ObjectsCase
     public function testSuffixedCodeKeepsMaxLength(): void
     {
         $this->loadLocalTestSequence("Monolangual");
+        $this->skipIfUniquenessNotSupported();
         $this->setUniqueAccountancyCode(true);
 
         try {
-            $code = "SPL".strtoupper(substr(md5(uniqid()), 0, 21));
+            //====================================================================//
+            // Code Never Ends with a Digit: a Suffix Must Never Match the Code Itself
+            $code = "SPL".strtoupper(substr(md5(uniqid()), 0, 20))."X";
             Assert::assertSame(24, strlen($code));
             $ownerId = $this->createThirdParty();
             $duplicateId = $this->createThirdParty();
@@ -85,6 +90,18 @@ class L14ThirdPartyAccountancyCodeTest extends ObjectsCase
             Assert::assertSame($code, $this->readAccountancyCode($ownerId));
         } finally {
             $this->setUniqueAccountancyCode(false);
+        }
+    }
+
+    /**
+     * Customer Accountancy Code Uniqueness Option was Introduced in Dolibarr V20
+     *
+     * @return void
+     */
+    private function skipIfUniquenessNotSupported(): void
+    {
+        if (Local::dolVersionCmp("20.0.0") < 0) {
+            $this->markTestSkipped("Customer accountancy code uniqueness requires Dolibarr V20+");
         }
     }
 
