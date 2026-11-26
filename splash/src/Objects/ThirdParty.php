@@ -51,6 +51,7 @@ class ThirdParty extends AbstractObject implements PrimaryKeysAwareInterface
     use ThirdParty\PrimaryTrait;
     use ThirdParty\CoreTrait;
     use ThirdParty\CodesTrait;
+    use ThirdParty\TypeTrait;
     use ThirdParty\MainTrait;
     use ThirdParty\AddressTrait;
     use ThirdParty\CategoriesTrait;
