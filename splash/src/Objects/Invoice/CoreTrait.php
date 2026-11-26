@@ -16,7 +16,10 @@
 namespace Splash\Local\Objects\Invoice;
 
 use DateTime;
+use Facture;
+use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
+use Splash\Local\Objects\CreditNote;
 
 /**
  * Dolibarr Customer Invoice Fields (Required)
@@ -70,6 +73,22 @@ trait CoreTrait
             ->isIndexed()
             ->isListed()
         ;
+        //====================================================================//
+        // Source Invoice — credit notes only
+        //
+        // A credit note that does not say which invoice it corrects is an
+        // orphan: the source invoice stays settled at its full amount, and
+        // Dolibarr's own screens cannot offer to convert the credit note into
+        // a discount, because that conversion needs the link.
+        if ($this instanceof CreditNote) {
+            $this->fieldsFactory()->create((string) self::objects()->encode("Invoice", SPL_T_ID))
+                ->identifier("fk_facture_source")
+                ->name($langs->trans("CorrectInvoice"))
+                ->description($langs->trans("InvoiceReplacement"))
+                ->microData("http://schema.org/Invoice", "referencesOrder")
+                ->isIndexed()
+            ;
+        }
     }
 
     /**
@@ -99,6 +118,19 @@ trait CoreTrait
             case 'date':
                 $date = $this->object->date;
                 $this->out[$fieldName] = !empty($date)?dol_print_date($date, '%Y-%m-%d'):null;
+
+                break;
+                //====================================================================//
+                // Source Invoice — credit notes only
+            case 'fk_facture_source':
+                if (!$this instanceof CreditNote) {
+                    return;
+                }
+                $sourceId = (int) ($this->object->fk_facture_source ?? 0);
+                $this->out[$fieldName] = $sourceId
+                    ? self::objects()->encode("Invoice", (string) $sourceId)
+                    : null
+                ;
 
                 break;
             default:
@@ -150,9 +182,60 @@ trait CoreTrait
                 $this->setSimple('date_commande', $dateTime->getTimestamp());
 
                 break;
+                //====================================================================//
+                // Source Invoice — credit notes only
+            case 'fk_facture_source':
+                if (!$this instanceof CreditNote) {
+                    return;
+                }
+                $sourceId = $fieldData ? (int) self::objects()->id((string) $fieldData) : 0;
+                //====================================================================//
+                // Refuse a source that is not a real invoice of this entity, and
+                // refuse a credit note pointing at itself.
+                if ($sourceId && !$this->isValidSourceInvoice($sourceId)) {
+                    Splash::log()->errTrace("Invoice ".$sourceId." cannot be used as credit note source.");
+
+                    break;
+                }
+                if ((int) ($this->object->fk_facture_source ?? 0) !== $sourceId) {
+                    $this->setSimple('fk_facture_source', $sourceId ?: null);
+                }
+
+                break;
             default:
                 return;
         }
         unset($this->in[$fieldName]);
+    }
+
+    /**
+     * Check an Invoice may be used as the source of this Credit Note
+     *
+     * Dolibarr stores the link as a bare id, with no foreign key: an invalid
+     * value would be accepted silently and only surface much later, when the
+     * source invoice fails to load. It is cheaper to refuse it here.
+     *
+     * @param int $sourceId Candidate source invoice id
+     *
+     * @return bool
+     */
+    private function isValidSourceInvoice(int $sourceId): bool
+    {
+        global $db;
+
+        //====================================================================//
+        // A credit note cannot correct itself
+        if (!empty($this->object->id) && $sourceId === (int) $this->object->id) {
+            return false;
+        }
+        //====================================================================//
+        // The source must be an existing standard invoice of the same entity
+        $sql = "SELECT f.rowid FROM ".MAIN_DB_PREFIX."facture f";
+        $sql .= " WHERE f.rowid = ".$sourceId;
+        $sql .= " AND f.type != ".Facture::TYPE_CREDIT_NOTE;
+        $sql .= " AND f.entity IN (".getEntity('invoice').")";
+        $result = $db->query($sql);
+
+        return (bool) ($result && $db->num_rows($result));
     }
 }
