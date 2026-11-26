@@ -17,6 +17,7 @@ namespace Splash\Local\Objects\Invoice;
 
 use Facture;
 use Splash\Core\SplashCore as Splash;
+use Splash\Local\Local;
 use Splash\Local\Objects\Invoice;
 use Splash\Models\Objects\Invoice\Status;
 
@@ -200,6 +201,11 @@ trait StatusTrait
                 //====================================================================//
             case "PaymentCanceled":
                 //====================================================================//
+                // Never cancel an Invoice that already carries money
+                if ($this->isCancelForbidden()) {
+                    break;
+                }
+                //====================================================================//
                 // Whatever => Set Canceled
                 if ((Facture::STATUS_ABANDONED != $this->getInvoiceStatus()) && (!$this->setStatusCancel())) {
                     return $this->catchDolibarrErrors();
@@ -239,6 +245,70 @@ trait StatusTrait
         if (property_exists($this->object, "statut")) {
             $this->object->statut = $status;
         }
+    }
+
+    /**
+     * Check if the Invoice must NOT be cancelled by the Sync
+     *
+     * When the source cancels its order, the connector abandons the invoice
+     * whatever its state. If money was already received, that abandon drops
+     * a settled sale from the books while the payment stays in the bank, with
+     * nothing left to match it.
+     *
+     * Seen in production (Dolibarr 24, Splash 2.23.4, WooCommerce): a B2B
+     * customer cancelled from his shop account an order that had been
+     * delivered in April and paid by bank transfer in May. The shop still
+     * showed it as awaiting payment, so it offered a Cancel button. The paid
+     * invoice was abandoned by the sync. It was the third time for that
+     * customer.
+     *
+     * Undoing money that was received goes through a credit note, decided by
+     * a human. So a settled invoice, or one that carries at least one
+     * payment, keeps its status: the request is ignored and logged.
+     * Draft and validated invoices without any payment are cancelled exactly
+     * as before: an unpaid order cancelled before shipping is a real cancel.
+     *
+     * @return bool True if the cancel request must be ignored
+     */
+    private function isCancelForbidden(): bool
+    {
+        global $db;
+
+        $status = $this->getInvoiceStatus();
+        if (Facture::STATUS_ABANDONED == $status) {
+            return false;
+        }
+        $reason = null;
+        if (Facture::STATUS_CLOSED == $status) {
+            $reason = "the invoice is already settled";
+        } else {
+            //====================================================================//
+            // Supplier invoices keep their payment links in another table.
+            $isSupplier = is_a($this, Local::CLASS_SUPPLIER_INVOICE);
+            $sql = "SELECT COUNT(*) as nb FROM ".MAIN_DB_PREFIX
+                .($isSupplier ? "paiementfourn_facturefourn" : "paiement_facture")
+                ." WHERE ".($isSupplier ? "fk_facturefourn" : "fk_facture")." = ".((int) $this->object->id);
+            $res = $db->query($sql);
+            $obj = $res ? $db->fetch_object($res) : null;
+            if ($obj && ((int) $obj->nb) > 0) {
+                $reason = ((int) $obj->nb)." real payment(s) recorded";
+            }
+        }
+        if (null === $reason) {
+            return false;
+        }
+        dol_syslog(
+            "splash: invoice ".$this->object->ref." kept, ".$reason
+            .", cancel request from the source ignored",
+            LOG_WARNING
+        );
+        Splash::log()->war(sprintf(
+            "Invoice %s was not cancelled: %s. Use a credit note to undo it.",
+            $this->object->ref ?? "?",
+            $reason
+        ));
+
+        return true;
     }
 
     /**
