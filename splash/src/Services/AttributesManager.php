@@ -268,6 +268,25 @@ class AttributesManager
     }
 
     /**
+     * Fetch All Values of a Product Attribute, Used or Not by a Combination
+     *
+     * @param ProductAttribute $attribute Product Attribute
+     *
+     * @return ProductAttributeValue[]
+     */
+    public static function getAttributeValues(ProductAttribute $attribute): array
+    {
+        //====================================================================//
+        // Ensure Service Init & Attribute Values are Loaded
+        self::loadAttributeValues($attribute->id);
+
+        return is_array(self::$attributesValuesCache[$attribute->id] ?? null)
+            ? self::$attributesValuesCache[$attribute->id]
+            : array()
+        ;
+    }
+
+    /**
      * Fetch Product Combinations Attribute Value
      *
      * @param ProductAttribute $attribute Product Attribute
