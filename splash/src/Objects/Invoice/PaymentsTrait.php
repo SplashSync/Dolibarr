@@ -40,6 +40,13 @@ trait PaymentsTrait
     protected array $payments = array();
 
     /**
+     * Was the Invoice already closed, with payments recorded, when it was loaded?
+     *
+     * @var bool
+     */
+    protected bool $paymentsLockedAtLoad = false;
+
+    /**
      * Build Address Fields using FieldFactory
      *
      * @return void
@@ -104,6 +111,10 @@ trait PaymentsTrait
         //====================================================================//
         // Detect Supplier Invoices Mode
         $isSupplier |= is_a($this, Local::CLASS_SUPPLIER_INVOICE);
+        //====================================================================//
+        // Remember whether the Invoice is closed as it stands in database,
+        // before this request writes anything to it
+        $this->paymentsLockedAtLoad = $this->isClosedWithPayments($invoiceId, (bool) $isSupplier);
         //====================================================================//
         // Prepare SQL Request
         // Payments already done (from payment on this invoice)
@@ -226,6 +237,20 @@ trait PaymentsTrait
             return;
         }
         //====================================================================//
+        // Never rewrite the Payments of a closed Invoice
+        if ($this->paymentsLockedAtLoad) {
+            Splash::log()->war(sprintf(
+                "Invoice %s is closed: its %d recorded payment(s) are kept, "
+                ."the %d payment line(s) sent by the source were ignored.",
+                $this->object->ref ?? "?",
+                count($this->payments),
+                count($fieldData ?? array())
+            ));
+            unset($this->in[$fieldName]);
+
+            return;
+        }
+        //====================================================================//
         // Verify Lines List & Update if Needed
         $firstMethodId = null;
         foreach ($fieldData ?? array() as $lineData) {
@@ -302,6 +327,50 @@ trait PaymentsTrait
                 Splash::log()->errTrace("Unable to Delete Invoice Payment (".$paymentData->id.")");
             }
         }
+    }
+
+    /**
+     * Check whether an Invoice is closed and already carries payments
+     *
+     * Payments are paired with source lines by position, and a pair whose
+     * amounts differ is resolved by deleting the local payment and creating
+     * a new one. On a closed invoice that rewrite always destroys information:
+     * the local payments are what was actually received — often corrected by
+     * hand, or completed by a transfer the source never saw — while the source
+     * still reports the order total it charged, or thinks it charged. A check
+     * made when the new payment is created comes too late: the deletion has
+     * already happened, and the invoice no longer looks settled.
+     *
+     * A closed or abandoned invoice that carries payments is therefore left
+     * alone: its payments are neither paired, deleted nor added to. An invoice
+     * closed without any payment is not locked, so a missing payment can still
+     * be recorded.
+     *
+     * @param int  $invoiceId  Invoice Id
+     * @param bool $isSupplier Supplier Invoice Mode
+     *
+     * @return bool
+     */
+    private function isClosedWithPayments(int $invoiceId, bool $isSupplier): bool
+    {
+        global $db;
+
+        $sql = "SELECT i.fk_statut, COUNT(pf.rowid) as nb";
+        $sql .= $isSupplier
+            ? " FROM ".MAIN_DB_PREFIX."facture_fourn as i"
+                ." LEFT JOIN ".MAIN_DB_PREFIX."paiementfourn_facturefourn as pf ON pf.fk_facturefourn = i.rowid"
+            : " FROM ".MAIN_DB_PREFIX."facture as i"
+                ." LEFT JOIN ".MAIN_DB_PREFIX."paiement_facture as pf ON pf.fk_facture = i.rowid"
+        ;
+        $sql .= " WHERE i.rowid = ".$invoiceId;
+        $sql .= " GROUP BY i.fk_statut";
+        $result = $db->query($sql);
+        if (!$result || !($row = $db->fetch_object($result))) {
+            return false;
+        }
+        $closed = array(\CommonInvoice::STATUS_CLOSED, \CommonInvoice::STATUS_ABANDONED);
+
+        return in_array((int) $row->fk_statut, $closed, true) && ((int) $row->nb > 0);
     }
 
     /**
